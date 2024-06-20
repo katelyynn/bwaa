@@ -8,6 +8,11 @@
 ==/UserStyle== */
 
 @-moz-document domain("last.fm") {
+    :root {
+        --cdn-flatness-grids-fiflufi-right: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAAUCAMAAADcBIQEAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF////w8HB+KnvTgAAAC1JREFUeNrs0jEBAAAMAiDtX9oE+3dABtLAN1ZiJViJlWAlVoKVWAlWwmECDACoDAAL0xu6HwAAAABJRU5ErkJggg==');
+    }
+
+
     .main-content,
     body {
         font-family: "Lucida Grande", Arial, Helvetica, Verdana, sans-serif;
@@ -26,7 +31,7 @@
         min-width: 930px;
         max-width: 1102px;
         padding: 0 15px !important;
-        background: url(https://web.archive.org/web/20120618063046im_/http://cdn.lst.fm/flatness/grids/fiflufi_right.5.png) right top repeat-y #fff;
+        background: var(--cdn-flatness-grids-fiflufi-right) right top repeat-y #fff;
         overflow: visible;
         border: 1px solid #ccc;
     }
