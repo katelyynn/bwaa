@@ -46,9 +46,9 @@
     .header--overview .container, .header--sub-page .container,
     .container {
         width: 100%;
-        left: 110px;
-        min-width: 930px;
-        max-width: 1072px;
+        left: 55px; /* this aligns it 1:1 with 2012 last.fm, weird */
+        min-width: 962px;
+        max-width: 962px;
         padding: 0 !important;
         background: var(--cdn-flatness-grids-fiflufi-right) right top repeat-y #fff;
         overflow: visible;
