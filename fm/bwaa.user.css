@@ -291,7 +291,7 @@
         .auth-link {
             background-image: var(--cdn-flatness-header-headersprite);
             height: 23px;
-            padding: 0 calc(21px + 8px) 0 3px;
+            padding: 0 calc(21px + 8px) 1px 3px;
             background-position: left -360px;
             background-repeat: no-repeat;
             color: #eee;
