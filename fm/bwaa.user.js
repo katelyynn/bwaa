@@ -172,7 +172,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     <div class="user-data">
                         <div class="user-plays">
                             <div class="count">
-                                {} plays
+                                ${scrobble_flip(header_user_data.scrobbles).outerHTML} plays
                             </div>
                             <div class="since">
                                 since {}
@@ -189,5 +189,24 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         } else {
             // profile non-overview stuff
         }
+    }
+
+    function scrobble_flip(element) {
+        let tooltip = element.getAttribute('title');
+        let link = element.querySelector('a').getAttribute('href');
+        let scrobbles = element.querySelector('a').textContent.replaceAll(',', '');
+
+        let scrobbles_split = scrobbles.split('');
+        let flipper = document.createElement('div');
+        flipper.classList.add('flipper-wrap');
+        for (let split in scrobbles_split) {
+            let counter = document.createElement('div');
+            counter.classList.add('flip');
+            counter.textContent = scrobbles_split[split];
+
+            flipper.appendChild(counter);
+        }
+
+        return flipper;
     }
 })();
