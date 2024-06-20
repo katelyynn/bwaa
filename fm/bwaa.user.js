@@ -180,7 +180,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
     // header
     function bwaa_load_header() {
-        return 200;
+        let auth_link = document.body.querySelector('.auth-link');
+
+        if (auth_link.hasAttribute('data-bwaa'))
+            return;
+        auth_link.setAttribute('data-bwaa', 'true');
+
+        let text = document.createElement('p');
+        text.textContent = auth;
+        auth_link.appendChild(text);
     }
 
 
