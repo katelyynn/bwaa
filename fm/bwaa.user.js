@@ -134,8 +134,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
 
             // re-implement header
-            let col_main = document.querySelector('.col-main');
+            let col_main = document.body.querySelector('.col-main');
             let recent_tracks = document.getElementById('recent-tracks-section'); // we will use this to append before it
+
+            let navlist = profile_header.querySelector('.navlist');
 
             // fetch some data from the header
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
@@ -175,17 +177,19 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 ${scrobble_flip(header_user_data.scrobbles).outerHTML} plays
                             </div>
                             <div class="since">
-                                since {}
+                                ${header_user_data.since.replace('• scrobbling ', '')}
                             </div>
                         </div>
                     </div>
                     <div class="user-activity">
-                        <a>{} Loved Tracks</a> | <a href="${header_user_data.artists.getAttribute('href')}">${header_user_data.artists.textContent} Artists</a> | <a>Shoutbox</a>
+                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${header_user_data.loved_tracks.textContent} Loved Tracks</a> | <a href="${header_user_data.artists.getAttribute('href')}">${header_user_data.artists.textContent} Artists</a> | <a>Shoutbox</a>
                     </div>
                 </div>
             `);
 
+            col_main.insertBefore(navlist, recent_tracks);
             col_main.insertBefore(new_header, recent_tracks);
+            profile_header.style.setProperty('display', 'none');
         } else {
             // profile non-overview stuff
         }
@@ -199,6 +203,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         let scrobbles_split = scrobbles.split('');
         let flipper = document.createElement('div');
         flipper.classList.add('flipper-wrap');
+        flipper.setAttribute('title', tooltip);
         for (let split in scrobbles_split) {
             let counter = document.createElement('div');
             counter.classList.add('flip');
