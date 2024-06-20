@@ -206,6 +206,18 @@
         }
     }
 
+    /* user types */
+    .user-type-banner {
+        padding: 0 0 0 94px;
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 20px;
+
+        &.user-type--subscriber {
+            background: #C7E6FE;
+        }
+    }
+
     /* links */
 
     a {

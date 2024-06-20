@@ -27,7 +27,11 @@ if (!valid_langs.includes(lang)) {
 
 const trans = {
     en: {
-
+        profile: {
+            user_types: {
+                subscriber: 'Sponsored User'
+            }
+        }
     }
 }
 
@@ -40,6 +44,81 @@ const trans = {
 let settings_defaults = {
 
 }
+
+let profile_badges = {
+    'cutensilly': [
+        {
+            type: 'k',
+            name: 'k'
+        },
+        {
+            type: 'a',
+            name: 'a'
+        },
+        {
+            type: 't',
+            name: 't'
+        },
+        {
+            type: 'e',
+            name: 'e'
+        },
+        {
+            type: 'queen',
+            name: 'blehhhhhhhhhh!!'
+        }
+    ],
+    'Iexyy': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'bIeak': [
+        {
+            type: 'cat',
+            name: 'it\'s a kitty!!'
+        },
+        {
+            type: 'glaive',
+            name: '#1 glaive fan'
+        }
+    ],
+    'peoplepleasr': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'twolay': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'aoivee': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'Serprety': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'RazzBX': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'ivyshandle': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'KuroinHeroin': {
+        type: 'mask',
+        name: 'kimchi lover'
+    },
+    'u5c': {
+        type: 'paw',
+        name: 'silly creature'
+    },
+    'destons': {
+        type: 'colon-three',
+        name: ':3²'
+    }
+};
 
 // use the top-right link to determine the current user
 let auth = '';
@@ -134,6 +213,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
 
             // re-implement header
+            let row = document.body.querySelector('.row');
             let col_main = document.body.querySelector('.col-main');
             let recent_tracks = document.getElementById('recent-tracks-section'); // we will use this to append before it
 
@@ -154,6 +234,31 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             if (recent_tracks.hasAttribute('data-bwaa'))
                 return;
             recent_tracks.setAttribute('data-bwaa', 'true');
+
+            console.info('bwaa - profile has stock labels', header_user_data.labels);
+            let this_profile_badges = [];
+
+            let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
+            let user_type = 'user';
+            if (user_is_subscriber)
+                user_type = 'subscriber';
+
+            // custom badges
+            if (profile_badges.hasOwnProperty(header_user_data.name)) {
+                if (!Array.isArray(profile_badges[header_user_data.name])) {
+                    // default
+                    console.info('bwaa - profile has 1 custom badge', profile_badges[header_user_data.name]);
+
+                    this_profile_badges.push(profile_badges[header_user_data.name]);
+                } else {
+                    // multiple
+                    console.info('bwaa - profile has multiple custom badges', profile_badges[header_user_data.name]);
+                    for (let badge_entry in profile_badges[header_user_data.name]) {
+                        this_profile_badges.push(profile_badges[header_user_data.name][badge_entry]);
+                    }
+                }
+            }
+            console.info('bwaa - profile stock labels & custom badges', this_profile_badges);
 
             let new_header = document.createElement('section');
             new_header.classList.add('profile-header-section');
@@ -187,9 +292,17 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 </div>
             `);
 
-            col_main.insertBefore(navlist, recent_tracks);
+            row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, recent_tracks);
             profile_header.style.setProperty('display', 'none');
+
+            // user type
+            if (user_type != 'user') {
+                let user_type_banner = document.createElement('div');
+                user_type_banner.classList.add('user-type-banner', `user-type--${user_type}`);
+                user_type_banner.textContent = trans[lang].profile.user_types[user_type];
+                row.insertBefore(user_type_banner, col_main);
+            }
         } else {
             // profile non-overview stuff
         }
