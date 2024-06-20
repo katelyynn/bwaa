@@ -24,13 +24,26 @@
         height: 1%;
     }
 
+    h1, h2, h3, h4, h5, h6 {
+        letter-spacing: unset !important;
+    }
+    h1 {
+        color: #000;
+        font-weight: bold;
+        line-height: 1.2em;
+    }
+    b, strong {
+        font-weight: bold;
+    }
+
     /* page */
 
+    .header--overview .container, .header--sub-page .container,
     .container {
         width: 100%;
         min-width: 930px;
-        max-width: 1102px;
-        padding: 0 15px !important;
+        max-width: 1072px;
+        padding: 0 !important;
         background: var(--cdn-flatness-grids-fiflufi-right) right top repeat-y #fff;
         overflow: visible;
         border: 1px solid #ccc;
@@ -49,6 +62,60 @@
         width: calc(300px + 30px);
         font-size: 11px;
         line-height: 1.181818em;
+    }
+
+    /* skin profile header to be part of container flow */
+    .profile-header-section {
+        display: flex;
+        gap: 15px;
+        padding: 0 0 15px 0;
+
+        img {
+            width: 130px;
+            height: 130px;
+            padding: 1px;
+            border: 1px solid #ccc;
+        }
+
+        .badge-info {
+            h1 {
+                padding: 5px 0;
+                font-size: 16px;
+            }
+
+            .user-info {
+                margin-top: 10px;
+                font-size: 11px;
+                line-height: 1.181818em;
+
+                .top {
+                    display: flex;
+                }
+                .bottom {
+                    font-size: 10px;
+                    color: #999;
+                }
+            }
+            .user-data {
+                margin-top: 10px;
+                font-size: 11px;
+                line-height: 13px;
+
+                .count {
+                    font-weight: bold;
+                }
+                .since {
+                    font-size: 10px;
+                    color: #999;
+                }
+            }
+            .user-activity {
+                margin-top: 4px;
+                font-size: 11px;
+                line-height: 1.181818em;
+                color: #0187c5;
+            }
+        }
     }
 
     /* links */
@@ -72,5 +139,10 @@
         font-weight: bold;
         font-size: 18px;
         line-height: 13px;
+
+        .col-sidebar & {
+            font-size: 14px;
+            line-height: 18px;
+        }
     }
 }
