@@ -211,6 +211,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         if (profile_header == undefined)
             return;
 
+        if (profile_header.hasAttribute('data-bwaa'))
+            return;
+        profile_header.setAttribute('data-bwaa', 'true');
+
         console.info('bwaa - user is on a profile');
 
         // are we on the overview page?
@@ -233,9 +237,6 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         if (profile_header_overview) {
             // profile overview stuff
 
-            // re-implement header
-            let recent_tracks = document.getElementById('recent-tracks-section'); // we will use this to append before it
-
             // fetch some data from the header
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
             let header_user_data = {
@@ -248,10 +249,6 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 artists: header_metadata[1].querySelector('a'),
                 loved_tracks: (header_metadata[2] != undefined) ? header_metadata[2].querySelector('a') : placeholder_loved_tracks()
             }
-
-            if (recent_tracks.hasAttribute('data-bwaa'))
-                return;
-            recent_tracks.setAttribute('data-bwaa', 'true');
 
             // user type
             let user_type = 'user';
@@ -282,13 +279,22 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             }
             console.info('bwaa - user is of type', user_type);
 
-            let latest_chartlist_timestamp = document.body.querySelector('.chartlist-timestamp');
-            let scrobbling_now = latest_chartlist_timestamp.querySelector('.chartlist-now-scrobbling');
+
+            // when was this user last seen scrobbling?
+            let recent_tracks = document.getElementById('recent-tracks-section');
             let last_seen = '';
-            if (scrobbling_now == undefined)
-                last_seen = latest_chartlist_timestamp.querySelector('span').textContent;
-            else
-                last_seen = 'Active now';
+            if (recent_tracks != undefined) {
+                let latest_chartlist_timestamp = document.body.querySelector('.chartlist-timestamp');
+                let scrobbling_now = latest_chartlist_timestamp.querySelector('.chartlist-now-scrobbling');
+
+                if (scrobbling_now == undefined)
+                    last_seen = latest_chartlist_timestamp.querySelector('span').textContent;
+                else
+                    last_seen = 'Active now';
+            } else {
+                last_seen = 'Unknown';
+            }
+
 
             let new_header = document.createElement('section');
             new_header.classList.add('profile-header-section');
@@ -326,7 +332,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             `);
 
             row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, recent_tracks);
+            col_main.insertBefore(new_header, col_main.firstChild);
             profile_header.style.setProperty('display', 'none');
 
             if (auth != header_user_data.name) {
