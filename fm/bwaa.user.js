@@ -252,6 +252,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             // user type
             let user_type = 'user';
+            let user_follows_you = (profile_header.querySelector('.label.user-follow') != undefined);
 
             // custom badges
             if (profile_badges.hasOwnProperty(header_user_data.name)) {
@@ -339,7 +340,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     <h1>${header_user_data.name}</h1>
                     <div class="user-info">
                         <div class="top">
-                            <strong>${header_user_data.display_name}</strong>, cutensilly.org
+                            <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? '(follows you!)' : ''}
                         </div>
                         <div class="bottom user-last-seen">
                         Last seen: ${last_seen}

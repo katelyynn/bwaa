@@ -152,7 +152,7 @@
                 line-height: 1.181818em;
 
                 .top {
-                    display: flex;
+                    display: block;
                 }
                 .bottom {
                     font-size: 10px;
@@ -172,9 +172,6 @@
                 .since {
                     font-size: 10px;
                     color: #999;
-                    /* align, dunno */
-                    position: relative;
-                    top: 1px;
                 }
                 .user-plays {
                     display: flex;
@@ -676,11 +673,18 @@
 
     /* section */
     .col-main, .col-sidebar {
+        section + .profile-mobile-featured-track + p, /* private tracks */
+        section + p,
         section + ul,
         section + section {
             border-top: 1px dotted #ccc;
             margin: 30px -15px 0 -15px;
             padding: 15px 15px;
+        }
+
+        /* private tracks */
+        .profile-mobile-featured-track + .no-data-message {
+            width: calc(100% + 30px);
         }
     }
 
