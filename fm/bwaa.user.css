@@ -848,4 +848,53 @@
             }
         }
     }
+
+
+    .profile-artist-section {
+        display: flex;
+        gap: 15px;
+
+        .artist-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+
+            h1 {
+                font-size: 18px;
+            }
+
+            .stats {
+                margin: 12px 0;
+                color: #666;
+                font-size: 11px;
+                line-height: 1.363636em;
+            }
+        }
+        .artist-image-side {
+            width: 255px;
+
+            .images {
+                border: 1px solid #ccc;
+                overflow: hidden;
+
+                .top {
+                    border: 1px solid #fff;
+                    width: 253px;
+                    overflow: hidden;
+
+                    img {
+                        width: 253px;
+                    }
+                }
+            }
+            .option {
+                background: #F7F7F7;
+                padding: 3px;
+                font-weight: bold;
+                font-size: 11px;
+                line-height: 14px;
+                text-align: right;
+            }
+        }
+    }
 }

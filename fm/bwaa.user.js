@@ -154,6 +154,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         } else {
             // things that load when not in bwaa settings
             bwaa_profiles();
+            bwaa_artists();
         }
 
         // last.fm is a single page application
@@ -174,6 +175,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                             } else {
                                 // things that load when not in bwaa settings
                                 bwaa_profiles();
+                                bwaa_artists();
                             }
                         }
                     }
@@ -427,5 +429,67 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         }
 
         return flipper;
+    }
+
+
+    function bwaa_artists() {
+        let artist_header = document.body.querySelector('.header-new--artist');
+
+        if (artist_header == undefined)
+            return;
+
+        if (artist_header.hasAttribute('data-bwaa'))
+            return;
+        artist_header.setAttribute('data-bwaa', 'true');
+
+        let is_subpage = artist_header.classList.contains('header-new--subpage');
+
+
+        let row = document.body.querySelector('.row');
+        let col_main = document.body.querySelector('.col-main');
+
+        if (!is_subpage) {
+            let artist_metadata = artist_header.querySelectorAll('.header-metadata-tnew-display');
+            let header_artist_data = {
+                avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
+                name: artist_header.querySelector('.header-new-title').textContent,
+                link: window.location.href,
+                photos: artist_header.querySelector('.header-new-gallery-inner').textContent,
+                plays: artist_metadata[1].querySelector('abbr').getAttribute('title'),
+                listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
+            }
+
+            let new_header = document.createElement('section');
+            new_header.classList.add('profile-artist-section');
+            new_header.innerHTML = (`
+                <div class="artist-info">
+                    <h1>${header_artist_data.name}</h1>
+                    <div class="stats">
+                        ${header_artist_data.plays} plays (${header_artist_data.listeners} listeners)
+                    </div>
+                </div>
+                <div class="artist-image-side">
+                    <div class="images">
+                        <div class="top">
+                            <a>
+                                <img src="${header_artist_data.avatar}">
+                            </a>
+                        </div>
+                        <div class="bottom">
+
+                        </div>
+                    </div>
+                    <div class="option">
+                        <a href="${header_artist_data.link}/+images">See all ${header_artist_data.photos}</a>
+                    </div>
+                </div>
+            `);
+
+            //row.insertBefore(navlist, col_main);
+            col_main.insertBefore(new_header, col_main.firstChild);
+            artist_header.style.setProperty('display', 'none');
+        } else {
+
+        }
     }
 })();
