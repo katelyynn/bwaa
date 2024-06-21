@@ -247,7 +247,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 since: profile_header.querySelector('.header-scrobble-since').textContent,
                 scrobbles: header_metadata[0],
                 artists: header_metadata[1].querySelector('a'),
-                loved_tracks: header_metadata[2].querySelector('a')
+                loved_tracks: (header_metadata[2] != undefined) ? header_metadata[2].querySelector('a') : placeholder_loved_tracks()
             }
 
             if (recent_tracks.hasAttribute('data-bwaa'))
@@ -374,6 +374,14 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             button.textContent = 'You are friends';
         else
             button.textContent = 'Add as friend';
+    }
+
+    function placeholder_loved_tracks() {
+        let placeholder = document.createElement('a');
+        placeholder.setAttribute('href', '');
+        placeholder.textContent = '0';
+
+        return placeholder;
     }
 
     function scrobble_flip(element) {
