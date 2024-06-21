@@ -40,12 +40,13 @@ const trans = {
                 'colon-three': ':3²'
             },
             tasteometer: {
-                super: 'Super',
-                very_high: 'Very High',
-                high: 'High',
-                medium: 'Medium',
-                low: 'Low',
-                very_low: 'Very Low'
+                super: 'SUPER',
+                very_high: 'VERY HIGH',
+                high: 'HIGH',
+                medium: 'MEDIUM',
+                low: 'LOW',
+                very_low: 'VERY LOW',
+                unknown: 'UNKNOWN'
             }
         }
     }
@@ -335,6 +336,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 let tasteometer_percent = tasteometer.querySelector('.tasteometer-viz').getAttribute('title');
                 let tasteometer_lvl = tasteometer.classList[1];
 
+                let tasteometer_artists = tasteometer.querySelectorAll('.tasteometer-shared-artists a');
+
                 let profile_actions = document.createElement('section');
                 profile_actions.classList.add('profile-actions-section');
                 profile_actions.innerHTML = (`
@@ -347,17 +350,18 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         <div class="bar">
                             <div class="fill" style="width: ${tasteometer_percent}"></div>
                         </div>
+                        <p>Music you have in common includes ${tasteometer_artists[0].outerHTML}, ${tasteometer_artists[1].outerHTML} and ${tasteometer_artists[2].outerHTML}.</p>
                     </div>
                 `);
                 col_main.insertBefore(profile_actions, recent_tracks);
 
-                let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
+                /*let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
                 follow_button2.setAttribute('onclick', '_update_follow_btn(this)');
                 console.info(follow_button2, follow_button2.getAttribute('data-analytics-action'), follow_button2.getAttribute('data-analytics-action') == 'UnfollowUser');
                 if (follow_button2.getAttribute('data-analytics-action') == 'UnfollowUser')
                     follow_button2.textContent = 'You are friends';
                 else
-                    follow_button2.textContent = 'Add as friend';
+                    follow_button2.textContent = 'Add as friend';*/
             }
 
             // user type
@@ -784,21 +788,22 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
                 link: window.location.href,
                 plays: track_metadata[1].querySelector('abbr').getAttribute('title'),
-                listeners: track_metadata[0].querySelector('abbr').getAttribute('title')
+                listeners: track_metadata[0].querySelector('abbr').getAttribute('title'),
+                album_amount: parseInt(document.body.querySelectorAll('.source-album').length) - 1
             }
 
             let new_header = document.createElement('section');
             new_header.classList.add('profile-track-section');
             new_header.innerHTML = (`
-                <div class="track-image-side">
-                    <a class="image">
-                        <img src="${header_track_data.avatar}">
-                    </a>
-                </div>
-                <div class="track-info">
-                    <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a></h1>
-                    <div class="stats">
-                        ${header_track_data.plays} plays (${header_track_data.listeners} listeners)
+                <div class="header">
+                    <div class="track-image-side">
+                        <a class="image">
+                            <img src="${header_track_data.avatar}">
+                        </a>
+                    </div>
+                    <div class="track-info">
+                        <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a></h1>
+                        <p>On ${header_track_data.album_amount} albums <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
                     </div>
                 </div>
             `);
