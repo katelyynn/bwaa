@@ -459,6 +459,24 @@
             height: 68px !important;
             margin-top: -2px;
             align-items: unset !important;
+
+            .header-promo {
+                position: absolute;
+                top: 45px;
+                left: 15px;
+                font-size: 11px;
+                line-height: 23px;
+                color: #ddd;
+                font-weight: bold;
+
+                a {
+                    color: inherit;
+
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+            }
         }
 
         .masthead-logo {

@@ -16,7 +16,10 @@
 
 console.info('bwaa - beginning to load');
 
-let version = '2024.0620';
+let version = '2024.0622';
+
+let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version} »`;
+
 let lang = document.documentElement.getAttribute('lang');
 let valid_langs = ['en'];
 
@@ -198,6 +201,13 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         let text = document.createElement('p');
         text.textContent = auth;
         auth_link.appendChild(text);
+
+        let inner = document.body.querySelector('.masthead-inner-wrap');
+
+        let promo = document.createElement('div');
+        promo.classList.add('header-promo');
+        promo.innerHTML = current_promo;
+        inner.appendChild(promo);
     }
 
 
@@ -324,6 +334,14 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 `);
                 col_main.insertBefore(profile_actions, col_main.firstChild);
 
+                /*let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
+                follow_button2.setAttribute('onclick', '_update_follow_btn(this)');
+                console.info(follow_button2, follow_button2.getAttribute('data-analytics-action'), follow_button2.getAttribute('data-analytics-action') == 'UnfollowUser');
+                if (follow_button2.getAttribute('data-analytics-action') == 'UnfollowUser')
+                    follow_button2.textContent = 'You are friends';
+                else
+                    follow_button2.textContent = 'Add as friend';*/
+            }
 
             // main user header
             // this is on top of the actions, but appending is backwards
@@ -365,15 +383,6 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             profile_header.style.setProperty('display', 'none');
-
-                /*let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
-                follow_button2.setAttribute('onclick', '_update_follow_btn(this)');
-                console.info(follow_button2, follow_button2.getAttribute('data-analytics-action'), follow_button2.getAttribute('data-analytics-action') == 'UnfollowUser');
-                if (follow_button2.getAttribute('data-analytics-action') == 'UnfollowUser')
-                    follow_button2.textContent = 'You are friends';
-                else
-                    follow_button2.textContent = 'Add as friend';*/
-            }
 
             // user type
             /*if (user_type != 'user') {
