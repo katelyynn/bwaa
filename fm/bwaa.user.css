@@ -244,10 +244,10 @@
                 position: relative;
                 left: unset;
                 top: unset;
-                font-size: 11px;
-                line-height: 12px;
-                text-transform: initial;
-                font-weight: normal;
+                font-size: 11px !important;
+                line-height: 12px !important;
+                text-transform: initial !important;
+                font-weight: normal !important;
             }
 
             .leave-a-shout {
