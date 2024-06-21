@@ -555,7 +555,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             let header_user_data = {
                 avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
                 name: artist_header.querySelector('.header-new-title').textContent,
-                link: profile_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
+                link: artist_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
                 page: document.body.querySelector('.subpage-title').textContent
             }
 
@@ -563,7 +563,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             new_header.classList.add('profile-header-subpage-section');
             new_header.innerHTML = (`
                 <div class="badge-avatar">
-                    <img src="${header_user_data.avatar.getAttribute('src')}" alt="${header_user_data.avatar.getAttribute('alt')}">
+                    <img src="${header_user_data.avatar}">
                 </div>
                 <div class="badge-info">
                     <a href="${header_user_data.link}">${header_user_data.name}</a>
@@ -573,7 +573,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
-            profile_header.style.setProperty('display', 'none');
+            artist_header.style.setProperty('display', 'none');
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
         }
@@ -666,28 +666,34 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             col_main.insertBefore(new_header, col_main.firstChild);
             album_header.style.setProperty('display', 'none');
         } else {
+            let subpage_title = document.body.querySelector('.subpage-title');
+            if (subpage_title == undefined)
+                subpage_title = col_main.querySelector(':scope > h2');
+
             let header_album_data = {
                 avatar: album_header.querySelector('.header-new-background-image').getAttribute('content'),
                 name: album_header.querySelector('.header-new-title').textContent,
-                link: profile_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
-                page: document.body.querySelector('.subpage-title').textContent
+                artist: album_header.querySelector('.header-new-crumb span').textContent,
+                artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
+                link: album_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
+                page: subpage_title.textContent
             }
 
             let new_header = document.createElement('section');
             new_header.classList.add('profile-header-subpage-section');
             new_header.innerHTML = (`
                 <div class="badge-avatar">
-                    <img src="${header_album_data.avatar.getAttribute('src')}" alt="${header_album_data.avatar.getAttribute('alt')}">
+                    <img src="${header_album_data.avatar}">
                 </div>
                 <div class="badge-info">
-                    <a href="${header_album_data.link}">${header_album_data.name}</a>
+                    <a href="${header_album_data.link}">${header_album_data.name} by <a href="${header_album_data.artist_link}">${header_album_data.artist}</a></a>
                     <h1>${header_album_data.page}</h1>
                 </div>
             `);
 
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
-            profile_header.style.setProperty('display', 'none');
+            album_header.style.setProperty('display', 'none');
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
         }
