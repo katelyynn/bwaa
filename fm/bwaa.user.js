@@ -148,6 +148,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_profiles();
             bwaa_artists();
             bwaa_albums();
+            bwaa_tracks();
         }
 
         // last.fm is a single page application
@@ -170,6 +171,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_profiles();
                                 bwaa_artists();
                                 bwaa_albums();
+                                bwaa_tracks();
                             }
                         }
                     }
@@ -373,6 +375,11 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 name: profile_header.querySelector('.header-title a').textContent,
                 link: profile_header.querySelector('.header-title a').getAttribute('href'),
                 page: document.body.querySelector('.content-top-header').textContent
+            }
+
+            let library_controls = content_top.querySelector('.library-controls');
+            if (library_controls != undefined) {
+                col_main.insertBefore(library_controls, col_main.firstChild);
             }
 
             let new_header = document.createElement('section');
@@ -593,7 +600,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
 
         let row = document.body.querySelector('.row');
-        let col_main = document.body.querySelector('.col-main');
+        let col_main = document.body.querySelector('.col-main:not(.visible-xs)');
 
         let navlist = album_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -635,15 +642,24 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         if (!is_subpage) {
             let album_metadata = album_header.querySelectorAll('.header-metadata-tnew-display');
+
+            let avatar_element = document.body.querySelector('.album-overview-cover-art img');
+            let avatar = '';
+            let add_artwork = '';
+            if (avatar_element != undefined) {
+                avatar = avatar_element.getAttribute('src');
+                add_artwork = document.body.querySelector('.album-overview-cover-art-gallery-action a').getAttribute('href');
+            }
+
             let header_album_data = {
-                avatar: document.body.querySelector('.album-overview-cover-art img').getAttribute('src'),
+                avatar: avatar,
                 name: album_header.querySelector('.header-new-title').textContent,
                 artist: album_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
                 link: window.location.href,
                 plays: album_metadata[1].querySelector('abbr').getAttribute('title'),
                 listeners: album_metadata[0].querySelector('abbr').getAttribute('title'),
-                add_artwork: document.body.querySelector('.album-overview-cover-art-gallery-action a').getAttribute('href')
+                add_artwork: add_artwork
             }
 
             let new_header = document.createElement('section');
@@ -694,6 +710,131 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             album_header.style.setProperty('display', 'none');
+
+            document.body.querySelector('.container.page-content').classList.add('subpage');
+        }
+    }
+
+    function bwaa_tracks() {
+        let track_header = document.body.querySelector('.header-new--track');
+
+        if (track_header == undefined)
+            return;
+
+        if (track_header.hasAttribute('data-bwaa'))
+            return;
+        track_header.setAttribute('data-bwaa', 'true');
+
+        let is_subpage = track_header.classList.contains('header-new--subpage');
+
+
+        let row = document.body.querySelector('.row');
+        let col_main = document.body.querySelector('.col-main');
+
+        let navlist = track_header.querySelector('.navlist');
+        if (!is_subpage) {
+            navlist = document.createElement('nav');
+            navlist.classList.add('navlist', 'secondary-nav', 'navlist--more');
+            navlist.setAttribute('aria-label', 'Secondary navigation');
+            navlist.setAttribute('data-require', 'components/collapsing-nav-v2');
+
+            navlist.innerHTML = (`
+                <ul class="navlist-items js-navlist-items" style="position: relative;">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            Overview
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
+                            Albums
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            Wiki
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            Tags
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            Shouts
+                        </a>
+                    </li>
+                </ul>
+            `);
+        }
+
+        if (!is_subpage) {
+            let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
+
+            let avatar_element = document.body.querySelector('.source-album-art img');
+            let avatar = '';
+            if (avatar_element != undefined)
+                avatar = avatar_element.getAttribute('src');
+
+            let header_track_data = {
+                avatar: avatar,
+                name: track_header.querySelector('.header-new-title').textContent,
+                artist: track_header.querySelector('.header-new-crumb span').textContent,
+                artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
+                link: window.location.href,
+                plays: track_metadata[1].querySelector('abbr').getAttribute('title'),
+                listeners: track_metadata[0].querySelector('abbr').getAttribute('title')
+            }
+
+            let new_header = document.createElement('section');
+            new_header.classList.add('profile-track-section');
+            new_header.innerHTML = (`
+                <div class="track-image-side">
+                    <a class="image">
+                        <img src="${header_track_data.avatar}">
+                    </a>
+                </div>
+                <div class="track-info">
+                    <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a></h1>
+                    <div class="stats">
+                        ${header_track_data.plays} plays (${header_track_data.listeners} listeners)
+                    </div>
+                </div>
+            `);
+
+            row.insertBefore(navlist, col_main);
+            col_main.insertBefore(new_header, col_main.firstChild);
+            track_header.style.setProperty('display', 'none');
+        } else {
+            let subpage_title = document.body.querySelector('.subpage-title');
+            if (subpage_title == undefined)
+                subpage_title = col_main.querySelector(':scope > h2');
+
+            let header_track_data = {
+                avatar: track_header.querySelector('.header-new-background-image').getAttribute('content'),
+                name: track_header.querySelector('.header-new-title').textContent,
+                artist: track_header.querySelector('.header-new-crumb span').textContent,
+                artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
+                link: track_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
+                page: subpage_title.textContent
+            }
+
+            let new_header = document.createElement('section');
+            new_header.classList.add('profile-header-subpage-section');
+            new_header.innerHTML = (`
+                <div class="badge-avatar">
+                    <img src="${header_track_data.avatar}">
+                </div>
+                <div class="badge-info">
+                    <a href="${header_track_data.link}">${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a></a>
+                    <h1>${header_track_data.page}</h1>
+                </div>
+            `);
+
+            row.insertBefore(navlist, col_main);
+            col_main.insertBefore(new_header, col_main.firstChild);
+            track_header.style.setProperty('display', 'none');
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
         }
