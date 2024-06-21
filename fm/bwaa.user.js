@@ -218,24 +218,24 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         let profile_header_overview = profile_header.classList.contains('header--overview');
         console.info('bwaa - profile overview?', profile_header_overview);
 
+        // remove the profile card-related stuff
+        let content_top = document.body.querySelector('.content-top');
+        if (!content_top.hasAttribute('data-bwaa')) {
+            content_top.setAttribute('data-bwaa', 'true');
+            content_top.style.setProperty('display', 'none');
+        }
+
+        let row = document.body.querySelector('.row');
+        let col_main = document.body.querySelector('.col-main');
+
+        let navlist = profile_header.querySelector('.navlist');
+
 
         if (profile_header_overview) {
             // profile overview stuff
 
-            // remove the profile card-related stuff
-            let content_top = document.body.querySelector('.content-top');
-            if (!content_top.hasAttribute('data-bwaa')) {
-                content_top.setAttribute('data-bwaa', 'true');
-                content_top.style.setProperty('display', 'none');
-            }
-
-
             // re-implement header
-            let row = document.body.querySelector('.row');
-            let col_main = document.body.querySelector('.col-main');
             let recent_tracks = document.getElementById('recent-tracks-section'); // we will use this to append before it
-
-            let navlist = profile_header.querySelector('.navlist');
 
             // fetch some data from the header
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
@@ -366,6 +366,31 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             }
         } else {
             // profile non-overview stuff
+
+            let header_user_data = {
+                avatar: profile_header.querySelector('.avatar img'),
+                name: profile_header.querySelector('.header-title a').textContent,
+                link: profile_header.querySelector('.header-title a').getAttribute('href'),
+                page: document.body.querySelector('.content-top-header').textContent
+            }
+
+            let new_header = document.createElement('section');
+            new_header.classList.add('profile-header-subpage-section');
+            new_header.innerHTML = (`
+                <div class="badge-avatar">
+                    <img src="${header_user_data.avatar.getAttribute('src')}" alt="${header_user_data.avatar.getAttribute('alt')}">
+                </div>
+                <div class="badge-info">
+                    <a href="${header_user_data.link}">${header_user_data.name}</a>
+                    <h1>${header_user_data.page}</h1>
+                </div>
+            `);
+
+            row.insertBefore(navlist, col_main);
+            col_main.insertBefore(new_header, col_main.firstChild);
+            profile_header.style.setProperty('display', 'none');
+
+            document.body.querySelector('.container.page-content').classList.add('subpage');
         }
     }
 

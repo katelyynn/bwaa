@@ -59,6 +59,24 @@
         background: var(--cdn-flatness-grids-fiflufi-right) right top repeat-y #fff;
         overflow: visible;
         border: 1px solid #ccc;
+
+        &.subpage {
+            background: #fff;
+
+            .col-main {
+                width: 100%;
+            }
+            .col-sidebar {
+                display: none;
+            }
+
+            #shoutbox {
+                max-width: 755px;
+                border: unset;
+                margin: unset;
+                padding: unset;
+            }
+        }
     }
     .row {
         margin: unset;
@@ -155,6 +173,27 @@
         }
     }
 
+    .profile-header-subpage-section {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+
+        .badge-avatar img {
+            width: 38px;
+            height: 38px;
+            padding: 1px;
+            border: 1px solid #ccc;
+        }
+
+        h1 {
+            font-size: 17px;
+            margin-top: 0.15em;
+            font-weight: bold;
+            line-height: 1.2em;
+            color: #0187c5;
+        }
+    }
+
     /* navlist */
     .row .navlist {
         position: absolute;
@@ -173,7 +212,7 @@
                 margin: unset !important;
 
                 .secondary-nav-item-link {
-                    margin: -1px 0 0 0;
+                    margin: unset;
                     width: 111px;
                     padding: 5px 5px 5px 10px;
                     background: var(--cdn-flatness-secondary-nav-bg);
@@ -184,6 +223,10 @@
                         display: none;
                     }
 
+                    .navlist-item:not(:first-child) & {
+                        margin: -1px 0 0 0;
+                    }
+
                     &:hover,
                     &.secondary-nav-item-link--active {
                         color: #D51007;
@@ -191,7 +234,6 @@
                     }
                     &.secondary-nav-item-link--active {
                         border-right-color: #fff;
-                        margin: unset;
                         position: relative;
 
                         /* hence the border-right is gone, we need to fill a 1px
@@ -530,6 +572,7 @@
 
     /* section */
     .col-main, .col-sidebar {
+        section + ul,
         section + section {
             border-top: 1px dotted #ccc;
             margin: 30px -15px 0 -15px;
@@ -724,6 +767,83 @@
                     font-size: 11px;
                     line-height: 1.25em;
                     color: #000;
+                }
+            }
+        }
+    }
+
+    /* top albums on artist page */
+    .artist-top-albums {
+        line-height: 1.25em;
+        margin: unset;
+
+        li {
+            position: relative;
+            width: 49.5%;
+            margin-bottom: 15px;
+            padding: unset !important;
+            margin: unset !important;
+            overflow: hidden;
+
+            & > div {
+                padding: 0 15px 0 85px;
+                min-height: 70px;
+
+                .media-item {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+
+                    &:after {
+                        content: '';
+                        background-image: var(--cdn-flatness-catalogue-album-jewelcase-medium);
+                        width: 73px;
+                        height: 68px;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        background-repeat: no-repeat;
+                        background-position: left top;
+                    }
+
+                    & > span {
+                        width: 75px;
+                        height: 67px;
+                        position: relative;
+
+                        img {
+                            width: 64px;
+                            height: 64px;
+                            position: absolute;
+                            left: 7px;
+                            top: 2px;
+                        }
+                    }
+                }
+
+                .lazy-buylinks, .artist-top-albums-item-playlink {
+                    display: none;
+                }
+
+                h3 {
+                    margin: unset !important;
+                    line-height: inherit;
+                    max-height: unset;
+                    font-weight: bold;
+
+                    .artist-top-albums li:has(.link-block-cover-link:hover) & {
+                        color: #0187c5;
+                    }
+                }
+                .artist-top-albums-item-aux-text {
+                    color: #000;
+                    font-size: 11px;
+                    line-height: inherit;
+                    margin: unset !important;
+
+                    & + .artist-top-albums-item-aux-text {
+                        display: none;
+                    }
                 }
             }
         }
