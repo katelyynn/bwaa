@@ -296,6 +296,36 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             }
 
 
+            // user interactions
+            if (auth != header_user_data.name) {
+                let follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]').outerHTML;
+
+                let tasteometer = profile_header.querySelector('.tasteometer');
+                let tasteometer_percent = tasteometer.querySelector('.tasteometer-viz').getAttribute('title');
+                let tasteometer_lvl = tasteometer.classList[1];
+
+                let tasteometer_artists = tasteometer.querySelectorAll('.tasteometer-shared-artists a');
+
+                let profile_actions = document.createElement('section');
+                profile_actions.classList.add('profile-actions-section');
+                profile_actions.innerHTML = (`
+                    <div class="options">
+                        ${follow_button}
+                        <a class="has-icon leave-a-shout" href="${header_user_data.link}/shoutbox">Leave a shout</a>
+                    </div>
+                    <div class=tasteometer ${tasteometer_lvl}">
+                        <p>Your musical compatibility with <strong>${header_user_data.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
+                        <div class="bar">
+                            <div class="fill" style="width: ${tasteometer_percent}"></div>
+                        </div>
+                        <p>Music you have in common includes ${tasteometer_artists[0].outerHTML}, ${tasteometer_artists[1].outerHTML} and ${tasteometer_artists[2].outerHTML}.</p>
+                    </div>
+                `);
+                col_main.insertBefore(profile_actions, col_main.firstChild);
+
+
+            // main user header
+            // this is on top of the actions, but appending is backwards
             let new_header = document.createElement('section');
             new_header.classList.add('profile-header-section');
             new_header.innerHTML = (`
@@ -334,32 +364,6 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             profile_header.style.setProperty('display', 'none');
-
-            if (auth != header_user_data.name) {
-                let follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]').outerHTML;
-
-                let tasteometer = profile_header.querySelector('.tasteometer');
-                let tasteometer_percent = tasteometer.querySelector('.tasteometer-viz').getAttribute('title');
-                let tasteometer_lvl = tasteometer.classList[1];
-
-                let tasteometer_artists = tasteometer.querySelectorAll('.tasteometer-shared-artists a');
-
-                let profile_actions = document.createElement('section');
-                profile_actions.classList.add('profile-actions-section');
-                profile_actions.innerHTML = (`
-                    <div class="options">
-                        ${follow_button}
-                        <a class="has-icon leave-a-shout" href="${header_user_data.link}/shoutbox">Leave a shout</a>
-                    </div>
-                    <div class=tasteometer ${tasteometer_lvl}">
-                        <p>Your musical compatibility with <strong>${header_user_data.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
-                        <div class="bar">
-                            <div class="fill" style="width: ${tasteometer_percent}"></div>
-                        </div>
-                        <p>Music you have in common includes ${tasteometer_artists[0].outerHTML}, ${tasteometer_artists[1].outerHTML} and ${tasteometer_artists[2].outerHTML}.</p>
-                    </div>
-                `);
-                col_main.insertBefore(profile_actions, recent_tracks);
 
                 /*let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
                 follow_button2.setAttribute('onclick', '_update_follow_btn(this)');
