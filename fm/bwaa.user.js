@@ -29,7 +29,15 @@ const trans = {
     en: {
         profile: {
             user_types: {
-                subscriber: 'Sponsored User'
+                user: 'User',
+                subscriber: 'Subscriber',
+                staff: 'Staff',
+                mod: 'Mod',
+                queen: 'bwaaaaaaaaaa!!',
+                cat: 'it\'s a kitty!!',
+                glaive: '#1 glaive fan',
+                paw: 'silly creature',
+                'colon-three': ':3²'
             },
             tasteometer: {
                 super: 'Super',
@@ -72,59 +80,43 @@ let profile_badges = {
             name: 'e'
         },
         {
-            type: 'queen',
-            name: 'blehhhhhhhhhh!!'
+            type: 'queen'
         }
     ],
     'Iexyy': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
+        type: 'cat'
     },
     'bIeak': [
         {
-            type: 'cat',
-            name: 'it\'s a kitty!!'
+            type: 'cat'
         },
         {
-            type: 'glaive',
-            name: '#1 glaive fan'
+            type: 'glaive'
         }
     ],
     'peoplepleasr': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
+        type: 'cat'
     },
     'twolay': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
+        type: 'cat'
     },
     'aoivee': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
+        type: 'cat'
     },
     'Serprety': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
+        type: 'cat'
     },
     'RazzBX': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
+        type: 'cat'
     },
     'ivyshandle': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'KuroinHeroin': {
-        type: 'mask',
-        name: 'kimchi lover'
+        type: 'cat'
     },
     'u5c': {
-        type: 'paw',
-        name: 'silly creature'
+        type: 'paw'
     },
     'destons': {
-        type: 'colon-three',
-        name: ':3²'
+        type: 'colon-three'
     }
 };
 
@@ -256,15 +248,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 return;
             recent_tracks.setAttribute('data-bwaa', 'true');
 
-            console.info('bwaa - profile has stock labels', header_user_data.labels);
-            let this_profile_badges = [];
-
-            let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
-            let user_is_staff = (profile_header.querySelector('.user-status-staff') != undefined);
-            let user_is_mod = (profile_header.querySelector('.user-status-mod') != undefined);
+            // user type
             let user_type = 'user';
-            if (user_is_subscriber || user_is_staff || user_is_mod)
-                user_type = 'subscriber';
 
             // custom badges
             if (profile_badges.hasOwnProperty(header_user_data.name)) {
@@ -272,16 +257,25 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     // default
                     console.info('bwaa - profile has 1 custom badge', profile_badges[header_user_data.name]);
 
-                    this_profile_badges.push(profile_badges[header_user_data.name]);
+                    user_type = profile_badges[header_user_data.name].type;
                 } else {
                     // multiple
                     console.info('bwaa - profile has multiple custom badges', profile_badges[header_user_data.name]);
-                    for (let badge_entry in profile_badges[header_user_data.name]) {
-                        this_profile_badges.push(profile_badges[header_user_data.name][badge_entry]);
-                    }
+
+                    user_type = profile_badges[header_user_data.name][profile_badges[header_user_data.name].length-1].type;
                 }
+            } else {
+                let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
+                let user_is_staff = (profile_header.querySelector('.user-status-staff') != undefined);
+                let user_is_mod = (profile_header.querySelector('.user-status-mod') != undefined);
+                if (user_is_staff)
+                    user_type = 'staff';
+                else if (user_is_mod)
+                    user_type = 'mod';
+                else if (user_is_subscriber)
+                    user_type = 'subscriber';
             }
-            console.info('bwaa - profile stock labels & custom badges', this_profile_badges);
+            console.info('bwaa - user is of type', user_type);
 
             let latest_chartlist_timestamp = document.body.querySelector('.chartlist-timestamp');
             let scrobbling_now = latest_chartlist_timestamp.querySelector('.chartlist-now-scrobbling');
@@ -296,6 +290,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             new_header.innerHTML = (`
                 <div class="badge-avatar">
                     <img src="${header_user_data.avatar.getAttribute('src')}" alt="${header_user_data.avatar.getAttribute('alt')}">
+                    <div class="user-type user-type--${user_type}">
+                        <a>${trans[lang].profile.user_types[user_type]}</a>
+                    </div>
                 </div>
                 <div class="badge-info">
                     <h1>${header_user_data.name}</h1>
@@ -318,7 +315,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         </div>
                     </div>
                     <div class="user-activity">
-                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${header_user_data.loved_tracks.textContent} Loved Tracks</a> | <a href="${header_user_data.artists.getAttribute('href')}">${header_user_data.artists.textContent} Artists</a> | <a href="${header_user_data.link}/shoutbox">Shoutbox</a>
+                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${header_user_data.loved_tracks.textContent} Loved Tracks</a> | <a href="${header_user_data.artists.getAttribute('href')}">${header_user_data.artists.textContent} Artists</a> | <a href="${header_user_data.link}/shoutbox">Shouts</a>
                     </div>
                 </div>
             `);
@@ -360,12 +357,12 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             }
 
             // user type
-            if (user_type != 'user') {
+            /*if (user_type != 'user') {
                 let user_type_banner = document.createElement('div');
                 user_type_banner.classList.add('user-type-banner', `user-type--${user_type}`);
                 user_type_banner.textContent = trans[lang].profile.user_types[user_type];
                 row.insertBefore(user_type_banner, col_main);
-            }
+            }*/
         } else {
             // profile non-overview stuff
 
