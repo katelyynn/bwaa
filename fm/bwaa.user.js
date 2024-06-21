@@ -30,6 +30,14 @@ const trans = {
         profile: {
             user_types: {
                 subscriber: 'Sponsored User'
+            },
+            tasteometer: {
+                super: 'Super',
+                very_high: 'Very High',
+                high: 'High',
+                medium: 'Medium',
+                low: 'Low',
+                very_low: 'Very Low'
             }
         }
     }
@@ -122,6 +130,7 @@ let profile_badges = {
 
 // use the top-right link to determine the current user
 let auth = '';
+let auth_link = '';
 
 let bwaa_url = 'https://www.last.fm/bwaa';
 let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
@@ -129,7 +138,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 (function() {
     'use strict';
 
-    auth = document.querySelector('a.auth-link img').getAttribute('alt');
+    auth_link = document.querySelector('a.auth-link');
+    auth = auth_link.querySelector('img').getAttribute('alt');
     console.info('bwaa - auth', auth);
     bwaa();
 
@@ -232,6 +242,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             let header_user_data = {
                 avatar: profile_header.querySelector('.avatar img'),
                 name: profile_header.querySelector('.header-title a').textContent,
+                link: profile_header.querySelector('.header-title a').getAttribute('href'),
                 display_name: profile_header.querySelector('.header-title-display-name').textContent,
                 since: profile_header.querySelector('.header-scrobble-since').textContent,
                 scrobbles: header_metadata[0],
@@ -270,6 +281,14 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             }
             console.info('bwaa - profile stock labels & custom badges', this_profile_badges);
 
+            let latest_chartlist_timestamp = document.body.querySelector('.chartlist-timestamp');
+            let scrobbling_now = latest_chartlist_timestamp.querySelector('.chartlist-now-scrobbling');
+            let last_seen = '';
+            if (scrobbling_now == undefined)
+                last_seen = latest_chartlist_timestamp.querySelector('span').textContent;
+            else
+                last_seen = 'Active now';
+
             let new_header = document.createElement('section');
             new_header.classList.add('profile-header-section');
             new_header.innerHTML = (`
@@ -283,7 +302,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                             <strong>${header_user_data.display_name}</strong>, cutensilly.org
                         </div>
                         <div class="bottom user-last-seen">
-                        Last seen: {}
+                        Last seen: ${last_seen}
                         </div>
                     </div>
                     <div class="user-data">
@@ -297,7 +316,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         </div>
                     </div>
                     <div class="user-activity">
-                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${header_user_data.loved_tracks.textContent} Loved Tracks</a> | <a href="${header_user_data.artists.getAttribute('href')}">${header_user_data.artists.textContent} Artists</a> | <a>Shoutbox</a>
+                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${header_user_data.loved_tracks.textContent} Loved Tracks</a> | <a href="${header_user_data.artists.getAttribute('href')}">${header_user_data.artists.textContent} Artists</a> | <a href="${header_user_data.link}/shoutbox">Shoutbox</a>
                     </div>
                 </div>
             `);
@@ -305,6 +324,38 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, recent_tracks);
             profile_header.style.setProperty('display', 'none');
+
+            if (auth != header_user_data.name) {
+                let follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]').outerHTML;
+
+                let tasteometer = profile_header.querySelector('.tasteometer');
+                let tasteometer_percent = tasteometer.querySelector('.tasteometer-viz').getAttribute('title');
+                let tasteometer_lvl = tasteometer.classList[1];
+
+                let profile_actions = document.createElement('section');
+                profile_actions.classList.add('profile-actions-section');
+                profile_actions.innerHTML = (`
+                    <div class="options">
+                        ${follow_button}
+                        <a class="has-icon leave-a-shout" href="${header_user_data.link}/shoutbox">Leave a shout</a>
+                    </div>
+                    <div class=tasteometer ${tasteometer_lvl}">
+                        <p>Your musical compatibility with <strong>${header_user_data.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
+                        <div class="bar">
+                            <div class="fill" style="width: ${tasteometer_percent}"></div>
+                        </div>
+                    </div>
+                `);
+                col_main.insertBefore(profile_actions, recent_tracks);
+
+                let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
+                follow_button2.setAttribute('onclick', '_update_follow_btn(this)');
+                console.info(follow_button2, follow_button2.getAttribute('data-analytics-action'), follow_button2.getAttribute('data-analytics-action') == 'UnfollowUser');
+                if (follow_button2.getAttribute('data-analytics-action') == 'UnfollowUser')
+                    follow_button2.textContent = 'You are friends';
+                else
+                    follow_button2.textContent = 'Add as friend';
+            }
 
             // user type
             if (user_type != 'user') {
@@ -316,6 +367,13 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         } else {
             // profile non-overview stuff
         }
+    }
+
+    unsafeWindow._update_follow_btn = function(button) {
+        if (button.getAttribute('data-analytics-action') == 'UnfollowUser')
+            button.textContent = 'You are friends';
+        else
+            button.textContent = 'Add as friend';
     }
 
     function scrobble_flip(element) {
