@@ -303,9 +303,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 if (scrobbling_now == undefined)
                     last_seen = latest_chartlist_timestamp.querySelector('span').textContent;
                 else
-                    last_seen = 'Active now';
+                    last_seen = 'active now';
             } else {
-                last_seen = 'Unknown';
+                last_seen = 'unknown o.O';
             }
 
 

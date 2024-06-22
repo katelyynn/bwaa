@@ -1730,8 +1730,7 @@
     }
 
 
-    .header-new-bookmark-button,
-    button {
+    .header-new-bookmark-button {
         min-width: unset;
         font: inherit;
         width: fit-content;
