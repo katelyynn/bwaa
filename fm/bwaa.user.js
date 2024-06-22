@@ -817,6 +817,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             button.innerHTML = '<strong>Added to my Library</strong>'
         }
     }
+    function update_love_btn(button) {
+        let action = button.getAttribute('data-analytics-action');
+        console.info('action', action);
+        if (action.startsWith('Love')) {
+            button.innerHTML = '<strong>Love this track</strong>';
+        } else {
+            button.innerHTML = '<strong>You love this track</strong>'
+        }
+    }
 
 
 
@@ -1179,6 +1188,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             let play_on_spotify = document.body.querySelector('.play-this-track-playlink--spotify');
             let play_on_apple_music = document.body.querySelector('.play-this-track-playlink--itunes');
 
+            let header_actions = track_header.querySelectorAll('.header-new-actions > [data-toggle-button=""]');
+
             let new_header = document.createElement('section');
             new_header.classList.add('profile-track-section');
             new_header.innerHTML = (`
@@ -1191,6 +1202,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     <div class="track-info">
                         <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a></h1>
                         <p>On ${header_track_data.album_amount} albums <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
+                        <div class="actions">
+                            ${header_actions[0].outerHTML}
+                            ${header_actions[1].outerHTML}
+                        </div>
                     </div>
                 </div>
                 <div class="tags">
@@ -1245,6 +1260,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             track_header.style.setProperty('display', 'none');
+
+            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
+            col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
+                update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
+            });
+            update_love_btn(col_main.querySelector('.header-new-love-button'));
+            col_main.querySelector('.header-new-love-button').addEventListener('click', (e) => {
+                update_love_btn(col_main.querySelector('.header-new-love-button'));
+            });
 
             // sidebar
             let my_avi = auth_link.querySelector('img').getAttribute('src');
