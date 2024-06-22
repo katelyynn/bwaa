@@ -563,6 +563,57 @@
                 background-position: 0 -420px;
             }
         }
+
+
+        .masthead-search-toggle {
+            display: none;
+        }
+        .masthead-search-form {
+            display: flex !important;
+            left: unset !important;
+            bottom: unset !important;
+            top: 46px !important;
+            right: 15px !important;
+            width: 211px;
+            height: 22px;
+            background: unset;
+
+            input {
+                width: 190px;
+                height: 22px;
+                line-height: 15px;
+                padding: 4px 5px 3px 5px;
+                margin: 0;
+                border: 0;
+                font-size: 11px;
+                background-image: var(--cdn-flatness-header-headersprite);
+                background-position: 0 -450px;
+                background-repeat: no-repeat;
+                outline: none;
+                color: #000;
+
+                &::placeholder {
+                    color: #999;
+                }
+            }
+            button {
+                width: 21px;
+                height: 22px;
+                padding: 0;
+                margin: 0;
+                border: 0;
+                opacity: unset !important;
+                background-image: var(--cdn-flatness-header-headersprite);
+                background-position: -42px -420px;
+                background-repeat: no-repeat;
+                outline: none;
+                cursor: pointer;
+
+                &:before {
+                    display: none;
+                }
+            }
+        }
     }
 
     /* chartlist */
@@ -1251,9 +1302,33 @@
         border: none;
         min-height: unset;
 
+        .shout-user {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 2px;
+            margin: 0 0 3px;
+            font-size: 12px;
+            line-height: 18px;
+
+            a {
+                color: #0187c5;
+            }
+        }
+
+        .shout-body {
+            font-size: 13px;
+            line-height: 18px;
+            color: #333;
+        }
+
+        .shout-reply, .shout-action,
+        .shout-timestamp {
+            font-size: 11px;
+            color: #999 !important;
+        }
+
         .shout-user-avatar {
             position: static;
-            margin-top: -21px;
+            margin-top: -24px;
             margin-left: -80px;
             width: 68px;
             height: unset;
