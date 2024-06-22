@@ -587,6 +587,74 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             artist_header.style.setProperty('display', 'none');
 
             // sidebar
+            let listeners_placeholder = document.createElement('div');
+            listeners_placeholder.classList.add('top-listeners');
+            let listeners_you_know_list = col_main.querySelectorAll('.personal-stats-listener');
+            console.info(listeners_you_know_list);
+            let listener_index = 0;
+            listeners_you_know_list.forEach((listener) => {
+                if (listener_index == 4)
+                    return;
+
+                let avi = listener.querySelector('img').getAttribute('src');
+                let name = listener.querySelector('img').getAttribute('alt');
+                let link = listener.querySelector('a').getAttribute('href');
+
+                console.info(name);
+
+                let listener_element = document.createElement('div');
+                listener_element.classList.add('listener');
+                listener_element.innerHTML = (`
+                    <div class="image">
+                        <img src="${avi}">
+                    </div>
+                    <div class="info">
+                        <a class="user" href="${auth_link.getAttribute('href').replace(auth, name)}">${name}</a>
+                        <a class="scrobbles" href="${link}">Top Listener</a>
+                    </div>
+                `);
+                listeners_placeholder.appendChild(listener_element);
+
+                listener_index += 1;
+            });
+
+            let more_listeners = col_main.querySelector('.personal-stats-item--listeners .header-metadata-display a');
+            let listeners_you_know = document.createElement('section');
+            listeners_you_know.innerHTML = (`
+                <h2>Listeners You Know</h2>
+                ${listeners_placeholder.outerHTML}
+                <div class="module-options">
+                    <a href="${more_listeners.getAttribute('href')}">See ${more_listeners.textContent} more</a>
+                </div>
+            `);
+            col_sidebar.insertBefore(listeners_you_know, col_sidebar.firstChild);
+
+            let my_avi = col_main.querySelector('.personal-stats-avatar img').getAttribute('src');
+            let scrobble_count_element = col_main.querySelector('.header-metadata-display a');
+            let scrobble_count = 0;
+            let scrobble_link = '';
+            if (scrobble_count_element != undefined) {
+                scrobble_count = scrobble_count_element.textContent;
+                scrobble_link = scrobble_count_element.getAttribute('href');
+            }
+
+            let your_scrobbles = document.createElement('section');
+            your_scrobbles.innerHTML = (`
+                <h2>Your Scrobbles</h2>
+                <div class="listeners-container">
+                    <div class="listener">
+                        <div class="image">
+                            <img src="${my_avi}">
+                        </div>
+                        <div class="info">
+                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="scrobbles" href="${scrobble_link}">${scrobble_count} scrobbles</a>
+                        </div>
+                    </div>
+                </div>
+            `);
+            col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
+
             let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
 
             let artist_stats = document.createElement('section');
@@ -736,6 +804,32 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             album_header.style.setProperty('display', 'none')
 
             // sidebar
+            let my_avi = col_main.querySelector('.personal-stats-avatar img').getAttribute('src');
+            let scrobble_count_element = col_main.querySelector('.header-metadata-display a');
+            let scrobble_count = 0;
+            let scrobble_link = '';
+            if (scrobble_count_element != undefined) {
+                scrobble_count = scrobble_count_element.textContent;
+                scrobble_link = scrobble_count_element.getAttribute('href');
+            }
+
+            let your_scrobbles = document.createElement('section');
+            your_scrobbles.innerHTML = (`
+                <h2>Your Scrobbles</h2>
+                <div class="listeners-container">
+                    <div class="listener">
+                        <div class="image">
+                            <img src="${my_avi}">
+                        </div>
+                        <div class="info">
+                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="scrobbles" href="${scrobble_link}">${scrobble_count} scrobbles</a>
+                        </div>
+                    </div>
+                </div>
+            `);
+            col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
+
             let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
 
             let album_stats = document.createElement('section');
@@ -888,6 +982,32 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             track_header.style.setProperty('display', 'none');
 
             // sidebar
+            let my_avi = col_main.querySelector('.personal-stats-avatar img').getAttribute('src');
+            let scrobble_count_element = col_main.querySelector('.header-metadata-display a');
+            let scrobble_count = 0;
+            let scrobble_link = '';
+            if (scrobble_count_element != undefined) {
+                scrobble_count = scrobble_count_element.textContent;
+                scrobble_link = scrobble_count_element.getAttribute('href');
+            }
+
+            let your_scrobbles = document.createElement('section');
+            your_scrobbles.innerHTML = (`
+                <h2>Your Scrobbles</h2>
+                <div class="listeners-container">
+                    <div class="listener">
+                        <div class="image">
+                            <img src="${my_avi}">
+                        </div>
+                        <div class="info">
+                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="scrobbles" href="${scrobble_link}">${scrobble_count} scrobbles</a>
+                        </div>
+                    </div>
+                </div>
+            `);
+            col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
+
             let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
 
             let track_stats = document.createElement('section');
