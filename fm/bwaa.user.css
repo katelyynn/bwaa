@@ -1667,6 +1667,7 @@
         }
     }
 
+    .section-with-separator:has(.listeners-section),
     .personal-stats {
         display: none;
     }

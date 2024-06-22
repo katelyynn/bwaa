@@ -587,6 +587,48 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             artist_header.style.setProperty('display', 'none');
 
             // sidebar
+            let top_global_listeners_placeholder = document.createElement('div');
+            top_global_listeners_placeholder.classList.add('top-listeners');
+            let top_global_listeners_you_know_list = document.body.querySelectorAll('.listeners-section-item');
+            console.info(top_global_listeners_you_know_list);
+            let top_global_listener_index = 0;
+            top_global_listeners_you_know_list.forEach((listener) => {
+                if (top_global_listener_index == 4)
+                    return;
+
+                let avi = listener.querySelector('img').getAttribute('src');
+                let name = listener.querySelector('.listeners-section-item-name a').textContent;
+                let link = listener.querySelector('.listeners-section-track a').getAttribute('href');
+
+                console.info(name);
+
+                let listener_element = document.createElement('div');
+                listener_element.classList.add('listener');
+                listener_element.innerHTML = (`
+                    <div class="image">
+                        <img src="${avi}">
+                    </div>
+                    <div class="info">
+                        <a class="user" href="${auth_link.getAttribute('href').replace(auth, name)}">${name}</a>
+                        <a class="scrobbles" href="${link}">Top Listener</a>
+                    </div>
+                `);
+                top_global_listeners_placeholder.appendChild(listener_element);
+
+                top_global_listener_index += 1;
+            });
+
+            let top_global_listeners_you_know = document.createElement('section');
+            top_global_listeners_you_know.innerHTML = (`
+                <h2>Top Listeners</h2>
+                ${top_global_listeners_placeholder.outerHTML}
+                <div class="module-options">
+                    <a href="${window.location.href}/+listeners">See more</a>
+                </div>
+            `);
+            col_sidebar.insertBefore(top_global_listeners_you_know, col_sidebar.firstChild);
+
+            // listeners you! know
             let listeners_placeholder = document.createElement('div');
             listeners_placeholder.classList.add('top-listeners');
             let listeners_you_know_list = col_main.querySelectorAll('.personal-stats-listener');
