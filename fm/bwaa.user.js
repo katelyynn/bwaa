@@ -1171,7 +1171,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             let track_video_element = document.body.querySelector('.video-preview');
             let track_video = '';
-            if (track_video != undefined)
+            if (track_video_element != null)
                 track_video = track_video_element.outerHTML;
 
 
