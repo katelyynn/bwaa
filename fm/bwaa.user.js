@@ -756,6 +756,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main');
+        let col_sidebar = document.body.querySelector('.col-sidebar');
 
         let navlist = track_header.querySelector('.navlist');
         if (!is_subpage) {
