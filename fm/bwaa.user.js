@@ -915,7 +915,57 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
-            album_header.style.setProperty('display', 'none')
+            album_header.style.setProperty('display', 'none');
+
+
+            // about this album
+            let release_year = 0;
+            let release_date = 'never :(';
+            let track_count = 'No tracks';
+            let album_length = '0:00'
+
+            let meta = col_main.querySelectorAll('.metadata-column .catalogue-metadata-description');
+            meta.forEach((meta_item, index) => {
+                let meta_text = meta_item.textContent;
+
+                if (index == 0) {
+                    // track count & length
+                    let split = meta_text.split(',');
+
+                    track_count = split[0];
+                    album_length = split[1].trim();
+                } else {
+                    // release date
+                    release_date = meta_text;
+                    release_year = new Date(release_date).getFullYear();
+                }
+            })
+
+            let about_this_album = document.createElement('section');
+            about_this_album.classList.add('about-this-album');
+            about_this_album.innerHTML = (`
+                <h2><a href="${window.location.href}/+wiki">About this album</a></h2>
+                <div class="label-container">
+                    <div class="image">
+                        <img src="https://lastfm.freetls.fastly.net/i/u/avatar300s/2a96cbd8b46e442fc41c2b86b821562f.jpg">
+                    </div>
+                    <div class="info">
+                        <div class="label-release">
+                            <a>No label</a> (${release_year})
+                        </div>
+                        <p>Released: ${release_date}</p>
+                        <p>${track_count}</p>
+                        <p>(${album_length})</p>
+                    </div>
+                </div>
+                <div class="wiki">
+                    ${col_main.querySelector('.wiki-block.visible-lg').outerHTML}
+                </div>
+            `);
+            document.getElementById('tracklist').after(about_this_album);
+
+
+
 
             // sidebar
             let my_avi = auth_link.querySelector('img').getAttribute('src');

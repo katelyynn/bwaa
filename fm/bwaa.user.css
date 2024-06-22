@@ -847,6 +847,7 @@
 
     /* section */
     .col-main {
+        #tracklist,
         .profile-mobile-featured-track + section,
         .profile-mobile-featured-track + p, /* private tracks */
         section + p,
@@ -860,6 +861,13 @@
         /* private tracks */
         .profile-mobile-featured-track + .no-data-message {
             width: calc(100% + 30px);
+        }
+    }
+    #tracklist {
+        margin-top: unset !important;
+
+        .col-main.buffer-standard:has(&) {
+            margin-top: unset !important;
         }
     }
 
@@ -915,6 +923,10 @@
         .col-sidebar & {
             font-size: 14px;
             line-height: 18px;
+        }
+
+        a {
+            color: inherit !important;
         }
     }
 
@@ -1762,6 +1774,33 @@
 
         &:before {
             display: none;
+        }
+    }
+
+
+    .about-this-album {
+        .label-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 14px;
+
+            &:has(.label-release a:hover) {
+                border-color: #0187c5;
+            }
+
+            .image {
+                flex-shrink: 0;
+
+                img {
+                    width: 34px;
+                    padding: 1px;
+                    border: 1px solid #ccc;
+                }
+            }
+            .info {
+                flex: 1;
+                font-size: 11px;
+            }
         }
     }
 }
