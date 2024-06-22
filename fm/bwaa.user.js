@@ -1196,6 +1196,12 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             let header_actions = track_header.querySelectorAll('.header-new-actions > [data-toggle-button=""]');
 
+            let first_meta = col_main.querySelector('.catalogue-metadata-description');
+            console.info(first_meta, first_meta.querySelector('a'));
+            let track_length = '';
+            if (first_meta.querySelector('a') == null)
+                track_length = ` (${first_meta.textContent.trim()})`;
+
             let new_header = document.createElement('section');
             new_header.classList.add('profile-track-section');
             new_header.innerHTML = (`
@@ -1206,7 +1212,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         </a>
                     </div>
                     <div class="track-info">
-                        <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a></h1>
+                        <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a>${track_length}</h1>
                         <p>On ${header_track_data.album_amount} albums <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
                         <div class="actions">
                             ${header_actions[0].outerHTML}
@@ -1279,6 +1285,18 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             col_main.querySelector('.header-new-love-button').addEventListener('click', (e) => {
                 update_love_btn(col_main.querySelector('.header-new-love-button'));
             });
+
+
+            // about this track
+            let about_this_track = document.createElement('section');
+            about_this_track.classList.add('about-this-track');
+            about_this_track.innerHTML = (`
+                <h2><a href="${window.location.href}/+wiki">About this track</a></h2>
+                <div class="wiki">
+                    ${col_main.querySelector('.wiki-block.visible-lg').outerHTML}
+                </div>
+            `);
+            new_header.after(about_this_track);
 
             // sidebar
             let my_avi = auth_link.querySelector('img').getAttribute('src');

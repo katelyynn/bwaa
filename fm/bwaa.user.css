@@ -1335,7 +1335,8 @@
     }
 
     .profile-album-section ~ .section-with-separator:has(.metadata-and-wiki-row),
-    .metadata-and-wiki-row--artist, .metadata-and-wiki-row--artist + .section-with-separator,
+    .metadata-and-wiki-row + .row,
+    .metadata-and-wiki-row, .metadata-and-wiki-row--artist + .section-with-separator,
     .masonry-right.col-sidebar {
         display: none;
     }
