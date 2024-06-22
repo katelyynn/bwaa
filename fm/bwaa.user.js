@@ -318,6 +318,16 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 let tasteometer_lvl = tasteometer.classList[1];
 
                 let tasteometer_artists = tasteometer.querySelectorAll('.tasteometer-shared-artists a');
+                let music_you_have_in_common = 'You have no music in common :(';
+                if (tasteometer_artists.length > 0) {
+                    music_you_have_in_common = `Music you have in common includes ${tasteometer_artists[0].outerHTML}`;
+                    if (tasteometer_artists.length > 1) {
+                        music_you_have_in_common = `${music_you_have_in_common}, ${tasteometer_artists[1].outerHTML}`;
+                        if (tasteometer_artists.length > 2) {
+                            music_you_have_in_common = `${music_you_have_in_common}, and ${tasteometer_artists[2].outerHTML}.`;
+                        }
+                    }
+                }
 
                 let profile_actions = document.createElement('section');
                 profile_actions.classList.add('profile-actions-section');
@@ -331,7 +341,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         <div class="bar">
                             <div class="fill" style="width: ${tasteometer_percent}"></div>
                         </div>
-                        <p>Music you have in common includes ${tasteometer_artists[0].outerHTML}, ${tasteometer_artists[1].outerHTML} and ${tasteometer_artists[2].outerHTML}.</p>
+                        <p>${music_you_have_in_common}</p>
                     </div>
                 `);
                 col_main.insertBefore(profile_actions, col_main.firstChild);
