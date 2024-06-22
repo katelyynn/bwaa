@@ -1582,6 +1582,8 @@
     }
 
     .top-listeners {
+        margin-left: unset;
+        margin-right: unset;
         margin-top: 12px;
         /*margin-bottom: 24px;*/
         display: grid;
