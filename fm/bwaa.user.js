@@ -846,8 +846,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             album_header.style.setProperty('display', 'none')
 
             // sidebar
-            let my_avi = col_main.querySelector('.personal-stats-avatar img').getAttribute('src');
-            let scrobble_count_element = col_main.querySelector('.header-metadata-display a');
+            let my_avi = auth_link.querySelector('img').getAttribute('src');
+            let scrobble_count_element = col_main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -1024,8 +1024,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             track_header.style.setProperty('display', 'none');
 
             // sidebar
-            let my_avi = col_main.querySelector('.personal-stats-avatar img').getAttribute('src');
-            let scrobble_count_element = col_main.querySelector('.header-metadata-display a');
+            let my_avi = auth_link.querySelector('img').getAttribute('src');
+            let scrobble_count_element = col_main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
