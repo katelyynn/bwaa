@@ -756,7 +756,6 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main');
-        let col_sidebar = document.body.querySelector('.col-sidebar');
 
         let navlist = track_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -797,6 +796,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         }
 
         if (!is_subpage) {
+            let col_sidebar = document.body.querySelector('.col-sidebar.buffer-standard');
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
             let avatar_element = document.body.querySelector('.source-album-art img');
@@ -834,6 +834,31 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             track_header.style.setProperty('display', 'none');
+
+            // sidebar
+            let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
+
+            let track_stats = document.createElement('section');
+            track_stats.innerHTML = (`
+                <h2>Track Stats</h2>
+                <div class="stats-container">
+                    <div class="scrobbles-and-listeners">
+                        <div class="scrobbles">
+                            <h1>${header_track_data.plays}</h1>
+                            <p>Scrobbles</p>
+                        </div>
+                        <div class="listeners">
+                            <h1>${header_track_data.listeners}</h1>
+                            <p>Listeners</p>
+                        </div>
+                    </div>
+                    <div class="recent-listening-trend">
+                        <p>Recent Listening Trend</p>
+                        ${listener_trend}
+                    </div>
+                </div>
+            `);
+            col_sidebar.insertBefore(track_stats, col_sidebar.firstChild);
         } else {
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
