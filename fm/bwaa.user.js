@@ -153,6 +153,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_artists();
             bwaa_albums();
             bwaa_tracks();
+            bwaa_shouts();
         }
 
         // last.fm is a single page application
@@ -176,6 +177,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_artists();
                                 bwaa_albums();
                                 bwaa_tracks();
+                                bwaa_shouts();
                             }
                         }
                     }
@@ -349,7 +351,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             new_header.classList.add('profile-header-section');
             new_header.innerHTML = (`
                 <div class="badge-avatar">
-                    <img src="${header_user_data.avatar.getAttribute('src')}" alt="${header_user_data.avatar.getAttribute('alt')}">
+                    <img src="${header_user_data.avatar.getAttribute('src').replace('/i/u/avatar170s/', '/i/u/ar0/')}" alt="${header_user_data.avatar.getAttribute('alt')}">
                     <div class="user-type user-type--${user_type}">
                         <a>${trans[lang].profile.user_types[user_type]}</a>
                     </div>
@@ -863,5 +865,21 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
         }
+    }
+
+
+    function bwaa_shouts() {
+        // avatars
+        let shout_avatars = document.body.querySelectorAll('.shout-user-avatar img');
+        shout_avatars.forEach((shout_avatar) => {
+            if (shout_avatar.hasAttribute('data-bwaa'))
+                return;
+            shout_avatar.setAttribute('data-bwaa', 'true');
+
+            // this allows shout avatars to be varied in shape
+            let src = shout_avatar.getAttribute('src');
+            src = src.replace('/i/u/avatar70s/', '/i/u/ar0/');
+            shout_avatar.setAttribute('src', src);
+        });
     }
 })();

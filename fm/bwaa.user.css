@@ -108,10 +108,14 @@
         padding: 0 0 15px 0;
         margin: unset;
 
+        & + .profile-mobile-featured-track + section {
+            margin-top: unset !important;
+        }
+
         .badge-avatar {
             img {
                 width: 130px;
-                height: 130px;
+                height: unset;
                 padding: 1px;
                 border: 1px solid #ccc;
             }
@@ -563,6 +567,8 @@
 
     /* chartlist */
     .chartlist {
+        margin-top: calc(15px + 7px);
+
         .chartlist-row {
             padding: unset !important;
             align-items: start;
@@ -690,8 +696,9 @@
     }
 
     /* section */
-    .col-main, .col-sidebar {
-        section + .profile-mobile-featured-track + p, /* private tracks */
+    .col-main {
+        .profile-mobile-featured-track + section,
+        .profile-mobile-featured-track + p, /* private tracks */
         section + p,
         section + ul,
         section + section {
@@ -1233,6 +1240,36 @@
                     background-repeat: no-repeat;
                     background-position: left top;
                 }
+            }
+        }
+    }
+
+    /* shouts */
+    .shout {
+        margin: 0 0 12px 0;
+        padding: 0 0 6px 80px;
+        border: none;
+        min-height: unset;
+
+        .shout-user-avatar {
+            position: static;
+            margin-top: -21px;
+            margin-left: -80px;
+            width: 68px;
+            height: unset;
+            float: left;
+
+            img {
+                position: static;
+                width: 68px;
+                height: unset;
+                padding: 1px;
+                border: 1px solid #ccc;
+                border-radius: unset;
+            }
+
+            &:after {
+                display: none;
             }
         }
     }
