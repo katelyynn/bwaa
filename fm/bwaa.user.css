@@ -1334,6 +1334,8 @@
         }
     }
 
+    form[action*="/playlists/create/"],
+    .external-links-section:has(.play-this-track-playlinks),
     .profile-album-section ~ .section-with-separator:has(.metadata-and-wiki-row),
     .metadata-and-wiki-row + .row,
     .metadata-and-wiki-row, .metadata-and-wiki-row--artist + .section-with-separator,
