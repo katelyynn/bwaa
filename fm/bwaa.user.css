@@ -1459,6 +1459,11 @@
     }
 
 
+    .subpage-title {
+        display: none;
+    }
+
+
     /* track / whatever stats */
     .stats-container {
         display: flex;
