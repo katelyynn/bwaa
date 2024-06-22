@@ -592,7 +592,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`
+            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`;
 
 
             let new_header = document.createElement('section');
@@ -811,7 +811,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
     function update_bookmark_btn(button) {
         let action = button.getAttribute('data-analytics-action');
         console.info('action', action);
-        if (action == 'BookmarkArtist') {
+        if (action.startsWith('Bookmark')) {
             button.innerHTML = '<strong>Add to my Library</strong>';
         } else {
             button.innerHTML = '<strong>Added to my Library</strong>'
@@ -883,7 +883,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             let add_artwork = '';
             if (avatar_element != undefined) {
                 avatar = avatar_element.getAttribute('src');
-                add_artwork = document.body.querySelector('.album-overview-cover-art-gallery-action a').getAttribute('href');
+                add_artwork = document.body.querySelector('.album-overview-cover-art a').getAttribute('href');
             }
 
             let header_album_data = {
@@ -910,7 +910,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`
+            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`;
 
 
             let new_header = document.createElement('section');
@@ -966,7 +966,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     let split = meta_text.split(',');
 
                     track_count = split[0];
-                    album_length = split[1].trim();
+                    if (split.length > 1)
+                        album_length = split[1].trim();
                 } else {
                     // release date
                     release_date = meta_text;
@@ -1158,6 +1159,26 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 album_amount: parseInt(document.body.querySelectorAll('.source-album').length) - 1
             }
 
+
+            let tags_html = '';
+            let tags = col_main.querySelectorAll('.tag a');
+
+            let index = 1;
+            tags.forEach((tag) => {
+                if (index == 1)
+                    tags_html = `${tags_html} <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+                else
+                    tags_html = `${tags_html}, <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+                index += 1;
+            });
+
+            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`;
+
+
+            let play_on_youtube = document.body.querySelector('.play-this-track-playlink--youtube');
+            let play_on_spotify = document.body.querySelector('.play-this-track-playlink--spotify');
+            let play_on_apple_music = document.body.querySelector('.play-this-track-playlink--itunes');
+
             let new_header = document.createElement('section');
             new_header.classList.add('profile-track-section');
             new_header.innerHTML = (`
@@ -1170,6 +1191,53 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     <div class="track-info">
                         <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a></h1>
                         <p>On ${header_track_data.album_amount} albums <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
+                    </div>
+                </div>
+                <div class="tags">
+                    Popular tags: ${tags_html}
+                </div>
+                <div class="shouts">
+                    Shouts: <a href="${window.location.href}/+shoutbox">Leave a shout</a>
+                </div>
+                <div class="share-bar">
+                    <strong>Share this artist:</strong>
+                </div>
+                <div class="playback">
+                    <div class="playback-item">
+                        ${(!play_on_youtube.classList.contains('play-this-track-playlink--disabled'))
+                        ? `<a class="provider provider--youtube" href="${play_on_youtube.getAttribute('href')}" target="_blank">
+                            Play on <strong>YouTube</strong>
+                        </a>`
+                        : `<a class="provider provider--youtube" href="${play_on_youtube.getAttribute('href')}" data-open-modal="${play_on_youtube.getAttribute('data-open-modal')}">
+                            Add a <strong>YouTube</strong> link
+                        </a>`}
+                        <div class="note">
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a>
+                        </div>
+                    </div>
+                    <div class="playback-item">
+                        ${(!play_on_spotify.classList.contains('play-this-track-playlink--disabled'))
+                        ? `<a class="provider provider--spotify" href="${play_on_spotify.getAttribute('href')}" target="_blank">
+                            Play on <strong>Spotify</strong>
+                        </a>`
+                        : `<a class="provider provider--spotify" href="${play_on_spotify.getAttribute('href')}" data-open-modal="${play_on_spotify.getAttribute('data-open-modal')}">
+                            Add a <strong>Spotify</strong> link
+                        </a>`}
+                        <div class="note">
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a>
+                        </div>
+                    </div>
+                    <div class="playback-item">
+                        ${(!play_on_apple_music.classList.contains('play-this-track-playlink--disabled'))
+                        ? `<a class="provider provider--apple-music" href="${play_on_apple_music.getAttribute('href')}" target="_blank">
+                            Play on <strong>Apple Music</strong>
+                        </a>`
+                        : `<a class="provider provider--apple-music" href="${play_on_apple_music.getAttribute('href')}" data-open-modal="${play_on_apple_music.getAttribute('data-open-modal')}">
+                            Add an <strong>Apple Music</strong> link
+                        </a>`}
+                        <div class="note">
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a>
+                        </div>
                     </div>
                 </div>
             `);
