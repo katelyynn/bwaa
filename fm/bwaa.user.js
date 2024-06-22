@@ -566,6 +566,22 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
             }
 
+
+            let tags_html = '';
+            let tags = col_main.querySelectorAll('.tag a');
+
+            let index = 1;
+            tags.forEach((tag) => {
+                if (index == 1)
+                    tags_html = `${tags_html} <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+                else
+                    tags_html = `${tags_html}, <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+                index += 1;
+            });
+
+            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`
+
+
             let new_header = document.createElement('section');
             new_header.classList.add('profile-artist-section');
             new_header.innerHTML = (`
@@ -573,6 +589,21 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     <h1>${header_artist_data.name}</h1>
                     <div class="stats">
                         ${header_artist_data.plays} plays (${header_artist_data.listeners} listeners)
+                    </div>
+                    <div class="actions">
+                        ${artist_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
+                    </div>
+                    <div class="wiki">
+                        ${col_main.querySelector('.wiki-block.visible-lg').outerHTML}
+                    </div>
+                    <div class="tags">
+                        Popular tags: ${tags_html}
+                    </div>
+                    <div class="shouts">
+                        Shouts: <a href="${window.location.href}/+shoutbox">Leave a shout</a>
+                    </div>
+                    <div class="share-bar">
+                        <strong>Share this artist:</strong>
                     </div>
                 </div>
                 <div class="artist-image-side">
@@ -595,6 +626,11 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             artist_header.style.setProperty('display', 'none');
+
+            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
+            col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
+                update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
+            })
 
             // sidebar
             let top_global_listeners_placeholder = document.createElement('div');
@@ -757,6 +793,18 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             document.body.querySelector('.container.page-content').classList.add('subpage');
         }
     }
+
+    function update_bookmark_btn(button) {
+        let action = button.getAttribute('data-analytics-action');
+        console.info('action', action);
+        if (action == 'BookmarkArtist') {
+            button.innerHTML = '<strong>Add to my Library</strong>';
+        } else {
+            button.innerHTML = '<strong>Added to my Library</strong>'
+        }
+    }
+
+
 
     function bwaa_albums() {
         let album_header = document.body.querySelector('.header-new--album');
