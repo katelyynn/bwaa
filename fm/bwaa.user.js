@@ -644,7 +644,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
             col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
                 update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
-            })
+            });
 
             // sidebar
             let top_global_listeners_placeholder = document.createElement('div');
@@ -897,6 +897,22 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 add_artwork: add_artwork
             }
 
+
+            let tags_html = '';
+            let tags = col_main.querySelectorAll('.tag a');
+
+            let index = 1;
+            tags.forEach((tag) => {
+                if (index == 1)
+                    tags_html = `${tags_html} <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+                else
+                    tags_html = `${tags_html}, <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+                index += 1;
+            });
+
+            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`
+
+
             let new_header = document.createElement('section');
             new_header.classList.add('profile-album-section');
             new_header.innerHTML = (`
@@ -904,6 +920,18 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     <h1>${header_album_data.name} by <a href="${header_album_data.artist_link}">${header_album_data.artist}</a></h1>
                     <div class="stats">
                         ${header_album_data.plays} plays (${header_album_data.listeners} listeners)
+                    </div>
+                    <div class="actions">
+                        ${album_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
+                    </div>
+                    <div class="tags">
+                        Popular tags: ${tags_html}
+                    </div>
+                    <div class="shouts">
+                        Shouts: <a href="${window.location.href}/+shoutbox">Leave a shout</a>
+                    </div>
+                    <div class="share-bar">
+                        <strong>Share this album:</strong>
                     </div>
                 </div>
                 <div class="album-image-side">
@@ -916,6 +944,11 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             album_header.style.setProperty('display', 'none');
+
+            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
+            col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
+                update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
+            });
 
 
             // about this album
@@ -939,7 +972,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     release_date = meta_text;
                     release_year = new Date(release_date).getFullYear();
                 }
-            })
+            });
 
             let about_this_album = document.createElement('section');
             about_this_album.classList.add('about-this-album');

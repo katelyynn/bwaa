@@ -1329,6 +1329,7 @@
         }
     }
 
+    .profile-album-section ~ .section-with-separator:has(.metadata-and-wiki-row),
     .metadata-and-wiki-row--artist, .metadata-and-wiki-row--artist + .section-with-separator,
     .masonry-right.col-sidebar {
         display: none;
@@ -1355,6 +1356,27 @@
                 color: #666;
                 font-size: 11px;
                 line-height: 1.363636em;
+            }
+
+            .actions {
+                margin-bottom: 12px;
+            }
+
+            .tags {
+                font-size: 11px;
+                line-height: 1.363636em;
+
+                .see-more-tags {
+                    font-weight: bold;
+                }
+            }
+            .shouts {
+                font-size: 11px;
+            }
+
+            .share-bar {
+                margin: 1em 0;
+                line-height: 1.6em;
             }
         }
         .album-image-side {
