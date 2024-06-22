@@ -1247,6 +1247,16 @@
                 line-height: 1.363636em;
             }
 
+            .origin {
+                margin-top: 12px;
+
+                .meta {
+                    font-weight: bold;
+                    font-size: 11px;
+                    line-height: 14px;
+                }
+            }
+
             .wiki {
                 margin: 1em 0;
             }
@@ -1307,6 +1317,7 @@
         }
     }
 
+    .metadata-and-wiki-row--artist, .metadata-and-wiki-row--artist + .section-with-separator,
     .masonry-right.col-sidebar {
         display: none;
     }

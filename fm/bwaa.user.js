@@ -567,6 +567,19 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             }
 
 
+            let origin = '';
+            let origin_elements = col_main.querySelectorAll('.metadata-column .catalogue-metadata-description');
+            if (origin_elements.length > 0) {
+                origin = '<div class="origin">';
+
+                origin_elements.forEach((meta) => {
+                    origin = `${origin}<div class="meta">${meta.textContent}</div>`;
+                })
+
+                origin = `${origin}</div>`;
+            }
+
+
             let tags_html = '';
             let tags = col_main.querySelectorAll('.tag a');
 
@@ -593,6 +606,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     <div class="actions">
                         ${artist_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
                     </div>
+                    ${origin}
                     <div class="wiki">
                         ${col_main.querySelector('.wiki-block.visible-lg').outerHTML}
                     </div>
