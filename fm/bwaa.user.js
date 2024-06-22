@@ -479,6 +479,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main');
+        let col_sidebar = document.body.querySelector('.col-sidebar.hidden-xs');
 
         let navlist = artist_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -584,6 +585,31 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             artist_header.style.setProperty('display', 'none');
+
+            // sidebar
+            let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
+
+            let artist_stats = document.createElement('section');
+            artist_stats.innerHTML = (`
+                <h2>Artist Stats</h2>
+                <div class="stats-container">
+                    <div class="scrobbles-and-listeners">
+                        <div class="scrobbles">
+                            <h1>${header_artist_data.plays}</h1>
+                            <p>Scrobbles</p>
+                        </div>
+                        <div class="listeners">
+                            <h1>${header_artist_data.listeners}</h1>
+                            <p>Listeners</p>
+                        </div>
+                    </div>
+                    <div class="recent-listening-trend">
+                        <p>Recent Listening Trend</p>
+                        ${listener_trend}
+                    </div>
+                </div>
+            `);
+            col_sidebar.insertBefore(artist_stats, col_sidebar.firstChild);
         } else {
             let header_user_data = {
                 avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
@@ -627,6 +653,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main:not(.visible-xs)');
+        let col_sidebar = document.body.querySelector('.col-sidebar.hidden-xs');
 
         let navlist = album_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -706,7 +733,32 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
-            album_header.style.setProperty('display', 'none');
+            album_header.style.setProperty('display', 'none')
+
+            // sidebar
+            let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
+
+            let album_stats = document.createElement('section');
+            album_stats.innerHTML = (`
+                <h2>Album Stats</h2>
+                <div class="stats-container">
+                    <div class="scrobbles-and-listeners">
+                        <div class="scrobbles">
+                            <h1>${header_album_data.plays}</h1>
+                            <p>Scrobbles</p>
+                        </div>
+                        <div class="listeners">
+                            <h1>${header_album_data.listeners}</h1>
+                            <p>Listeners</p>
+                        </div>
+                    </div>
+                    <div class="recent-listening-trend">
+                        <p>Recent Listening Trend</p>
+                        ${listener_trend}
+                    </div>
+                </div>
+            `);
+            col_sidebar.insertBefore(album_stats, col_sidebar.firstChild);;
         } else {
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)

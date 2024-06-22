@@ -1522,4 +1522,8 @@
             }
         }
     }
+
+    .section-with-separator:has(.listener-trend) {
+        display: none;
+    }
 }
