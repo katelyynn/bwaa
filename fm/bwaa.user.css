@@ -1535,6 +1535,23 @@
                 }
             }
         }
+
+        .playback-video {
+            padding: 0 50px;
+            margin-top: 25px;
+
+            .video-preview {
+                margin-top: unset;
+                box-shadow: none;
+
+                .video-preview-playlink {
+                    padding-top: unset;
+                    height: fit-content;
+                    aspect-ratio: 16 / 9;
+                    position: relative;
+                }
+            }
+        }
     }
 
     /* shouts */

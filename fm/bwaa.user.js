@@ -1169,6 +1169,12 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             }
 
 
+            let track_video_element = document.body.querySelector('.video-preview');
+            let track_video = '';
+            if (track_video != undefined)
+                track_video = track_video_element.outerHTML;
+
+
             let tags_html = '';
             let tags = col_main.querySelectorAll('.tag a');
 
@@ -1255,6 +1261,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         </div>
                     </div>
                 </div>
+                ${(track_video != ''
+                    ? `<div class="playback-video">${track_video}</div>`
+                    : ''
+                )}
             `);
 
             row.insertBefore(navlist, col_main);
