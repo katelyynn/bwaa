@@ -1646,6 +1646,26 @@
             background-position: right top;
         }
     }
+    .more-link {
+        margin: unset !important;
+        padding: unset !important;
+        border: none !important;
+
+        a {
+            font-weight: bold;
+            font-size: 11px;
+            line-height: 14px;
+            padding-right: 18px;
+            margin-left: 9px;
+            background-image: var(--cdn-flatness-icons-see-more-arrow-blue-13x13-2);
+            background-repeat: no-repeat;
+            background-position: right top;
+
+            &:before {
+                display: none;
+            }
+        }
+    }
 
     .personal-stats {
         display: none;
