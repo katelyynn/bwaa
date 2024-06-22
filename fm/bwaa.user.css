@@ -1639,4 +1639,8 @@
             background-position: right top;
         }
     }
+
+    .personal-stats {
+        display: none;
+    }
 }
