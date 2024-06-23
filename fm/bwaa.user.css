@@ -296,6 +296,10 @@
                 }
             }
         }
+
+        & + h2 {
+            display: none;
+        }
     }
 
     .header-new {

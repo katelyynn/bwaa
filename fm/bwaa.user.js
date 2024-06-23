@@ -361,7 +361,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             new_header.classList.add('profile-header-section');
             new_header.innerHTML = (`
                 <div class="badge-avatar">
-                    <img src="${header_user_data.avatar.getAttribute('src').replace('/i/u/avatar170s/', '/i/u/ar0/')}" alt="${header_user_data.avatar.getAttribute('alt')}">
+                    <img src="${header_user_data.avatar.getAttribute('src').replace('/i/u/avatar170s/', '/i/u/550x0/')}" alt="${header_user_data.avatar.getAttribute('alt')}">
                     <div class="user-type user-type--${user_type}">
                         <a>${trans[lang].profile.user_types[user_type]}</a>
                     </div>
@@ -1393,7 +1393,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             // this allows shout avatars to be varied in shape
             let src = shout_avatar.getAttribute('src');
-            src = src.replace('/i/u/avatar70s/', '/i/u/ar0/');
+            src = src.replace('/i/u/avatar70s/', '/i/u/550x0/');
             shout_avatar.setAttribute('src', src);
         });
     }
