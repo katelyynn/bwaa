@@ -647,6 +647,38 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             });
 
             // sidebar
+
+
+            // links
+            let links = document.body.querySelectorAll('.external-links-section .resource-external-link');
+            if (links.length > 0) {
+                console.info(links.length);
+                let links_html = document.createElement('div');
+                links.forEach((link, index) => {
+                    if (index >= (links.length / 2))
+                        return;
+
+                    link.classList = [];
+                    links_html.appendChild(link);
+                });
+
+                let more_information = document.createElement('section');
+                more_information.innerHTML = (`
+                    <h2>More information</h2>
+                    <div class="more-information-links">
+                        <div class="title">
+                            <h3>Links</h3>
+                        </div>
+                        <div class="links">
+                            ${links_html.innerHTML}
+                        </div>
+                    </div>
+                `);
+                col_sidebar.insertBefore(more_information, col_sidebar.firstChild);
+            }
+
+
+            //
             let top_global_listeners_placeholder = document.createElement('div');
             top_global_listeners_placeholder.classList.add('top-listeners');
             let top_global_listeners_you_know_list = document.body.querySelectorAll('.listeners-section-item');

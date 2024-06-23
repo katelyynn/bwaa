@@ -923,6 +923,7 @@
         text-decoration: underline;
     }
 
+    h3.text-18,
     h2 {
         color: #D51007;
         font-weight: bold;
@@ -1338,8 +1339,8 @@
         }
     }
 
+    .external-links-section,
     form[action*="/playlists/create/"],
-    .external-links-section:has(.play-this-track-playlinks),
     .profile-album-section ~ .section-with-separator:has(.metadata-and-wiki-row),
     .metadata-and-wiki-row + .row,
     .metadata-and-wiki-row, .metadata-and-wiki-row--artist + .section-with-separator,
@@ -1923,6 +1924,24 @@
                 flex: 1;
                 font-size: 11px;
             }
+        }
+    }
+
+
+    .more-information-links {
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+
+        .title {
+            width: 100px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
     }
 }
