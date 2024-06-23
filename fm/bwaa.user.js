@@ -1249,7 +1249,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     </div>
                     <div class="track-info">
                         <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a>${track_length}</h1>
-                        <p>On ${header_track_data.album_amount} albums <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
+                        <p>On ${(header_track_data.album_amount > 0) ? header_track_data.album_amount : 'no'} albums <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
                         <div class="actions">
                             ${header_actions[0].outerHTML}
                             ${header_actions[1].outerHTML}
