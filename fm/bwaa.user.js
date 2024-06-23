@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0620
+// @version      2024.0623
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -16,7 +16,7 @@
 
 console.info('bwaa - beginning to load');
 
-let version = '2024.0622';
+let version = '2024.0623';
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version} »`;
 
@@ -781,11 +781,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             `);
             col_sidebar.insertBefore(artist_stats, col_sidebar.firstChild);
         } else {
+            let subpage_title = document.body.querySelector('.subpage-title');
+            if (subpage_title == undefined)
+                subpage_title = col_main.querySelector(':scope > h2');
+
             let header_user_data = {
                 avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
                 name: artist_header.querySelector('.header-new-title').textContent,
                 link: artist_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
-                page: document.body.querySelector('.subpage-title').textContent
+                page: subpage_title.textContent
             }
 
             let new_header = document.createElement('section');
