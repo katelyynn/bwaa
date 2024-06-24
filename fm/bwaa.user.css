@@ -930,7 +930,7 @@
                     }
 
                     &:hover:before,
-                    [data-toggle-button-current-state="unloved"] &:before {
+                    [data-toggle-button-current-state="loved"] &:before {
                         background-position: 0 -1018px;
                     }
                 }
