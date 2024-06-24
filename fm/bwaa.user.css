@@ -680,8 +680,11 @@
     .chartlist {
         margin-top: calc(15px + 7px);
 
-        #tracklist &,
-        #top-tracks & {
+        .buffer-standard:has(> &) {
+            margin-top: 15px;
+        }
+
+        #tracklist & {
             thead {
                 clip: unset;
                 border: unset;
@@ -735,12 +738,15 @@
             line-height: 1.5em;
             border-top: 1px solid #ccc;
             background: unset !important;
+            --general-td-padding: 4px 10px;
 
             &:hover, &:focus-within {
                 background: #bfdff4 !important;
             }
             &.chartlist-row--now-scrobbling {
                 background: #fffcca !important;
+
+                --general-td-padding: 4px 10px;
 
                 td {
                     height: 64px;
@@ -749,6 +755,10 @@
                 .chartlist-image {
                     width: 64px;
                     height: 64px;
+                }
+
+                .chartlist-more {
+                    padding: 5px 5px 0 3px;
                 }
 
                 .chartlist-timestamp {
@@ -767,7 +777,7 @@
             }
 
             td {
-                padding: 5px 10px;
+                padding: var(--general-td-padding);
                 height: 100%;
                 margin: unset;
                 height: 34px;
@@ -932,10 +942,12 @@
 
             .chartlist-timestamp {
                 order: 6;
-                padding: 5px;
+                padding: var(--general-td-padding);
+                padding-left: 10px;
+                padding-right: 5px;
                 color: #999;
                 font-size: 10px;
-                width: 100px;
+                width: 115px;
             }
 
             .chartlist-duration {
@@ -963,6 +975,44 @@
 
                         .stat-name {
                             display: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        #top-tracks & {
+            .chartlist-row {
+                .chartlist-bar {
+                    width: 33% !important;
+                    padding: 0;
+                    background: #fff;
+
+                    .chartlist-count-bar {
+                        height: 20px;
+
+                        a {
+                            text-decoration: none !important;
+                        }
+
+                        .chartlist-count-bar-slug {
+                            display: block;
+                            padding: 3px 0.5em 0 0.5em;
+                            background: #71b7e6;
+                            color: #fff;
+                            border-radius: 0 3px 3px 0;
+                        }
+
+                        .chartlist-count-bar-value {
+                            display: flex;
+                            align-items: center;
+                            height: 20px;
+                            padding: 0 0.5em 0 0.5em;
+                            color: #fff;
+
+                            &:after {
+                                display: none;
+                            }
                         }
                     }
                 }
