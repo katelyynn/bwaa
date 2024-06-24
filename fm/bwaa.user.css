@@ -993,6 +993,10 @@
 
                         a {
                             text-decoration: none !important;
+
+                            &:hover .chartlist-count-bar-slug {
+                                background: #48779a;
+                            }
                         }
 
                         .chartlist-count-bar-slug {

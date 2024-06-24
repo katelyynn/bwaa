@@ -608,7 +608,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     </div>
                     ${origin}
                     <div class="wiki">
-                        ${col_main.querySelector('.wiki-block.visible-lg').outerHTML}
+                        ${get_wiki(col_main)}
                     </div>
                     <div class="tags">
                         Popular tags: ${tags_html}
@@ -1038,7 +1038,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     </div>
                 </div>
                 <div class="wiki">
-                    ${col_main.querySelector('.wiki-block.visible-lg').outerHTML}
+                    ${get_wiki(col_main)}
                 </div>
             `);
             document.getElementById('tracklist').after(about_this_album);
@@ -1329,7 +1329,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             about_this_track.innerHTML = (`
                 <h2><a href="${window.location.href}/+wiki">About this track</a></h2>
                 <div class="wiki">
-                    ${col_main.querySelector('.wiki-block.visible-lg').outerHTML}
+                    ${get_wiki(col_main)}
                 </div>
             `);
             new_header.after(about_this_track);
@@ -1416,6 +1416,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
         }
+    }
+
+
+    function get_wiki(col_main) {
+        let wiki = col_main.querySelector('.wiki-block.visible-lg');
+        if (wiki == null)
+            wiki = col_main.querySelector('.wiki-block-cta');
+
+        return wiki.outerHTML;
     }
 
 
