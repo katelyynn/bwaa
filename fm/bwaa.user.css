@@ -679,6 +679,54 @@
     .chartlist {
         margin-top: calc(15px + 7px);
 
+        #tracklist &,
+        #top-tracks & {
+            thead {
+                clip: unset;
+                border: unset;
+                height: unset;
+                margin: unset;
+                overflow: unset;
+                padding: unset;
+                position: unset;
+                width: unset;
+
+                tr {
+                    display: flex;
+                }
+
+                th {
+                    display: none;
+                }
+
+                th {
+                    &:nth-child(4),
+                    &:nth-child(8),
+                    &:nth-child(9) {
+                        display: flex;
+                        width: fit-content;
+                        padding: 0 5px;
+                        color: #696969;
+                        font-size: 11px;
+                        line-height: 16px;
+                        font-weight: normal;
+                    }
+
+                    &:nth-child(4) {
+                        margin-left: 56px;
+                        flex: 1;
+                    }
+                    &:nth-child(8) {
+                        width: 56px;
+                    }
+                    &:nth-child(9) {
+                        width: 75px;
+                    }
+                }
+
+            }
+        }
+
         .chartlist-row {
             padding: unset !important;
             align-items: start;
@@ -749,9 +797,20 @@
                     margin-right: 2px;
                 }
             }
-            &:not(.chartlist-row--with-artist) {
+            #tracklist &,
+            #top-tracks & {
+                .chartlist-image {
+                    display: none;
+                }
+
                 .chartlist-artist {
                     display: none;
+                }
+
+                .chartlist-play {
+                    padding-bottom: 0;
+                    padding-top: 1px;
+                    width: 27px;
                 }
 
                 &:not(:hover):nth-child(odd) {
@@ -781,7 +840,7 @@
             }
 
             .chartlist-index {
-                width: 20px;
+                width: 30px;
                 color: #696969;
                 text-align: right;
                 line-height: 16px;
@@ -795,6 +854,7 @@
                 .chartlist-play-button {
                     width: 16px;
                     height: 16px;
+                    right: unset;
 
                     &:before {
                         background-color: unset !important;
@@ -827,6 +887,7 @@
                 width: 56px !important;
                 color: #696969;
                 line-height: 16px;
+                text-align: left;
             }
             .chartlist-bar {
                 order: 8;
