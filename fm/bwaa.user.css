@@ -34,6 +34,7 @@
         --cdn-flatness-buttons-8-grey-right: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAkCAYAAABMgYAxAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAKtJREFUeNpiVlVV/SwsLCwLxPuYIyIi2v79+2f64cMHHqb///8zyMnJMQBBONPv378ZGBkZQRwJFhAHBlh+/fqFg4Oi7O/fvwjOnz9/SJbBzQG6mAGEgeAF2ACoK+ayfPny5T6QsQyIm5iAhCgQCwExM3Nubm4b0BDT169fQ3yqrq4O8SnIABYWFohPcfsHhUNd/2B4DkUGauILsNvevXsH8endu3fhPgUIMAC9YoVZngbghAAAAABJRU5ErkJggg==');
         --cdn-flatness-buttons-8-add-left: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAAAkCAYAAAA+R3frAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAylJREFUeNrs3bFOIkEcx/FBEClMyJ2xRBOFGCsbY38NL2CvEN/AmHDhKorLPQaBq30BH8HKF1AfwOaKC+IKevubu9msHDoU7GSL7ydZd7IOFFP88p/d2aHQaDTKxpgf8XEWH1UDAPnyuxT/+ba9vX0eB5YplUoMCYBcmU6n60qms62tLXthMpkwKgByR0G1/vLyYp6fn72dd3Z27Pnu7o6RAxA0qGwl9fr66iu/zOnpqW13Oh1TLBYZPQDhgiqKIm/wqOIqFAq2PR6PzerqKqMHIH9B5aou9fdVYACw9Kmf7lP5gmpeGwCyVmg0Gr/q9Xp1ZWUluahq6ejoyJycnJhyufzhF6i6Gg6H5vr6OpkaAkAmFdVsUD0+Pi4UPOqjvvoOggpAZhVVrVb7r6JS8KhaclNCXbu8vLTt4+PjJJT0OVVdWixKUAEIWlHpUPi4m+bpxaDq61axK5xcsBFUADILKlVN7z3Fc+HjAsm106Hkgg0AMgsqLeb0VUMKMzcN1FmfAYBcBZX69Hq9pA0AIYPqIQ6eNzfT59HU7ubmxrbV17fuCgCWGVQ/x+NxT0/ufGGVrroIKgAhKGsUVN+jKJrGRytu1xkWADlzrxJKL/l9jo9NxgNADm3aHT739/fPDw4OvK/LAEBok8nk7w6fe3t79v4TLxsDyCO7w+e/1PJ23t3dtefb21tGDkDQoFpofymtnWq1WrZ9cXHBDp8AwgbVItXU09NTsnxBuyWsra0xegDCBVV69873qOpKt31rrgAgeEWV7qM2P60FIGhQzb7r53b4bLfbc5csDAaDN9VVv99nh08A2QdVmpasj0ajhaZ36qO+mj4yHQSQBbvD5+HhYTX9FE9BpZvn+lksN8XTtaurK9tuNptJKGkDvUqlYm+uE1QAglVUmvopuBRA7iZ7ejGorrvf9dN0T30/2nwPAJYeVM5slZW+7rYinvd/AAgWVGnq48JIbTbPAxA0qBRAvid2mtZ1u92kTQUFIGRQPURRVF1k5wS3w6fuT1FRAQiluLGx8Sk+f1H4+N7f0/95xw9ASHqQp+UJSp6v8dEy7PAJIH/u/wgwABlAharlTkodAAAAAElFTkSuQmCC');
         --cdn-flatness-medialinks-outbound-link: url('data:image/gif;base64,R0lGODlhCQAJAKIEAJfS7x+Z1ZTR7yCa1////wAAAAAAAAAAACH5BAEAAAQALAAAAAAJAAkAAAMcSKrTHkMJt9iMAEyGQRBLJHxgFJElEVWq6rxEAgA7');
+        --cdn-flatness-buttons-6-small-multi: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAeCAMAAAAFBf7qAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPNQTFRFlZWVV1dX////l5eXnp6e4+PjY2Njjo6Ok5OTeXl5vLy8t7e39vb2gYGBmJiYdXV1paWl1NTU09PT2tralpaWaGhoZWVlampqX19fXV1d/v7+d3d3iYmJmZmZ3Nzcg4ODcHBwiIiIgoKClJSUcnJyj4+PdHR0fX19o6Oj19fXenp6fn5+1tbWb29v2dnZn5+fra2t0tLSp6en8fHxdnZ2kJCQ9/f3nZ2da2troKCgpKSk7+/vqampxMTEjIyMm5uboqKi9fX1wMDAs7OzioqKhoaG5+fnc3Nz/f39tLS06+vrhYWFuLi4qKioWlpasbGx////S19FmQAAAFF0Uk5T//////////////////////////////////////////////////////////////////////////////////////////////////////////8AaOyowQAAAS1JREFUeNqMkYdywjAMhoUzwAGHJIwMwgqzUFpK96R7D97/aarkQpvoQq+/73Q6/ZYt+4OVlMvWCsoCMiXKkEsVevpPmossGTSmYQQ4PE5bckmxmKmU0Ls6JV0KC6Vg5htpq7jHWlBhZlGHhw+Ac9y2H1uYytDEuAvBHGDxzLz5ustiW2CybeyafuFRFqtk3DV5waA/NhMT7rBKNGHjfeO7njRi/Wp2m7B4O2mdXK6zNodVeePP/xtKdSlJVSnUlEIpyFE9tOnwg3FUDhsplPxZIVaPftT9OB9rQKF0ja5/g9uOuj6F8mYIoXvMuxYBhRIYnHOLtTgf0buE0en0h6+NfueAQhkZds2uoewZfddkocayKZTGhes4juu4rkqhDO/UOi61Xv/8C8q3AAMAkwEbXf6bD3wAAAAASUVORK5CYII=');
     }
 
 
@@ -777,6 +778,27 @@
                 width: 34px;
                 height: 34px;
                 order: 0;
+                margin-right: 6px;
+            }
+
+            .chartlist-more {
+                width: 34px;
+                padding: 3px 5px 0 3px;
+
+                .chartlist-more-button {
+                    background: transparent var(--cdn-flatness-buttons-6-small-multi) no-repeat right top;
+                    width: 26px;
+                    height: 15px;
+                    font-size: 9px;
+
+                    &:before {
+                        display: none;
+                    }
+
+                    &:hover {
+                        background-position: right bottom;
+                    }
+                }
             }
 
             &.chartlist-row--with-artist .chartlist-artist {
@@ -836,7 +858,7 @@
                 display: none;
             }
             .chartlist-more {
-                order: 4;
+                order: 5;
             }
 
             .chartlist-index {
@@ -849,7 +871,7 @@
             .chartlist-play {
                 order: 1;
                 padding: 3px 0 0 3px;
-                width: 17px;
+                width: 24px;
 
                 .chartlist-play-button {
                     width: 16px;
@@ -870,16 +892,50 @@
                     }
                 }
             }
+            .chartlist-loved {
+                padding: 3px 0 0 3px;
+                width: 24px;
+
+                [data-toggle-button=""],
+                form {
+                    width: 16px;
+                }
+
+                .chartlist-love-button {
+                    width: 16px;
+                    height: 16px;
+                    right: unset;
+
+                    &:before {
+                        background-color: unset !important;
+                        background-image: var(--cdn-flatness-sprites-21-icons);
+                        box-shadow: unset;
+                        background-position: 0 -1038px;
+                        margin: unset;
+                        width: 16px;
+                        height: 16px;
+                        transition: unset;
+                        top: 0;
+                        left: 0;
+                    }
+
+                    &:hover:before,
+                    [data-toggle-button-current-state="unloved"] &:before {
+                        background-position: 0 -1018px;
+                    }
+                }
+            }
 
             .chartlist-loved {
-                order: 5;
+                order: 4;
             }
 
             .chartlist-timestamp {
-                order: 5;
+                order: 6;
                 padding: 5px;
                 color: #999;
                 font-size: 10px;
+                width: 100px;
             }
 
             .chartlist-duration {
