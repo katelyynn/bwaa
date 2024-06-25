@@ -681,7 +681,7 @@
         margin-top: calc(15px + 7px);
 
         .buffer-standard:has(> &) {
-            margin-top: 15px;
+            margin-top: calc(15px + 7px);
         }
 
         #tracklist & {
@@ -1114,7 +1114,7 @@
     /* top artists on user page */
     [data-endpoint$="/library/artists"] .grid-items,
     #top-artists .grid-items {
-        height: 310px;
+        /*height: 310px;*/
         font-size: 11px;
         line-height: 1.181818em;
 
@@ -1658,7 +1658,7 @@
         }
 
         .tags {
-            margin-top: 15px;
+            margin-top: calc(15px + 7px);
             font-size: 11px;
             line-height: 1.363636em;
 
@@ -2074,7 +2074,7 @@
 
     .about-this-album {
         .label-container {
-            margin-top: 15px;
+            margin-top: calc(15px + 7px);
             display: flex;
             gap: 14px;
 
