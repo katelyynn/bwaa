@@ -2187,4 +2187,84 @@
             border-bottom: none;
         }
     }
+
+
+    .user-events-sidebar {
+        h3,
+        .events-list-sidebar {
+            margin-top: unset;
+        }
+
+        h3,
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            display: none;
+        }
+    }
+    .events-list-sidebar .events-list-item {
+        padding: 5px 5px 5px 42px;
+        border-top: 1px solid #fff;
+        border-bottom: 1px solid #ccc;
+        font-size: 11px;
+        line-height: 1.181818em;
+
+        .events-list-item-date {
+            width: 25px;
+            top: 5px;
+            left: 5px;
+
+            .events-list-item-date-icon-month {
+                background: linear-gradient(#E21403, #D20F02);
+                border: 1px solid #D51007;
+                border-radius: 2px 2px 0 0;
+                color: #fff;
+                text-transform: uppercase;
+                line-height: 1.1em;
+                font-weight: bold;
+                text-align: center;
+                height: 12px;
+                font-size: 9px;
+            }
+            .events-list-item-date-icon-day {
+                background: #fff;
+                border: 1px solid #ccc;
+                border-radius: 0 0 2px 2px;
+                border-top: none;
+                color: #000;
+                font-size: 14px;
+                line-height: 1.4em;
+                font-weight: bold;
+                letter-spacing: -0.1em;
+            }
+        }
+
+        .events-list-item-event {
+            margin-top: -2px;
+            &:hover {
+                color: var(--text-link);
+            }
+        }
+        .events-list-item-venue {
+            color: #000;
+            font-size: 11px;
+            line-height: inherit;
+            margin: 1px 0 4px 0;
+        }
+        .events-list-item-attendees {
+            font-size: 10px;
+            color: #666;
+            margin: unset;
+            line-height: inherit;
+        }
+
+        &:first-child {
+            border-top: none;
+        }
+        &:last-child {
+            border-bottom: none;
+        }
+    }
 }
