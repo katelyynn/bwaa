@@ -622,6 +622,18 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`;
 
 
+            let gallery_sidebar_photos_ems = document.body.querySelectorAll('.sidebar-image-list-item');
+            let gallery_sidebar_photos = [];
+            for (let i = 1; i < 5; i++) {
+                console.info('gallery', i, gallery_sidebar_photos_ems);
+                if (gallery_sidebar_photos_ems[i] != null) {
+                    gallery_sidebar_photos.push(gallery_sidebar_photos_ems[i].querySelector('a').outerHTML);
+                } else {
+                    gallery_sidebar_photos.push('');
+                }
+            }
+
+
             let new_header = document.createElement('section');
             new_header.classList.add('profile-artist-section');
             new_header.innerHTML = (`
@@ -650,12 +662,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 <div class="artist-image-side">
                     <div class="images">
                         <div class="top">
-                            <a>
+                            <a href="${header_artist_data.link}/+images">
                                 <img src="${header_artist_data.avatar}">
                             </a>
                         </div>
                         <div class="bottom">
-
+                            ${gallery_sidebar_photos[0]}
+                            ${gallery_sidebar_photos[1]}
+                            ${gallery_sidebar_photos[2]}
+                            ${gallery_sidebar_photos[3]}
                         </div>
                     </div>
                     <div class="option">

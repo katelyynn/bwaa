@@ -1511,6 +1511,23 @@
                         width: 253px;
                     }
                 }
+
+                .bottom {
+                    display: flex;
+
+                    a {
+                        height: 63px;
+                    }
+
+                    img {
+                        width: 63px;
+                        height: 63px;
+                        border: 1px solid #fff;
+                        border-top: none;
+                        border-right: none;
+                        position: static;
+                    }
+                }
             }
             .option {
                 background: #F7F7F7;
@@ -2189,12 +2206,26 @@
     }
 
 
+    .section-with-separator {
+        padding: unset;
+
+        &:after {
+            display: none;
+        }
+    }
+
+
+    .buffer-standard:has(> .events-list-sidebar) {
+        margin-top: 15px;
+    }
+    .buffer-standard:has(> .events-list-sidebar),
     .user-events-sidebar {
         h3,
         .events-list-sidebar {
             margin-top: unset;
         }
 
+        .buffer-standard.text-bold,
         h3,
         h2 {
             margin-bottom: 15px;
@@ -2210,6 +2241,8 @@
         border-bottom: 1px solid #ccc;
         font-size: 11px;
         line-height: 1.181818em;
+        min-height: unset;
+        margin: unset !important;
 
         .events-list-item-date {
             width: 25px;
