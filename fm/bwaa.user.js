@@ -50,6 +50,13 @@ const trans = {
                 low: 'LOW',
                 very_low: 'VERY LOW',
                 unknown: 'UNKNOWN'
+            },
+            reports: {
+                categories: {
+                    week: 'Last week',
+                    month: 'Last month',
+                    year: 'Last year'
+                }
             }
         }
     }
@@ -403,6 +410,26 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 user_type_banner.textContent = trans[lang].profile.user_types[user_type];
                 row.insertBefore(user_type_banner, col_main);
             }*/
+
+
+
+
+            // listening reports
+            let listening_report_items = document.body.querySelectorAll('.listening-report-promo');
+            listening_report_items.forEach((report) => {
+                report.classList.remove('listening-report-promo');
+                report.classList.add('listen-report', 'journal-like');
+
+                console.info(report, report.classList[0]);
+
+                let date = report.querySelector('.listening-report-promo-date').textContent;
+                let title = trans[lang].profile.reports.categories[report.classList[0].replace('listening-report-promo--', '')];
+
+                report.innerHTML = (`
+                    <div class="title">${title}</div>
+                    <div class="date">${date}</div>
+                `);
+            });
         } else {
             // profile non-overview stuff
 
