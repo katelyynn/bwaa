@@ -706,6 +706,7 @@
             margin-top: calc(15px + 7px);
         }
 
+        #top-tracks-section &,
         #tracklist & {
             thead {
                 clip: unset;
@@ -725,31 +726,61 @@
                     display: none;
                 }
 
-                th {
-                    &:nth-child(4),
-                    &:nth-child(8),
-                    &:nth-child(9) {
-                        display: flex;
-                        width: fit-content;
-                        padding: 0 5px;
-                        color: #696969;
-                        font-size: 11px;
-                        line-height: 16px;
-                        font-weight: normal;
-                    }
+                /* top-tracks-section, if its in context of album tracks scrobbled
+                by a user */
+                &:has(:nth-child(10)) {
+                    th {
+                        &:nth-child(5),
+                        &:nth-child(9),
+                        &:nth-child(10) {
+                            display: flex;
+                            width: fit-content;
+                            padding: 0 5px;
+                            color: #696969;
+                            font-size: 11px;
+                            line-height: 16px;
+                            font-weight: normal;
+                        }
 
-                    &:nth-child(4) {
-                        margin-left: 56px;
-                        flex: 1;
-                    }
-                    &:nth-child(8) {
-                        width: 56px;
-                    }
-                    &:nth-child(9) {
-                        width: 80px;
+                        &:nth-child(5) {
+                            margin-left: 56px;
+                            flex: 1;
+                        }
+                        &:nth-child(9) {
+                            width: 56px;
+                        }
+                        &:nth-child(10) {
+                            width: 80px;
+                        }
                     }
                 }
+                /* generic album page tracklist */
+                &:not(:has(:nth-child(10))) {
+                    th {
+                        &:nth-child(4),
+                        &:nth-child(8),
+                        &:nth-child(9) {
+                            display: flex;
+                            width: fit-content;
+                            padding: 0 5px;
+                            color: #696969;
+                            font-size: 11px;
+                            line-height: 16px;
+                            font-weight: normal;
+                        }
 
+                        &:nth-child(4) {
+                            margin-left: 56px;
+                            flex: 1;
+                        }
+                        &:nth-child(8) {
+                            width: 56px;
+                        }
+                        &:nth-child(9) {
+                            width: 80px;
+                        }
+                    }
+                }
             }
         }
 
@@ -851,6 +882,7 @@
                     margin-right: 2px;
                 }
             }
+            #top-tracks-section &,
             #tracklist &,
             #top-tracks & {
                 .chartlist-image {
