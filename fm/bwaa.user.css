@@ -2258,13 +2258,20 @@
         }
 
         .buffer-standard.text-bold,
-        h3,
         h2 {
             margin-bottom: 15px;
         }
 
         h3 {
-            display: none;
+            margin-bottom: 6px;
+            font-size: 11px;
+            line-height: 1.181818em;
+            text-transform: unset;
+            font-weight: normal;
+
+            .events-list-sidebar + & {
+                margin-top: 6px;
+            }
         }
     }
     .events-list-sidebar .events-list-item {
