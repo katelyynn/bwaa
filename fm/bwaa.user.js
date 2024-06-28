@@ -1496,9 +1496,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         if (gallery_sidebar == null)
             return;
 
-        if (gallery_sidebar.hasAttribute('data-bwaa'))
+        /*if (gallery_sidebar.hasAttribute('data-bwaa'))
             return;
-        gallery_sidebar.setAttribute('data-bwaa', 'true');
+        gallery_sidebar.setAttribute('data-bwaa', 'true');*/
 
         let gallery_image_votes = gallery_sidebar.querySelectorAll('.gallery-image-votes');
         gallery_image_votes.forEach((button) => {

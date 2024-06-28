@@ -9,6 +9,9 @@
 
 @-moz-document domain("last.fm") {
     :root {
+        --vote-up: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJLSURBVDhP7ZJNaNNgHMafph9bu7Z2rnTVKp3iB3PUQyqiTgURdhIR0augh6kXL06cF29C8etetoFXjw4RdtiEfWiVFebs6Cq41i1ra9dtbZO2M03z+raGgSzpRK8+8BLIm+eXX/5v8D//HJ1y1cxk9CXJvAsjF4nBdcqPC1cfNuwwylUz36emsVs243T3GaSnwspd7WwLLK/l0NxihdVmgU4oYezDIFG2VNMQ+D7ximRm5uH2elEt5cHzRTTtdCi76mkIjL95Cx/rp5p5CAUepMWM7oNX/m6GocVhEh+ZRCfLQuCi4IUiTK2N7WrRBBYWU3C63dDJEgh9bOOHCD7O4fG1c2Tw0Q0y/PqJ6iw19Qdo6ZDDDU+bGcWlOdi8XUjGviDLJcHoDbTJQJZEMPs7cPH+0CZH1XAg0EsIt4q9nl3IfZ1FVZLBJyJ12NlbfTh8nEV7xx54T5yHvJBQWr+iavig5yi5fvsmhKV5iOtJ6PU65HNljH3mUK5IMBsN2GE20mWCvdkI50k/enqf11nUfWuqhEASK+DTS3UYIToI/Ab6AgGsR0MoCwKK+QJKdNm8R8BNjytNDaBMgVVqUvtUyPTFFGgwMHja37/VcDkNu6ddaWoAzW2t4Ol/Z7S7IObS9VOWKPxPDFVn+CJ4j5RmFsB2HkClkKXQDEQ6golYatsZqgJrGXp2h6yFI2B9XbBZLWAYBtzsx/opr3waR24lC5NzH76FRnEpOLrJ0QTWUjOdG5lANrWKsijBYWmidvrfDF3HfLh8N6hwgJ+UdgTpS0l9IgAAAABJRU5ErkJggg==');
+        --vote-down: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEXUExURbd6Z5hZOolQNHpHL3FCK3JDK3NDK4BKMJVcQ72FerBnQ+vHq9mgecmLZdatl+KthNiieqpxT9GvpsSEcaZhP8B5TdiTXN2hcsmmkbqDed2mf9Sac798V9Opk9iSW+XDqpVdRbhzVrduR+zIrYdPM+vGqoRNMt6kderEp4FLMdWPWteRW+e8m6BuUqdzZrh4YrJrSLFqRsOBXd6qg+KuhsSYeqJuYcCNiaBtYIZTP4BNNL2JZ9mec+S4l5NiR8uYl5FfTsGMa9WZb92xkXdGLuCssIJRPcuVdNyriqd4XKh2bNqmqnhJMdSfftamiHlKNN6qrsyZmYNSOtOegLOCZ5tqXoZWRL6Lb6V0Wal3brSCfNejpgAAAEFxMooAAABddFJOU///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AOGvnZAAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC6SURBVChTY4jBAqgjyMDIxMzCysbOwQnmgcViuLh5ePm4+PkFBIXggsIiIJXMomLi/BKSMEEubilpXhlZLjk5cXkFmKAiRKWSnJyYsgqmSjFVNXQz5eTUNTRhglDbtbTldHT14IL6XAaGXEbGWiamZkAeVDAmxtzC0sraxtbOHsiGCwKBg6OTs4srkIEs6Obu4ekFYiAJevv4+vkHgFhIgoFBwSGhYBay9rDwiEgwA1kwKiwyGkjFxAAA2EButh4+YGMAAAAASUVORK5CYII=');
+
         --favi-youtube: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFoSURBVDhPxdI9S8NAGAfw/11srRWRFsUiodiKuKiLg/gBOomDYh3FjyH4AjqogyDiCwqCgx9AwbFOIsVBcRAsIgiK2K0IJWl7TXo+SUWbsx2c+oQfJM/9Oe4uh6YXe9P1tg/z8xiQg/Q9TPzuSMNiD5QVDHgcyxlz7DrUvkHdhergv2uTW5AJglq234f+vUP44nFPv44ELwNRglp2IIDwzCxGLq8Qmk56xhRRLiTCBLUKFaBYLEJwjtj2Lvq2dmC1BjyZb2EuAI3AS8I0TZdhGOiYmIS+tq5kXBovSwmVqPxO4HjPZJA62P+TczgrsJVZiXS34Lg/P8NpcgrBl2cl47KdM8gp+4KwKjDzeVysLOFmeRFDokSXg3kzVTl21Bm8hZSjNOFP2SQtLAy0aIhwujKNirE75x6klH/rPuN+DV0cnn4dKW2+O5LOlwpROjdaOLKkl6AuhifKvdJ7VoKd9OixVWo3tYAv3BEV9YNgeXoAAAAASUVORK5CYII=');
         --btn-love-left: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAAAkCAYAAAA+R3frAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAVJSURBVHhe7d3dT1N3HMfxTymFFmsrivJQKd2oD0URdWydIDGok8iMcfFqerNszotF73dl4tX+AfXGuEvnbpzG6LIYSdwWRZimhodFJTIm+BDjxlOgUFr2/f52SjhM4y5a0ovPKzk58jue23d+56G/41izZk0BgG9k+0I2v2xERLlkXEN1sqqq6oTskZ+fb40TEeWGZDIJDdVgU1NToLCw0BomIsotGqrhxsZG/8LZVJHbDZ/PB6/Hg4nJSQyPjZm9R4Lml/Eia3xkdBSTU1PWWUREmWdCFY1G/U6n0xoC3BKjmrVrsaulBaFQCAP9/ehob0d3by8i69fjg2gUq4NBDA0Oou36dfQ+fIg4Y0VEWWJCtWXLFluoAmVl+PTQIayVWOn1YV5eHmYSCfxw8SI+OXjQ3MuaTaWQJ+c8lEh9d/48hp4/t84mIsosE6oNGzbYQlUbieDY8eNwOBxIzszAIaHSWM3KMYdsKYnU7Ows9JwZOX7m1Cl0P3hgziUiyjQTqnXr1vk1RGlba2vx1bFjJkYaKqWx0nDpmM6mlNOaWZ05fRqxnh4zRkSUaSZU4XDYFqrSkhIcPnwYGzduNJd8GieNVFr673yXC7FYDN9fuIAXr15ZR4mIMsuEKhQK2ULlkFlSQzSKbdu3o1ZipfepNE5pZnYl++6uLrTfvo1f29vhmHfpSESUSSZUlZWVtlBpmJwSpvJVq9C4Ywd2NjfD6/XOzaRGR0bQduMGbt26hWcvXiAl586/x0VElEkmVOXl5bZQKY1VIh5HhcSqXmZXLXv3IlBRgaFnz/DTtWvovHMHz1++RH5hISNFRFllQlVaWuqffw8qTWdQeo9q+dKl5t2p1n378OPVq7jT0YG/ZFal96hedx4RUSaZUJWUlLw2VEpjlZLZ1dKiIgRXr8afg4MYm5gw71AxUkS0GEyoiouL3xiqNHNDPZWae6eKkSKixaKheuTz+cIL71EREeUKDdWJgoKCk7KZmRIRUS7RX8JoqPSR3deyfSZbWA8QEeWQfp1CaaiWy7ZSR4iIcsxKnVGdjEQiJ+rq6qCXf0REuUQXPtBQDR44cCDg8XisYSKi3KKhGpZQ+V0ulzX0rwKnE263G24Zn0okMDk9jWnZu2TcI+MFMq5/T8bjSCST1llERJlnQtXa2moLVb7EqCoQwI5duxAMBvFkYAB3OzvR9/gx3gmF8F59PQKVlXj69Cl+bmvDwNAQZhgrIsoSE6o9e/bY1kxf5vNBZlkIh8O2FT6vXrmCj/fvt63w2dfXh0uXLmF4dNQ6m4gos0yompubbaEKVlTgy6NHzb/ftsKnhuzc2bN4wqWIiShLTKiamppsoXpXLus+P3LExOj/rPD57blz+EMu/4iIssGEqqGhwRYqr9ttPuKgX5x52wqfXd3duHL5MsbjcesoEVFmmVAt/FxWcnoatTU1eH/bNtRIrMwPkiVOaekVPn/v7cVvnZ2439MDFz9gSkRZYkJVX19vC5W+YJWcmkKx348PGxogl4ZYsmTJ3ExqbGwMv9y8iY6ODvyt61LJDIyL5xFRtphQLfyun9JYTU1MYJnXi7qtW7Fz926Ul5WZpYf1o6Oxe/cwMj6OwqIi8xSQiChbTKg2bdr0n1ApfbqXkMtAj4Ro8+bN+KilBdclUvdjMUzIuIsrLhDRIjChWvgB0vn0ck+f/LkkSOWlpWZGlZCA6RM/Lp5HRIvBhCoSibwxVGl6KahLEutLnvp/GSkiWiwaqkfV1dVhrpxARLnKuWLFimLZN+tv/d42qyIiWmyJRMLMqLROXOGTiHIU+v8BFU7x0K3QnAIAAAAASUVORK5CYII=');
 
@@ -1112,6 +1115,7 @@
     }
 
     /* icons */
+    .gallery-image-votes:before,
     .journal-like:before,
     .provider:before,
     .library-controls .secondary-nav-item-link:before,
@@ -2410,8 +2414,13 @@
             flex: 0;
 
             .gallery-image-votes {
-                padding: 4px 0;
+                padding: 2px 4px 4px;
                 text-align: right;
+
+                &:before {
+                    --width: 20px;
+                    --height: 20px;
+                }
             }
             .vote-text {
                 background: #DDD;
@@ -2430,10 +2439,18 @@
             &.gallery-image-vote-up-off,
             &.gallery-image-vote-up-on {
                 background: #C9E4B4 !important;
+
+                .gallery-image-votes:before {
+                    background-image: var(--vote-up);
+                }
             }
             &.gallery-image-vote-down-off,
             &.gallery-image-vote-down-on {
                 background: #E1ADB2 !important;
+
+                .gallery-image-votes:before {
+                    background-image: var(--vote-down);
+                }
             }
 
             &.gallery-image-vote-up-off,
@@ -2455,6 +2472,10 @@
 
                 .to-vote {
                     display: none;
+                }
+
+                .vote-text {
+                    background: #CCC !important;
                 }
             }
             .gallery-image-vote-buttons[data-ajax-form-state=up-voted] &.gallery-image-vote-up-off,
