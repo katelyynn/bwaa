@@ -2343,19 +2343,33 @@
 
 
 
+    .about-me-sidebar p {
+        overflow: hidden !important;
+    }
+
+
+
+
     /* dropdown */
+    .auth-dropdown-menu-wrap {
+        top: 18px !important;
+    }
+
+    .js .auth-dropdown-menu,
     .dropdown-menu-clickable {
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        box-shadow: 3px 3px 5px #ccc; /* technically only in buy dropdowns */
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+        border-radius: 3px !important;
+        box-shadow: 3px 3px 5px #ccc !important; /* technically only in buy dropdowns */
         font-size: 10px;
-        padding: unset;
-        margin: -10px 0 0 0;
+        padding: unset !important;
+        margin: -10px 0 0 0 !important;
 
         &:before {
             display: none;
         }
 
+        .auth-dropdown-menu-item,
         .dropdown-menu-clickable-item {
             background: #fff;
             color: #000;
