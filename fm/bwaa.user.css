@@ -2387,4 +2387,86 @@
             }
         }
     }
+
+
+
+
+    .gallery-image-vote-buttons {
+        display: flex;
+        gap: 10px;
+
+        button {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 20px;
+            letter-spacing: unset;
+            border-radius: 4px;
+            background: unset !important;
+            color: inherit !important;
+            padding: unset !important;
+            margin: unset !important;
+            overflow: hidden;
+            width: fit-content !important;
+            flex: 0;
+
+            .gallery-image-votes {
+                padding: 4px 0;
+                text-align: right;
+            }
+            .vote-text {
+                background: #DDD;
+                color: inherit;
+                height: 20px;
+                font-size: 10px;
+                text-transform: initial;
+            }
+
+            &:hover, &:focus-visible {
+                .vote-text {
+                    background-color: #CCC;
+                }
+            }
+
+            &.gallery-image-vote-up-off,
+            &.gallery-image-vote-up-on {
+                background: #C9E4B4 !important;
+            }
+            &.gallery-image-vote-down-off,
+            &.gallery-image-vote-down-on {
+                background: #E1ADB2 !important;
+            }
+
+            &.gallery-image-vote-up-off,
+            &.gallery-image-vote-down-off
+            {
+                display: flex;
+                flex-direction: column;
+
+                .voted {
+                    display: none;
+                }
+            }
+            .gallery-image-vote-buttons[data-ajax-form-state=up-voted] &.gallery-image-vote-up-on,
+            .gallery-image-vote-buttons[data-ajax-form-state=down-voted] &.gallery-image-vote-down-on,
+            .gallery-image-preferred-button &.gallery-image-preferred-off
+            {
+                display: flex;
+                flex-direction: column;
+
+                .to-vote {
+                    display: none;
+                }
+            }
+            .gallery-image-vote-buttons[data-ajax-form-state=up-voted] &.gallery-image-vote-up-off,
+            .gallery-image-vote-buttons[data-ajax-form-state=down-voted] &.gallery-image-vote-down-off,
+            .gallery-image-preferred-button &.gallery-image-preferred-on
+            {
+                display: none;
+
+                .to-vote {
+                    display: none;
+                }
+            }
+        }
+    }
 }

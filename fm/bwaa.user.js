@@ -161,6 +161,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_albums();
             bwaa_tracks();
             bwaa_shouts();
+            bwaa_artworks();
         }
 
         // last.fm is a single page application
@@ -185,6 +186,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_albums();
                                 bwaa_tracks();
                                 bwaa_shouts();
+                                bwaa_artworks();
                             }
                         }
                     }
@@ -1482,6 +1484,32 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             let src = shout_avatar.getAttribute('src');
             src = src.replace('/i/u/avatar70s/', '/i/u/550x0/');
             shout_avatar.setAttribute('src', src);
+        });
+    }
+
+
+
+
+    function bwaa_artworks() {
+        let gallery_sidebar = document.body.querySelector('.gallery-sidebar');
+
+        if (gallery_sidebar == null)
+            return;
+
+        if (gallery_sidebar.hasAttribute('data-bwaa'))
+            return;
+        gallery_sidebar.setAttribute('data-bwaa', 'true');
+
+        let gallery_image_votes = gallery_sidebar.querySelectorAll('.gallery-image-votes');
+        gallery_image_votes.forEach((button) => {
+            if (button.hasAttribute('data-bwaa'))
+                return;
+            button.setAttribute('data-bwaa', 'true');
+
+            let vote_text = document.createElement('span');
+            vote_text.classList.add('vote-text');
+            vote_text.innerHTML = '<span class="to-vote">Vote</span><span class="voted">Voted</span>';
+            button.after(vote_text);
         });
     }
 })();
