@@ -2490,4 +2490,22 @@
             }
         }
     }
+
+
+
+
+    .avatar-status-dot {
+        top: 1px !important;
+        left: 1px !important;
+        border-radius: unset;
+        width: var(--size, 6px) !important;
+        height: var(--size, 6px) !important;
+        border: 1px solid #fff;
+        outline: 1px solid #ccc;
+        box-shadow: unset;
+
+        .shout-user-avatar & {
+            --size: 8px;
+        }
+    }
 }
