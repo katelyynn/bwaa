@@ -2508,4 +2508,16 @@
             --size: 8px;
         }
     }
+
+
+
+
+    /* account migration */
+    .nag-bar--alert {
+        margin-bottom: 15px;
+
+        .container {
+            border: none !important;
+        }
+    }
 }
