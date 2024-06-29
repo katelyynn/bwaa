@@ -58,6 +58,30 @@ const trans = {
                     year: 'Last year'
                 }
             }
+        },
+        gallery: {
+            tabs: {
+                overview: 'Photos',
+                bookmarks: 'Saved'
+            },
+            bookmarks: {
+                name: 'Saved',
+                bio: 'Gallery photos can be saved for future reference.',
+                no_data: 'no images saved (・・ )',
+                button: {
+                    image_is_bookmarked: {
+                        name: 'You have saved this image'
+                    },
+                    bookmark_this_image: {
+                        name: 'Save this image',
+                        bio: 'Save this image for later'
+                    },
+                    unbookmark_this_image: {
+                        name: 'Unsave this image',
+                        bio: 'Unsave this image'
+                    }
+                }
+            }
         }
     }
 }
@@ -1520,8 +1544,85 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             let vote_text = document.createElement('span');
             vote_text.classList.add('vote-text');
-            vote_text.innerHTML = '<span class="to-vote">Favourite</span><span class="voted">Favourited</span>';
+            vote_text.innerHTML = '<span class="to-vote">Star</span><span class="voted">Starred</span>';
             button.after(vote_text);
         });
+
+        // bookmarks from bleh
+        let artist_name = document.body.querySelector('.header-new-title').textContent;
+        let focused_image_id = gallery_sidebar.querySelector('div[data-image-url]').getAttribute('data-image-url').split('/')[4];
+
+        let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
+        let image_is_bookmarked = false;
+        if (bookmarked_images.hasOwnProperty(artist_name)) {
+            if (bookmarked_images[artist_name].includes(focused_image_id)) {
+                image_is_bookmarked = true;
+                console.info('bleh - focused image is bookmarked');
+            }
+        }
+
+        let gallery_interactions = gallery_sidebar.querySelector('.gallery-image-buttons');
+        if (gallery_interactions == undefined)
+            return;
+
+        if (gallery_interactions.hasAttribute('data-bwaa'))
+            return;
+        gallery_interactions.setAttribute('data-bwaa', 'true');
+
+        // append a bookmark button
+        let gallery_bookmark_button = document.createElement('div');
+        gallery_bookmark_button.classList.add('gallery-image-bookmark-button');
+        gallery_bookmark_button.innerHTML = (`
+            <button class="gallery-image-bookmark-button-button" data-bleh--image-is-bookmarked="${image_is_bookmarked}" onclick="_update_image_bookmark(this, '${artist_name}', '${focused_image_id}')">
+                <span class="bookmark-votes">
+
+                </span>
+                <span class="vote-text" id="bookmark-vote-text">
+                    ${(image_is_bookmarked)
+                    ? 'Saved'
+                    : 'Save'}
+                </span>
+            </button>
+        `);
+        gallery_interactions.appendChild(gallery_bookmark_button);
+    }
+
+    unsafeWindow._update_image_bookmark = function(button, artist, id) {
+        update_image_bookmark(button, artist, id);
+    }
+    function update_image_bookmark(button, artist, id) {
+        let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
+        let is_bookmarked = (button.getAttribute('data-bleh--image-is-bookmarked') === 'true');
+
+        document.getElementById('bookmark-vote-text').textContent = (is_bookmarked)
+        ? 'Save'
+        : 'Saved';
+
+        if (!bookmarked_images.hasOwnProperty(artist))
+            bookmarked_images[artist] = [];
+
+        if (is_bookmarked) {
+            // remove from bookmarks
+
+            button.setAttribute('data-bleh--image-is-bookmarked', 'false');
+
+            let new_artist_bookmarks = [];
+            for (let image in bookmarked_images[artist]) {
+                if (bookmarked_images[artist][image] != id) {
+                    new_artist_bookmarks.push(bookmarked_images[artist][image]);
+                }
+            }
+            bookmarked_images[artist] = new_artist_bookmarks;
+
+            console.info('bleh - image', id, 'from artist', artist, 'has been removed from bookmarks');
+        } else {
+            // add to bookmarks
+
+            button.setAttribute('data-bleh--image-is-bookmarked', 'true');
+            bookmarked_images[artist].push(id);
+            console.info('bleh - image', id, 'from artist', artist, 'has been added to bookmarks');
+        }
+
+        localStorage.setItem('bleh_bookmarked_images', JSON.stringify(bookmarked_images));
     }
 })();
