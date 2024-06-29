@@ -1511,5 +1511,17 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             vote_text.innerHTML = '<span class="to-vote">Vote</span><span class="voted">Voted</span>';
             button.after(vote_text);
         });
+
+        let gallery_image_favs = gallery_sidebar.querySelectorAll('.gallery-image-preferred-states');
+        gallery_image_favs.forEach((button) => {
+            if (button.hasAttribute('data-bwaa'))
+                return;
+            button.setAttribute('data-bwaa', 'true');
+
+            let vote_text = document.createElement('span');
+            vote_text.classList.add('vote-text');
+            vote_text.innerHTML = '<span class="to-vote">Favourite</span><span class="voted">Favourited</span>';
+            button.after(vote_text);
+        });
     }
 })();
