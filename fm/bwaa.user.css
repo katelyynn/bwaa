@@ -49,6 +49,7 @@
         --border: #ccc;
         --border-2: #eee;
         --colour: #1b1b1b;
+        --colour-upper: #333;
         --colour-middle: #666;
         --colour-lower: #999;
         --text-link: #0187c5;
@@ -62,6 +63,20 @@
         --user-type-text-white: #fff;
         --user-type-black: #000;
         --user-type-red: #D51007;
+
+        [data-bwaa--theme="paint_it_black"] & {
+            --background: #16181C;
+            --navlist-border: #e7e7e7;
+            --body: #26292F;
+            --border: #414650;
+            --border-2: #2d313a;
+            --colour: #C3CDD8;
+            --colour-upper: #B2BBC4;
+            --colour-middle: #888F96;
+            --colour-lower: #7A848E;
+            --text-link: #86cae9;
+            --header-text: #ec6f68;
+        }
     }
 
 
@@ -100,7 +115,7 @@
         min-width: 962px;
         max-width: 962px;
         padding: 0 !important;
-        background: var(--cdn-flatness-grids-fiflufi-right) right top repeat-y #fff;
+        background: var(--cdn-flatness-grids-fiflufi-right) right top repeat-y var(--body);
         overflow: visible;
         border: 1px solid var(--border);
 
@@ -161,6 +176,10 @@
                 position: relative;
                 top: -7px;
                 text-align: center;
+
+                &.user-type--user {
+                    display: none;
+                }
 
                 a {
                     font-size: 11px;
@@ -581,7 +600,7 @@
             padding: 0 calc(21px + 8px) 1px 3px;
             background-position: left -360px;
             background-repeat: no-repeat;
-            color: var(--border-2);
+            color: #eee;
             font-size: 11px;
             line-height: 15px;
             font-weight: bold;
@@ -1141,7 +1160,7 @@
 
     .header-follower-btn,
     a {
-        color: #0187c5;
+        color: var(--text-link);
         text-decoration: none;
     }
 
@@ -1151,13 +1170,13 @@
 
     .header-follower-btn:hover,
     a:hover {
-        color: #0187c5;
+        color: var(--text-link);
         text-decoration: underline;
     }
 
     h3.text-18,
     h2 {
-        color: #D51007;
+        color: var(--header-text);
         font-weight: bold;
         font-size: 18px;
         line-height: 13px;
@@ -1228,11 +1247,11 @@
 
                     &:hover,
                     .grid-items-item:has(.link-block-cover-link:hover) & {
-                        color: #0187c5;
+                        color: var(--text-link);
                     }
                 }
                 .grid-items-item-aux-text a {
-                    color: #0187c5;
+                    color: var(--text-link);
                     font-size: 10px;
                     white-space: nowrap;
                     display: flex;
@@ -1307,7 +1326,7 @@
 
                     &:hover,
                     .grid-items-item:has(.link-block-cover-link:hover) & {
-                        color: #0187c5;
+                        color: var(--text-link);
                     }
                 }
 
@@ -1391,7 +1410,7 @@
 
                     &:hover,
                     .artist-top-albums li:has(.link-block-cover-link:hover) & {
-                        color: #0187c5;
+                        color: var(--text-link);
                     }
                 }
                 .artist-top-albums-item-aux-text {
@@ -1828,25 +1847,25 @@
             text-decoration: none !important;
 
             a {
-                color: #0187c5;
+                color: var(--text-link);
             }
         }
 
         .shout-body {
             font-size: 13px;
             line-height: 18px;
-            color: #333;
+            color: var(--colour-upper);
         }
 
         .shout-reply, .shout-action,
         .shout-timestamp {
             font-size: 11px;
-            color: #999 !important;
+            color: var(--colour-lower) !important;
         }
 
         &:has(.link-block-target:hover, .shout-user-avatar-link:hover) {
             .shout-user-avatar img {
-                border-color: #0187c5;
+                border-color: var(--text-link);
             }
             .shout-user a {
                 text-decoration: underline;
@@ -1982,7 +2001,7 @@
             }
 
             &:has(.user:hover) img {
-                border-color: #0187c5;
+                border-color: var(--text-link);
             }
 
             .image {
@@ -1998,7 +2017,7 @@
                     font-weight: bold;
 
                     &:hover {
-                        color: #0187c5;
+                        color: var(--text-link);
                     }
                 }
                 .scrobbles {
@@ -2032,7 +2051,7 @@
             }
 
             &:has(.user:hover) img {
-                border-color: #0187c5;
+                border-color: var(--text-link);
             }
 
             .image {
@@ -2048,7 +2067,7 @@
                     font-weight: bold;
 
                     &:hover {
-                        color: #0187c5;
+                        color: var(--text-link);
                     }
                 }
                 .scrobbles {
@@ -2158,7 +2177,7 @@
             gap: 14px;
 
             &:has(.label-release a:hover) {
-                border-color: #0187c5;
+                border-color: var(--text-link);
             }
 
             .image {

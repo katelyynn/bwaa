@@ -93,7 +93,7 @@ const trans = {
 });*/
 
 let settings_defaults = {
-
+    theme: 'simply_red'
 }
 
 let profile_badges = {
@@ -174,6 +174,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         console.info('bwaa - starting up');
 
         // essentials
+        load_settings();
         bwaa_load_header();
 
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
@@ -199,6 +200,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                             console.info('bwaa - bwaa\'ing');
 
                             // essentials
+                            load_settings();
                             bwaa_load_header();
 
                             if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
@@ -1624,5 +1626,55 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         }
 
         localStorage.setItem('bleh_bookmarked_images', JSON.stringify(bookmarked_images));
+    }
+
+
+
+
+    // theme
+    unsafeWindow.toggle_theme = function() {
+        let settings = JSON.parse(localStorage.getItem('bwaa')) || create_settings_template();
+
+        let current_theme = settings.theme;
+
+        if (current_theme == 'paint_it_black')
+            current_theme = 'simply_red';
+        else if (current_theme == 'simply_red')
+            current_theme = 'paint_it_black';
+
+        document.getElementById('theme-value').textContent = trans[lang].settings.themes[current_theme].name;
+
+        // save value
+        settings.theme = current_theme;
+        document.documentElement.setAttribute(`data-bwaa--theme`, `${current_theme}`);
+
+        // save to settings
+        localStorage.setItem('bwaa', JSON.stringify(settings));
+    }
+
+
+    // create blank settings
+    function create_settings_template() {
+        localStorage.setItem('bwaa', JSON.stringify(settings_defaults));
+        return settings_defaults;
+    }
+
+    // load settings
+    function load_settings() {
+        let settings = JSON.parse(localStorage.getItem('bwaa')) || create_settings_template();
+
+        // missing? set to default value
+        for (let setting in settings_defaults)
+            if (settings[setting] == undefined)
+                settings[setting] = settings_defaults[setting];
+
+        // save setting into body
+        for (let setting in settings) {
+            document.body.style.setProperty(`--${setting}`, settings[setting]);
+            document.documentElement.setAttribute(`data-bwaa--${setting}`, `${settings[setting]}`);
+        }
+
+        // save to settings
+        localStorage.setItem('bwaa', JSON.stringify(settings));
     }
 })();
