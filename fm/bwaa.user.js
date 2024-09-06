@@ -16,17 +16,19 @@
 
 console.info('bwaa - beginning to load');
 
-let version = '2024.0623';
-
-let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version} »`;
-
-let lang = document.documentElement.getAttribute('lang');
-let valid_langs = ['en'];
-
-if (!valid_langs.includes(lang)) {
-    console.info('bwaa - language fallback from', lang, 'to en (lang is not listed as valid)', valid_langs);
-    lang = 'en';
+let version = {
+    build: '2024.0905',
+    sku: 'main'
 }
+
+let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »`;
+
+// loads your selected language in last.fm
+let lang;
+// WARN: fill this out if translating
+// lists all languages with valid bwaa translations
+// any custom translations will not load if not listed here!!
+let valid_langs = ['en'];
 
 const trans = {
     en: {
@@ -83,6 +85,16 @@ const trans = {
                 }
             }
         }
+    }
+}
+
+function lookup_lang() {
+    root = document.querySelector('.masthead-logo a').getAttribute('href');
+    lang = document.documentElement.getAttribute('lang');
+
+    if (!valid_langs.includes(lang)) {
+        console.info('bwaa - language fallback from', lang, 'to en (language is not listed as valid)', valid_langs);
+        lang = 'en';
     }
 }
 
@@ -159,6 +171,8 @@ let profile_badges = {
 let auth = '';
 let auth_link = '';
 
+let root = '';
+
 let bwaa_url = 'https://www.last.fm/bwaa';
 let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
@@ -174,6 +188,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         console.info('bwaa - starting up');
 
         // essentials
+        lookup_lang();
         load_settings();
         bwaa_load_header();
 
@@ -187,6 +202,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_tracks();
             bwaa_shouts();
             bwaa_artworks();
+            bwaa_friends();
         }
 
         // last.fm is a single page application
@@ -200,6 +216,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                             console.info('bwaa - bwaa\'ing');
 
                             // essentials
+                            lookup_lang();
                             load_settings();
                             bwaa_load_header();
 
@@ -213,6 +230,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_tracks();
                                 bwaa_shouts();
                                 bwaa_artworks();
+                                bwaa_friends();
                             }
                         }
                     }
@@ -229,7 +247,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
     // header
     function bwaa_load_header() {
-        let auth_link = document.body.querySelector('.auth-link');
+        let auth_link = document.querySelector('a.auth-link');
 
         if (auth_link.hasAttribute('data-bwaa'))
             return;
@@ -859,7 +877,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             `);
             col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
 
-            let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
+            let listener_trend = document.body.querySelector('.listener-trend');
+            if (listener_trend == null)
+                return;
+            listener_trend = listener_trend.outerHTML;
 
             let artist_stats = document.createElement('section');
             artist_stats.innerHTML = (`
@@ -1143,7 +1164,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             `);
             col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
 
-            let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
+            let listener_trend = document.body.querySelector('.listener-trend');
+            if (listener_trend == null)
+                return;
+            listener_trend = listener_trend.outerHTML;
 
             let album_stats = document.createElement('section');
             album_stats.innerHTML = (`
@@ -1431,7 +1455,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             `);
             col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
 
-            let listener_trend = document.body.querySelector('.listener-trend').outerHTML;
+            let listener_trend = document.body.querySelector('.listener-trend');
+            if (listener_trend == null)
+                return;
+            listener_trend = listener_trend.outerHTML;
 
             let track_stats = document.createElement('section');
             track_stats.innerHTML = (`
@@ -1500,7 +1527,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
     function bwaa_shouts() {
         // avatars
-        let shout_avatars = document.body.querySelectorAll('.shout-user-avatar img');
+        let shout_avatars = document.body.querySelectorAll('.shout-user-avatar img:not([data-bwaa])');
         shout_avatars.forEach((shout_avatar) => {
             if (shout_avatar.hasAttribute('data-bwaa'))
                 return;
@@ -1510,6 +1537,22 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             let src = shout_avatar.getAttribute('src');
             src = src.replace('/i/u/avatar70s/', '/i/u/550x0/');
             shout_avatar.setAttribute('src', src);
+        });
+    }
+
+
+    function bwaa_friends() {
+        // avatars
+        let friend_avatars = document.body.querySelectorAll('.user-list-avatar img:not([data-bwaa])');
+        friend_avatars.forEach((friend_avatar) => {
+            if (friend_avatar.hasAttribute('data-bwaa'))
+                return;
+            friend_avatar.setAttribute('data-bwaa', 'true');
+
+            // this allows friend avatars to be varied in shape
+            let src = friend_avatar.getAttribute('src');
+            src = src.replace('/i/u/avatar70s/', '/i/u/550x0/');
+            friend_avatar.setAttribute('src', src);
         });
     }
 
