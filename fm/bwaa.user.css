@@ -70,7 +70,7 @@
         [data-bwaa--theme="paint_it_black"] & {
             --background: #000000;
             --navlist-border: #e7e7e7;
-            --body: #141414;
+            --body: #0a0a0a;
             --border: #424242;
             --border-2: #333;
             --border-3: #444;
@@ -379,6 +379,7 @@
     }
 
     /* navlist */
+    .subpage > .navlist,
     .row > .navlist {
         position: absolute;
         top: -1px;

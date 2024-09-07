@@ -498,6 +498,13 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         } else {
             // profile non-overview stuff
 
+            // which subpage is it?
+            let subpage_type = document.body.classList[1].replace('namespace--', '');
+
+            if (subpage_type == 'user_obsessions_overview') {
+                col_main = document.body.querySelector('.container.page-content');
+            }
+
             let header_user_data = {
                 avatar: profile_header.querySelector('.avatar img'),
                 name: profile_header.querySelector('.header-title a').textContent,
@@ -522,8 +529,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 </div>
             `);
 
-            row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, col_main.firstChild);
+            try { row.insertBefore(navlist, col_main); } catch(e) { col_main.insertBefore(navlist, col_main.firstElementChild) }
+            col_main.insertBefore(new_header, col_main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
