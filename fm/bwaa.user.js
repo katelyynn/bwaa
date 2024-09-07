@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0623
+// @version      2024.0906
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -17,8 +17,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0905',
-    sku: 'main'
+    build: '2024.0906',
+    sku: 'sweet'
 }
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »`;
@@ -655,6 +655,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             let tags_html = '';
             let tags = col_main.querySelectorAll('.tag a');
+            let tags_see_more = col_main.querySelector('.tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -665,7 +666,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">See more</a>`;
 
 
             let gallery_sidebar_photos_ems = document.body.querySelectorAll('.sidebar-image-list-item');
@@ -841,15 +842,17 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             });
 
             let more_listeners = col_main.querySelector('.personal-stats-item--listeners .header-metadata-display a');
-            let listeners_you_know = document.createElement('section');
-            listeners_you_know.innerHTML = (`
-                <h2>Listeners You Know</h2>
-                ${listeners_placeholder.outerHTML}
-                <div class="module-options">
-                    <a href="${more_listeners.getAttribute('href')}">See ${more_listeners.textContent} more</a>
-                </div>
-            `);
-            col_sidebar.insertBefore(listeners_you_know, col_sidebar.firstChild);
+            if (more_listeners != null) {
+                let listeners_you_know = document.createElement('section');
+                listeners_you_know.innerHTML = (`
+                    <h2>Listeners You Know</h2>
+                    ${listeners_placeholder.outerHTML}
+                    <div class="module-options">
+                        <a href="${more_listeners.getAttribute('href')}">See ${more_listeners.textContent} more</a>
+                    </div>
+                `);
+                col_sidebar.insertBefore(listeners_you_know, col_sidebar.firstChild);
+            }
 
             let my_avi = auth_link.querySelector('img').getAttribute('src');
             let scrobble_count_element = col_main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
@@ -1036,6 +1039,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             let tags_html = '';
             let tags = col_main.querySelectorAll('.tag a');
+            let tags_see_more = col_main.querySelector('.tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -1046,7 +1050,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">See more</a>`;
 
 
             let new_header = document.createElement('section');
@@ -1307,6 +1311,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             let tags_html = '';
             let tags = col_main.querySelectorAll('.tag a');
+            let tags_see_more = col_main.querySelector('.tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -1317,7 +1322,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${col_main.querySelector('.tags-view-all').getAttribute('href')}">See more</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">See more</a>`;
 
 
             let play_on_youtube = document.body.querySelector('.play-this-track-playlink--youtube');

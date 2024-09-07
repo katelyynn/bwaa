@@ -121,6 +121,14 @@
         overflow: visible;
         border: 1px solid var(--border);
 
+        &.page-content {
+            min-height: 400px;
+        }
+        &:has(.content-top-lower-row),
+        .page-content + &:not(.page-content) {
+            display: none;
+        }
+
         &.subpage {
             background: var(--body);
 
@@ -822,6 +830,7 @@
             &:hover, &:focus-within {
                 background: #bfdff4 !important;
             }
+            &.chartlist-row--highlight,
             &.chartlist-row--now-scrobbling {
                 background: #fffcca !important;
 
@@ -1106,12 +1115,13 @@
 
     /* section */
     .col-main {
+        .album-and-lyrics-row,
         #tracklist,
         .profile-mobile-featured-track + section,
         .profile-mobile-featured-track + p, /* private tracks */
         section + p,
         section + ul,
-        section + section {
+        section + section:not(.secondary-album-column) {
             border-top: 1px dotted #ccc;
             margin: 30px -15px 0 -15px;
             padding: 15px 15px;
@@ -1297,6 +1307,14 @@
                     position: absolute;
                     left: 7px;
                     top: 2px;
+
+                    &[alt*="Yandhi"] {
+                        transform: scale(1.25);
+                    }
+                    &[alt*="Yeezus"] {
+                        transform: scale(1.2);
+                        left: 4px;
+                    }
                 }
 
                 &:after {
@@ -1497,6 +1515,93 @@
                     margin: 5px 0 0 0 !important;
                     font-size: 10px;
                     color: #696969;
+                }
+            }
+        }
+    }
+    /* track featured on album */
+    .album-and-lyrics-row {
+        display: flex;
+    }
+    .source-album-column,
+    .secondary-album-column {
+        flex: 1;
+        line-height: 1.25em;
+        margin: unset !important;
+        padding: unset !important;
+        width: unset;
+
+        h3 {
+            margin-bottom: 12px;
+        }
+
+        .source-album,
+        li {
+            position: relative;
+            margin: unset !important;
+            margin-bottom: 15px !important;
+            padding: 0 15px 0 85px !important;
+            min-height: 70px;
+            overflow: hidden;
+
+            .source-album-art {
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                &:after {
+                    content: '';
+                    background-image: var(--cdn-flatness-catalogue-album-jewelcase-medium);
+                    width: 73px;
+                    height: 68px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background-repeat: no-repeat;
+                    background-position: left top;
+                }
+
+                & > span {
+                    width: 75px;
+                    height: 67px;
+                    position: relative;
+
+                    img {
+                        width: 64px;
+                        height: 64px;
+                        position: absolute;
+                        left: 7px;
+                        top: 2px;
+                    }
+                }
+            }
+
+            .image-overlay-playlink-link {
+                display: none;
+            }
+
+            .source-album-details {
+                color: #000;
+                line-height: inherit;
+                margin: unset !important;
+
+                .source-album-name {
+                    margin: unset !important;
+                    line-height: inherit;
+                    max-height: unset;
+                    font-weight: bold;
+
+                    &:hover,
+                    .source-album:has(.link-block-cover-link:hover) & {
+                        color: var(--text-link);
+                    }
+                }
+
+                .source-album-artist, .source-album-stats {
+                    color: inherit;
+                    font-size: 11px;
+                    line-height: inherit;
+                    margin: unset;
                 }
             }
         }
@@ -2131,6 +2236,7 @@
             background-position: right top;
         }
     }
+    .more-link-fullwidth-right,
     .more-link {
         margin: unset !important;
         padding: unset !important;
@@ -2674,7 +2780,7 @@
         padding: 3px !important;
     }
 
-    .content-form textarea[style*="height: "] {
+    .content-form textarea[style*="height: "]:not(#id_body) {
         min-height: 39px !important;
         max-height: 70px !important;
         height: fit-content !important;
@@ -2836,6 +2942,47 @@
 
                 &:before {
                     display: none;
+                }
+            }
+        }
+    }
+
+
+
+
+    .avatar-shape, .avatar::after, .avatar img {
+        border-radius: unset;
+    }
+
+
+
+
+    .footer {
+        font-size: 11px;
+        text-align: left;
+        line-height: 1.181818em;
+        margin: 10px 0 0 110px;
+        padding-top: 25px;
+        background: unset;
+        color: inherit;
+        overflow: hidden;
+
+        .container {
+            border: unset;
+        }
+
+        .footer-top {
+            .footer-top-row {
+                display: flex;
+
+                .footer-top-col {
+                    flex: 1;
+                    margin-left: 15px;
+                    padding: unset;
+
+                    &:last-child {
+                        display: none;
+                    }
                 }
             }
         }
