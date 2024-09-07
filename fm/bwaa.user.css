@@ -2727,6 +2727,7 @@
 
 
     /* generic button */
+    .user-list-follower-btn,
     #ot-sdk-btn.ot-sdk-show-settings,
     .btn-primary {
         border: 1px solid !important;
@@ -2749,9 +2750,24 @@
         text-transform: unset !important;
 
         min-width: unset !important;
-        min-height: unset !important;
+        min-height: 18px !important;
+        width: fit-content !important;
+        height: fit-content !important;
 
         transition: none !important;
+
+        &.user-list-follower-btn {
+            &:before {
+                display: none;
+            }
+            &:after {
+                content: var(--txt, 'Follow');
+            }
+
+            &[data-analytics-action="UnfollowUser"] {
+                --txt: 'Following';
+            }
+        }
 
         .btn-inner {
             height: 16px;
@@ -2797,7 +2813,7 @@
 
         .user-list-inner-wrap {
             margin: 0 0 30px 0;
-            padding: 0 0 6px 80px;
+            padding: 0 0 calc(18px + 6px) 80px;
 
             .user-list-name {
                 border-bottom: 1px solid #ccc;
@@ -2832,6 +2848,13 @@
                         line-height: 1.181818;
                     }
                 }
+            }
+
+            .user-list-follower-btn {
+                position: absolute;
+                left: 80px;
+                top: unset;
+                bottom: 0;
             }
 
             &:has(.link-block-target:hover, .link-block-cover-link:hover) {
