@@ -911,7 +911,7 @@
             }
             &.chartlist-row--highlight,
             &.chartlist-row--now-scrobbling {
-                background: var(--body)cca !important;
+                background: #fffcca !important;
 
                 --general-td-padding: 4px 10px;
 
