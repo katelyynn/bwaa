@@ -84,6 +84,16 @@ const trans = {
                     }
                 }
             }
+        },
+        settings: {
+            themes: {
+                simply_red: {
+                    name: 'Simply Red'
+                },
+                paint_it_black: {
+                    name: 'Paint It Black'
+                }
+            }
         }
     }
 }
@@ -104,6 +114,7 @@ function lookup_lang() {
     delay: [null, 50]
 });*/
 
+let settings;
 let settings_defaults = {
     theme: 'simply_red'
 }
@@ -263,6 +274,14 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         promo.classList.add('header-promo');
         promo.innerHTML = current_promo;
         inner.appendChild(promo);
+
+
+        let search_companion_nav = document.createElement('div');
+        search_companion_nav.classList.add('search-companion-nav');
+        search_companion_nav.innerHTML = (`
+            <a onclick="open_language_menu()">English</a> | <a onclick="toggle_theme()" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</a> | <a href="${root}help">Help</a>
+        `);
+        inner.appendChild(search_companion_nav);
     }
 
 
@@ -1681,8 +1700,6 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
     // theme
     unsafeWindow.toggle_theme = function() {
-        let settings = JSON.parse(localStorage.getItem('bwaa')) || create_settings_template();
-
         let current_theme = settings.theme;
 
         if (current_theme == 'paint_it_black')
@@ -1709,7 +1726,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
     // load settings
     function load_settings() {
-        let settings = JSON.parse(localStorage.getItem('bwaa')) || create_settings_template();
+        settings = JSON.parse(localStorage.getItem('bwaa')) || create_settings_template();
 
         // missing? set to default value
         for (let setting in settings_defaults)
