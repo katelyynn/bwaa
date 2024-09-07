@@ -214,6 +214,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_shouts();
             bwaa_artworks();
             bwaa_friends();
+            bwaa_obsessions();
         }
 
         // last.fm is a single page application
@@ -242,6 +243,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_shouts();
                                 bwaa_artworks();
                                 bwaa_friends();
+                                bwaa_obsessions();
                             }
                         }
                     }
@@ -1748,5 +1750,24 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         // save to settings
         localStorage.setItem('bwaa', JSON.stringify(settings));
+    }
+
+
+
+
+    function bwaa_obsessions() {
+        let obsession_container = document.querySelector('.obsession-container:not([data-bwaa="true"])');
+
+        if (obsession_container == null)
+            return;
+
+        obsession_container.setAttribute('data-bwaa', 'true');
+
+        let page_content = obsession_container.querySelector('.page-content');
+        page_content.classList.add('subpage');
+
+        let adaptive_skin = document.querySelector('.adaptive-skin-container');
+        let content_top = adaptive_skin.querySelector('.content-top');
+        adaptive_skin.removeChild(content_top);
     }
 })();
