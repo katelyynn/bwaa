@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2024.0620
+@version        2024.0907
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -330,14 +330,14 @@
 
         h1 {
             font-size: 17px;
-            margin-top: 0.15em;
+            margin: 0.15em 0 0 0 !important;
             font-weight: bold;
             line-height: 1.2em;
-            color: --text-link;
+            color: var(--text-link);
         }
 
         & + .library-controls {
-            margin: -5px 0 10px 0;
+            margin: 0 0 10px 0;
             display: flex;
             float: unset;
 
@@ -2935,15 +2935,23 @@
 
 
 
+    .top-listeners {
+        grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+        gap: 0;
+        margin: unset;
+    }
+    .top-listeners-item-wrap,
     .user-list-item {
         margin: 0 15px 0 0;
         padding: unset;
         width: 370px;
 
+        .top-listeners-item,
         .user-list-inner-wrap {
             margin: 0 0 30px 0;
             padding: 0 0 calc(18px + 6px) 80px;
 
+            .top-listeners-item-name,
             .user-list-name {
                 border-bottom: 1px solid var(--border);
                 padding-bottom: 2px;
@@ -2953,7 +2961,9 @@
                 text-decoration: none !important;
             }
 
+            .top-listeners-track,
             .user-list-description {
+                &.top-listeners-track,
                 p {
                     font-size: 10px;
                     line-height: 1.181818;
@@ -3150,13 +3160,14 @@
 
 
 
-    .lastfm-settings {
+    .col-main {
         .navlist {
             width: 100%;
             padding: unset;
             box-shadow: none;
             border-bottom: solid 1px var(--navlist-border);
             line-height: 26px;
+            margin-top: -5px;
 
             .navlist-items {
                 overflow: visible;
