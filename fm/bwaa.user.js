@@ -215,6 +215,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_artworks();
             bwaa_friends();
             bwaa_obsessions();
+            bwaa_lastfm_settings();
         }
 
         // last.fm is a single page application
@@ -244,6 +245,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_artworks();
                                 bwaa_friends();
                                 bwaa_obsessions();
+                                bwaa_lastfm_settings();
                             }
                         }
                     }
@@ -1769,5 +1771,40 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
         let content_top = adaptive_skin.querySelector('.content-top');
         adaptive_skin.removeChild(content_top);
+    }
+
+
+
+
+    function bwaa_lastfm_settings() {
+        if (!document.body.classList[2].startsWith('namespace--settings'))
+            return;
+
+        let page_content = document.querySelector('.page-content:not([data-bwaa="true"])');
+        page_content.setAttribute('data-bwaa', 'true');
+        page_content.classList.add('lastfm-settings', 'subpage');
+        let col_main = page_content.querySelector('.col-main');
+
+        let adaptive_skin = document.querySelector('.adaptive-skin-container');
+        let content_top = adaptive_skin.querySelector('.content-top');
+
+        let navlist = content_top.querySelector('.navlist');
+        col_main.insertBefore(navlist, col_main.firstElementChild);
+
+        adaptive_skin.removeChild(content_top);
+
+        let my_avi = auth_link.querySelector('img').getAttribute('src');
+        let new_header = document.createElement('section');
+        new_header.classList.add('profile-header-subpage-section');
+        new_header.innerHTML = (`
+            <div class="badge-avatar">
+                <img src="${my_avi}" alt="${auth}">
+            </div>
+            <div class="badge-info">
+                <a href="${root}user/${auth}">${auth}</a>
+                <h1>Your Account Settings</h1>
+            </div>
+        `);
+        col_main.insertBefore(new_header, col_main.firstElementChild);
     }
 })();
