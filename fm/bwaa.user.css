@@ -2960,6 +2960,7 @@
             margin-bottom: 15px;
         }
 
+        .form-group--submit,
         .form-group + .form-group {
             margin-top: 6px;
         }
@@ -2974,6 +2975,11 @@
             }
         }
 
+        fieldset {
+            border: 1px solid var(--border);
+        }
+
+        legend,
         .control-label {
             font: inherit;
             margin: unset;
@@ -2983,6 +2989,38 @@
 
         [type="checkbox"] {
             margin-right: 4px;
+        }
+
+        .btn-file-label {
+            padding: unset;
+            min-width: unset;
+            min-height: unset;
+            font: inherit;
+            color: var(--colour-middle);
+        }
+    }
+
+    section {
+        margin-top: 15px;
+    }
+    #update-picture {
+        .col-xs-4.col-sm-2 {
+            padding: unset;
+
+            .avatar {
+                aspect-ratio: 1 / 1;
+                border: 1px solid var(--body);
+                outline: 1px solid var(--border);
+
+                margin-bottom: 10px;
+
+                &:after {
+                    display: none;
+                }
+            }
+            .image-remove-form {
+                text-align: center;
+            }
         }
     }
 
@@ -3516,6 +3554,7 @@
 
 
 
+    .form-row-help-text,
     .bulleted-list,
     .alert,
     .no-data-message {
