@@ -3047,6 +3047,10 @@
 
     section {
         margin-top: 15px;
+
+        .col-sidebar &:first-child {
+            margin-top: unset;
+        }
     }
     #update-picture {
         .col-xs-4.col-sm-2 {
