@@ -2876,8 +2876,7 @@
     }
 
 
-    .form-group-controls input,
-    .content-form textarea,
+    .shout-form textarea,
     input[type=password] {
         font-size: inherit !important;
         line-height: inherit !important;
