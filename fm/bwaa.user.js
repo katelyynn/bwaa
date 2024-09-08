@@ -326,11 +326,6 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         let journal_nav_btn = document.createElement('li');
         journal_nav_btn.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--journal');
-        journal_nav_btn.innerHTML = (`
-            <a class="secondary-nav-item-link" href="${root}user/${auth}/journal">
-                Journal
-            </a>
-        `);
 
 
         if (profile_header_overview) {
@@ -348,6 +343,12 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 artists: header_metadata[1].querySelector('a'),
                 loved_tracks: (header_metadata[2] != undefined) ? header_metadata[2].querySelector('a') : placeholder_loved_tracks()
             }
+
+            journal_nav_btn.innerHTML = (`
+                <a class="secondary-nav-item-link" href="${root}user/${header_user_data.name}/journal">
+                    Journal
+                </a>
+            `);
 
             // user type
             let user_type = 'user';
@@ -526,12 +527,6 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             if (subpage_type == 'user_obsessions_overview') {
                 col_main = document.body.querySelector('.container.page-content');
-            } else if (subpage_type.startsWith('user_journal')) {
-                journal_nav_btn.innerHTML = (`
-                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${auth}/journal">
-                        Journal
-                    </a>
-                `);
             }
 
             let header_user_data = {
@@ -539,6 +534,20 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 name: profile_header.querySelector('.header-title a').textContent,
                 link: profile_header.querySelector('.header-title a').getAttribute('href'),
                 page: document.body.querySelector('.content-top-header').textContent
+            }
+
+            if (subpage_type.startsWith('user_journal')) {
+                journal_nav_btn.innerHTML = (`
+                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${header_user_data.name}/journal">
+                        Journal
+                    </a>
+                `);
+            } else {
+                journal_nav_btn.innerHTML = (`
+                    <a class="secondary-nav-item-link" href="${root}user/${header_user_data.name}/journal">
+                        Journal
+                    </a>
+                `);
             }
 
             let library_controls = content_top.querySelector('.library-controls');
