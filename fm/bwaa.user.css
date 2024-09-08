@@ -1203,9 +1203,13 @@
         section + p,
         section + ul,
         section + section:not(.secondary-album-column) {
-            border-top: 1px dotted var(--border);
-            margin: 30px -15px 0 -15px;
+            margin: -15px -15px 0 -15px;
             padding: 15px 15px;
+
+            &:not(.profile-header-subpage-section + &) {
+                border-top: 1px dotted var(--border);
+                margin: 30px -15px 0 -15px;
+            }
         }
 
         /* private tracks */
@@ -3298,6 +3302,7 @@
 
     .col-sidebar,
     .col-main {
+        .shoutbox-controls .dropdown-menu-clickable,
         .tab-container,
         .section-with-control .dropdown-menu-clickable:not(.chartlist-more-menu, .dropdown-menu-clickable--padded),
         .section-controls .dropdown-menu-clickable,
@@ -3382,6 +3387,7 @@
     .artist-overview-top-tracks {
         margin-top: unset !important;
     }
+    .shoutbox-controls,
     .section-with-control,
     .section-controls {
         &.section-controls {
@@ -3443,6 +3449,14 @@
         }
         .dropdown-menu-clickable:not(.chartlist-more-menu, .dropdown-menu-clickable--padded) {
             display: flex !important;
+        }
+    }
+
+    .shoutbox-controls {
+        margin-top: 15px;
+
+        .dropdown-menu-clickable-button {
+            top: calc(13px + 15px) !important;
         }
     }
 
