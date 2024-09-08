@@ -2815,6 +2815,7 @@
 
 
     /* generic button */
+    .btn-cancel,
     .user-list-follower-btn,
     #ot-sdk-btn.ot-sdk-show-settings,
     .btn-secondary, .btn-primary {
@@ -2828,6 +2829,7 @@
 
         color: #101010 !important;
         text-shadow: rgba(255,255,255,0.5) 0 1px 0 !important;
+        text-decoration: none !important;
 
         padding: unset !important;
         font-family: var(--font) !important;
@@ -2874,6 +2876,7 @@
     }
 
 
+    .form-group-controls input,
     .content-form textarea,
     input[type=password] {
         font-size: inherit !important;
@@ -2889,6 +2892,36 @@
         max-height: 70px !important;
         height: fit-content !important;
         overflow: hidden !important;
+    }
+
+
+    .dropdown-menu-clickable--padded {
+        padding: 6px !important;
+    }
+    .settings-form {
+        .form-header {
+            margin-bottom: 15px;
+        }
+
+        .form-group + .form-group {
+            margin-top: 6px;
+        }
+
+        .form-submit {
+            display: flex;
+            gap: 4px;
+        }
+
+        .control-label {
+            font: inherit;
+            margin: unset;
+            color: var(--colour-middle);
+            font-weight: bold;
+        }
+
+        [type="checkbox"] {
+            margin-right: 4px;
+        }
     }
 
 
@@ -3354,6 +3387,7 @@
 
 
 
+    .bulleted-list,
     .alert,
     .no-data-message {
         margin: 15px 0 !important;

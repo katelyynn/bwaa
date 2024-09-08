@@ -1779,6 +1779,14 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
 
     function bwaa_lastfm_settings() {
+        let content_forms = document.querySelectorAll('.content-form:not([data-bwaa="true"])');
+        content_forms.forEach((content_form) => {
+            content_form.classList.remove('content-form');
+            content_form.classList.add('settings-form');
+
+            content_form.setAttribute('data-bwaa', 'true');
+        });
+
         if (!document.body.classList[2].startsWith('namespace--settings'))
             return;
 
