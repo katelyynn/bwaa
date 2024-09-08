@@ -63,7 +63,7 @@
         --header-text-black: #000;
         --header-text: #D51007;
 
-        --listening-trend-head: #f7f7f6;
+        --listening-trend-head: #f7f7f7;
         --listening-trend: #fefefe;
 
         --text-over-header: #fff;
@@ -92,7 +92,7 @@
             --colour-upper: #B2BBC4;
             --colour-middle: #888F96;
             --colour-lower: #7A848E;
-            --text-link: #86cae9;
+            --text-link: #75a2d6;
             --header-text-black: #fff;
             --header-text: #ec6f68;
 
@@ -321,6 +321,7 @@
     .profile-header-subpage-section {
         display: flex;
         gap: 10px;
+        margin-top: unset;
         margin-bottom: 15px;
 
         .badge-avatar img {
@@ -964,6 +965,11 @@
                     width: 26px;
                     height: 15px;
                     font-size: 9px;
+
+                    [data-bwaa--theme="paint_it_black"] & {
+                        filter: brightness(70%) contrast(170%);
+                        border-top-left-radius: 4px;
+                    }
 
                     &:before {
                         display: none;
@@ -1704,6 +1710,7 @@
     .profile-artist-section {
         display: flex;
         gap: 15px;
+        margin: unset;
 
         .artist-info {
             display: flex;
@@ -1760,7 +1767,7 @@
                 overflow: hidden;
 
                 .top {
-                    border: 1px solid #fff;
+                    border: 1px solid var(--body);
                     width: 253px;
                     overflow: hidden;
 
@@ -1779,7 +1786,7 @@
                     img {
                         width: 63px;
                         height: 63px;
-                        border: 1px solid #fff;
+                        border: 1px solid var(--body);
                         border-top: none;
                         border-right: none;
                         position: static;
@@ -1787,7 +1794,7 @@
                 }
             }
             .option {
-                background: #F7F7F7;
+                background: var(--listening-trend-head);
                 padding: 3px;
                 font-weight: bold;
                 font-size: 11px;
@@ -1819,6 +1826,7 @@
     .profile-album-section {
         display: flex;
         gap: 15px;
+        margin: unset;
 
         .album-info {
             display: flex;
@@ -1896,6 +1904,7 @@
     .profile-track-section {
         display: flex;
         flex-direction: column;
+        margin: unset;
 
         .header {
             display: flex;
@@ -2223,6 +2232,13 @@
             .highcharts-graph {
                 stroke: var(--header-text) !important;
             }
+
+            .highcharts-background {
+                fill: transparent !important;
+            }
+            .highcharts-alternate-grid {
+                fill: var(--navlist-grad) !important;
+            }
         }
     }
 
@@ -2341,6 +2357,7 @@
             background-position: right top;
         }
     }
+    .more-link-fullwidth-right-flush-top,
     .cta-link-wrap,
     .more-link-fullwidth-right,
     .more-link {
@@ -2890,6 +2907,16 @@
         color: #101010 !important;
         text-shadow: rgba(255,255,255,0.5) 0 1px 0 !important;
         text-decoration: none !important;
+
+        [data-bwaa--theme="paint_it_black"] & {
+            border-color: #444444 #505050 #636363 #858585 !important;
+
+            background-color: #2b2b2b !important;
+            background-image: linear-gradient(0deg, #2b2b2b, #1b1b1b) !important;
+
+            color: var(--colour) !important;
+            text-shadow: unset !important;
+        }
 
         padding: unset !important;
         font-family: var(--font) !important;
@@ -3520,6 +3547,11 @@
         width: 26px;
         height: 15px;
         font-size: 9px;
+
+        [data-bwaa--theme="paint_it_black"] & {
+            filter: brightness(70%) contrast(170%);
+            border-top-left-radius: 4px;
+        }
 
         opacity: unset !important;
         margin: unset;

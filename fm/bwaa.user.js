@@ -965,7 +965,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 </div>
                 <div class="badge-info">
                     <a href="${header_user_data.link}">${header_user_data.name}</a>
-                    <h1>${header_user_data.page}</h1>
+                    <h1 id="artist-subpage-text">${header_user_data.page}</h1>
                 </div>
             `);
 
@@ -1615,6 +1615,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         if (gallery_sidebar == null)
             return;
+
+        let artist_subpage_text = document.getElementById('artist-subpage-text');
+        artist_subpage_text.textContent = document.querySelector('.subpage-title').textContent;
 
         /*if (gallery_sidebar.hasAttribute('data-bwaa'))
             return;
