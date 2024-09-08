@@ -412,6 +412,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 profile_actions.innerHTML = (`
                     <div class="options">
                         ${follow_button}
+                        <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${header_user_data.name}">Send a message</a>
                         <a class="has-icon leave-a-shout" href="${header_user_data.link}/shoutbox">Leave a shout</a>
                     </div>
                     <div class=tasteometer ${tasteometer_lvl}">
@@ -450,9 +451,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         <div class="top">
                             <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? '(follows you!)' : ''}
                         </div>
+                        ${(auth != header_user_data.name) ? `
                         <div class="bottom user-last-seen">
-                        Last seen: ${last_seen}
+                            Last seen: ${last_seen}
                         </div>
+                        ` : `
+                        <div class="bottom edit-profile-details">
+                            <a href="${root}settings">Edit profile details »</a>
+                        </div>
+                        `}
                     </div>
                     <div class="user-data">
                         <div class="user-plays">
