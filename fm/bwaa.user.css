@@ -1535,6 +1535,7 @@
                     line-height: inherit;
                     max-height: unset;
                     font-weight: bold;
+                    color: var(--header-text-black);
 
                     &:hover,
                     .artist-top-albums li:has(.link-block-cover-link:hover) & {
