@@ -799,7 +799,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             //
             let top_global_listeners_placeholder = document.createElement('div');
-            top_global_listeners_placeholder.classList.add('top-listeners');
+            top_global_listeners_placeholder.classList.add('top-listeners-small');
             let top_global_listeners_you_know_list = document.body.querySelectorAll('.listeners-section-item');
             console.info(top_global_listeners_you_know_list);
             let top_global_listener_index = 0;
@@ -841,7 +841,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             // listeners you! know
             let listeners_placeholder = document.createElement('div');
-            listeners_placeholder.classList.add('top-listeners');
+            listeners_placeholder.classList.add('top-listeners-small');
             let listeners_you_know_list = col_main.querySelectorAll('.personal-stats-listener');
             console.info(listeners_you_know_list);
             let listener_index = 0;
