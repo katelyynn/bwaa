@@ -3250,6 +3250,7 @@
 
     .col-sidebar,
     .col-main {
+        .tab-container,
         .section-with-control .dropdown-menu-clickable:not(.chartlist-more-menu, .dropdown-menu-clickable--padded),
         .section-controls .dropdown-menu-clickable,
         .navlist {
@@ -3274,11 +3275,14 @@
                 overflow: visible;
             }
 
+            li,
             .dropdown-menu-clickable-item,
             .navlist-item {
                 margin: 0 4px 0 0;
-                margin-bottom: -1px !important;
+                margin-bottom: var(--margin-bottom, -1px) !important;
                 height: 20px;
+                font: inherit;
+                flex: unset;
 
                 color: var(--text-link) !important;
                 &:hover {
@@ -3287,30 +3291,36 @@
 
                 background: unset !important;
 
+                &[selected="selected"],
                 &.dropdown-menu-clickable-item--selected,
                 &:has(.secondary-nav-item-link--active) {
                     background: var(--body) !important;
                     border: 1px solid var(--border);
                     border-bottom-color: var(--body);
-                    border-radius: 3px 3px 0 0;
+                    border-radius: 3px 3px 0 0 !important;
 
                     color: var(--colour-middle) !important;
                     text-decoration: none !important;
                     font-weight: normal !important;
 
+                    button,
                     a {
                         color: inherit !important;
                         font: inherit !important;
                         text-decoration: inherit !important;
+                        border-radius: 3px 3px 0 0 !important;
                     }
                 }
 
+                button,
                 &.dropdown-menu-clickable-item,
                 a {
                     height: 20px;
                     line-height: 17px;
                     margin: 0 3px 0 0;
                     padding: 0 2px 0 5px;
+                    border-radius: inherit;
+                    width: fit-content;
 
                     &:before,
                     &:after {
@@ -3409,6 +3419,21 @@
     }
     .share-button-profile {
         display: none !important;
+    }
+
+
+    /* your progress */
+    .tab-container {
+        display: block;
+        height: unset;
+
+        li {
+            --margin-bottom: -2px;
+        }
+
+        .selector {
+            display: none;
+        }
     }
 
 
