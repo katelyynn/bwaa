@@ -1238,6 +1238,8 @@
 
     /* section */
     .col-main {
+        div#shoutbox,
+        .artist-overview-top-tracks,
         .album-and-lyrics-row,
         #tracklist,
         .profile-mobile-featured-track + section,
@@ -3160,6 +3162,9 @@
 
 
 
+    .artist-overview-top-tracks {
+        margin-top: unset !important;
+    }
     .section-controls {
         flex-direction: column;
         align-items: unset;
