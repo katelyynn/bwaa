@@ -3388,6 +3388,29 @@
         }
     }
 
+    .section-settings-toggle {
+        background: transparent var(--cdn-flatness-buttons-6-small-multi) no-repeat right top;
+        width: 26px;
+        height: 15px;
+        font-size: 9px;
+
+        opacity: unset !important;
+        margin: unset;
+        top: 15px;
+        right: 15px;
+
+        &:before {
+            display: none;
+        }
+
+        &:hover {
+            background-position: right bottom;
+        }
+    }
+    .share-button-profile {
+        display: none !important;
+    }
+
 
 
 
