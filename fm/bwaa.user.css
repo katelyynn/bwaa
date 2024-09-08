@@ -102,6 +102,8 @@
             --chartlist-odd: #111;
             --chartlist-hover: #101d24;
             --chartlist-highlight: #31251a;
+
+            color-scheme: dark;
         }
     }
 
