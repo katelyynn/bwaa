@@ -1262,7 +1262,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 </div>
                 <div class="badge-info">
                     <a href="${header_album_data.link}">${header_album_data.name} by <a href="${header_album_data.artist_link}">${header_album_data.artist}</a></a>
-                    <h1>${header_album_data.page}</h1>
+                    <h1 id="artist-subpage-text">${header_album_data.page}</h1>
                 </div>
             `);
 
@@ -1648,6 +1648,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         });
 
         // bookmarks from bleh
+        let artist_header = document.querySelector('.header-new--artist');
+        if (artist_header == null)
+            return;
+
         let artist_name = document.body.querySelector('.header-new-title').textContent;
         let focused_image_id = gallery_sidebar.querySelector('div[data-image-url]').getAttribute('data-image-url').split('/')[4];
 
