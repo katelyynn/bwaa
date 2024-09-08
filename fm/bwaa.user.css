@@ -1194,6 +1194,7 @@
 
     /* section */
     .col-main {
+        .about-this-album:first-child,
         div#shoutbox,
         .artist-overview-top-tracks,
         .album-and-lyrics-row,
@@ -1209,6 +1210,10 @@
             &:not(.profile-header-subpage-section + &) {
                 border-top: 1px dotted var(--border);
                 margin: 30px -15px 0 -15px;
+            }
+
+            &:first-child {
+                margin-top: unset !important;
             }
         }
 

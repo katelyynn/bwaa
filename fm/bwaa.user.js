@@ -1175,7 +1175,14 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     ${get_wiki(col_main)}
                 </div>
             `);
-            document.getElementById('tracklist').after(about_this_album);
+            try {
+                document.getElementById('tracklist').after(about_this_album);
+            } catch(e) {
+                console.info('bwaa - no tracklist, will append elsewhere');
+
+                let masonry_left = document.querySelector('.masonry-left-bottom');
+                masonry_left.insertBefore(about_this_album, masonry_left.firstElementChild);
+            }
 
 
 
