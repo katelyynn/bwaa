@@ -322,6 +322,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         let col_main = document.body.querySelector('.col-main');
 
         let navlist = profile_header.querySelector('.navlist');
+        let navlist_items = navlist.querySelector('.navlist-items');
+
+        let journal_nav_btn = document.createElement('li');
+        journal_nav_btn.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--journal');
+        journal_nav_btn.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${root}user/${auth}/journal">
+                Journal
+            </a>
+        `);
 
 
         if (profile_header_overview) {
@@ -477,6 +486,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 </div>
             `);
 
+            navlist_items.appendChild(journal_nav_btn);
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
             profile_header.style.setProperty('display', 'none');
@@ -516,6 +526,12 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             if (subpage_type == 'user_obsessions_overview') {
                 col_main = document.body.querySelector('.container.page-content');
+            } else if (subpage_type.startsWith('user_journal')) {
+                journal_nav_btn.innerHTML = (`
+                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${auth}/journal">
+                        Journal
+                    </a>
+                `);
             }
 
             let header_user_data = {
@@ -542,6 +558,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 </div>
             `);
 
+            navlist_items.appendChild(journal_nav_btn);
             try { row.insertBefore(navlist, col_main); } catch(e) { col_main.insertBefore(navlist, col_main.firstElementChild) }
             col_main.insertBefore(new_header, col_main.firstElementChild);
             profile_header.style.setProperty('display', 'none');

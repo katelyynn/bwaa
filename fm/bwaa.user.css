@@ -160,7 +160,7 @@
         }
 
         &.page-content {
-            min-height: 400px;
+            min-height: 560px;
         }
         &:has(.content-top-lower-row),
         .page-content + &:not(.page-content) {
