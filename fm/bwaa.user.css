@@ -2910,6 +2910,11 @@
         .form-submit {
             display: flex;
             gap: 4px;
+            width: max-content;
+
+            button {
+                flex-shrink: 0;
+            }
         }
 
         .control-label {
