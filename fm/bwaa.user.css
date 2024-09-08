@@ -3437,7 +3437,7 @@
 
                 background: unset !important;
 
-                &[selected="selected"],
+                &:has(.tab--selected),
                 &.dropdown-menu-clickable-item--selected,
                 &:has(.secondary-nav-item-link--active) {
                     background: var(--body) !important;
