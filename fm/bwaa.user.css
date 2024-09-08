@@ -1208,7 +1208,6 @@
         .album-and-lyrics-row,
         #tracklist,
         .profile-mobile-featured-track + section,
-        .profile-mobile-featured-track + p, /* private tracks */
         section + p,
         section + ul,
         section + section:not(.secondary-album-column) {
@@ -3625,6 +3624,14 @@
 
         &.alert-danger {
             background: #ffe7e4;
+        }
+
+        [data-bwaa--theme="paint_it_black"] & {
+            background: #182838;
+
+            &.alert-danger {
+                background: #381818;
+            }
         }
 
         &.no-data-message {
