@@ -1407,13 +1407,13 @@
                     left: 7px;
                     top: 2px;
 
-                    &[alt*="Yandhi"] {
+                    /*&[alt*="Yandhi"] {
                         transform: scale(1.25);
                     }
                     &[alt*="Yeezus"] {
                         transform: scale(1.2);
                         left: 4px;
-                    }
+                    }*/
                 }
 
                 &:after {
@@ -2771,7 +2771,7 @@
                 }
             }
             .vote-text {
-                background: #DDD;
+                background: var(--border-4);
                 color: inherit;
                 height: 20px;
                 font-size: 10px;
@@ -2789,6 +2789,10 @@
             &.gallery-image-vote-up-on {
                 background: #C9E4B4 !important;
 
+                [data-bwaa--theme="paint_it_black"] & {
+                    background: #5c6e4e !important;
+                }
+
                 .gallery-image-votes:before {
                     background-image: var(--vote-up);
                 }
@@ -2796,6 +2800,10 @@
             &.gallery-image-vote-down-off,
             &.gallery-image-vote-down-on {
                 background: #E1ADB2 !important;
+
+                [data-bwaa--theme="paint_it_black"] & {
+                    background: #7c524c !important;
+                }
 
                 .gallery-image-votes:before {
                     background-image: var(--vote-down);
@@ -2805,12 +2813,20 @@
             &.gallery-image-preferred-on {
                 background: #F2BF93 !important;
 
+                [data-bwaa--theme="paint_it_black"] & {
+                    background: #886650 !important;
+                }
+
                 .gallery-image-preferred-states:before {
                     background-image: var(--vote-fav);
                 }
             }
             &.gallery-image-bookmark-button-button {
                 background: #83C0C4 !important;
+
+                [data-bwaa--theme="paint_it_black"] & {
+                    background: #49797a !important;
+                }
 
                 .bookmark-votes:before {
                     background-image: var(--vote-save);
