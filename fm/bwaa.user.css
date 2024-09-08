@@ -3165,14 +3165,27 @@
     .artist-overview-top-tracks {
         margin-top: unset !important;
     }
+    .section-with-control,
     .section-controls {
-        flex-direction: column;
-        align-items: unset;
-        justify-content: unset;
-        gap: 15px;
+        &.section-controls {
+            flex-direction: column;
+            align-items: unset;
+            justify-content: unset;
+            gap: 15px;
 
-        & + .buffer-standard {
-            margin-top: 15px;
+            & + .buffer-standard {
+                margin-top: 15px;
+            }
+        }
+        &.section-with-control {
+            .buffer-standard {
+                margin-top: 15px;
+            }
+
+            .dropdown-menu-clickable:not(.dropdown-menu-clickable--padded) {
+                margin-top: calc(15px + 6px) !important;
+                margin-bottom: calc(-1 * (22px - 15px)) !important;
+            }
         }
 
         .section-playlink {
@@ -3181,7 +3194,7 @@
 
         .dropdown-menu-clickable-button {
             position: absolute;
-            top: calc(13px + 15px);
+            top: calc(13px + 15px + 15px);
             right: 0;
             left: 0;
             height: 20px;
@@ -3195,12 +3208,13 @@
                 pointer-events: none;
             }
         }
-        .dropdown-menu-clickable {
+        .dropdown-menu-clickable:not(.dropdown-menu-clickable--padded) {
             display: flex !important;
         }
     }
 
     .col-main {
+        .section-with-control .dropdown-menu-clickable,
         .section-controls .dropdown-menu-clickable,
         .navlist {
             width: 100%;
