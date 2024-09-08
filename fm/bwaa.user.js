@@ -205,6 +205,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
             // start bwaa settings
+            bwaa_settings();
         } else {
             // things that load when not in bwaa settings
             bwaa_profiles();
@@ -215,9 +216,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_artworks();
             bwaa_friends();
             bwaa_obsessions();
-            bwaa_lastfm_settings();
-            bwaa_footer();
         }
+        bwaa_lastfm_settings();
+        bwaa_footer();
 
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
@@ -236,6 +237,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
                             if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
                                 // start bwaa settings
+                                bwaa_settings();
                             } else {
                                 // things that load when not in bwaa settings
                                 bwaa_profiles();
@@ -246,9 +248,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_artworks();
                                 bwaa_friends();
                                 bwaa_obsessions();
-                                bwaa_lastfm_settings();
-                                bwaa_footer();
                             }
+                            bwaa_lastfm_settings();
+                            bwaa_footer();
                         }
                     }
                 }
@@ -1840,7 +1842,30 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         let page_content = document.querySelector('.page-content:not([data-bwaa="true"])');
         page_content.setAttribute('data-bwaa', 'true');
         page_content.classList.add('lastfm-settings', 'subpage');
-        let col_main = page_content.querySelector('.col-main');
+
+        let row = page_content.querySelector(':scope > .row');
+
+
+        let navlist_switcher = document.createElement('nav');
+        navlist_switcher.classList.add('navlist', 'secondary-nav', 'navlist--more');
+        navlist_switcher.innerHTML = (`
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}settings">
+                        Last.fm
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                    <a class="secondary-nav-item-link" href="${root}bwaa">
+                        bwaa
+                    </a>
+                </li>
+            </ul>
+        `);
+        row.insertBefore(navlist_switcher, row.firstElementChild);
+
+
+        let col_main = row.querySelector('.col-main');
 
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
         let content_top = adaptive_skin.querySelector('.content-top');
@@ -1863,6 +1888,70 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             </div>
         `);
         col_main.insertBefore(new_header, col_main.firstElementChild);
+    }
+
+
+
+
+    function bwaa_settings() {
+        console.info('bwaa - loading custom settings');
+        let adaptive_skin = document.querySelector('.adaptive-skin-container:not([data-bwaa="true"])');
+
+        if (adaptive_skin == null)
+            return;
+        adaptive_skin.setAttribute('data-bwaa', 'true');
+
+        adaptive_skin.innerHTML = '';
+        document.title = 'configure your bwaa | Last.fm';
+
+        let my_avi = auth_link.querySelector('img').getAttribute('src');
+
+        adaptive_skin.innerHTML = (`
+            <div class="container page-content bwaa-settings lastfm-settings subpage">
+                <div class="row">
+                    <nav class="navlist secondary-nav navlist--more">
+                        <ul class="navlist-items">
+                            <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                                <a class="secondary-nav-item-link" href="${root}settings">
+                                    Last.fm
+                                </a>
+                            </li>
+                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa">
+                                    bwaa
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="col-main settings-form">
+                        <section class="profile-header-subpage-section">
+                            <div class="badge-avatar">
+                                <img src="${my_avi}" alt="${auth}">
+                            </div>
+                            <div class="badge-info">
+                                <a href="${root}user/${auth}">${auth}</a>
+                                <h1>Configure bwaa Settings</h1>
+                            </div>
+                        </section>
+                        <nav class="navlist secondary-nav navlist--more">
+                            <ul class="navlist-items">
+                                <li class="navlist-item secondary-nav-item">
+                                    <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" onclick="change_settings_page('home')">
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item">
+                                    <a class="secondary-nav-item-link bwaa-settings-tab" onclick="change_settings_page('page2')">
+                                        Page 2
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div id="bleh-settings-inject"></div>
+                    </div>
+                </div>
+            </div>
+        `);
     }
 
 
