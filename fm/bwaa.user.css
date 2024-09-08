@@ -989,6 +989,8 @@
                 padding-right: unset;
                 margin: unset !important;
 
+                position: static !important;
+
                 /* adds spacing on hover */
                 &:before {
                     display: none;
@@ -1047,6 +1049,14 @@
                 color: #696969;
                 text-align: right;
                 line-height: 16px;
+            }
+
+            .chartlist-count-bar-value {
+                padding-right: unset;
+
+                &:after {
+                    display: none;
+                }
             }
 
             .chartlist-play {
