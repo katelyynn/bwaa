@@ -216,6 +216,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_friends();
             bwaa_obsessions();
             bwaa_lastfm_settings();
+            bwaa_footer();
         }
 
         // last.fm is a single page application
@@ -246,6 +247,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_friends();
                                 bwaa_obsessions();
                                 bwaa_lastfm_settings();
+                                bwaa_footer();
                             }
                         }
                     }
@@ -1806,5 +1808,48 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             </div>
         `);
         col_main.insertBefore(new_header, col_main.firstElementChild);
+    }
+
+
+
+
+    function bwaa_footer() {
+        let footer = document.querySelector('.footer:not([data-bwaa="true"]');
+
+        if (footer == null)
+            return;
+        footer.setAttribute('data-bwaa', 'true');
+
+
+        let footer_container = footer.querySelector('.footer-top .container');
+
+        let cute = document.createElement('div');
+        cute.classList.add('cute-quote-container');
+        cute.innerHTML = (`
+            <div class="quote">
+                “cute quote here”
+            </div>
+            <div class="more">
+                <strong>More Last.fm Sites:</strong> <a href="https://blog.last.fm">Blog</a> | <a href="https://musicmanager.last.fm">Music Manager</a> | <a href="https://build.last.fm">Build</a> | <a href="https://playground.last.fm">Playground (Subscriber VIP zone)</a>
+            </div>
+        `);
+
+        footer_container.appendChild(cute);
+
+        let audioscrobbler_logo = footer.querySelector('.footer-bottom .logo img').getAttribute('src');
+
+        let legal = document.createElement('div');
+        legal.classList.add('legal');
+        legal.innerHTML = (`
+            <div class="logos">
+                <div class="cbs-logo"></div>
+                <div class="audioscrobbler-logo" style="background-image: url(${audioscrobbler_logo});"></div>
+            </div>
+            <div class="text">
+                © 2024 Last.fm Ltd. All rights reserved. | <a href="${root}legal/terms">Terms of Use</a> and <a href="${root}legal/privacy">Privacy Policy</a> | <i class="update-date">Updated 2024</i><br>Some user-contributed text on this page is available under the <a href="http://creativecommons.org/licenses/by-sa/3.0/legalcode">Creative Commons Attribution/Share-Alike License</a>.<br>Text may also be available under the <a href="https://www.last.fm/help/gfdl">GNU Free Documentation License</a>.
+            </div>
+        `);
+
+        footer_container.appendChild(legal);
     }
 })();

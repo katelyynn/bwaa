@@ -42,6 +42,8 @@
         --cdn-flatness-buttons-6-small-multi: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAeCAMAAAAFBf7qAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPNQTFRFlZWVV1dX////l5eXnp6e4+PjY2Njjo6Ok5OTeXl5vLy8t7e39vb2gYGBmJiYdXV1paWl1NTU09PT2tralpaWaGhoZWVlampqX19fXV1d/v7+d3d3iYmJmZmZ3Nzcg4ODcHBwiIiIgoKClJSUcnJyj4+PdHR0fX19o6Oj19fXenp6fn5+1tbWb29v2dnZn5+fra2t0tLSp6en8fHxdnZ2kJCQ9/f3nZ2da2troKCgpKSk7+/vqampxMTEjIyMm5uboqKi9fX1wMDAs7OzioqKhoaG5+fnc3Nz/f39tLS06+vrhYWFuLi4qKioWlpasbGx////S19FmQAAAFF0Uk5T//////////////////////////////////////////////////////////////////////////////////////////////////////////8AaOyowQAAAS1JREFUeNqMkYdywjAMhoUzwAGHJIwMwgqzUFpK96R7D97/aarkQpvoQq+/73Q6/ZYt+4OVlMvWCsoCMiXKkEsVevpPmossGTSmYQQ4PE5bckmxmKmU0Ls6JV0KC6Vg5htpq7jHWlBhZlGHhw+Ac9y2H1uYytDEuAvBHGDxzLz5ustiW2CybeyafuFRFqtk3DV5waA/NhMT7rBKNGHjfeO7njRi/Wp2m7B4O2mdXK6zNodVeePP/xtKdSlJVSnUlEIpyFE9tOnwg3FUDhsplPxZIVaPftT9OB9rQKF0ja5/g9uOuj6F8mYIoXvMuxYBhRIYnHOLtTgf0buE0en0h6+NfueAQhkZds2uoewZfddkocayKZTGhes4juu4rkqhDO/UOi61Xv/8C8q3AAMAkwEbXf6bD3wAAAAASUVORK5CYII=');
         --cdn-depth-global-page-next: url('data:image/gif;base64,R0lGODlhCwALAKIAANfX13BwcIyMjPHx8f///wAAAAAAAAAAACH5BAAAAAAALAAAAAALAAsAAAMgSCSs7kLFJ8kY88WL6ebZYnFAAI1DqY3qmpoe0XoC/CQAOw==');
         --cdn-depth-global-page-previous: url('data:image/gif;base64,R0lGODlhCwALAKIAANfX13BwcIyMjPHx8f///wAAAAAAAAAAACH5BAAAAAAALAAAAAALAAsAAAMfSLrS+0LFR8QYldqb2eUTEQAfFookSI3qSnYuvDpEAgA7');
+
+        --cdn-flatness-footer-cbsi-music: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIYAAAAkCAMAAAB7c7JGAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRF4+Pjg4KCtLS0y8vLm5qaiYiI3d3d19fX0dHRp6env76+j4+PlZSUxcXFra2toaGhYdZY0gAAA8xJREFUeNrsV9mO5DoINdh4X/7/b4fFWSrVPbpPtzRSoXSHxNg+hgOknPvKV/4pibUEFhyfBJEKHNLwYygQ7tLyZ1AUeEg9h3IHWNEJuJBdJaAprwPw5Z0HbxPsHGIGgcMaASL/53XbMIuAUICndqhm+h9QABwMSQRzQXAcKr4l6Nh1TGF0gRECEFOKUQY1m0DO8VYoRmESjdDZYiIMaI5X8Gb6W0QoIOLs+yEdY7xc4fWDy7A89OHRHzAAGYaTMbMzlYdcJ+o8gZ8q+9CbhV+Qq8z5kXx8YHVlLiT8TGjPNrhkH1lfPS9bS4gOb1C9YOgccQwsBlAK5HO/A0YVzyZ/W/4REsKTpS3HKXej6ZR9Kjr25WiUvMcG5eQG0AWjeJ937HjWWjC9cCGjP2FEaBpINX0KH77nW65wPAa/KzpYoUdPJFulxkScvMo6YPB2LzB4nyAkdMROIYpEPna4gsK+ZQd5M32gGIwiMnUu4TmZhGgnfasFpcQmt5MbLtJLUED3W5wLUyYOzYlyBUWYm5xljn8jKKN4TZYsM2GTdCCyxvjFkbHqE+P0crkkp5KBJAY+mprlbfLJJdSivF9HVrw8+R+8sUji1O4w0Bn4/1PCODPhDsM1g7F7TGKmGe/lQHWF6U09dOtLyA9JrEWqnNjPsJCV6m0Z53UsvcGYP8JItDO1nfXDKh+iKw1HYcKwGvvWdZPW7YFTlaVxtCuUoUpAS12HUp7Cm6+nrhEepZwZvmGQuqPdYESlDTZFJMTizfR0YWlyUfRqGml4W4WL5gVDlbLeKCrkuPc2ikL3XfW54ghPqV8wsm7K/hVEBnYJv/Jm9coGw/VRLO0TpAcMfNavDHLg2O4xiYyibxhJFi8l3ILSaY6oqr+3KOyHZq+RUt89so1XGDGUJzm67pzpQFG0qx6FGMSdEfIdBtOSgHsFw+h3GHLCyW2r+iO4BwUCXjCksVF746gWmVaT0YMw4hEZg1GbnPMFhjhxUbq8oXlQuxYUv+x1LOROb/gLhtTQn4pB2B9dOOUqt6RVGI5GqwpDG0HBHVfi1HNGYLulzY220bEPS9hBSmu+cOMHueLxUtBPGLORJlyfmsh1gBEy84pTvVus8i9NG4TDSeCTpmHsRfJHLNbvMKStPKTHG4wkfSEIfQJOKrJrQf7TFUUPZA0zBpoYWjlghMq7y5zAy4U21fB3GM4//BGuii9RlAaQkxRJ1G8e7t6qpLT103xI7UwpWuxztoI6jjExTOkvH+b38kWf+zR3vtDx+yB+9gdTlkxK3x+OX/nKXf4IMAC7ZRquziiYegAAAABJRU5ErkJggg==');
     }
 
     body {
@@ -2249,6 +2251,13 @@
                 font-weight: bold !important;
                 transform: translateY(-4px);
             }
+
+            .highcharts-area {
+                fill: var(--header-text) !important;
+            }
+            .highcharts-graph {
+                stroke: var(--header-text) !important;
+            }
         }
     }
 
@@ -3125,7 +3134,7 @@
         font-size: 11px;
         text-align: left;
         line-height: 1.181818em;
-        margin: 10px 0 0 110px;
+        margin: 10px 0;
         padding-top: 25px;
         background: unset;
         color: inherit;
@@ -3133,6 +3142,15 @@
 
         .container {
             border: unset;
+            padding-left: 15px !important;
+            padding-right: unset;
+
+            background: unset !important;
+            border: unset !important;
+
+            &:after {
+                display: none;
+            }
         }
 
         .footer-top {
@@ -3147,9 +3165,92 @@
                     &:last-child {
                         display: none;
                     }
+
+                    .footer-heading {
+                        width: 177px;
+                        font-weight: bold;
+                        font-size: 12px;
+                        padding-bottom: 3px;
+                        border-bottom: 1px solid var(--border);
+                        margin-bottom: 3px;
+
+                        color: var(--header-text-black);
+                        text-transform: unset;
+                    }
+
+                    .footer-links {
+                        li {
+                            margin-bottom: 0.2em;
+                            font-size: 11px;
+                            text-align: left;
+                            line-height: 1.181818em;
+                            color: var(--header-text-black);
+
+                            a {
+                                font: inherit;
+                                color: inherit;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .cute-quote-container {
+                margin: 25px 0 3px 0;
+                padding-bottom: 3px;
+                border-bottom: 1px solid var(--border);
+                color: var(--header-text-black);
+
+                .quote {
+                    color: var(--colour-middle);
+                    font-style: italic;
+                    font-size: 11px;
+                    margin-bottom: 25px;
+                }
+
+                .more {
+                    a {
+                        color: var(--text-link);
+                    }
+                }
+            }
+
+            .legal {
+                margin-top: 8px;
+                padding-top: 12px;
+                color: var(--colour-middle);
+                font-size: 10px;
+
+                display: flex;
+
+                .logos {
+                    width: 134px;
+                    flex-shrink: 0;
+                    margin-top: -12px;
+
+                    .cbs-logo {
+                        background: var(--cdn-flatness-footer-cbsi-music) no-repeat -7px 0;
+                        height: 36px;
+                    }
+                    .audioscrobbler-logo {
+                        background-size: 38px;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        height: 20px;
+
+                        [data-bwaa--theme="simply_red"] & {
+                            filter: brightness(50%);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    /* legacy */
+    .footer .logo,
+    .footer-legal {
+        display: none;
     }
 
 
@@ -3162,6 +3263,7 @@
 
 
 
+    .col-sidebar,
     .col-main {
         .section-with-control .dropdown-menu-clickable:not(.chartlist-more-menu, .dropdown-menu-clickable--padded),
         .section-controls .dropdown-menu-clickable,
@@ -3171,6 +3273,7 @@
             box-shadow: none;
             line-height: 26px;
             margin-top: -5px;
+            font-size: 10px;
 
             line-height: inherit;
             position: static !important;
@@ -3190,6 +3293,7 @@
             .navlist-item {
                 margin: 0 4px 0 0;
                 margin-bottom: -1px !important;
+                height: 20px;
 
                 color: var(--text-link) !important;
                 &:hover {
@@ -3207,6 +3311,13 @@
 
                     color: var(--colour-middle) !important;
                     text-decoration: none !important;
+                    font-weight: normal !important;
+
+                    a {
+                        color: inherit !important;
+                        font: inherit !important;
+                        text-decoration: inherit !important;
+                    }
                 }
 
                 &.dropdown-menu-clickable-item,
@@ -3244,8 +3355,11 @@
                 margin-top: 15px;
             }
 
-            .dropdown-menu-clickable:not(.chartlist-more-menu, .dropdown-menu-clickable--padded) {
+            .col-main & .dropdown-menu-clickable:not(.chartlist-more-menu, .dropdown-menu-clickable--padded) {
                 margin-top: calc(15px + 6px) !important;
+            }
+            .col-sidebar & .dropdown-menu-clickable {
+                margin-top: 15px !important;
             }
 
             /*.section-settings-toggle,
