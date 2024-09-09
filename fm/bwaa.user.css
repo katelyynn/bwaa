@@ -2200,6 +2200,11 @@
             line-height: 18px;
             text-decoration: none !important;
 
+            [data-bwaa--shouts_2010="true"] & {
+                font-size: 11px;
+                line-height: 1.5em;
+            }
+
             a {
                 color: var(--text-link);
             }
@@ -2209,12 +2214,69 @@
             font-size: 13px;
             line-height: 18px;
             color: var(--colour-upper);
+
+            [data-bwaa--shouts_2010="true"] & {
+                padding: 3px 5px 3px 1px;
+                font-size: 12px;
+                line-height: 1.3;
+            }
         }
 
-        .shout-reply, .shout-action,
         .shout-timestamp {
             font-size: 11px;
             color: var(--colour-lower) !important;
+
+            padding-right: calc(26px + 4px);
+
+            [data-bwaa--shouts_2010="true"] & {
+                font-size: 10px;
+                color: var(--colour-upper) !important;
+                opacity: 0.8;
+            }
+        }
+
+        .shout-actions {
+            font: inherit;
+            margin: unset;
+
+            .shout-action {
+                float: unset;
+                font: inherit;
+                color: inherit;
+                display: inline;
+
+                margin: unset;
+
+                & > div, form,
+                [data-ajax-form-state="initial-state"] .initially-visible,
+                [data-ajax-form-state="modified-state"] .initially-hidden, button,
+                a {
+                    display: inline;
+                    font: inherit;
+                    color: var(--text-link) !important;
+
+                    height: fit-content;
+                    padding: unset;
+
+                    &:before {
+                        display: none;
+                    }
+
+                    &:hover {
+                        text-decoration: underline !important;
+                    }
+                }
+            }
+        }
+
+        .vote-button-toggle {
+            .vote-button--voted {
+                font-weight: bold !important;
+            }
+
+            [data-bwaa--shouts_no_votes="true"] & {
+                display: none !important;
+            }
         }
 
         &:has(.link-block-target:hover, .shout-user-avatar-link:hover) {
@@ -2223,6 +2285,30 @@
             }
             .shout-user a {
                 text-decoration: underline;
+            }
+        }
+
+        .shout-more-actions {
+            background: transparent var(--cdn-flatness-buttons-6-small-multi) no-repeat right top;
+            width: 26px;
+            height: 15px;
+            font-size: 9px;
+
+            position: absolute;
+            top: 0;
+            right: 8px;
+
+            [data-bwaa--theme="paint_it_black"] & {
+                filter: brightness(70%) contrast(170%);
+                border-top-left-radius: 4px;
+            }
+
+            &:before {
+                display: none;
+            }
+
+            &:hover {
+                background-position: right bottom;
             }
         }
 
@@ -2236,6 +2322,10 @@
             width: 68px;
             height: unset;
             float: left;
+
+            /*[data-bwaa--shouts_2010="true"] & {
+                margin-top: -22px;
+            }*/
 
             img {
                 position: static;

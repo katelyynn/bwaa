@@ -125,7 +125,6 @@ let settings_defaults = {
     sticky_nav: false,
     shouts_2010: false,
     shouts_no_votes: false,
-    shouts_no_reply: false,
     no_notifs: false
 }
 let settings_store = {
@@ -161,10 +160,6 @@ let settings_store = {
         values: [true, false]
     },
     shouts_no_votes: {
-        type: 'toggle',
-        values: [true, false]
-    },
-    shouts_no_reply: {
         type: 'toggle',
         values: [true, false]
     },
@@ -1685,14 +1680,36 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
     function bwaa_shouts() {
+        let shouts = document.body.querySelectorAll('.shout:not([data-bwaa])');
+        shouts.forEach((shout) => {
+            shout.setAttribute('data-bwaa', 'true');
+
+            let shout_name = shout.querySelector('.shout-user');
+            if (settings.shouts_2010)
+                shout_name.innerHTML = `${shout_name.innerHTML} wrote:`;
+
+            let shout_actions = shout.querySelector('.shout-actions');
+
+            if (!settings.shouts_no_votes) {
+                let shout_reply = shout_actions.querySelector('.shout-action');
+                shout_reply.innerHTML = `${shout_reply.innerHTML} | `;
+
+                let vote_buttons = shout_actions.querySelectorAll('.vote-button');
+                vote_buttons.forEach((vote_button) => {
+                    vote_button.textContent = vote_button.textContent;
+                });
+            }
+
+            if (settings.shouts_2010)
+                shout_actions.innerHTML = `<a href="${root}user/${shout_name.textContent}">View Profile</a> | ${shout_actions.innerHTML}`;
+        });
+
         if (!settings.varied_avatar_shapes)
             return;
 
         // avatars
         let shout_avatars = document.body.querySelectorAll('.shout-user-avatar img:not([data-bwaa])');
         shout_avatars.forEach((shout_avatar) => {
-            if (shout_avatar.hasAttribute('data-bwaa'))
-                return;
             shout_avatar.setAttribute('data-bwaa', 'true');
 
             // this allows shout avatars to be varied in shape
@@ -2171,7 +2188,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--shouts_2010">
                                     <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Prefer 2010-era shout design <i class="subtext">(not yet implemented)</i>
+                                    Prefer 2010-era shout design
                                 </label>
                             </div>
                         </div>
@@ -2179,15 +2196,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--shouts_no_votes">
                                     <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Do not display shout votes <i class="subtext">(not yet implemented)</i>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--shouts_no_reply">
-                                    <input id="setting--shouts_no_reply" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Disallow ability to reply to shouts <i class="subtext">(not yet implemented)</i>
+                                    Do not display shout votes
                                 </label>
                             </div>
                         </div>
@@ -2512,14 +2521,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 <label for="setting--shouts_no_votes">
                                     <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     Do not display shout votes <i class="subtext">(not yet implemented)</i>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--shouts_no_reply">
-                                    <input id="setting--shouts_no_reply" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Disallow ability to reply to shouts <i class="subtext">(not yet implemented)</i>
                                 </label>
                             </div>
                         </div>
