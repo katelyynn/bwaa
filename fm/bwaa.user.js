@@ -117,13 +117,28 @@ function lookup_lang() {
 let settings;
 let settings_defaults = {
     theme: 'simply_red',
-    test: false
+    test: false,
+    sticky_nav: false,
+    shouts_2010: false,
+    no_notifs: false
 }
 let settings_store = {
     theme: {
         type: 'option'
     },
     test: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    sticky_nav: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    shouts_2010: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    no_notifs: {
         type: 'toggle',
         values: [true, false]
     }
@@ -2060,6 +2075,36 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                             </label>
                         </div>
                     </div>
+                    <fieldset>
+                        <legend>Navigation</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--sticky_nav">
+                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Make the navigation bar persistent on scroll
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Social</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_2010">
+                                    <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Prefer 2010-era shout design <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--no_notifs">
+                                    <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Hide notifications, only display inbox <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
             `);
 
@@ -2077,22 +2122,23 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         if (settings_store[setting].type == 'toggle') {
             if (modify) {
                 if (value == settings_store[setting].values[0]) {
-                    settings[setting] = settings_store[setting].values[1];
+                    settings[setting] = settings_store[setting].values[0];
                     document.getElementById(`setting--${setting}`).checked = true;
                 } else {
-                    settings[setting] = settings_store[setting].values[0];
+                    settings[setting] = settings_store[setting].values[1];
                     document.getElementById(`setting--${setting}`).checked = false;
                 }
-                console.info('bwaa - setting', setting, 'changed to', value);
+                console.info('bwaa - setting', setting, 'changed to', value, settings[setting]);
 
                 // save setting into body
                 document.body.style.setProperty(`--${setting}`, settings[setting]);
                 document.documentElement.setAttribute(`data-bwaa--${setting}`, `${settings[setting]}`);
             } else {
+                console.info('bwaa - setting', setting, 'is being loaded as', value);
                 if (value == settings_store[setting].values[0]) {
-                    document.getElementById(`setting--${setting}`).checked = false;
-                } else {
                     document.getElementById(`setting--${setting}`).checked = true;
+                } else {
+                    document.getElementById(`setting--${setting}`).checked = false;
                 }
             }
         }

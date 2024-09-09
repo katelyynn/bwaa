@@ -135,6 +135,13 @@
 
     .main-content {
         padding-top: 88px !important;
+
+        [data-bwaa--sticky_nav="true"] & {
+            padding-top: unset !important;
+        }
+    }
+    [data-bwaa--sticky_nav="true"] .adaptive-skin-container {
+        padding-top: 18px;
     }
     .header--overview .container, .header--sub-page .container,
     .container {
@@ -591,6 +598,10 @@
 
         [data-bwaa--theme="paint_it_black"] & {
             background-position: 0 -80px;
+        }
+
+        [data-bwaa--sticky_nav="true"] & {
+            position: sticky !important;
         }
 
         .masthead-inner-wrap {
@@ -3058,6 +3069,8 @@
             margin-bottom: 15px;
         }
 
+        fieldset + fieldset,
+        .form-group + fieldset,
         .form-group--submit,
         .form-group + .form-group {
             margin-top: 6px;
@@ -3704,5 +3717,16 @@
         &:before {
             display: none;
         }
+    }
+
+
+
+
+    #bleh-settings-inject {
+        margin-top: 15px;
+    }
+    .subtext {
+        font-size: 10px;
+        color: var(--colour-middle);
     }
 }
