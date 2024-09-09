@@ -1,0 +1,1 @@
+Resources contained are © Last.fm Ltd. All rights reserved.
