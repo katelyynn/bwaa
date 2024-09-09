@@ -3743,6 +3743,10 @@
             float: unset;
             margin-top: unset;
         }
+
+        .dropdown-menu-clickable-button {
+            top: 0;
+        }
     }
 
     .section-settings-toggle {
