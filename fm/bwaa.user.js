@@ -250,6 +250,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         lookup_lang();
         load_settings();
         bwaa_load_header();
+        load_notifs();
 
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
             // start bwaa settings
@@ -2177,6 +2178,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                     </fieldset>
                     <div class="more-link align-right">
+                        <a onclick="_deliver_notif('This is a test notification filled with lots of text bla b la bla lbaslba b;;af;asdasdjk')">Create a notification</a>
+                    </div>
+                    <div class="more-link align-right">
                         <a href="${root}bwaa/setup">Enter first-time setup again</a>
                     </div>
                 </section>
@@ -2481,5 +2485,51 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         } else if (page == 'page2') {
             injector.innerHTML = '<p>o.O</p>';
         }
+    }
+
+
+
+
+    // notifs
+    function load_notifs() {
+        let prev_notif = document.getElementById('bleh-notifs');
+        if (prev_notif == null) {
+            let notifs = document.createElement('div');
+            notifs.classList.add('bwaa-notification-feed');
+            notifs.setAttribute('id', 'bwaa-notifs');
+            document.body.appendChild(notifs);
+        }
+    }
+
+    unsafeWindow._deliver_notif = function(content, dev_only=false, persist=false) {
+        deliver_notif(content, dev_only, persist);
+    }
+    function deliver_notif(content, dev_only=false, persist=false) {
+        if (dev_only && !settings.developer)
+            return;
+
+        let notif = document.createElement('button');
+        notif.classList.add('bwaa-notification');
+        notif.setAttribute('onclick', '_kill_notif(this)');
+        notif.textContent = content;
+
+        document.getElementById('bwaa-notifs').appendChild(notif);
+
+        if (persist)
+            return;
+
+        setTimeout(function() {
+            kill_notif(notif);
+        }, 7500);
+    }
+
+    unsafeWindow._kill_notif = function(notif) {
+        kill_notif(notif);
+    }
+    function kill_notif(notif) {
+        notif.classList.add('fade-out');
+        setTimeout(function() {
+            document.getElementById('bwaa-notifs').removeChild(notif);
+        }, 200);
     }
 })();
