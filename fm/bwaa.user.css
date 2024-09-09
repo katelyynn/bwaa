@@ -427,6 +427,8 @@
                     &.secondary-nav-item-link--active {
                         border-right-color: var(--body);
                         position: relative;
+                        box-shadow: rgba(0,0,0,0.1) 0 1px 10px;
+                        z-index: 10;
 
                         /* hence the border-right is gone, we need to fill a 1px
                         gap on the top border, no clue how old last.fm did this */
