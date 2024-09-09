@@ -3067,8 +3067,13 @@
     .settings-form {
         .form-header {
             margin-bottom: 15px;
+
+            & + p {
+                margin-top: unset;
+            }
         }
 
+        p + fieldset,
         fieldset + fieldset,
         .form-group + fieldset,
         .form-group--submit,

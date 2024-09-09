@@ -2081,15 +2081,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
                     <h2 class="form-header">Welcome! this is a test page</h2>
-                    <div class="form-group">
-                        <h3 class="control-label">Do something</h3>
-                        <div class="checkbox">
-                            <label for="setting--test">
-                                <input id="setting--test" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                test setting
-                            </label>
-                        </div>
-                    </div>
+                    <p>proper text heading n things coming soonnnnnnnn</p>
                     <fieldset>
                         <legend>Navigation</legend>
                         <div class="form-group">
