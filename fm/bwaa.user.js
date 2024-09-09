@@ -2010,7 +2010,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (!document.body.classList[2].startsWith('namespace--settings'))
             return;
 
-        let page_content = document.querySelector('.page-content:not([data-bwaa="true"])');
+        let page_content = document.querySelector('.page-content');
+
+        if (page_content.hasAttribute('data-bwaa'))
+            return;
         page_content.setAttribute('data-bwaa', 'true');
         page_content.classList.add('lastfm-settings', 'subpage');
 
