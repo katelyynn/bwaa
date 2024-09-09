@@ -2069,7 +2069,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         change_settings_page(page);
     }
     function change_settings_page(page) {
-        let tabs = document.querySelectorAll('bwaa-settings-tab');
+        let tabs = document.querySelectorAll('.bwaa-settings-tab');
         tabs.forEach((tab) => {
             if (tab.getAttribute('data-bwaa-tab') != page) {
                 tab.classList.remove('secondary-nav-item-link--active');
@@ -2159,6 +2159,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             `);
 
             request_checkbox_update();
+        } else if (page == 'page2') {
+            injector.innerHTML = '<p>o.O</p>';
         }
     }
 

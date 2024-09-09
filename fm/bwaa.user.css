@@ -3555,6 +3555,7 @@
                     padding: 0 2px 0 5px;
                     border-radius: inherit;
                     width: fit-content;
+                    cursor: pointer;
 
                     &:before,
                     &:after {
@@ -3648,6 +3649,10 @@
 
     .shoutbox-controls {
         margin-top: 15px;
+
+        h2 + .shoutbox-controls-wrapper & {
+            margin-top: calc(15px + 7px);
+        }
 
         .shoutbox--subpage & {
             float: unset;
