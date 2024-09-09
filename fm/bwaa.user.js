@@ -491,13 +491,17 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     follow_button2.textContent = 'Add as friend';*/
             }
 
+            let user_avatar = header_user_data.avatar.getAttribute('src');
+            if (settings.varied_avatar_shapes)
+                user_avatar = user_avatar.replace('/i/u/avatar170s/', '/i/u/550x0/');
+
             // main user header
             // this is on top of the actions, but appending is backwards
             let new_header = document.createElement('section');
             new_header.classList.add('profile-header-section');
             new_header.innerHTML = (`
                 <div class="badge-avatar">
-                    <img src="${header_user_data.avatar.getAttribute('src').replace('/i/u/avatar170s/', '/i/u/550x0/')}" alt="${header_user_data.avatar.getAttribute('alt')}">
+                    <img src="${user_avatar}" alt="${header_user_data.avatar.getAttribute('alt')}">
                     <div class="user-type user-type--${user_type}">
                         <a>${trans[lang].profile.user_types[user_type]}</a>
                     </div>
@@ -1650,6 +1654,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
 
     function bwaa_shouts() {
+        if (!settings.varied_avatar_shapes)
+            return;
+
         // avatars
         let shout_avatars = document.body.querySelectorAll('.shout-user-avatar img:not([data-bwaa])');
         shout_avatars.forEach((shout_avatar) => {
@@ -1666,6 +1673,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
 
     function bwaa_friends() {
+        if (!settings.varied_avatar_shapes)
+            return;
+
         // avatars
         let friend_avatars = document.body.querySelectorAll('.user-list-avatar img:not([data-bwaa])');
         friend_avatars.forEach((friend_avatar) => {
@@ -2113,7 +2123,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                             <div class="checkbox">
                                 <label for="setting--varied_avatar_shapes">
                                     <input id="setting--varied_avatar_shapes" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Allow varied avatar shapes <i class="subtext">(disabling not yet implemented)</i>
+                                    Allow varied avatar shapes
                                 </label>
                                 <div class="alert">
                                     Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.
