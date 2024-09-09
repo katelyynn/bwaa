@@ -116,7 +116,17 @@ function lookup_lang() {
 
 let settings;
 let settings_defaults = {
-    theme: 'simply_red'
+    theme: 'simply_red',
+    test: false
+}
+let settings_store = {
+    theme: {
+        type: 'option'
+    },
+    test: {
+        type: 'toggle',
+        values: [true, false]
+    }
 }
 
 let profile_badges = {
@@ -1999,12 +2009,12 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         <nav class="navlist secondary-nav navlist--more">
                             <ul class="navlist-items">
                                 <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" onclick="change_settings_page('home')">
+                                    <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_settings_page('home')">
                                         Home
                                     </a>
                                 </li>
                                 <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link bwaa-settings-tab" onclick="change_settings_page('page2')">
+                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="page2" onclick="_change_settings_page('page2')">
                                         Page 2
                                     </a>
                                 </li>
@@ -2015,6 +2025,87 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                 </div>
             </div>
         `);
+
+
+        change_settings_page('home');
+    }
+
+    unsafeWindow._change_settings_page = function(page) {
+        change_settings_page(page);
+    }
+    function change_settings_page(page) {
+        let tabs = document.querySelectorAll('bwaa-settings-tab');
+        tabs.forEach((tab) => {
+            if (tab.getAttribute('data-bwaa-tab') != page) {
+                tab.classList.remove('secondary-nav-item-link--active');
+            } else {
+                tab.classList.add('secondary-nav-item-link--active');
+            }
+        });
+
+        render_settings_page(page, document.getElementById('bleh-settings-inject'));
+    }
+
+    function render_settings_page(page, injector) {
+        if (page == 'home') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">Welcome! this is a test page</h2>
+                    <div class="form-group">
+                        <h3 class="control-label">Do something</h3>
+                        <div class="checkbox">
+                            <label for="setting--test">
+                                <input id="setting--test" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                test setting
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            request_checkbox_update();
+        }
+    }
+
+    function request_checkbox_update() {
+        for (let setting in settings_store) {
+            checkbox_update(setting, settings[setting], false);
+        }
+    }
+
+    function checkbox_update(setting, value, modify=true) {
+        if (settings_store[setting].type == 'toggle') {
+            if (modify) {
+                if (value == settings_store[setting].values[0]) {
+                    settings[setting] = settings_store[setting].values[1];
+                    document.getElementById(`setting--${setting}`).checked = true;
+                } else {
+                    settings[setting] = settings_store[setting].values[0];
+                    document.getElementById(`setting--${setting}`).checked = false;
+                }
+                console.info('bwaa - setting', setting, 'changed to', value);
+
+                // save setting into body
+                document.body.style.setProperty(`--${setting}`, settings[setting]);
+                document.documentElement.setAttribute(`data-bwaa--${setting}`, `${settings[setting]}`);
+            } else {
+                if (value == settings_store[setting].values[0]) {
+                    document.getElementById(`setting--${setting}`).checked = false;
+                } else {
+                    document.getElementById(`setting--${setting}`).checked = true;
+                }
+            }
+        }
+
+        // save to settings
+        localStorage.setItem('bwaa', JSON.stringify(settings));
+    }
+
+    unsafeWindow._notify_checkbox_change = function(checkbox) {
+        let setting = checkbox.getAttribute('id').replace('setting--', '');
+        let state = checkbox.checked;
+
+        checkbox_update(setting, state);
     }
 
 
