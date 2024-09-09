@@ -941,7 +941,7 @@
                     }
                 }
                 /* generic album page tracklist */
-                &:not(:has(:nth-child(10))) {
+                &:not(:has(:nth-child(10)), #top-tracks-section &) {
                     th {
                         &:nth-child(4),
                         &:nth-child(8),
@@ -963,6 +963,35 @@
                             width: 56px;
                         }
                         &:nth-child(9) {
+                            width: 80px;
+                        }
+                    }
+                }
+
+                #top-tracks-section & {
+                    th {
+                        &:nth-child(3),
+                        &:nth-child(5),
+                        &:nth-child(8) {
+                            display: flex;
+                            width: fit-content;
+                            padding: 0 5px;
+                            color: #696969;
+                            font-size: 11px;
+                            line-height: 16px;
+                            font-weight: normal;
+                        }
+
+                        &:nth-child(3) {
+                            order: 2;
+                            flex: 1;
+                        }
+                        &:nth-child(5) {
+                            margin-left: 56px;
+                            width: 358px;
+                        }
+                        &:nth-child(8) {
+                            order: 3;
                             width: 80px;
                         }
                     }
@@ -1008,6 +1037,18 @@
                             margin: 0 0 -2px 2px;
                             top: 1px;
                         }
+                    }
+                }
+            }
+
+            .chartlist-album {
+                order: 3;
+                color: var(--colour-middle);
+
+                .chartlist-row:has(&) {
+                    .chartlist-name {
+                        width: 350px;
+                        max-width: unset;
                     }
                 }
             }

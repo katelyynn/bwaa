@@ -261,6 +261,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             bwaa_artworks();
             bwaa_friends();
             bwaa_obsessions();
+            bwaa_library();
         }
         bwaa_lastfm_settings();
         bwaa_footer();
@@ -293,6 +294,7 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 bwaa_artworks();
                                 bwaa_friends();
                                 bwaa_obsessions();
+                                bwaa_library();
                             }
                             bwaa_lastfm_settings();
                             bwaa_footer();
@@ -2272,5 +2274,36 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         `);
 
         footer_container.appendChild(bwaa_legal);
+    }
+
+
+
+
+    function bwaa_library() {
+        let top_tracks = document.querySelectorAll('#top-tracks-section .chartlist .chartlist-row:not(.chartlist__placeholder-row, [data-bwaa="true"])');
+
+        if (top_tracks == null)
+            return;
+
+        top_tracks.forEach((track) => {
+            track.setAttribute('data-bwaa', 'true');
+
+            let album_link = '';
+            let album_name = '-';
+
+            let track_image = track.querySelector('.chartlist-image a');
+            if (track_image != null) {
+                album_link = track_image.getAttribute('href');
+                album_name = track_image.querySelector('img').getAttribute('alt');
+            }
+
+            let album_name_col = document.createElement('td');
+            album_name_col.classList.add('chartlist-album');
+            album_name_col.innerHTML = (`
+                <a href="${album_link}" alt="${album_name}">${album_name}</a>
+            `);
+
+            track.appendChild(album_name_col);
+        });
     }
 })();
