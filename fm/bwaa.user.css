@@ -1960,6 +1960,7 @@
         }
     }
 
+    .section-with-separator:has(.sidebar-image-list),
     .external-links-section,
     form[action*="/playlists/create/"],
     .profile-album-section ~ .section-with-separator:has(.metadata-and-wiki-row),
@@ -3696,7 +3697,7 @@
                         height: 36px;
                     }
                     .audioscrobbler-logo {
-                        background-size: 38px;
+                        background-size: 37px;
                         background-position: center;
                         background-repeat: no-repeat;
                         height: 20px;
