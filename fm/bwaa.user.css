@@ -3570,6 +3570,11 @@
 
     .shoutbox-controls {
         margin-top: 15px;
+
+        .shoutbox--subpage & {
+            float: unset;
+            margin-top: unset;
+        }
     }
 
     .section-settings-toggle {
