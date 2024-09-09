@@ -257,6 +257,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         console.info('bwaa - starting up');
 
         // essentials
+        document.head.querySelector('link[rel="icon"]').setAttribute('href', 'https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico');
         lookup_lang();
         load_settings();
         bwaa_load_header();
