@@ -1388,7 +1388,7 @@
 
     /* icons */
     .gallery-image-votes:before, .gallery-image-preferred-states:before, .bookmark-votes:before,
-    .journal-like:before,
+    .journal-like:before, .stationlink:before,
     .provider:before,
     .library-controls .secondary-nav-item-link:before,
     .profile-actions-section .options :is(button, a):before
@@ -1405,6 +1405,9 @@
         transition: none !important;
         background-color: unset !important;
         border-radius: unset !important;
+
+        box-shadow: unset !important;
+        right: var(--right, unset) !important;
     }
 
     /* links */
@@ -2360,6 +2363,7 @@
             }
 
             text {
+                font-family: inherit !important;
                 font-size: 11px !important;
                 line-height: 1.181818em !important;
                 color: var(--colour-lower) !important;
@@ -2667,6 +2671,43 @@
         }
         &:last-child {
             border-bottom: none;
+        }
+    }
+
+    .stationlink-list {
+        .stationlink {
+            display: flex;
+            flex-direction: column;
+            padding: 5px 5px 5px 25px !important;
+            border-top: 1px solid var(--body);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            min-height: unset;
+
+            &:before {
+                --top: 4px;
+                --width: 16px;
+                --height: 16px;
+                background-image: var(--cdn-flatness-preview-1-sprite);
+                background-position: 0 0;
+            }
+
+            &:after {
+                display: none;
+            }
+        }
+
+        li {
+            &:first-child {
+                .stationlink {
+                    border-top: none;
+                }
+            }
+            &:last-child {
+                .stationlink {
+                    border-bottom: none;
+                }
+            }
         }
     }
 
@@ -3077,7 +3118,7 @@
         }
 
         padding: unset !important;
-        font-family: var(--font) !important;
+        font-family: inherit !important;
         font-size: 11px !important;
         font-weight: bold !important;
         line-height: 12px !important;
@@ -3789,6 +3830,43 @@
 
         .selector {
             display: none;
+        }
+    }
+    .buffer-3 {
+        margin-top: 15px;
+    }
+    .your-progress {
+        margin-top: calc(15px - 7px);
+
+        h4 {
+            display: none;
+        }
+
+        svg {
+            font-family: "Lucida Grande", Arial, Helvetica, Verdana, sans-serif !important;
+            font-size: 12px !important;
+            line-height: 1.5 !important;
+            color: var(--colour) !important;
+        }
+        text {
+            font-size: 12px !important;
+            line-height: 1.5 !important;
+            color: var(--colour) !important;
+            fill: var(--colour) !important;
+        }
+
+        [stroke="#ffffff"] {
+            stroke: var(--body) !important;
+        }
+
+        .highcharts-background,
+        svg {
+            fill: transparent !important;
+        }
+
+        .description {
+            color: var(--colour-middle);
+            line-height: inherit;
         }
     }
 
