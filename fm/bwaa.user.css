@@ -3307,6 +3307,14 @@
 
 
 
+    img {
+        font-size: 9px;
+        color: var(--colour-middle);
+    }
+
+
+
+
     .top-listeners {
         grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
         gap: 0;
