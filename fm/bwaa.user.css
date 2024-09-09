@@ -3650,7 +3650,8 @@
     .shoutbox-controls {
         margin-top: 15px;
 
-        h2 + .shoutbox-controls-wrapper & {
+        /* why r profile ones diff? dunno right now */
+        #top-tracks + #shoutbox & {
             margin-top: calc(15px + 7px);
         }
 
