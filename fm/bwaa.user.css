@@ -1165,6 +1165,16 @@
                 color: #696969;
                 text-align: right;
                 line-height: 16px;
+
+                .chartlist--with-index--length-3 & {
+                    width: 40px;
+                }
+                .chartlist--with-index--length-4 & {
+                    width: 50px;
+                }
+                .chartlist--with-index--length-5 & {
+                    width: 60px;
+                }
             }
 
             .chartlist-count-bar-value {
@@ -1280,6 +1290,12 @@
                         }
                     }
                 }
+            }
+
+            .chartlist__placeholder-image,
+            .chartlist__placeholder-name,
+            .chartlist__placeholder-bar {
+                opacity: 0 !important;
             }
         }
 
