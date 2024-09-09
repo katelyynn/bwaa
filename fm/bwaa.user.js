@@ -1822,12 +1822,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
             bookmarked_images[artist] = new_artist_bookmarks;
 
+            deliver_notif(`Removed from ${artist}’s saved images`);
             console.info('bleh - image', id, 'from artist', artist, 'has been removed from bookmarks');
         } else {
             // add to bookmarks
 
             button.setAttribute('data-bleh--image-is-bookmarked', 'true');
             bookmarked_images[artist].push(id);
+            deliver_notif(`Added to ${artist}’s saved images`);
             console.info('bleh - image', id, 'from artist', artist, 'has been added to bookmarks');
         }
 
