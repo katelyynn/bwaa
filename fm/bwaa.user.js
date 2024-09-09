@@ -120,6 +120,8 @@ let settings_defaults = {
     test: false,
     sticky_nav: false,
     shouts_2010: false,
+    shouts_no_votes: false,
+    shouts_no_reply: false,
     no_notifs: false
 }
 let settings_store = {
@@ -135,6 +137,14 @@ let settings_store = {
         values: [true, false]
     },
     shouts_2010: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    shouts_no_votes: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    shouts_no_reply: {
         type: 'toggle',
         values: [true, false]
     },
@@ -2096,6 +2106,23 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                                 </label>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_no_votes">
+                                    <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Do not display shout votes <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_no_reply">
+                                    <input id="setting--shouts_no_reply" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Disallow ability to reply to shouts <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--no_notifs">

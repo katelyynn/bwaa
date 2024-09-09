@@ -3076,6 +3076,14 @@
             margin-top: 6px;
         }
 
+        .sep {
+            margin: 9px 0;
+            height: 1px;
+            display: block;
+            background: var(--border-2);
+            width: 14px;
+        }
+
         .form-submit {
             display: flex;
             gap: 4px;
