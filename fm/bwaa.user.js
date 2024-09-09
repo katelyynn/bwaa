@@ -1819,6 +1819,69 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         let page_content = obsession_container.querySelector('.page-content');
         page_content.classList.add('subpage');
 
+        let row = document.createElement('div');
+        row.classList.add('row');
+
+        let col_main = document.createElement('div');
+        col_main.classList.add('col-main');
+
+        let obsession_wrap = page_content.querySelector('.obsession-details-wrap');
+
+
+        let obsession_author = obsession_wrap.querySelector('.obsession-details-intro a').textContent;
+
+        let new_header = document.createElement('section');
+        new_header.classList.add('profile-header-subpage-section');
+        new_header.innerHTML = (`
+            <div class="badge-avatar">
+                <img src="${obsession_wrap.querySelector('.obsession-details-intro-avatar-wrap img').getAttribute('src')}" alt="${obsession_author}">
+            </div>
+            <div class="badge-info">
+                <a href="${root}user/${obsession_author}">${obsession_author}</a>
+                <h1>Music <a href="${root}user/${obsession_author}/obsessions">Obsession</a></h1>
+            </div>
+        `);
+
+
+        let next = page_content.querySelector('.obsession-pagination-next a');
+        let previous = page_content.querySelector('.obsession-pagination-previous a');
+
+        let navlist_switcher = document.createElement('nav');
+        navlist_switcher.classList.add('navlist', 'secondary-nav', 'navlist--more');
+        navlist_switcher.innerHTML = (`
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--next-obsession">
+                    ${(next != null) ? `
+                        <a class="secondary-nav-item-link" href="${next.getAttribute('href')}">
+                            « Forward
+                        </a>
+                    ` : `
+                        <a class="secondary-nav-item-link" disabled>
+                            « Forward
+                        </a>
+                    `}
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--previous-obsession">
+                    ${(previous != null) ? `
+                        <a class="secondary-nav-item-link" href="${previous.getAttribute('href')}">
+                            Previous »
+                        </a>
+                    ` : `
+                        <a class="secondary-nav-item-link" disabled>
+                            Previous »
+                        </a>
+                    `}
+                </li>
+            </ul>
+        `);
+        row.appendChild(navlist_switcher);
+        col_main.appendChild(new_header);
+        col_main.appendChild(obsession_wrap);
+
+        row.appendChild(col_main);
+
+        page_content.appendChild(row);
+
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
         let content_top = adaptive_skin.querySelector('.content-top');
         adaptive_skin.removeChild(content_top);

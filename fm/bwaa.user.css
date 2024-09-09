@@ -384,6 +384,15 @@
                     border: 1px solid var(--border);
                     color: var(--colour-middle);
 
+                    &[disabled] {
+                        pointer-events: none !important;
+                        filter: brightness(90%);
+
+                        [data-bwaa--theme="paint_it_black"] & {
+                            filter: brightness(50%);
+                        }
+                    }
+
                     &:after {
                         display: none !important;
                     }
@@ -426,6 +435,40 @@
                         }
                     }
                 }
+            }
+
+            .secondary-nav-item--overview {
+                order: -20;
+            }
+            .secondary-nav-item--library {
+                order: -19;
+            }
+            .secondary-nav-item--listening-report {
+                order: -18;
+            }
+            .secondary-nav-item--events {
+                order: -17;
+            }
+            .secondary-nav-item--following {
+                order: -16;
+            }
+            .secondary-nav-item--followers {
+                order: -15;
+            }
+            .secondary-nav-item--neighbours {
+                order: -14;
+            }
+            .secondary-nav-item--obsessions {
+                order: -13;
+            }
+            .secondary-nav-item--shoutbox {
+                order: -12;
+            }
+            .secondary-nav-item--journal {
+                order: -3;
+            }
+            .secondary-nav-item--tags {
+                order: -2;
             }
         }
     }
@@ -3398,6 +3441,10 @@
 
     .obsession-container {
         margin-bottom: 18px;
+
+        .obsession-pagination {
+            display: none;
+        }
     }
 
 
