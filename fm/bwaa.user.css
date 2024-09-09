@@ -556,6 +556,25 @@
                     background: var(--header-text);
                     height: 8px;
                     border-radius: 3px;
+
+                    [data-taste="very_low"] & {
+                        background: #9a9a9a;
+                    }
+                    [data-taste="low"] & {
+                        background: #453e45;
+                    }
+                    [data-taste="medium"] & {
+                        background: #5336bd;
+                    }
+                    [data-taste="high"] & {
+                        background: #05bd4c;
+                    }
+                    [data-taste="very_high"] & {
+                        background: #e9c102;
+                    }
+                    [data-taste="super"] & {
+                        background: #ff0101;
+                    }
                 }
             }
 
