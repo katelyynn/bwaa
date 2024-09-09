@@ -118,6 +118,7 @@ let settings;
 let settings_defaults = {
     theme: 'simply_red',
     test: false,
+    varied_avatar_shapes: true,
     tabs_2013: false,
     sticky_nav: false,
     shouts_2010: false,
@@ -130,6 +131,10 @@ let settings_store = {
         type: 'option'
     },
     test: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    varied_avatar_shapes: {
         type: 'toggle',
         values: [true, false]
     },
@@ -2106,6 +2111,18 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                         <legend>Social</legend>
                         <div class="form-group">
                             <div class="checkbox">
+                                <label for="setting--varied_avatar_shapes">
+                                    <input id="setting--varied_avatar_shapes" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Allow varied avatar shapes <i class="subtext">(disabling not yet implemented)</i>
+                                </label>
+                                <div class="alert">
+                                    Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="form-group">
+                            <div class="checkbox">
                                 <label for="setting--shouts_2010">
                                     <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     Prefer 2010-era shout design <i class="subtext">(not yet implemented)</i>
@@ -2153,13 +2170,17 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
     function checkbox_update(setting, value, modify=true) {
         if (settings_store[setting].type == 'toggle') {
+            let checkbox = document.getElementById(`setting--${setting}`);
+            if (checkbox == null)
+                return;
+
             if (modify) {
                 if (value == settings_store[setting].values[0]) {
                     settings[setting] = settings_store[setting].values[0];
-                    document.getElementById(`setting--${setting}`).checked = true;
+                    checkbox.checked = true;
                 } else {
                     settings[setting] = settings_store[setting].values[1];
-                    document.getElementById(`setting--${setting}`).checked = false;
+                    checkbox.checked = false;
                 }
                 console.info('bwaa - setting', setting, 'changed to', value, settings[setting]);
 
@@ -2169,9 +2190,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
             } else {
                 console.info('bwaa - setting', setting, 'is being loaded as', value);
                 if (value == settings_store[setting].values[0]) {
-                    document.getElementById(`setting--${setting}`).checked = true;
+                    checkbox.checked = true;
                 } else {
-                    document.getElementById(`setting--${setting}`).checked = false;
+                    checkbox.checked = false;
                 }
             }
         }

@@ -3081,6 +3081,11 @@
             margin-top: 6px;
         }
 
+        .alert {
+            margin: 6px 0 !important;
+            max-width: 550px;
+        }
+
         .sep {
             margin: 9px 0;
             height: 1px;
