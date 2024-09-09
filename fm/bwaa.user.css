@@ -3189,6 +3189,10 @@
             font: inherit;
             color: var(--colour-middle);
         }
+
+        .more-link {
+            margin-top: 15px !important;
+        }
     }
 
     section {

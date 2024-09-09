@@ -232,6 +232,9 @@ let root = '';
 let bwaa_url = 'https://www.last.fm/bwaa';
 let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
+let setup_url = 'https://www.last.fm/bwaa/setup';
+let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
+
 (function() {
     'use strict';
 
@@ -251,6 +254,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
             // start bwaa settings
             bwaa_settings();
+        } else if (window.location.href == setup_url || setup_regex.test(window.location.href)) {
+            // start bwaa setup
+            bwaa_setup();
         } else {
             // things that load when not in bwaa settings
             bwaa_profiles();
@@ -284,6 +290,9 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                             if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
                                 // start bwaa settings
                                 bwaa_settings();
+                            } else if (window.location.href == setup_url || setup_regex.test(window.location.href)) {
+                                // start bwaa setup
+                                bwaa_setup();
                             } else {
                                 // things that load when not in bwaa settings
                                 bwaa_profiles();
@@ -2167,7 +2176,10 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                             </div>
                         </div>
                     </fieldset>
-                </div>
+                    <div class="more-link align-right">
+                        <a href="${root}bwaa/setup">Enter first-time setup again</a>
+                    </div>
+                </section>
             `);
 
             request_checkbox_update();
@@ -2305,5 +2317,169 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
             track.appendChild(album_name_col);
         });
+    }
+
+
+
+
+    function bwaa_setup() {
+        console.info('bwaa - loading first-time setup');
+        let adaptive_skin = document.querySelector('.adaptive-skin-container:not([data-bwaa="true"])');
+
+        if (adaptive_skin == null)
+            return;
+        adaptive_skin.setAttribute('data-bwaa', 'true');
+
+        adaptive_skin.innerHTML = '';
+        document.title = 'first-time bwaa | Last.fm';
+
+        let my_avi = auth_link.querySelector('img').getAttribute('src');
+
+        adaptive_skin.innerHTML = (`
+            <div class="container page-content bwaa-settings lastfm-settings subpage">
+                <div class="row">
+                    <nav class="navlist secondary-nav navlist--more">
+                        <ul class="navlist-items">
+                            <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                                <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                                    Setup bwaa
+                                </a>
+                            </li>
+                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                <a class="secondary-nav-item-link" href="${root}bwaa">
+                                    Configure bwaa
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="col-main settings-form">
+                        <section class="profile-header-subpage-section">
+                            <div class="badge-avatar">
+                                <img src="${my_avi}" alt="${auth}">
+                            </div>
+                            <div class="badge-info">
+                                <a href="${root}user/${auth}">${auth}</a>
+                                <h1>Setup bwaa</h1>
+                            </div>
+                        </section>
+                        <nav class="navlist secondary-nav navlist--more">
+                            <ul class="navlist-items">
+                                <li class="navlist-item secondary-nav-item">
+                                    <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_settings_page('home')">
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item">
+                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="page2" onclick="_change_settings_page('page2')">
+                                        Page 2
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div id="bleh-setup-inject"></div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+
+        change_setup_page('home');
+    }
+
+    unsafeWindow._change_setup_page = function(page) {
+        change_setup_page(page);
+    }
+    function change_setup_page(page) {
+        let tabs = document.querySelectorAll('.bwaa-settings-tab');
+        tabs.forEach((tab) => {
+            if (tab.getAttribute('data-bwaa-tab') != page) {
+                tab.classList.remove('secondary-nav-item-link--active');
+            } else {
+                tab.classList.add('secondary-nav-item-link--active');
+            }
+        });
+
+        render_setup_page(page, document.getElementById('bleh-setup-inject'));
+    }
+
+    function render_setup_page(page, injector) {
+        if (page == 'home') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">Welcome to bwaa!</h2>
+                    <p>proper text heading n things coming soonnnnnnnn</p>
+                    <fieldset>
+                        <legend>Navigation</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--tabs_2013">
+                                    <input id="setting--tabs_2013" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Prefer 2013-era tab design <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--sticky_nav">
+                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Make the navigation bar persistent on scroll
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Social</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--varied_avatar_shapes">
+                                    <input id="setting--varied_avatar_shapes" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Allow varied avatar shapes
+                                </label>
+                                <div class="alert">
+                                    Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_2010">
+                                    <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Prefer 2010-era shout design <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_no_votes">
+                                    <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Do not display shout votes <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_no_reply">
+                                    <input id="setting--shouts_no_reply" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Disallow ability to reply to shouts <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--no_notifs">
+                                    <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Hide notifications, only display inbox <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </section>
+            `);
+        } else if (page == 'page2') {
+            injector.innerHTML = '<p>o.O</p>';
+        }
     }
 })();
