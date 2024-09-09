@@ -1685,6 +1685,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             shout.setAttribute('data-bwaa', 'true');
 
             let shout_name = shout.querySelector('.shout-user');
+            if (shout_name == null)
+                return;
+
             if (settings.shouts_2010)
                 shout_name.innerHTML = `${shout_name.innerHTML} wrote:`;
 
