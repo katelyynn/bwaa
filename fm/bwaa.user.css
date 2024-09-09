@@ -2785,6 +2785,10 @@
             &:after {
                 display: none;
             }
+
+            &:hover {
+                color: var(--text-link);
+            }
         }
 
         li {
