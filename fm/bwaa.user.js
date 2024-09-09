@@ -1143,7 +1143,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             Artwork
                         </a>
                     </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
                             Shouts
                         </a>
@@ -1418,7 +1418,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             Tags
                         </a>
                     </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
                             Shouts
                         </a>
