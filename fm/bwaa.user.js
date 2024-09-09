@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0908
+// @version      2024.0909
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -17,7 +17,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0908',
+    build: '2024.0909',
     sku: 'sweet'
 }
 
@@ -118,6 +118,7 @@ let settings;
 let settings_defaults = {
     theme: 'simply_red',
     test: false,
+    tabs_2013: false,
     sticky_nav: false,
     shouts_2010: false,
     shouts_no_votes: false,
@@ -129,6 +130,10 @@ let settings_store = {
         type: 'option'
     },
     test: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    tabs_2013: {
         type: 'toggle',
         values: [true, false]
     },
@@ -2087,6 +2092,15 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
                     </div>
                     <fieldset>
                         <legend>Navigation</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--tabs_2013">
+                                    <input id="setting--tabs_2013" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Prefer 2013-era tab design <i class="subtext">(not yet implemented)</i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--sticky_nav">
