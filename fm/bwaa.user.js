@@ -598,9 +598,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             // which subpage is it?
             let subpage_type = document.body.classList[1].replace('namespace--', '');
+            deliver_notif(`Subpage type of ${subpage_type}`, true);
 
             if (subpage_type == 'user_obsessions_overview') {
                 col_main = document.body.querySelector('.container.page-content');
+                deliver_notif('This page is currently not finished, sorry!');
+            } else if (
+                subpage_type.startsWith('user_events') ||
+                subpage_type.startsWith('user_playlists') ||
+                subpage_type == 'user_neighbours'
+            ) {
+                deliver_notif('This page is currently not finished, sorry!');
             }
 
             let header_user_data = {
@@ -2120,8 +2128,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (page == 'home') {
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
-                    <h2 class="form-header">Welcome! this is a test page</h2>
-                    <p>proper text heading n things coming soonnnnnnnn</p>
+                    <h2 class="form-header">Welcome to bwaa!</h2>
+                    <p>You currently have version <strong>${version.build}.${version.sku}</strong> of bwaa installed. Think you’re behind?</p>
+                    <div class="more-link align-left space-self">
+                        <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js" target="_blank">Check for updates</a>
+                    </div>
                     <fieldset>
                         <legend>Navigation</legend>
                         <div class="form-group">
@@ -2223,7 +2234,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         <a onclick="_deliver_notif('This is a notification only visible with developer mode enabled', true)">Create a developer-only notification</a>
                     </div>
                     <div class="more-link align-right">
-                        <a href="${root}bwaa/setup">Enter first-time setup again</a>
+                        <a href="${root}bwaa/setup">Enter first-time setup</a>
                     </div>
                 </section>
             `);
@@ -2411,12 +2422,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         <nav class="navlist secondary-nav navlist--more">
                             <ul class="navlist-items">
                                 <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_settings_page('home')">
+                                    <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_setup_page('home')">
                                         Home
                                     </a>
                                 </li>
                                 <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="page2" onclick="_change_settings_page('page2')">
+                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="page2" onclick="_change_setup_page('page2')">
                                         Page 2
                                     </a>
                                 </li>
@@ -2452,8 +2463,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (page == 'home') {
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
-                    <h2 class="form-header">Welcome to bwaa!</h2>
-                    <p>proper text heading n things coming soonnnnnnnn</p>
+                    <h2 class="form-header">Thank you for installing!</h2>
+                    <p>bwaa is an extension for Last.fm by <a href="${root}user/cutensilly">cutensilly</a> with the aim to bring back the 2012 look of Last.fm. Since it’s you’re first time installing, here’s a quick setup to get you going. You can configure bwaa at anytime by visiting <a href="${root}bwaa">Settings</a> :3</p>
                     <fieldset>
                         <legend>Navigation</legend>
                         <div class="form-group">
@@ -2522,6 +2533,16 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             </div>
                         </div>
                     </fieldset>
+                    <div class="more-link align-right">
+                        <a href="${root}bwaa">Configure more of bwaa</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a href="${root}user/${auth}">Head to your profile</a>
+                    </div>
+                    <fieldset>
+                        <legend>Support bwaa</legend>
+                        <div class="alert">If you end up enjoying bwaa you can <a href="https://github.com/katelyynn/bwaa" target="_blank">star the project</a> <i class="subtext">(if you have GitHub)</i> and/or share the word around! <3</alert>
+                    </fieldset>
                 </section>
             `);
         } else if (page == 'page2') {
@@ -2546,6 +2567,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     unsafeWindow._deliver_notif = function(content, dev_only=false, quick=true, persist=false) {
         deliver_notif(content, dev_only, quick, persist);
     }
+    /**
+     * deliver notification to the user
+     * @param {string} content text content displayed to the user
+     * @param {boolean} dev_only display only when developer mode is enabled
+     * @param {boolean} quick only show for a short notice
+     * @param {boolean} persist persist until user dismisses
+     */
     function deliver_notif(content, dev_only=false, quick=true, persist=false) {
         if (dev_only && !settings.developer)
             return;

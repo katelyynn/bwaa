@@ -3157,7 +3157,7 @@
         }
 
         &:hover {
-            filter: brightness(110%) !important;
+            border-color: var(--text-link) !important;
         }
     }
 
@@ -3203,6 +3203,13 @@
         .alert {
             margin: 6px 0 !important;
             max-width: 550px;
+
+            legend + & {
+                margin-top: unset !important;
+            }
+            &:last-child {
+                margin-bottom: unset !important;
+            }
         }
 
         .sep {
@@ -3248,9 +3255,24 @@
         }
 
         .more-link {
-            cursor: pointer;
-            user-select: none;
             margin-top: 15px !important;
+
+            &.align-left {
+                text-align: left;
+
+                a {
+                    margin-left: unset;
+                }
+            }
+
+            &.space-self {
+                margin: 6px 0 !important;
+            }
+
+            a {
+                cursor: pointer;
+                user-select: none;
+            }
         }
     }
 
@@ -3912,6 +3934,7 @@
 
 
 
+    #bleh-setup-inject,
     #bleh-settings-inject {
         margin-top: 15px;
     }
