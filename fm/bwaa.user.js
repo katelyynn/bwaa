@@ -116,6 +116,8 @@ function lookup_lang() {
 
 let settings;
 let settings_defaults = {
+    developer: false,
+    inbuilt_style_loading: true,
     theme: 'simply_red',
     test: false,
     varied_avatar_shapes: true,
@@ -127,6 +129,14 @@ let settings_defaults = {
     no_notifs: false
 }
 let settings_store = {
+    developer: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    inbuilt_style_loading: {
+        type: 'toggle',
+        values: [true, false]
+    },
     theme: {
         type: 'option'
     },
@@ -2177,8 +2187,37 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             </div>
                         </div>
                     </fieldset>
+                    <fieldset>
+                        <legend>${version.build}.${version.sku}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--developer">
+                                    <input id="setting--developer" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Enable developer features
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--inbuilt_style_loading">
+                                    <input id="setting--inbuilt_style_loading" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Automatically load the stylesheet <i class="subtext">(not yet implemented)</i>
+                                </label>
+                                <div class="alert">
+                                    Once disabled, you are in control of loading the stylesheet with browser extensions such as Stylus.
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
                     <div class="more-link align-right">
-                        <a onclick="_deliver_notif('This is a test notification filled with lots of text bla b la bla lbaslba b;;af;asdasdjk')">Create a notification</a>
+                        <a onclick="_deliver_notif('This is a quick test notification with text!')">Create a notification</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_deliver_notif('This is a long-lasting test notification filled with lots of text bla b la bla lbaslba b;;af;asdasdjk', false, false)">Create a long-lasting notification</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_deliver_notif('This is a notification only visible with developer mode enabled', true)">Create a developer-only notification</a>
                     </div>
                     <div class="more-link align-right">
                         <a href="${root}bwaa/setup">Enter first-time setup again</a>
@@ -2501,10 +2540,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
     }
 
-    unsafeWindow._deliver_notif = function(content, dev_only=false, persist=false) {
-        deliver_notif(content, dev_only, persist);
+    unsafeWindow._deliver_notif = function(content, dev_only=false, quick=true, persist=false) {
+        deliver_notif(content, dev_only, quick, persist);
     }
-    function deliver_notif(content, dev_only=false, persist=false) {
+    function deliver_notif(content, dev_only=false, quick=true, persist=false) {
         if (dev_only && !settings.developer)
             return;
 
@@ -2518,9 +2557,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (persist)
             return;
 
+        let timeout_length = (quick) ? 2500 : 7000;
+
         setTimeout(function() {
             kill_notif(notif);
-        }, 7500);
+        }, timeout_length);
     }
 
     unsafeWindow._kill_notif = function(notif) {
