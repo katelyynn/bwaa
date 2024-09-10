@@ -712,6 +712,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main');
         let col_sidebar = document.body.querySelector('.col-sidebar.hidden-xs');
+        if (col_sidebar == null)
+            col_sidebar = document.body.querySelector('.col-sidebar');
 
         let navlist = artist_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -1134,6 +1136,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main:not(.visible-xs)');
         let col_sidebar = document.body.querySelector('.col-sidebar.hidden-xs');
+        if (col_sidebar == null)
+            col_sidebar = document.body.querySelector('.col-sidebar');
 
         let navlist = album_header.querySelector('.navlist');
         if (!is_subpage) {
