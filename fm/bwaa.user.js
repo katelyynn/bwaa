@@ -2158,15 +2158,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     function bwaa_lastfm_settings() {
         console.info('bwaa - last.fm settings host');
 
-        let modal_bodys = document.querySelectorAll('.popup_wrapper_visible');
-        modal_bodys.forEach((modal_body) => {
-            console.warn('modal body', modal_body);
-        });
-
         let content_forms = document.querySelectorAll('.content-form:not([data-bwaa="true"])');
         console.info('bwaa - last.fm settings host found content-forms:', content_forms);
         content_forms.forEach((content_form) => {
-            deliver_notif('content form');
             content_form.classList.remove('content-form');
             content_form.classList.add('settings-form');
 

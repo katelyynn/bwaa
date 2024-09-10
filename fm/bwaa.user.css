@@ -4415,4 +4415,45 @@
         flex-direction: column;
         gap: 15px;
     }
+
+
+
+
+    /* modal */
+    .popup_visible {
+        overflow: unset;
+    }
+
+    .popup_background {
+        display: none !important;
+    }
+    .modal-content {
+        text-align: left !important;
+    }
+    .modal-dialog {
+        width: fit-content;
+    }
+    .modal-body {
+        border: 5px solid var(--colour-upper);
+        background: var(--body);
+        border-radius: 5px;
+        box-shadow: 0 0 10px var(--colour-upper);
+
+        padding: 15px;
+
+        .modal-title {
+            margin-bottom: 15px;
+
+            & + div {
+                margin-top: unset;
+            }
+        }
+    }
+
+    #id_album_artist_name,
+    #id_album_name,
+    #id_artist_name,
+    #id_track_name {
+        width: 350px;
+    }
 }
