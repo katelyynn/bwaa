@@ -2528,6 +2528,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
     function bwaa_library() {
+        bwaa_library_header();
+
         let top_tracks = document.querySelectorAll('#top-tracks-section .chartlist .chartlist-row:not(.chartlist__placeholder-row, [data-bwaa="true"])');
 
         if (top_tracks == null)
@@ -2553,6 +2555,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             track.appendChild(album_name_col);
         });
+    }
+    function bwaa_library_header() {
+        let library_header = document.querySelector('.library-header:not([data-bwaa])');
+
+        if (library_header == null)
+            return;
+        library_header.setAttribute('data-bwaa', 'true');
+
+        library_header.innerHTML = library_header.innerHTML.replaceAll('·', '|');
     }
 
 

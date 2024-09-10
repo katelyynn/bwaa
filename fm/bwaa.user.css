@@ -932,7 +932,7 @@
                             display: flex;
                             width: fit-content;
                             padding: 0 5px;
-                            color: #696969;
+                            color: var(--colour-middle);
                             font-size: 11px;
                             line-height: 16px;
                             font-weight: normal;
@@ -959,7 +959,7 @@
                             display: flex;
                             width: fit-content;
                             padding: 0 5px;
-                            color: #696969;
+                            color: var(--colour-middle);
                             font-size: 11px;
                             line-height: 16px;
                             font-weight: normal;
@@ -986,7 +986,7 @@
                             display: flex;
                             width: fit-content;
                             padding: 0 5px;
-                            color: #696969;
+                            color: var(--colour-middle);
                             font-size: 11px;
                             line-height: 16px;
                             font-weight: normal;
@@ -3770,6 +3770,7 @@
 
     .col-sidebar,
     .col-main {
+        .library-overview-header .dropdown-menu-clickable,
         .shoutbox-controls .dropdown-menu-clickable,
         .tab-container,
         .section-with-control .dropdown-menu-clickable:not(.chartlist-more-menu, .dropdown-menu-clickable--padded),
@@ -3856,6 +3857,7 @@
     .artist-overview-top-tracks {
         margin-top: unset !important;
     }
+    .library-overview-header,
     .shoutbox-controls,
     .section-with-control,
     .section-controls {
@@ -4211,5 +4213,66 @@
 
         padding: unset;
         border: unset;
+    }
+
+
+
+
+    .library-header {
+        margin-top: 15px;
+        height: fit-content;
+        min-height: 38px;
+
+        padding-left: calc(38px + 10px);
+
+        .library-header-image {
+            width: 38px;
+            height: 38px;
+
+            img {
+                width: 38px;
+                height: 38px;
+                padding: 1px;
+                border: 1px solid var(--border);
+                object-fit: cover;
+            }
+        }
+
+        .library-header-title {
+            font-size: 17px;
+            margin: 0 0 0.15em 0 !important;
+            font-weight: bold;
+            line-height: 1.2em;
+        }
+    }
+    .metadata-list {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0 0 0 !important;
+
+        .metadata-item {
+            margin: unset;
+            padding: unset;
+
+            .metadata-title {
+                color: var(--colour-middle);
+                font-size: 11px;
+                line-height: 16px;
+                font-weight: normal;
+                text-transform: unset;
+            }
+            .metadata-display {
+                font-size: 14px;
+                line-height: 16px;
+                font-weight: bold;
+                margin: unset;
+            }
+        }
+    }
+
+    .library-overview-header {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 }
