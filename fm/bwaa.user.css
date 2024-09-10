@@ -1450,6 +1450,8 @@
                             height: 20px;
                             padding: 0 0.5em 0 0.5em;
                             color: #fff;
+                            /* this didnt exist in last.fm somehow, makes text sorta readable if its longer than the bar */
+                            text-shadow: 1px 1px 0 #71b7e6;
 
                             &:after {
                                 display: none;
