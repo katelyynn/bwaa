@@ -123,7 +123,6 @@ let settings_defaults = {
     theme: 'simply_red',
     test: false,
     varied_avatar_shapes: true,
-    tabs_2013: false,
     sticky_nav: false,
     shouts_2010: false,
     shouts_no_votes: false,
@@ -148,10 +147,6 @@ let settings_store = {
         values: [true, false]
     },
     varied_avatar_shapes: {
-        type: 'toggle',
-        values: [true, false]
-    },
-    tabs_2013: {
         type: 'toggle',
         values: [true, false]
     },
@@ -2312,15 +2307,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <fieldset>
                         <legend>Navigation</legend>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--tabs_2013">
-                                    <input id="setting--tabs_2013" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Prefer 2013-era tab design <i class="subtext">(not yet implemented)</i>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="sep"></div>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--sticky_nav">
