@@ -3186,6 +3186,7 @@
 
 
     /* generic button */
+    .js-shout-reply-cancel,
     .btn-cancel,
     .user-list-follower-btn,
     #ot-sdk-btn.ot-sdk-show-settings,
@@ -3251,7 +3252,7 @@
             padding: 2px 5px !important;
         }
 
-        &:hover {
+        &:not([disabled]):hover {
             border-color: var(--text-link) !important;
         }
     }
@@ -3287,6 +3288,12 @@
             }
         }
 
+        #id_summary, #id_sources,
+        #id_body {
+            width: 100%;
+        }
+
+        [type="hidden"]:not([name="csrfmiddlewaretoken"]) + .form-group,
         p + fieldset,
         fieldset + fieldset,
         .form-group + fieldset,
@@ -3998,6 +4005,7 @@
 
 
 
+    .wiki-style-rules,
     .form-row-help-text,
     .bulleted-list,
     .alert,
@@ -4012,6 +4020,13 @@
 
         width: fit-content !important;
         text-align: left;
+
+        h3 {
+            font: inherit;
+            margin: unset;
+            color: var(--colour-middle);
+            font-weight: bold;
+        }
 
         &.alert-danger {
             background: #ffe7e4;
