@@ -2341,6 +2341,18 @@
                 display: none;
             }
         }
+
+        &.shout--deleted, &.shout--reported {
+            background: var(--border-2);
+            opacity: 0.4;
+
+            [data-bwaa--theme="paint_it_black"] & {
+                opacity: 0.2;
+            }
+        }
+    }
+    .shout-list-item .shout-list-item .shout-container {
+        padding-top: unset;
     }
 
     .shout-form {
