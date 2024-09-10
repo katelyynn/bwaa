@@ -2816,5 +2816,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 media_item.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
             }
         });
+
+        let chartlist_images = document.querySelectorAll('.chartlist-image img:not([data-bwaa])');
+        chartlist_images.forEach((chartlist_image) => {
+            chartlist_image.setAttribute('data-bwaa', 'true');
+
+            let url = chartlist_image.getAttribute('src');
+            let url_split = url.split('/');
+
+            if (legacy_cover_art.hasOwnProperty(url_split[6])) {
+                chartlist_image.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
+            }
+        });
     }
 })();
