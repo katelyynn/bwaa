@@ -1459,6 +1459,9 @@
     }
 
     /* top artists on user page */
+    .grid-items {
+        margin-top: 15px;
+    }
     #line-up .grid-items,
     [data-endpoint$="/library/artists"] .grid-items,
     #top-artists .grid-items {
