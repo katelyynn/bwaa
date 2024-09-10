@@ -4443,6 +4443,7 @@
 
         .modal-title {
             margin-bottom: 15px;
+            padding: unset !important;
 
             & + div {
                 margin-top: unset;
