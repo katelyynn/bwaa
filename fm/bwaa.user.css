@@ -3895,11 +3895,10 @@
             width: 100%;
             padding: unset;
             box-shadow: none;
-            line-height: 26px;
-            margin-top: -5px;
             font-size: 10px;
+            line-height: 17px;
+            height: 22px;
 
-            line-height: inherit;
             position: static !important;
             background: unset !important;
             border: unset !important;
@@ -3914,11 +3913,10 @@
             }
 
             li,
-            .dropdown-menu-clickable-item,
             .navlist-item {
                 margin: 0 4px 0 0;
                 margin-bottom: var(--margin-bottom, -1px) !important;
-                height: 20px;
+                height: 22px;
                 font: inherit;
                 flex: unset;
 
@@ -3930,8 +3928,8 @@
                 background: unset !important;
 
                 &:has(.tab--selected),
-                &.dropdown-menu-clickable-item--selected,
-                &:has(.secondary-nav-item-link--active) {
+                .dropdown-menu-clickable-item--selected,
+                .secondary-nav-item-link--active {
                     background: var(--body) !important;
                     border: 1px solid var(--border);
                     border-bottom-color: var(--body);
@@ -3951,19 +3949,17 @@
                 }
 
                 button,
-                &.dropdown-menu-clickable-item,
                 a {
-                    height: 20px;
-                    line-height: 17px;
+                    background: unset !important;
+                    position: relative;
                     margin: 0 3px 0 0;
-                    padding: 0 2px 0 5px;
-                    border-radius: inherit;
+                    padding: 2px 2px 1px 5px;
                     width: fit-content;
                     cursor: pointer;
 
-                    &:hover {
-                        text-decoration: underline;
-                    }
+                    border-top: 1px solid var(--body); /* ?, not needed in settings but for other tabs ig */
+                    color: inherit !important;
+                    text-decoration: inherit !important;
 
                     &:before,
                     &:after {
@@ -4038,7 +4034,7 @@
             top: calc(13px + 15px);
             right: 0 !important;
             left: 0;
-            height: 20px;
+            height: 22px;
             opacity: 0 !important;
             margin: unset !important;
             padding: unset !important;
