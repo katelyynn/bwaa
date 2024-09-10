@@ -125,7 +125,8 @@ let settings_defaults = {
     sticky_nav: false,
     shouts_2010: false,
     shouts_no_votes: false,
-    no_notifs: false
+    no_notifs: false,
+    hide_redirect_banner: false
 }
 let settings_store = {
     developer: {
@@ -164,6 +165,10 @@ let settings_store = {
         values: [true, false]
     },
     no_notifs: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    hide_redirect_banner: {
         type: 'toggle',
         values: [true, false]
     }
@@ -2117,6 +2122,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                     </a>
                                 </li>
                                 <li class="navlist-item secondary-nav-item">
+                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="corrections" onclick="_change_settings_page('corrections')">
+                                        Corrections
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item">
                                     <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="page2" onclick="_change_settings_page('page2')">
                                         Page 2
                                     </a>
@@ -2253,6 +2263,29 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="more-link align-right">
                         <a href="${root}bwaa/setup">Enter first-time setup</a>
                     </div>
+                </section>
+            `);
+
+            request_checkbox_update();
+        } else if (page == 'corrections') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">Media Corrections</h2>
+                    <div class="alert">Capitalisation corrections for artists, albums, and tracks are currently not supported. Sorry for the inconvenience.</div>
+                    <div class="more-link align-left space-self">
+                        <a href="https://github.com/katelyynn/bleh/issues/new" target="_blank">Submit a correction</a>
+                    </div>
+                    <fieldset>
+                        <legend>Artist Redirection</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_redirect_banner">
+                                    <input id="setting--hide_redirect_banner" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Do not display redirection banners
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
                 </section>
             `);
 

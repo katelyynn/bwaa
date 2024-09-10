@@ -3196,6 +3196,11 @@
             border: none !important;
         }
     }
+    .nag-bar--corrections {
+        [data-bwaa--hide_redirect_banner="true"] & {
+            display: none !important;
+        }
+    }
 
 
 
