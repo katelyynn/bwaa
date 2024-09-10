@@ -4153,6 +4153,11 @@
             font-weight: bold;
         }
 
+        .no-facts {
+            margin-top: 7px;
+            color: var(--colour-middle);
+        }
+
         .factbox-item {
             flex-direction: row;
             margin: 7px 0 0 0;

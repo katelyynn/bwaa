@@ -1716,48 +1716,58 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let factbox = col_main.querySelector('.factbox');
 
         col_sidebar.innerHTML = '';
-        if (factbox != null) {
-            let factbox_header = document.createElement('h4');
-            factbox_header.classList.add('factbox-header');
-            factbox_header.innerHTML = 'Factbox (<a href="#" title="What’s This?">?</a>)';
+        if (factbox == null) {
+            factbox = document.createElement('div');
+            factbox.classList.add('factbox');
+            factbox.innerHTML = (`
+                <div class="no-facts">This wiki has no facts listed :(</div>
+            `);
+        }
 
-            factbox.insertBefore(factbox_header, factbox.firstElementChild);
+        let factbox_header = document.createElement('h4');
+        factbox_header.classList.add('factbox-header');
+        factbox_header.innerHTML = 'Factbox (<a href="#" title="What’s This?">?</a>)';
+        factbox.insertBefore(factbox_header, factbox.firstElementChild);
 
-            let wiki_author_element = col_main.querySelector('.wiki-author');
-            let wiki_author = wiki_author_element.querySelector(':scope > a');
-            let wiki_version = wiki_author_element.firstChild.textContent.trim();
-            let wiki_date = wiki_author_element.childNodes[2].textContent.trim();
+        let wiki_author_element = col_main.querySelector('.wiki-author');
+        let wiki_author = wiki_author_element.querySelector(':scope > a');
+        let wiki_version = wiki_author_element.firstChild.textContent.trim();
+        let wiki_date = wiki_author_element.childNodes[2].textContent.trim();
 
-            let wiki_history_link = wiki_author_element.querySelector('.wiki-history-link--desktop a');
+        let wiki_history_link = wiki_author_element.querySelector('.wiki-history-link--desktop a');
 
-            let wiki_discuss_link = document.querySelector('.secondary-nav-item--shoutbox a');
+        let wiki_discuss_link = document.querySelector('.secondary-nav-item--shoutbox a');
 
-            let factbox_version = document.createElement('div');
-            factbox_version.classList.add('factbox-version-container');
-            factbox_version.innerHTML = (`
-                <div class="factbox-version">
-                    You’re viewing <span class="version">${wiki_version}</span> ${wiki_author.outerHTML}. ${(wiki_history_link != null) ? `<a href="${wiki_history_link.getAttribute('href')}">View older versions</a>, or <a href="${wiki_discuss_link.getAttribute('href')}">discuss</a> this wiki.` : ''}
-                </div>
-                <div class="factbox-author">
-                    Last edited ${wiki_date}.
-                </div>
+        let factbox_version = document.createElement('div');
+        factbox_version.classList.add('factbox-version-container');
+        factbox_version.innerHTML = (`
+            <div class="factbox-version">
+                You’re viewing <span class="version">${wiki_version}</span> ${wiki_author.outerHTML}. ${(wiki_history_link != null) ? `<a href="${wiki_history_link.getAttribute('href')}">View older versions</a>, or <a href="${wiki_discuss_link.getAttribute('href')}">discuss</a> this wiki.` : ''}
+            </div>
+            <div class="factbox-author">
+                Last edited ${wiki_date}.
+            </div>
+        `);
+
+        factbox.appendChild(factbox_version);
+
+        let wiki_edit_link = col_main.querySelector('.qa-wiki-edit');
+        if (wiki_edit_link != null) {
+            let wiki_edit_more_link = document.createElement('div');
+            wiki_edit_more_link.classList.add('more-link', 'align-right');
+            wiki_edit_more_link.innerHTML = (`
+                <a href="${wiki_edit_link.getAttribute('href')}">Edit this wiki’s contents</a>
             `);
 
-            factbox.appendChild(factbox_version);
-
-            let wiki_edit_link = col_main.querySelector('.qa-wiki-edit');
-            if (wiki_edit_link != null) {
-                let wiki_edit_more_link = document.createElement('div');
-                wiki_edit_more_link.classList.add('more-link', 'align-right');
-                wiki_edit_more_link.innerHTML = (`
-                    <a href="${wiki_edit_link.getAttribute('href')}">Edit this wiki’s contents</a>
-                `);
-
-                factbox.appendChild(wiki_edit_more_link);
-            }
-
-            col_sidebar.appendChild(factbox);
+            factbox.appendChild(wiki_edit_more_link);
         }
+
+        let alerts = col_main.querySelectorAll('.alert');
+        alerts.forEach((alert) => {
+            factbox.appendChild(alert);
+        });
+
+        col_sidebar.appendChild(factbox);
     }
 
 
