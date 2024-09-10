@@ -3845,6 +3845,10 @@
                     width: fit-content;
                     cursor: pointer;
 
+                    &:hover {
+                        text-decoration: underline;
+                    }
+
                     &:before,
                     &:after {
                         display: none;
