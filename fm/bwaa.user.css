@@ -344,7 +344,6 @@
             margin: 0.15em 0 0 0 !important;
             font-weight: bold;
             line-height: 1.2em;
-            color: var(--text-link);
         }
 
         & + .library-controls {
@@ -447,37 +446,48 @@
             }
 
             .secondary-nav-item--overview {
-                order: -20;
+                order: -30;
             }
+            .secondary-nav-item--wiki,
             .secondary-nav-item--library {
-                order: -19;
+                order: -29;
             }
+            .secondary-nav-item--images,
             .secondary-nav-item--listening-report {
-                order: -18;
+                order: -28;
+            }
+            .secondary-nav-item--albums {
+                order: -27;
+            }
+            .secondary-nav-item--tracks {
+                order: -26;
             }
             .secondary-nav-item--events {
-                order: -17;
+                order: -25;
+            }
+            .secondary-nav-item--similar {
+                order: -24;
             }
             .secondary-nav-item--following {
-                order: -16;
+                order: -23;
             }
             .secondary-nav-item--followers {
-                order: -15;
+                order: -22;
             }
             .secondary-nav-item--neighbours {
-                order: -14;
+                order: -21;
             }
             .secondary-nav-item--obsessions {
-                order: -13;
+                order: -20;
             }
             .secondary-nav-item--shoutbox {
-                order: -12;
+                order: -19;
             }
             .secondary-nav-item--journal {
-                order: -3;
+                order: -13;
             }
             .secondary-nav-item--tags {
-                order: -2;
+                order: -12;
             }
         }
     }
@@ -4190,8 +4200,16 @@
     }
 
     .wiki-container .metadata,
-    .qa-wiki-edit,
-    .wiki-legal {
+    .qa-wiki-edit {
         display: none;
+    }
+
+    .wiki-legal {
+        margin: 1em 0 0 0;
+        font: inherit;
+        color: inherit;
+
+        padding: unset;
+        border: unset;
     }
 }

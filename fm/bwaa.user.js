@@ -126,7 +126,8 @@ let settings_defaults = {
     shouts_2010: false,
     shouts_no_votes: false,
     no_notifs: false,
-    hide_redirect_banner: false
+    hide_redirect_banner: false,
+    legacy_cover_art: true
 }
 let settings_store = {
     developer: {
@@ -171,7 +172,17 @@ let settings_store = {
     hide_redirect_banner: {
         type: 'toggle',
         values: [true, false]
+    },
+    legacy_cover_art: {
+        type: 'toggle',
+        values: [true, false]
     }
+}
+let legacy_cover_art = {
+    // NIRVANA
+    '570021b68d3d9d2db08bc99a473303b0.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND
+    '3324e5982f0d81338d2749d5161eb2a8.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND (REMASTERED)
+    'b897255bf422baa93a42536af293f9f8.jpg': '6549c435e66249e29ebbcb5722a7fce7.jpg' // IN UTERO
 }
 
 let profile_badges = {
@@ -282,6 +293,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_friends();
             bwaa_obsessions();
             bwaa_library();
+            bwaa_media_items();
         }
         bwaa_lastfm_settings();
         bwaa_footer();
@@ -318,6 +330,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_friends();
                                 bwaa_obsessions();
                                 bwaa_library();
+                                bwaa_media_items();
                             }
                             bwaa_lastfm_settings();
                             bwaa_footer();
@@ -1197,6 +1210,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 plays: album_metadata[1].querySelector('abbr').getAttribute('title'),
                 listeners: album_metadata[0].querySelector('abbr').getAttribute('title'),
                 add_artwork: add_artwork
+            }
+
+            if (settings.legacy_cover_art) {
+                let url_split = avatar.split('/');
+
+                if (legacy_cover_art.hasOwnProperty(url_split[6])) {
+                    header_album_data.avatar = header_album_data.avatar.replace(url_split[6], legacy_cover_art[url_split[6]]);
+                }
             }
 
 
@@ -2283,6 +2304,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                     </fieldset>
                     <fieldset>
+                        <legend>Accuracy</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--legacy_cover_art">
+                                    <input id="setting--legacy_cover_art" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Override album cover art for 2012-era images
+                                </label>
+                                <div class="alert">
+                                    All personal preference, check out <a href="${root}music/Nirvana" target="_blank">Nirvana</a>’s <a href="${root}music/Nirvana/Nevermind" target="_blank">Nevermind</a> for an example.
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
                         <legend>Social</legend>
                         <div class="form-group">
                             <div class="checkbox">
@@ -2761,5 +2796,25 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             deliver_notif(`bwaa has updated to ${version.build}.${version.sku}, welcome aboard!`, false, false, true);
             localStorage.setItem('bwaa_last_version_used', version.build);
         }
+    }
+
+
+
+
+    function bwaa_media_items() {
+        if (!settings.legacy_cover_art)
+            return;
+
+        let media_items = document.querySelectorAll('.media-item img:not([data-bwaa])');
+        media_items.forEach((media_item) => {
+            media_item.setAttribute('data-bwaa', 'true');
+
+            let url = media_item.getAttribute('src');
+            let url_split = url.split('/');
+
+            if (legacy_cover_art.hasOwnProperty(url_split[6])) {
+                media_item.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
+            }
+        });
     }
 })();
