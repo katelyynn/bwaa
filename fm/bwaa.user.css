@@ -4173,6 +4173,10 @@
             display: flex;
             flex-direction: column;
             gap: 1em;
+
+            .version {
+                text-transform: lowercase;
+            }
         }
     }
 
