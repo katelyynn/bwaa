@@ -4449,6 +4449,11 @@
                 margin-top: unset;
             }
         }
+
+        .form-group--submit {
+            display: flex;
+            justify-content: end;
+        }
     }
 
     #id_album_artist_name,
