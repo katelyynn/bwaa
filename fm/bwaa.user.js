@@ -258,6 +258,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         bwaa_load_header();
         load_notifs();
 
+        notify_if_new_update();
+
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
             // start bwaa settings
             bwaa_settings();
@@ -2402,6 +2404,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return;
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
+        deliver_notif(`bwaa has installed successfully, welcome aboard!`);
+
         adaptive_skin.innerHTML = '';
         document.title = 'first-time bwaa | Last.fm';
 
@@ -2610,5 +2614,25 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         setTimeout(function() {
             document.getElementById('bwaa-notifs').removeChild(notif);
         }, 200);
+    }
+
+
+
+
+    function notify_if_new_update() {
+        let last_version_used = localStorage.getItem('bwaa_last_version_used') || '';
+
+        // enter first-time setup
+        if (last_version_used == '') {
+            window.location.href = `${root}bwaa/setup`;
+            localStorage.setItem('bwaa_last_version_used', version.build);
+            return;
+        }
+
+        // otherwise, it's a usual update
+        if (last_version_used != version.build) {
+            deliver_notif(`bwaa has updated to ${version.build}.${version.sku}, welcome aboard!`, false, false, true);
+            localStorage.setItem('bwaa_last_version_used', version.build);
+        }
     }
 })();
