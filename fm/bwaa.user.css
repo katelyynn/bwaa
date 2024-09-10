@@ -4132,4 +4132,57 @@
             opacity: 1;
         }
     }
+
+
+
+
+    .wiki-container {
+        margin: unset;
+
+        .wiki-content {
+            font-size: 13px;
+            line-height: inherit;
+        }
+    }
+    .factbox {
+        width: 100%;
+        float: unset;
+        margin: unset;
+
+        h4 {
+            font-weight: bold;
+        }
+
+        .factbox-item {
+            flex-direction: row;
+            margin: 7px 0 0 0;
+
+            h4 {
+                font-weight: inherit;
+                width: 100px;
+                flex-shrink: 0;
+            }
+        }
+
+        .factbox-version-container {
+            margin: 1em 0;
+            color: var(--colour-middle);
+            font-size: 11px;
+            line-height: 1.4;
+
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+    }
+
+    .more-link.align-right {
+        text-align: right;
+    }
+
+    .wiki-container .metadata,
+    .qa-wiki-edit,
+    .wiki-legal {
+        display: none;
+    }
 }
