@@ -184,7 +184,7 @@ let legacy_cover_art = {
     // NIRVANA
     '570021b68d3d9d2db08bc99a473303b0.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND
     '3324e5982f0d81338d2749d5161eb2a8.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND (REMASTERED)
-    'b897255bf422baa93a42536af293f9f8.jpg': '6549c435e66249e29ebbcb5722a7fce7.jpg' // IN UTERO
+    'b897255bf422baa93a42536af293f9f8.jpg': 'acbf048199bb4cf18ed93d3065a25be9.jpg' // IN UTERO
 }
 
 let profile_badges = {
