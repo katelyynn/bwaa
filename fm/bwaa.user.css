@@ -4243,6 +4243,10 @@
             margin: 0 0 0.15em 0 !important;
             font-weight: bold;
             line-height: 1.2em;
+
+            a + & {
+                margin: 0.15em 0 0 0 !important;
+            }
         }
     }
     .metadata-list {
