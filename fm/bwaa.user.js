@@ -25,6 +25,7 @@ let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cu
 
 // loads your selected language in last.fm
 let lang;
+let non_override_lang;
 // WARN: fill this out if translating
 // lists all languages with valid bwaa translations
 // any custom translations will not load if not listed here!!
@@ -101,6 +102,7 @@ const trans = {
 function lookup_lang() {
     root = document.querySelector('.masthead-logo a').getAttribute('href');
     lang = document.documentElement.getAttribute('lang');
+    non_override_lang = lang;
 
     if (!valid_langs.includes(lang)) {
         console.info('bwaa - language fallback from', lang, 'to en (language is not listed as valid)', valid_langs);
@@ -367,12 +369,37 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         inner.appendChild(promo);
 
 
+        let selected_language = document.querySelector('.footer-language--active strong').textContent;
+        let language_options = document.querySelectorAll('.footer-language-form');
+
+        let language_menu = document.createElement('div');
+        language_menu.classList.add('language-menu');
+
+        language_options.forEach((language_option) => {
+            let button = language_option.querySelector('button');
+            button.classList.remove('mimic-link');
+            button.classList.add('language-menu-item');
+
+            language_menu.appendChild(language_option);
+        });
+
+
         let search_companion_nav = document.createElement('div');
         search_companion_nav.classList.add('search-companion-nav');
         search_companion_nav.innerHTML = (`
-            <a onclick="open_language_menu()">English</a> | <a onclick="toggle_theme()" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</a> | <a href="${root}help">Help</a>
+            <span class="language-wrapper" id="language-wrapper" data-dialog-open="false"><a onclick="_open_language_menu()" name="${non_override_lang}">${selected_language}</a>${language_menu.outerHTML}</span> | <a onclick="toggle_theme()" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</a> | <a href="${root}help">Help</a>
         `);
         inner.appendChild(search_companion_nav);
+    }
+
+    unsafeWindow._open_language_menu = function() {
+        let wrapper = document.getElementById('language-wrapper');
+
+        let current_state = wrapper.getAttribute('data-dialog-open');
+        if (current_state == 'false')
+            wrapper.setAttribute('data-dialog-open', 'true');
+        else
+            wrapper.setAttribute('data-dialog-open', 'false');
     }
 
 

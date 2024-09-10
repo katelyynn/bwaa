@@ -681,6 +681,113 @@
                         color: var(--text-over-header);
                     }
                 }
+
+                .language-wrapper {
+                    position: relative;
+
+                    a {
+                        padding-left: calc(16px + 6px);
+
+                        &:before {
+                            background-image: var(--cdn-flatness-sprites-21-icons);
+                            --top: 2px;
+                            background-position: var(--flag-position, 0 0);
+                        }
+
+                        &[name="de"] {
+                            --flag-position: 0 -20px;
+                        }
+                        &[name="es"] {
+                            --flag-position: 0 -40px;
+                        }
+                        &[name="fr"] {
+                            --flag-position: 0 -60px;
+                        }
+                        &[name="it"] {
+                            --flag-position: 0 -80px;
+                        }
+                        &[name="ja"] {
+                            --flag-position: 0 -100px;
+                        }
+                        &[name="pl"] {
+                            --flag-position: 0 -120px;
+                        }
+                        &[name="pt"] {
+                            --flag-position: 0 -140px;
+                        }
+                        &[name="ru"] {
+                            --flag-position: 0 -160px;
+                        }
+                        &[name="sv"] {
+                            --flag-position: 0 -180px;
+                        }
+                        &[name="tr"] {
+                            --flag-position: 0 -200px;
+                        }
+                        &[name="zh"] {
+                            --flag-position: 0 -220px;
+                        }
+                    }
+
+                    .language-menu {
+                        position: absolute;
+                        top: 22px;
+                        left: -8px;
+
+                        [data-dialog-open="false"] & {
+                            display: none;
+                        }
+
+                        .language-menu-item {
+                            width: 100%;
+                            text-align: left;
+                            position: relative;
+
+                            padding-left: 29px;
+
+                            &:before {
+                                background-image: var(--cdn-flatness-sprites-21-icons);
+                                --top: 5px;
+                                --left: 7px;
+                                background-position: var(--flag-position, 0 0);
+                            }
+
+                            &[name="de"] {
+                                --flag-position: 0 -20px;
+                            }
+                            &[name="es"] {
+                                --flag-position: 0 -40px;
+                            }
+                            &[name="fr"] {
+                                --flag-position: 0 -60px;
+                            }
+                            &[name="it"] {
+                                --flag-position: 0 -80px;
+                            }
+                            &[name="ja"] {
+                                --flag-position: 0 -100px;
+                            }
+                            &[name="pl"] {
+                                --flag-position: 0 -120px;
+                            }
+                            &[name="pt"] {
+                                --flag-position: 0 -140px;
+                            }
+                            &[name="ru"] {
+                                --flag-position: 0 -160px;
+                            }
+                            &[name="sv"] {
+                                --flag-position: 0 -180px;
+                            }
+                            &[name="tr"] {
+                                --flag-position: 0 -200px;
+                            }
+                            &[name="zh"] {
+                                --flag-position: 0 -220px;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -1399,6 +1506,7 @@
     }
 
     /* icons */
+    .language-menu-item:before, .language-wrapper a:before,
     .gallery-image-votes:before, .gallery-image-preferred-states:before, .bookmark-votes:before,
     .journal-like:before, .stationlink:before,
     .provider:before,
@@ -2984,6 +3092,7 @@
             }
         }
     }
+    .language-menu,
     .js .auth-dropdown-menu {
         background: #a00100 !important;
         border: 1px solid #750500 !important;
@@ -2996,6 +3105,7 @@
             display: none;
         }
 
+        .language-menu-item,
         .auth-dropdown-menu-item {
             padding: 0 7px;
             font-size: 11px;
@@ -3748,6 +3858,9 @@
                     }
                 }
             }
+        }
+        .footer-bottom {
+            display: none;
         }
     }
 
