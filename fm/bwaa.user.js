@@ -128,7 +128,11 @@ let settings_defaults = {
     shouts_no_votes: false,
     no_notifs: false,
     hide_redirect_banner: false,
-    legacy_cover_art: true
+    legacy_cover_art: true,
+
+    hide_obsessions: false,
+    hide_your_progress: false,
+    hide_listening_reports: false
 }
 let settings_store = {
     developer: {
@@ -2671,62 +2675,39 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <h2 class="form-header">Thank you for installing!</h2>
                     <p>bwaa is an extension for Last.fm by <a href="${root}user/cutensilly">cutensilly</a> with the aim to bring back the 2012 look of Last.fm. Since it’s you’re first time installing, here’s a quick setup to get you going. You can configure bwaa at anytime by visiting <a href="${root}bwaa">Settings</a> :3</p>
                     <fieldset>
-                        <legend>Navigation</legend>
+                        <legend>What era suits you best?</legend>
                         <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--tabs_2013">
-                                    <input id="setting--tabs_2013" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Prefer 2013-era tab design <i class="subtext">(not yet implemented)</i>
+                            <div class="radio-box">
+                                <label for="setting--setup_choose_era--2010">
+                                    <input id="setting--setup_choose_era--2010" type="radio" value="2010" name="setup_choose_era" onchange="_notify_radio_change(this)">
+                                    2010 <i class="subtext">(WIP)</i>
                                 </label>
                             </div>
-                        </div>
-                        <div class="sep"></div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--sticky_nav">
-                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Make the navigation bar persistent on scroll
+                            <div class="radio-box">
+                                <label for="setting--setup_choose_era--2012">
+                                    <input id="setting--setup_choose_era--2012" type="radio" value="2012" name="setup_choose_era" checked onchange="_notify_radio_change(this)">
+                                    2012 <i class="subtext">(default, most optimised)</i>
                                 </label>
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>Social</legend>
+                        <legend>How should modern features be treated?</legend>
                         <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--varied_avatar_shapes">
-                                    <input id="setting--varied_avatar_shapes" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Allow varied avatar shapes
+                            <div class="radio-box">
+                                <label for="setting--setup_modern_visibility--true">
+                                    <input id="setting--setup_modern_visibility--true" type="radio" value="true" name="setup_modern_visibility" checked onchange="_notify_radio_change(this)">
+                                    Keep visible and attempt to blend in
+                                </label>
+                            </div>
+                            <div class="radio-box">
+                                <label for="setting--setup_modern_visibility--false">
+                                    <input id="setting--setup_modern_visibility--false" type="radio" value="false" name="setup_modern_visibility" onchange="_notify_radio_change(this)">
+                                    Hide all features not available in the time period (within reason)
                                 </label>
                                 <div class="alert">
-                                    Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.
+                                    Keep in mind, this will hide features such as obsessions, listening reports, and more. This is configurable on a case-by-case basis in settings.
                                 </div>
-                            </div>
-                        </div>
-                        <div class="sep"></div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--shouts_2010">
-                                    <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Prefer 2010-era shout design <i class="subtext">(not yet implemented)</i>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--shouts_no_votes">
-                                    <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Do not display shout votes <i class="subtext">(not yet implemented)</i>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="sep"></div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--no_notifs">
-                                    <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Hide notifications, only display inbox <i class="subtext">(not yet implemented)</i>
-                                </label>
                             </div>
                         </div>
                     </fieldset>
@@ -2745,6 +2726,48 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         } else if (page == 'page2') {
             injector.innerHTML = '<p>o.O</p>';
         }
+    }
+
+    function radio_update(setting, value) {
+        if (setting == 'setup_choose_era') {
+            // choose your era preset
+
+            // global
+            settings.varied_avatar_shapes = true;
+            settings.legacy_cover_art = true;
+
+            if (value == '2012') {
+                // 2012
+                settings.shouts_2010 = false;
+            } else if (value == '2010') {
+                // 2010
+                settings.shouts_2010 = true;
+            }
+        } else if (setting == 'setup_modern_visibility') {
+            // show modern things
+
+            if (value == 'true') {
+                // true, show
+                settings.hide_obsessions = false;
+                settings.hide_your_progress = false;
+                settings.hide_listening_reports = false;
+            } else {
+                // false, hide
+                settings.hide_obsessions = true;
+                settings.hide_your_progress = true;
+                settings.hide_listening_reports = true;
+            }
+        }
+
+        // save to settings
+        localStorage.setItem('bwaa', JSON.stringify(settings));
+    }
+
+    unsafeWindow._notify_radio_change = function(radio) {
+        let setting = radio.getAttribute('name');
+        let value = radio.getAttribute('value');
+
+        radio_update(setting, value);
     }
 
 
