@@ -1203,6 +1203,7 @@
                         margin: unset;
                         width: 16px;
                         height: 16px;
+                        background-size: 16px !important;
                         transition: unset;
                         top: 0;
                         left: 0;
@@ -2793,6 +2794,7 @@
                 --height: 16px;
                 background-image: var(--cdn-flatness-preview-1-sprite);
                 background-position: 0 0;
+                background-size: 16px !important;
             }
 
             &:after {
