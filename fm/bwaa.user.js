@@ -304,8 +304,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
                     if (node instanceof Element) {
+                        console.info(node.className);
+                        if (node.classList[0] == 'modal-dialog') {
+                            // this is a silly hack to ensure modals get themed, as the creation of this element
+                            // causes another run of this script, giving enough time for the modal to load
+                            // this took so long
+                            fix_modal();
+                        }
+
                         if (!node.hasAttribute('data-bwaa')) {
                             node.setAttribute('data-bwaa', 'true');
+                            console.info('node', node);
 
                             console.info('bwaa - bwaa\'ing');
 
@@ -341,7 +350,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
         });
 
-        observer.observe(document.body, {
+        observer.observe(document.documentElement, {
             childList: true,
             subtree: true
         });
@@ -2147,8 +2156,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
     function bwaa_lastfm_settings() {
+        console.info('bwaa - last.fm settings host');
+
+        let modal_bodys = document.querySelectorAll('.popup_wrapper_visible');
+        modal_bodys.forEach((modal_body) => {
+            console.warn('modal body', modal_body);
+        });
+
         let content_forms = document.querySelectorAll('.content-form:not([data-bwaa="true"])');
+        console.info('bwaa - last.fm settings host found content-forms:', content_forms);
         content_forms.forEach((content_form) => {
+            deliver_notif('content form');
             content_form.classList.remove('content-form');
             content_form.classList.add('settings-form');
 
@@ -2823,6 +2841,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         setTimeout(function() {
             document.getElementById('bwaa-notifs').removeChild(notif);
         }, 200);
+    }
+
+    function fix_modal() {
+        let fix = document.createElement('div');
+        fix.classList.add('modal-fixer');
+        fix.style.setProperty('display', 'none');
+
+        document.body.appendChild(fix);
+
+        setTimeout(function() {
+            document.body.removeChild(fix);
+        }, 10);
     }
 
 
