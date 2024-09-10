@@ -83,7 +83,7 @@
             --navlist-grad: #222;
             --navlist-border: #e7e7e7;
             --body: #0a0a0a;
-            --border: #424242;
+            --border: #363636;
             --border-2: #222;
             --border-3: #333;
             --border-4: #555;
@@ -3069,10 +3069,14 @@
         background: var(--body) !important;
         border: 1px solid var(--border) !important;
         border-radius: 3px !important;
-        box-shadow: 3px 3px 5px var(--border) !important; /* technically only in buy dropdowns */
+        box-shadow: var(--dropdown-border-override, 3px 3px 5px var(--border)) !important; /* technically only in buy dropdowns */
         font-size: 10px;
         padding: unset !important;
         margin: -10px 0 0 0 !important;
+
+        [data-bwaa--theme="paint_it_black"] & {
+            box-shadow: var(--dropdown-border-override, 3px 3px 5px 2px var(--background)) !important;
+        }
 
         &:before {
             display: none;
@@ -3102,6 +3106,11 @@
         border-radius: 0 0 3px 3px !important;
         box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px !important;
 
+        [data-bwaa--theme="paint_it_black"] & {
+            background: #000 !important;
+            border-color: var(--border) !important; /* supposed to be #000 but that looks strange */
+        }
+
         padding: unset !important;
 
         &:before {
@@ -3121,6 +3130,10 @@
                 color: #fff;
             }
 
+            [data-bwaa--theme="paint_it_black"] &:hover {
+                background: var(--border);
+            }
+
             .auth-dropdown-item-secondary {
                 display: none;
             }
@@ -3136,6 +3149,10 @@
                 line-height: 10px;
                 background: unset;
                 color: #e97470;
+
+                [data-bwaa--theme="paint_it_black"] & {
+                    color: var(--colour-middle);
+                }
             }
         }
     }
@@ -3907,7 +3924,7 @@
             border: unset !important;
             border-bottom: solid 1px var(--border) !important;
             border-radius: unset !important;
-            box-shadow: unset !important;
+            --dropdown-border-override: none !important;
             margin: unset !important;
 
 
