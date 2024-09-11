@@ -3210,6 +3210,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     ${col_main.querySelector('form').outerHTML}
                 </div>
             </div>
+            <div class="alert">This page is a work in progress</div>
         `);
         col_main.insertBefore(playlist_section, col_main.firstElementChild);
 
