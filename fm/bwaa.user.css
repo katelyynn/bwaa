@@ -4675,6 +4675,27 @@
             }
         }
     }
+    .date-range-picker-content {
+        .date-range-picker-presets {
+            margin-top: -4px !important;
+
+            a {
+                padding: 4px 15px !important;
+                background: unset !important;
+                color: var(--text-link);
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .date-range-picker-form {
+            padding-top: 6px;
+            margin-top: 6px;
+            border-top: 1px solid var(--border);
+        }
+    }
 
 
 
