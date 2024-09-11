@@ -366,6 +366,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     // header
     function bwaa_load_header() {
+        let auth_link = document.querySelector('a.auth-link');
         let inner = document.body.querySelector('.masthead-inner-wrap');
 
         if (inner.hasAttribute('data-bwaa'))
@@ -423,6 +424,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return;
 
 
+        let site_auth = inner.querySelector('.site-auth');
+
         let notif_btn_txt = document.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent;
         let notif_badge = document.querySelector('[data-analytics-label="notifications"] .notification-count-badge');
 
@@ -441,7 +444,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         user_companion_nav.innerHTML = (`
             <a href="${root}inbox/notifications">${notif_btn_txt}${(notif_badge != null ? ` (${notif_badge.textContent.trim()})` : '')}</a> | <a href="${root}inbox">${inbox_btn_txt}${(inbox_badge != null ? ` (${inbox_badge.textContent.trim()})` : '')}</a> | ${logout_btn.outerHTML}
         `);
-        inner.appendChild(user_companion_nav);
+        site_auth.appendChild(user_companion_nav);
     }
 
     unsafeWindow._open_language_menu = function() {

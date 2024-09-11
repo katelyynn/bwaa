@@ -851,15 +851,16 @@
             }
 
 
+            .site-auth {
+                display: flex;
+            }
             .user-companion-nav {
-                position: absolute;
-                top: 9px;
-                right: 125px;
-                height: 15px;
+                margin-right: 3px;
                 line-height: 15px;
-                padding: 4px 5px 4px 5px;
+                padding: 3px 5px 3px 5px;
                 color: #ddd;
                 font-size: 11px;
+                order: -1;
 
                 a {
                     color: inherit;
@@ -944,6 +945,8 @@
             display: flex;
             align-items: center;
             gap: 4px;
+
+            position: relative;
 
             [data-bwaa--theme="paint_it_black"] & {
                 background-position: left -390px;
