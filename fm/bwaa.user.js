@@ -185,6 +185,7 @@ let legacy_cover_art = {
     '3324e5982f0d81338d2749d5161eb2a8.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND (REMASTERED)
     'b897255bf422baa93a42536af293f9f8.jpg': 'acbf048199bb4cf18ed93d3065a25be9.jpg' // IN UTERO
 }
+let fallback_cover_art = 'https://katelyynn.github.io/bwaa/fm/extra_res/empty_disc.png';
 
 let profile_badges = {
     'cutensilly': [
@@ -3117,6 +3118,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (legacy_cover_art.hasOwnProperty(url_split[6])) {
                 media_item.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
             }
+
+            // or maybe it's blank?
+            if (
+                url_split[6] == '4128a6eb29f94943c9d206c08e625904' || // track
+                url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb' // album
+            ) {
+                media_item.setAttribute('src', fallback_cover_art);
+            }
         });
 
         let chartlist_images = document.querySelectorAll('.chartlist-image img:not([data-bwaa])');
@@ -3129,6 +3138,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (legacy_cover_art.hasOwnProperty(url_split[6])) {
                 chartlist_image.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
             }
+
+            // or maybe it's blank?
+            if (
+                url_split[6] == '4128a6eb29f94943c9d206c08e625904' || // track
+                url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb' // album
+            ) {
+                chartlist_image.setAttribute('src', fallback_cover_art);
+            }
         });
 
         let grid_images = document.querySelectorAll('.grid-items-cover-image-image img:not([data-bwaa])');
@@ -3140,6 +3157,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             if (legacy_cover_art.hasOwnProperty(url_split[6])) {
                 grid_image.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
+            }
+
+            // or maybe it's blank?
+            if (
+                url_split[6] == '4128a6eb29f94943c9d206c08e625904.jpg' || // track
+                url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb.jpg' // album
+            ) {
+                grid_image.setAttribute('src', fallback_cover_art);
             }
         });
     }
