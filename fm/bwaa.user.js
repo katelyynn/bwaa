@@ -3339,6 +3339,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let artist_name = obsession.querySelector('.obsession-history-item-artist a');
             let obsession_date = obsession.querySelector('.obsession-history-item-date a').textContent.trim();
 
+            let obsession_is_first = (obsession.querySelector('.obsession-first') != null);
+
 
             let obsession_item = document.createElement('li');
             obsession_item.classList.add('grid-items-item');
@@ -3346,6 +3348,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <div class="grid-items-cover-image">
                     <div class="grid-items-cover-image-image">
                         <img src="${cover}" alt="Image for '${track_name}'" loading="lazy">
+                        ${(obsession_is_first) ? `<div class="image-sticker first-obsession">#1</div>` : ''}
                     </div>
                     <div class="grid-items-item-details">
                         <p class="grid-items-item-main-text">
