@@ -1717,8 +1717,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (subpage_title == undefined)
                 subpage_title = col_main.querySelector(':scope > h2');
 
+            let pre_fetch_avatar = track_header.querySelector('.header-new-background-image');
+            if (pre_fetch_avatar == null)
+                pre_fetch_avatar = '';
+            else
+                pre_fetch_avatar = pre_fetch_avatar.getAttribute('content')
+
             let header_track_data = {
-                avatar: track_header.querySelector('.header-new-background-image').getAttribute('content'),
+                avatar: pre_fetch_avatar,
                 name: track_header.querySelector('.header-new-title').textContent,
                 artist: track_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
