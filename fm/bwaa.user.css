@@ -207,12 +207,14 @@
     .col-main {
         padding: 15px;
         width: calc(100% - 330px);
+        margin-top: unset !important;
     }
     .col-sidebar {
         padding: 15px;
         /* the old site had border-box off i believe, which means the
         padding was added to the width, we have to do it manually here */
         width: calc(300px + 30px);
+        margin-top: unset !important;
         font-size: 11px;
         line-height: 1.181818em;
     }
