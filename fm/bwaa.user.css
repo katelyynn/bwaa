@@ -1775,6 +1775,7 @@
             }
         }
     }
+    .obsession-list.grid-items,
     [data-endpoint$="/library/albums"] .grid-items,
     #top-albums .grid-items {
         line-height: 1.25em;
@@ -1862,6 +1863,7 @@
         }
     }
 
+    .obsession-list.grid-items li,
     [data-endpoint$="/library/albums"] .grid-items li {
         width: 33% !important;
     }
@@ -4062,6 +4064,9 @@
         .obsession-pagination {
             display: none;
         }
+    }
+    .obsession-history {
+        display: none;
     }
 
 

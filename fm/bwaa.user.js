@@ -712,20 +712,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         } else {
             // profile non-overview stuff
 
+            let page_content = document.body.querySelector('.page-content');
+
             // which subpage is it?
             let subpage_type = document.body.classList[1].replace('namespace--', '');
             deliver_notif(`Subpage type of ${subpage_type}`, true);
-
-            if (subpage_type == 'user_obsessions_overview') {
-                col_main = document.body.querySelector('.container.page-content');
-                deliver_notif('This page is currently not finished, sorry!');
-            } else if (
-                subpage_type.startsWith('user_events') ||
-                subpage_type.startsWith('user_playlists') ||
-                subpage_type == 'user_neighbours'
-            ) {
-                deliver_notif('This page is currently not finished, sorry!');
-            }
 
             let header_user_data = {
                 avatar: profile_header.querySelector('.avatar img'),
@@ -764,7 +755,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             col_main.insertBefore(new_header, col_main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
-            document.body.querySelector('.container.page-content').classList.add('subpage');
+            page_content.classList.add('subpage');
+
+            if (subpage_type == 'user_obsessions_overview') {
+                bwaa_obsessions_list(page_content, col_main, col_sidebar);
+            } else if (
+                subpage_type.startsWith('user_events') ||
+                subpage_type.startsWith('user_playlists') ||
+                subpage_type == 'user_neighbours'
+            ) {
+                deliver_notif('This page is currently not finished, sorry!');
+            }
         }
     }
 
@@ -3317,5 +3318,77 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         companion.dispatchEvent(new Event('keydown'));
         companion.dispatchEvent(new Event('input'));
         companion_textbox.dispatchEvent(new Event('input'));
+    }
+
+
+
+
+    function bwaa_obsessions_list(page_content, col_main, col_sidebar) {
+        let obsession_list = document.createElement('section');
+        obsession_list.classList.add('obsession-list', 'grid-items');
+
+        let obsessions = document.querySelectorAll('.obsession-history-item-inner');
+        obsessions.forEach((obsession) => {
+            let cover_original = obsession.querySelector('.obsession-history-item-background').getAttribute('style').trim();
+            let cover_substr = cover_original.indexOf('url');
+            let cover = cover_original.substring(cover_substr).replace('url(', '').replace(');', '').trim();
+
+            let link = obsession.querySelector('.obsession-history-item-heading-link').getAttribute('href');
+
+            let track_name = obsession.querySelector('.obsession-history-item-heading').textContent;
+            let artist_name = obsession.querySelector('.obsession-history-item-artist a');
+            let obsession_date = obsession.querySelector('.obsession-history-item-date a').textContent;
+
+
+            let obsession_item = document.createElement('li');
+            obsession_item.classList.add('grid-items-item');
+            obsession_item.innerHTML = (`
+                <div class="grid-items-cover-image">
+                    <div class="grid-items-cover-image-image">
+                        <img src="${cover}" alt="Image for '${track_name}'" loading="lazy">
+                    </div>
+                    <div class="grid-items-item-details">
+                        <p class="grid-items-item-main-text">
+                            <a class="link-block-target" href="${link}" title="${track_name}">
+                                ${track_name}
+                            </a>
+                        </p>
+                        <p class="grid-items-item-aux-text">
+                            <a class="grid-items-item-aux-block" href="${artist_name}">
+                                ${artist_name.textContent}
+                            </a>
+                            <a href="${link}">
+                                ${obsession_date}
+                            </a>
+                        </p>
+                    </div>
+                    <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
+                </div>
+            `);
+
+            obsession_list.appendChild(obsession_item);
+        });
+
+        col_main.appendChild(obsession_list);
+
+        let obsession_btn_section = document.createElement('div');
+        obsession_btn_section.classList.add('obsession-button-section');
+
+        let section_controls = document.querySelector('.section-controls');
+        let obsession_btn = section_controls.querySelector('.section-controls .btn-primary');
+        if (obsession_btn != null)
+            obsession_btn_section.appendChild(obsession_btn);
+        page_content.removeChild(section_controls);
+
+        let pagination = document.querySelector('.pagination');
+        if (pagination != null)
+            obsession_btn_section.appendChild(pagination);
+
+        col_main.appendChild(obsession_btn_section);
+
+
+        // remove leftovers
+        let row_buffer = document.querySelector('.row._buffer');
+        page_content.removeChild(row_buffer);
     }
 })();
