@@ -3080,12 +3080,156 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let playlist_info = {
             cover: playlist_header.querySelector('.playlisting-playlist-header-image').getAttribute('src'),
+            user_name: playlist_header.querySelector('.subpage-breadcrumb a').textContent,
             name_form: playlist_header.querySelector('.inplace-form'),
             play_btn: playlist_header.querySelector('.js-playlink-station'),
-            menu: playlist_header.querySelector('.dropdown-menu-clickable'),
-            publishing_btn: menu.querySelector('li:first-child > div'),
-            delete_btn: menu.querySelector('li:nth-child(2) > div'),
-            export_btn: menu.querySelector('li:nth-child(3) > div')
+            menu: playlist_header.querySelector('.dropdown-menu-clickable')
         }
+        playlist_info.publishing_btn = playlist_info.menu.querySelector('li:first-child > div');
+        playlist_info.delete_btn = playlist_info.menu.querySelector('li:nth-child(2) > div');
+        playlist_info.export_btn = playlist_info.menu.querySelector('li:nth-child(3) > div');
+
+        let my_avi = auth_link.querySelector('img').getAttribute('src');
+
+        let new_header = generic_subpage_header(
+            my_avi,
+            playlist_info.user_name,
+            'Playlists'
+        );
+
+        let navlist = document.createElement('nav');
+        navlist.classList.add('navlist', 'secondary-nav', 'navlist--more');
+        navlist.setAttribute('aria-label', 'Secondary navigation');
+        navlist.setAttribute('data-require', 'components/collapsing-nav-v2');
+
+        let base_link = `${root}user/${playlist_info.user_name}`;
+
+        navlist.innerHTML = (`
+            <ul class="navlist-items js-navlist-items" style="position: relative;">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                    <a class="secondary-nav-item-link" href="${base_link}">
+                        Overview
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--listening-report">
+                    <a class="secondary-nav-item-link" href="${base_link}/listening-report">
+                        Reports
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--library">
+                    <a class="secondary-nav-item-link" href="${base_link}/library">
+                        Library
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--playlists">
+                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${base_link}/playlists">
+                        Playlists
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--following">
+                    <a class="secondary-nav-item-link" href="${base_link}/following">
+                        Following
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--followers">
+                    <a class="secondary-nav-item-link" href="${base_link}/followers">
+                        Followers
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--loved">
+                    <a class="secondary-nav-item-link" href="${base_link}/loved">
+                        Loved Tracks
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--obsessions">
+                    <a class="secondary-nav-item-link" href="${base_link}/obsessions">
+                        Obsessions
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--events">
+                    <a class="secondary-nav-item-link" href="${base_link}/events">
+                        Events
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--neighbours">
+                    <a class="secondary-nav-item-link" href="${base_link}/neighbours">
+                        Neighbours
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                    <a class="secondary-nav-item-link" href="${base_link}/tags">
+                        Tags
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                    <a class="secondary-nav-item-link" href="${base_link}/shoutbox">
+                        Shouts
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--journal">
+                    <a class="secondary-nav-item-link" href="${base_link}/journal">
+                        Journal
+                    </a>
+                </li>
+            </ul>
+        `);
+
+
+        // grab the playlist name field h1
+        /*let inplace_name_field_wrapper = playlist_info.name_form.querySelector('.inplace-field--wrapper');
+        let inplace_name_field = playlist_info.name_form.querySelector('.inplace-field');
+        // let's make a clone of it as an input
+        let inplace_name_field_clone = document.createElement('input');
+        inplace_name_field_clone.setAttribute('placeholder', inplace_name_field.getAttribute('placeholder'));
+        inplace_name_field_clone.setAttribute('maxlength', inplace_name_field.getAttribute('maxlength'));
+        inplace_name_field_clone.setAttribute('data-h1-to-copy-to', 'playlist-name-field');
+        inplace_name_field_clone.setAttribute('data-textbox-to-copy-to', 'playlist-title');
+        inplace_name_field_clone.setAttribute('name', 'title');
+        inplace_name_field_clone.setAttribute('oninput', '_update_textbox(this)');
+        inplace_name_field_clone.value = inplace_name_field.textContent;
+
+        inplace_name_field.setAttribute('id', 'playlist-name-field');
+        inplace_name_field.removeAttribute('aria-labelledby');
+        inplace_name_field_wrapper.appendChild(inplace_name_field_clone);*/
+
+
+        let playlist_section = document.createElement('section');
+        playlist_section.classList.add('playlist-view-section');
+        playlist_section.innerHTML = (`
+            <div class="name-top">
+                ${playlist_info.name_form.outerHTML}
+                <div class="alert alert-side">
+                    While typing, the input box will lose focus but your inputs are saved!
+                </div>
+            </div>
+            <div class="cover-and-desc">
+                <div class="cover">
+                    <img src="${playlist_info.cover}">
+                </div>
+                <div class="desc">
+                    ${col_main.querySelector('form').outerHTML}
+                </div>
+            </div>
+        `);
+        col_main.insertBefore(playlist_section, col_main.firstElementChild);
+
+        let adaptive_skin = document.querySelector('.adaptive-skin-container');
+
+        row.insertBefore(navlist, col_main);
+        col_main.insertBefore(new_header, col_main.firstChild);
+        adaptive_skin.removeChild(playlist_header);
+    }
+
+    unsafeWindow._update_textbox = function(element) {
+        let companion = document.getElementById(element.getAttribute('data-h1-to-copy-to'));
+        let companion_textbox = document.getElementById(element.getAttribute('data-textbox-to-copy-to'));
+
+        companion.textContent = element.value;
+        companion_textbox.value = element.value;
+        companion.dispatchEvent(new Event('focus'));
+        companion.dispatchEvent(new Event('paste'));
+        companion.dispatchEvent(new Event('keydown'));
+        companion.dispatchEvent(new Event('input'));
+        companion_textbox.dispatchEvent(new Event('input'));
     }
 })();

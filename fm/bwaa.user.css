@@ -4607,4 +4607,102 @@
             }
         }
     }
+
+
+
+
+    /* playlist view */
+    .inplace-field--wrapper {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        &:hover, &:focus-within {
+            background: var(--chartlist-highlight) !important;
+        }
+
+        .inplace-field {
+            background: unset !important;
+            font: inherit;
+            order: -1;
+
+            width: 100% !important;
+            margin: unset;
+            padding: unset;
+            max-width: unset;
+        }
+
+        small {
+            display: flex !important;
+            color: var(--colour-middle);
+            font-weight: normal;
+            line-height: inherit;
+        }
+
+        label {
+            display: none;
+        }
+    }
+
+    .name-top {
+        width: 100%;
+
+        .alert {
+            margin: 0 !important;
+            flex-shrink: 0;
+
+            display: none;
+        }
+
+        form {
+            font-size: 14px;
+            font-weight: bold;
+        }
+    }
+
+    .cover-and-desc {
+        display: flex;
+        gap: 6px;
+        margin-top: 6px;
+
+        .cover {
+            width: 70px;
+            height: 70px;
+            padding: 1px;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .desc {
+            flex: 1;
+
+            form {
+                height: 100%;
+
+                .form-group {
+                    align-items: start;
+                    height: 100%;
+                }
+            }
+
+            .inplace-field {
+                border: unset !important;
+                cursor: text;
+                border-radius: unset;
+
+                &:before {
+                    color: var(--colour-middle) !important;
+                }
+            }
+        }
+    }
+
+    .playlist-view-section + form,
+    .playlisting-playlist-author {
+        display: none;
+    }
 }
