@@ -663,6 +663,66 @@
                 }
             }
 
+            .site-auth--anon {
+                display: flex;
+
+                &:before {
+                    display: none;
+                }
+
+                .site-auth-item {
+                    margin: unset !important;
+
+                    &:first-child {
+                        order: 1;
+                    }
+                }
+
+                .site-auth-control {
+                    display: inline-block;
+                    height: 23px;
+                    line-height: 15px;
+                    padding: 3px 7px 5px 5px;
+                    font-size: 11px;
+                    color: #eee;
+                    text-decoration: none;
+                    font-weight: normal;
+
+                    min-width: unset;
+                    min-height: unset;
+                    background-color: unset;
+                    letter-spacing: unset;
+                    border-radius: unset;
+                    text-transform: unset;
+                    transition: unset;
+                    opacity: unset !important;
+
+                    &:hover {
+                        color: #fff !important;
+                    }
+
+                    &.logon-button {
+                        background-image: var(--cdn-flatness-header-headersprite) !important;
+                        background-position: right -360px;
+                        background-repeat: no-repeat;
+                        text-shadow: #870802 0 1px 0;
+                        overflow: hidden;
+                        padding: 0 3px 0 0;
+
+                        strong {
+                            display: inline-block;
+                            height: 23px;
+                            padding: 1px 5px 3px 8px;
+                            background-image: var(--cdn-flatness-header-headersprite) !important;
+                            background-position: left -360px;
+                            background-repeat: no-repeat;
+                            line-height: 19px;
+                            vertical-align: top;
+                        }
+                    }
+                }
+            }
+
             .search-companion-nav {
                 position: absolute;
                 top: 45px;
@@ -3398,7 +3458,7 @@
     .btn-cancel,
     .user-list-follower-btn,
     #ot-sdk-btn.ot-sdk-show-settings,
-    .btn-secondary, .btn-primary {
+    .btn-secondary:not(.join-cta-button), .btn-primary {
         border: 1px solid !important;
         border-color: #d2d1d1 #b4b3b3 #959595 #b4b3b3 !important;
         border-radius: 3px !important;

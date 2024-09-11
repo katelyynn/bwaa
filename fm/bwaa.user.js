@@ -261,8 +261,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     'use strict';
 
     auth_link = document.querySelector('a.auth-link');
-    auth = auth_link.querySelector('img').getAttribute('alt');
-    console.info('bwaa - auth', auth);
+    if (auth_link != null) {
+        auth = auth_link.querySelector('img').getAttribute('alt');
+        console.info('bwaa - auth', auth);
+    }
     bwaa();
 
     function bwaa() {
@@ -274,6 +276,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         load_settings();
         bwaa_load_header();
         load_notifs();
+
+        bwaa_lastfm_settings();
+        bwaa_footer();
+
+        if (auth == '')
+            return;
 
         notify_if_new_update();
 
@@ -296,8 +304,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_library();
             bwaa_media_items();
         }
-        bwaa_lastfm_settings();
-        bwaa_footer();
 
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
@@ -323,6 +329,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             load_settings();
                             bwaa_load_header();
 
+                            bwaa_lastfm_settings();
+                            bwaa_footer();
+
                             if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
                                 // start bwaa settings
                                 bwaa_settings();
@@ -342,8 +351,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_library();
                                 bwaa_media_items();
                             }
-                            bwaa_lastfm_settings();
-                            bwaa_footer();
                         }
                     }
                 }
@@ -359,17 +366,29 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     // header
     function bwaa_load_header() {
-        let auth_link = document.querySelector('a.auth-link');
-
-        if (auth_link.hasAttribute('data-bwaa'))
-            return;
-        auth_link.setAttribute('data-bwaa', 'true');
-
-        let text = document.createElement('p');
-        text.textContent = auth;
-        auth_link.appendChild(text);
-
         let inner = document.body.querySelector('.masthead-inner-wrap');
+
+        if (inner.hasAttribute('data-bwaa'))
+            return;
+        inner.setAttribute('data-bwaa', 'true');
+
+        if (auth_link != null) {
+            // logged in
+            let text = document.createElement('p');
+            text.textContent = auth;
+            auth_link.appendChild(text);
+        } else {
+            // guest
+
+            let site_auth_anon = inner.querySelector('.site-auth--anon');
+
+            let login_btn = site_auth_anon.querySelector('.site-auth-control');
+            login_btn.classList.add('logon-button');
+            login_btn.innerHTML = '<strong>Login</strong>';
+
+            let join_btn = site_auth_anon.querySelector('.join-cta-button');
+            join_btn.innerHTML = '<strong>Join</strong>';
+        }
 
         let promo = document.createElement('div');
         promo.classList.add('header-promo');
@@ -398,6 +417,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             <span class="language-wrapper" id="language-wrapper" data-dialog-open="false"><a onclick="_open_language_menu()" name="${non_override_lang}">${selected_language}</a>${language_menu.outerHTML}</span> | <a onclick="toggle_theme()" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</a> | <a href="${root}help">Help</a>
         `);
         inner.appendChild(search_companion_nav);
+
+
+        if (auth_link == null)
+            return;
 
 
         let notif_btn_txt = document.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent;
