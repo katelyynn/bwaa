@@ -3121,8 +3121,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             // or maybe it's blank?
             if (
-                url_split[6] == '4128a6eb29f94943c9d206c08e625904' || // track
-                url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb' // album
+                url_split[6] == '4128a6eb29f94943c9d206c08e625904.jpg' || // track
+                url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb.jpg' // album
             ) {
                 media_item.setAttribute('src', fallback_cover_art);
             }
@@ -3141,8 +3141,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             // or maybe it's blank?
             if (
-                url_split[6] == '4128a6eb29f94943c9d206c08e625904' || // track
-                url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb' // album
+                url_split[6] == '4128a6eb29f94943c9d206c08e625904.jpg' || // track
+                url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb.jpg' // album
             ) {
                 chartlist_image.setAttribute('src', fallback_cover_art);
             }
