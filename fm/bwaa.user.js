@@ -1649,7 +1649,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
             let avatar_element = document.body.querySelector('.source-album-art img');
-            let avatar = '';
+            let avatar = fallback_cover_art;
             if (avatar_element != undefined)
                 avatar = avatar_element.getAttribute('src');
 
