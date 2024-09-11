@@ -1766,15 +1766,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
      */
     function generic_subpage_header(avatar, user_name, header_title, additional_user_reference='', link_type='user') {
         // determines top text link
-        let link_field = `<a href="${root}user/${user_name}">${user_name}</a>`;
+        let link_field = `<a href="${root}user/${sanitise(user_name)}">${user_name}</a>`;
 
         // not a user
         if (link_type == 'artist')
-            link_field = `<a href="${root}music/${user_name}">${user_name}</a>`;
+            link_field = `<a href="${root}music/${sanitise(user_name)}">${sanitise(user_name)}</a>`;
         else if (link_type == 'album')
-            link_field = `<a href="${root}music/${additional_user_reference}/${user_name}">${user_name}</a>`;
+            link_field = `<a href="${root}music/${sanitise(additional_user_reference)}/${sanitise(user_name)}">${user_name}</a>`;
         else if (link_type == 'track')
-            link_field = `<a href="${root}music/${additional_user_reference}/_/${user_name}">${user_name}</a>`;
+            link_field = `<a href="${root}music/${sanitise(additional_user_reference)}/_/${sanitise(user_name)}">${user_name}</a>`;
 
         let new_header = document.createElement('section');
         new_header.classList.add('profile-header-subpage-section');
@@ -1789,6 +1789,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         `);
 
         return new_header;
+    }
+
+
+    function sanitise(text) {
+        return text
+        .replaceAll(' ', '+')
+        .replaceAll('?', '%3F');
     }
 
 
