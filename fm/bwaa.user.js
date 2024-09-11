@@ -303,6 +303,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_obsessions();
             bwaa_library();
             bwaa_media_items();
+            bwaa_playlists();
         }
 
         // last.fm is a single page application
@@ -350,6 +351,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_obsessions();
                                 bwaa_library();
                                 bwaa_media_items();
+                                bwaa_playlists();
                             }
                         }
                     }
@@ -3054,5 +3056,36 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 grid_image.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
             }
         });
+    }
+
+
+
+
+    // run on playlists
+    function bwaa_playlists() {
+        console.info('bwaa - playlists');
+
+        // are we on a playlist?
+        let playlist_header = document.querySelector('.playlisting-playlist-header:not([data-bwaa])');
+
+        if (playlist_header == null)
+            return;
+        playlist_header.setAttribute('data-bwaa', 'true');
+
+        console.info('bwaa - user is on a playlist');
+
+        let row = document.body.querySelector('.row');
+        let col_main = document.body.querySelector('.col-main');
+
+
+        let playlist_info = {
+            cover: playlist_header.querySelector('.playlisting-playlist-header-image').getAttribute('src'),
+            name_form: playlist_header.querySelector('.inplace-form'),
+            play_btn: playlist_header.querySelector('.js-playlink-station'),
+            menu: playlist_header.querySelector('.dropdown-menu-clickable'),
+            publishing_btn: menu.querySelector('li:first-child > div'),
+            delete_btn: menu.querySelector('li:nth-child(2) > div'),
+            export_btn: menu.querySelector('li:nth-child(3) > div')
+        }
     }
 })();
