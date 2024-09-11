@@ -1749,8 +1749,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
 
+    /**
+     * subpage header creator for profiles, artists, albums, and tracks
+     * @param {string} avatar avatar url
+     * @param {string} user_name name used for small text for profile, artist, track, or album name
+     * @param {string} header_title main header text
+     * @param {string} additional_user_reference artist name linked to track/album (not required)
+     * @param {string} link_type type of header, controls how top link is created (defaults to user)
+     * @returns subpage header
+     */
     function generic_subpage_header(avatar, user_name, header_title, additional_user_reference='', link_type='user') {
+        // determines top text link
         let link_field = `<a href="${root}user/${user_name}">${user_name}</a>`;
+
+        // not a user
         if (link_type == 'artist')
             link_field = `<a href="${root}music/${user_name}">${user_name}</a>`;
         else if (link_type == 'album')
