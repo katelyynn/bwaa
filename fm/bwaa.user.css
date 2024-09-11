@@ -1422,6 +1422,41 @@
                     }
                 }
             }
+            .chartlist-multi-playlinks {
+                padding: 3px 0 0 3px;
+                width: fit-content;
+
+                .chartlist-multi-playlinks-item {
+                    margin: unset;
+                }
+                .chartlist-multi-playlinks-playlink {
+                    width: 24px;
+
+                    &:after {
+                        background-color: unset !important;
+                        background-image: var(--cdn-flatness-sprites-21-icons);
+                        box-shadow: unset;
+                        background-position: 0 0;
+                        margin: unset;
+                        width: 16px;
+                        height: 16px;
+                        transition: unset;
+                        top: 0;
+                        left: 0;
+                        border-radius: unset !important;
+                    }
+
+                    &.chartlist-multi-playlinks-playlink--youtube:after {
+                        background-image: var(--favi-youtube);
+                    }
+                    &.chartlist-multi-playlinks-playlink--spotify:after {
+                        background-position: 0 -420px;
+                    }
+                    &.chartlist-multi-playlinks-playlink--itunes:after {
+                        background-position: 0 -300px;
+                    }
+                }
+            }
             .chartlist-loved {
                 padding: 3px 0 0 3px;
                 width: 24px;
