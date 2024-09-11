@@ -183,7 +183,10 @@ let legacy_cover_art = {
     // NIRVANA
     '570021b68d3d9d2db08bc99a473303b0.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND
     '3324e5982f0d81338d2749d5161eb2a8.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND (REMASTERED)
-    'b897255bf422baa93a42536af293f9f8.jpg': 'acbf048199bb4cf18ed93d3065a25be9.jpg' // IN UTERO
+    'b897255bf422baa93a42536af293f9f8.jpg': 'acbf048199bb4cf18ed93d3065a25be9.jpg', // IN UTERO
+    // KANYE WEST
+    '617da94739994953c9dead5f00a6972c.jpg': '5af9deac5bd2ec3da52a36d7b6c4b850.jpg', // YEEZUS
+    '57c1731b0f18c6f288e30a6c3ad42eb6.jpg': 'ab7f5ca02b45ea96ee7bbf33d4502ab0.jpg' // YANDHI - i cant upload a better one :(
 }
 let fallback_cover_art = 'https://katelyynn.github.io/bwaa/fm/extra_res/empty_disc.png';
 
@@ -1925,7 +1928,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             </div>
             <div class="badge-info">
                 ${link_field}
-                <h1>${header_title}</h1>
+                <h1 id="artist-subpage-text">${header_title}</h1>
             </div>
         `);
 
@@ -2573,7 +2576,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                     Override album cover art for 2012-era images
                                 </label>
                                 <div class="alert">
-                                    All personal preference, check out <a href="${root}music/Nirvana" target="_blank">Nirvana</a>’s <a href="${root}music/Nirvana/Nevermind" target="_blank">Nevermind</a> for an example.
+                                    All personal preference, check out <a href="${root}music/Nirvana" target="_blank">Nirvana</a>’s <a href="${root}music/Nirvana/Nevermind" target="_blank">Nevermind</a> or more fittingly <a href="${root}music/Kanye+West" target="_blank">Kanye</a>’s <a href="${root}music/Kanye+West/Yeezus" target="_blank">Yeezus</a> for an example.
                                 </div>
                             </div>
                         </div>
