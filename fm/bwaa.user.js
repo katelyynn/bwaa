@@ -398,6 +398,27 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             <span class="language-wrapper" id="language-wrapper" data-dialog-open="false"><a onclick="_open_language_menu()" name="${non_override_lang}">${selected_language}</a>${language_menu.outerHTML}</span> | <a onclick="toggle_theme()" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</a> | <a href="${root}help">Help</a>
         `);
         inner.appendChild(search_companion_nav);
+
+
+        let notif_btn_txt = document.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent;
+        let notif_badge = document.querySelector('[data-analytics-label="notifications"] .notification-count-badge');
+
+        if (settings.no_notifs)
+            notif_badge = null;
+
+        let inbox_btn_txt = document.querySelector('[data-analytics-label="inbox"] .auth-dropdown-item-left').textContent;
+        let inbox_badge = document.querySelector('[data-analytics-label="inbox"] .notification-count-badge');
+
+        let logout_btn = document.querySelector('[data-require="components/logout-form"]');
+        let logout_btn_anchor = logout_btn.querySelector('a');
+        logout_btn_anchor.classList.remove('auth-dropdown-menu-item', 'js-logout-button', 'mimic-link', 'masthead-nav-control');
+
+        let user_companion_nav = document.createElement('div');
+        user_companion_nav.classList.add('user-companion-nav');
+        user_companion_nav.innerHTML = (`
+            <a href="${root}inbox/notifications">${notif_btn_txt}${(notif_badge != null ? ` (${notif_badge.textContent.trim()})` : '')}</a> | <a href="${root}inbox">${inbox_btn_txt}${(inbox_badge != null ? ` (${inbox_badge.textContent.trim()})` : '')}</a> | ${logout_btn.outerHTML}
+        `);
+        inner.appendChild(user_companion_nav);
     }
 
     unsafeWindow._open_language_menu = function() {
@@ -2423,7 +2444,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--no_notifs">
                                     <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Hide notifications, only display inbox <i class="subtext">(not yet implemented)</i>
+                                    Hide notifications, only display inbox
                                 </label>
                             </div>
                         </div>

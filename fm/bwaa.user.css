@@ -789,6 +789,31 @@
                     }
                 }
             }
+
+
+            .user-companion-nav {
+                position: absolute;
+                top: 9px;
+                right: 125px;
+                height: 15px;
+                line-height: 15px;
+                padding: 4px 5px 4px 5px;
+                color: #ddd;
+                font-size: 11px;
+
+                a {
+                    color: inherit;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: var(--text-over-header);
+                    }
+                }
+
+                form {
+                    display: inline;
+                }
+            }
         }
 
         .masthead-logo {
@@ -2731,6 +2756,7 @@
             background-position: right top;
         }
     }
+    .more-link-with-action,
     .more-link-fullwidth-right-flush-top,
     .cta-link-wrap,
     .more-link-fullwidth-right,
@@ -2743,14 +2769,23 @@
             font-weight: bold;
             font-size: 11px;
             line-height: 14px;
-            padding-right: 18px;
-            margin-left: 9px;
+            padding-right: 18px !important;
+            margin-left: unset;
+            text-align: left;
             background-image: var(--cdn-flatness-icons-see-more-arrow-blue-13x13-2);
             background-repeat: no-repeat;
             background-position: right top;
 
+            .more-link.align-right &,
+            .more-link-fullwidth-right-flush-top &,
+            .more-link-fullwidth-right & {
+                margin-left: 9px;
+                text-align: right;
+            }
+
+            &:after,
             &:before {
-                display: none;
+                display: none !important;
             }
         }
     }
@@ -3108,6 +3143,8 @@
         border-radius: 0 0 3px 3px !important;
         box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px !important;
 
+        min-width: 107px;
+
         [data-bwaa--theme="paint_it_black"] & {
             background: #000 !important;
             border-color: var(--border) !important; /* supposed to be #000 but that looks strange */
@@ -3126,6 +3163,12 @@
             line-height: 22px;
             height: 22px;
             color: #ddd;
+
+            &[data-analytics-label="notifications"],
+            &[data-analytics-label="inbox"],
+            form &.auth-dropdown-menu-item {
+                display: none !important;
+            }
 
             &:hover {
                 background: #750500;
@@ -4333,10 +4376,6 @@
                 text-transform: lowercase;
             }
         }
-    }
-
-    .more-link.align-right {
-        text-align: right;
     }
 
     .wiki-container .metadata,
