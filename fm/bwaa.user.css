@@ -1675,7 +1675,7 @@
         text-decoration: underline;
     }
 
-    h3:not(.shout-user),
+    .your-progress h3,
     .date-heading,
     .modal-body .modal-title,
     h3.text-18,
