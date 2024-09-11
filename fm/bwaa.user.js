@@ -3335,9 +3335,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let link = obsession.querySelector('.obsession-history-item-heading-link').getAttribute('href');
 
-            let track_name = obsession.querySelector('.obsession-history-item-heading').textContent;
+            let track_name = obsession.querySelector('.obsession-history-item-heading').textContent.trim();
             let artist_name = obsession.querySelector('.obsession-history-item-artist a');
-            let obsession_date = obsession.querySelector('.obsession-history-item-date a').textContent;
+            let obsession_date = obsession.querySelector('.obsession-history-item-date a').textContent.trim();
 
 
             let obsession_item = document.createElement('li');
@@ -3349,13 +3349,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="grid-items-item-details">
                         <p class="grid-items-item-main-text">
-                            <a class="link-block-target" href="${link}" title="${track_name.trim()}">
+                            <a class="link-block-target" href="${link}" title="${track_name}">
                                 ${track_name}
                             </a>
                         </p>
                         <p class="grid-items-item-aux-text">
                             <a class="grid-items-item-aux-block" href="${artist_name}">
-                                ${artist_name.textContent}
+                                ${artist_name.textContent.trim()}
                             </a>
                             <a href="${link}">
                                 ${obsession_date}
