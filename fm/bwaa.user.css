@@ -3615,6 +3615,9 @@
         #id_body {
             width: 100%;
         }
+        #id_body {
+            resize: vertical;
+        }
 
         [type="hidden"]:not([name="csrfmiddlewaretoken"]) + .form-group,
         p + fieldset,

@@ -490,6 +490,22 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main');
 
+        if (col_main == null) {
+            let page_content = document.body.querySelector('.page-content');
+
+            row = document.createElement('div');
+            row.classList.add('row');
+
+            col_main = document.createElement('div');
+            col_main.classList.add('col-main');
+
+            col_sidebar = document.createElement('div');
+            col_sidebar.classList.add('col-sidebar');
+
+            row.appendChild(col_main, col_sidebar);
+            page_content.insertBefore(row, page_content.firstElementChild);
+        }
+
         let navlist = profile_header.querySelector('.navlist');
         let navlist_items = navlist.querySelector('.navlist-items');
 
@@ -803,8 +819,29 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main');
         let col_sidebar = document.body.querySelector('.col-sidebar.hidden-xs');
+
+        // attempt to see if there's a normal sidebar first
         if (col_sidebar == null)
             col_sidebar = document.body.querySelector('.col-sidebar');
+
+        if (col_main == null) {
+            let page_content = document.body.querySelector('.page-content');
+
+            row = document.createElement('div');
+            row.classList.add('row');
+
+            col_main = document.createElement('div');
+            col_main.classList.add('col-main');
+
+            row.appendChild(col_main);
+            page_content.insertBefore(row, page_content.firstElementChild);
+        }
+        if (col_sidebar == null) {
+            col_sidebar = document.createElement('div');
+            col_sidebar.classList.add('col-sidebar');
+
+            row.appendChild(col_sidebar);
+        }
 
         let navlist = artist_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -1226,8 +1263,29 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main:not(.visible-xs)');
         let col_sidebar = document.body.querySelector('.col-sidebar.hidden-xs');
+
+        // attempt to see if there's a normal sidebar first
         if (col_sidebar == null)
             col_sidebar = document.body.querySelector('.col-sidebar');
+
+        if (col_main == null) {
+            let page_content = document.body.querySelector('.page-content');
+
+            row = document.createElement('div');
+            row.classList.add('row');
+
+            col_main = document.createElement('div');
+            col_main.classList.add('col-main');
+
+            row.appendChild(col_main);
+            page_content.insertBefore(row, page_content.firstElementChild);
+        }
+        if (col_sidebar == null) {
+            col_sidebar = document.createElement('div');
+            col_sidebar.classList.add('col-sidebar');
+
+            row.appendChild(col_sidebar);
+        }
 
         let navlist = album_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -1522,6 +1580,25 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main');
         let col_sidebar = document.body.querySelector('.col-sidebar');
+
+        if (col_main == null) {
+            let page_content = document.body.querySelector('.page-content');
+
+            row = document.createElement('div');
+            row.classList.add('row');
+
+            col_main = document.createElement('div');
+            col_main.classList.add('col-main');
+
+            row.appendChild(col_main);
+            page_content.insertBefore(row, page_content.firstElementChild);
+        }
+        if (col_sidebar == null) {
+            col_sidebar = document.createElement('div');
+            col_sidebar.classList.add('col-sidebar');
+
+            row.appendChild(col_sidebar);
+        }
 
         let navlist = track_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -1883,6 +1960,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         factbox.insertBefore(factbox_header, factbox.firstElementChild);
 
         let wiki_author_element = col_main.querySelector('.wiki-author');
+        if (wiki_author_element == null)
+            return;
 
         // ensures splitting still works fine, refer to below
         wiki_author_element.innerHTML = wiki_author_element.innerHTML.replace('Deleted user', '<span>deleted user</span>');
