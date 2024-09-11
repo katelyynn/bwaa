@@ -1635,6 +1635,7 @@
     }
 
     /* icons */
+    .date-range-picker-button:before,
     .language-menu-item:before, .language-wrapper a:before,
     .gallery-image-votes:before, .gallery-image-preferred-states:before, .bookmark-votes:before,
     .journal-like:before, .stationlink:before,
@@ -4090,6 +4091,7 @@
 
     .col-sidebar,
     .col-main {
+        .library-sort .dropdown-menu-clickable,
         .library-overview-header .dropdown-menu-clickable,
         .shoutbox-controls .dropdown-menu-clickable,
         .tab-container,
@@ -4177,6 +4179,7 @@
     .artist-overview-top-tracks {
         margin-top: unset !important;
     }
+    .library-sort,
     .library-overview-header,
     .shoutbox-controls,
     .section-with-control,
@@ -4580,6 +4583,9 @@
             }
         }
     }
+    .library-top {
+        margin-top: -15px;
+    }
     .metadata-list {
         display: flex;
         gap: 10px;
@@ -4611,6 +4617,65 @@
         gap: 15px;
     }
 
+    .library-sort {
+        margin: 15px 0 0 0 !important;
+        padding: unset !important;
+
+        .dropdown-menu-clickable-button {
+            top: 0;
+        }
+    }
+    .library-view {
+        margin-top: 15px !important;
+
+        .library-view-button {
+            margin: 0 0 0 15px !important;
+            padding: unset !important;
+        }
+    }
+
+    .library-controls-datepicker {
+        padding: unset;
+        position: static;
+
+        .col-sidebar:has(&) {
+            position: static;
+        }
+
+        .date-range-picker-button {
+            position: absolute !important;
+            top: 157px;
+            right: calc(15px + 16px + 15px);
+
+            font-size: 10px;
+            line-height: 17px;
+            color: var(--text-link);
+            font-weight: normal;
+
+            padding-left: calc(13px + 4px);
+
+            &:before {
+                background-image: var(--cdn-flatness-sprites-21-icons);
+                background-position: 0 -960px;
+                background-size: unset;
+                --top: 2px;
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+
+            .date-range-picker-button-inner {
+                font-weight: inherit;
+                padding: unset;
+
+                &:before {
+                    display: none;
+                }
+            }
+        }
+    }
+
 
 
 
@@ -4628,13 +4693,18 @@
     .modal-dialog {
         width: fit-content;
     }
+    .date-range-picker-content,
     .modal-body {
         border: 5px solid var(--colour-upper);
         background: var(--body);
         border-radius: 5px;
         box-shadow: 0 0 10px var(--colour-upper);
 
-        padding: 15px;
+        padding: 15px !important;
+
+        &:before {
+            display: none;
+        }
 
         .modal-title {
             margin-bottom: 15px;
