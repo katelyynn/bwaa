@@ -1255,6 +1255,7 @@
             .chartlist-album {
                 order: 3;
                 color: var(--colour-middle);
+                margin: unset !important; /* hover margin */
 
                 .chartlist-row:has(&) {
                     .chartlist-name {
@@ -1615,11 +1616,6 @@
                 margin-top: unset !important;
             }
         }
-
-        /* private tracks */
-        .profile-mobile-featured-track + .no-data-message {
-            width: calc(100% + 30px);
-        }
     }
     #tracklist {
         margin-top: unset !important;
@@ -1679,6 +1675,7 @@
         text-decoration: underline;
     }
 
+    h3,
     .date-heading,
     .modal-body .modal-title,
     h3.text-18,
@@ -3505,6 +3502,7 @@
 
 
     /* generic button */
+    .btn-subscribe,
     .js-shout-reply-cancel,
     .btn-cancel,
     .user-list-follower-btn,
@@ -4324,18 +4322,33 @@
             color: var(--colour-middle);
             line-height: inherit;
         }
+
+        .free-description {
+            margin: 15px 0 6px 0 !important;
+        }
+        .btn-subscribe {
+            margin: unset;
+        }
     }
 
 
 
 
+    .mpu-subscription-upsell {
+        display: none;
+    }
+    .buffer-standard {
+        margin-top: 15px;
+    }
+
+    .free-description,
     .wiki-style-rules,
     .form-row-help-text,
     .bulleted-list,
     .alert,
     .no-data-message {
         margin: 15px 0 !important;
-        padding: 0.125em 0.5em 0.25em 0.5em;
+        padding: 0.125em 0.5em 0.25em 0.5em !important;
         background: #e4f1ff;
         color: inherit;
         font-size: 11px;
