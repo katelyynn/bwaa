@@ -3349,7 +3349,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="grid-items-item-details">
                         <p class="grid-items-item-main-text">
-                            <a class="link-block-target" href="${link}" title="${track_name}">
+                            <a class="link-block-target" href="${link}" title="${track_name.trim()}">
                                 ${track_name}
                             </a>
                         </p>
