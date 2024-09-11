@@ -791,7 +791,7 @@
 
                     .language-menu {
                         position: absolute;
-                        top: 22px;
+                        top: 19px;
                         left: -8px;
 
                         [data-dialog-open="false"] & {
