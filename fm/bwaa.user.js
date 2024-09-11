@@ -687,17 +687,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 col_main.insertBefore(library_controls, col_main.firstChild);
             }
 
-            let new_header = document.createElement('section');
-            new_header.classList.add('profile-header-subpage-section');
-            new_header.innerHTML = (`
-                <div class="badge-avatar">
-                    <img src="${header_user_data.avatar.getAttribute('src')}" alt="${header_user_data.avatar.getAttribute('alt')}">
-                </div>
-                <div class="badge-info">
-                    <a href="${header_user_data.link}">${header_user_data.name}</a>
-                    <h1>${header_user_data.page}</h1>
-                </div>
-            `);
+            let new_header = generic_subpage_header(
+                header_user_data.avatar.getAttribute('src'),
+                header_user_data.name,
+                header_user_data.page
+            );
 
             navlist_items.appendChild(journal_nav_btn);
             try { row.insertBefore(navlist, col_main); } catch(e) { col_main.insertBefore(navlist, col_main.firstElementChild) }
@@ -1121,17 +1115,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 page: subpage_title.textContent
             }
 
-            let new_header = document.createElement('section');
-            new_header.classList.add('profile-header-subpage-section');
-            new_header.innerHTML = (`
-                <div class="badge-avatar">
-                    <img src="${header_user_data.avatar}">
-                </div>
-                <div class="badge-info">
-                    <a href="${header_user_data.link}">${header_user_data.name}</a>
-                    <h1 id="artist-subpage-text">${header_user_data.page}</h1>
-                </div>
-            `);
+            let new_header = generic_subpage_header(
+                header_user_data.avatar.getAttribute('src'),
+                header_user_data.name,
+                header_user_data.page,
+                'artist'
+            );
 
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
@@ -1438,17 +1427,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 page: subpage_title.textContent
             }
 
-            let new_header = document.createElement('section');
-            new_header.classList.add('profile-header-subpage-section');
-            new_header.innerHTML = (`
-                <div class="badge-avatar">
-                    <img src="${header_album_data.avatar}">
-                </div>
-                <div class="badge-info">
-                    <a href="${header_album_data.link}">${header_album_data.name} by <a href="${header_album_data.artist_link}">${header_album_data.artist}</a></a>
-                    <h1 id="artist-subpage-text">${header_album_data.page}</h1>
-                </div>
-            `);
+            let new_header = generic_subpage_header(
+                header_user_data.avatar.getAttribute('src'),
+                header_user_data.name,
+                header_user_data.page,
+                header_user_data.artist,
+                'album'
+            );
 
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
@@ -1741,17 +1726,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 page: subpage_title.textContent
             }
 
-            let new_header = document.createElement('section');
-            new_header.classList.add('profile-header-subpage-section');
-            new_header.innerHTML = (`
-                <div class="badge-avatar">
-                    <img src="${header_track_data.avatar}">
-                </div>
-                <div class="badge-info">
-                    <a href="${header_track_data.link}">${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a></a>
-                    <h1>${header_track_data.page}</h1>
-                </div>
-            `);
+            let new_header = generic_subpage_header(
+                header_track_data.avatar,
+                header_track_data.name,
+                header_track_data.page,
+                header_track_data.artist,
+                'track'
+            );
 
             row.insertBefore(navlist, col_main);
             col_main.insertBefore(new_header, col_main.firstChild);
@@ -1765,6 +1746,31 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
         }
+    }
+
+
+    function generic_subpage_header(avatar, user_name, header_title, additional_user_reference='', link_type='user') {
+        let link_field = `<a href="${root}user/${user_name}">${user_name}</a>`;
+        if (link_type == 'artist')
+            link_field = `<a href="${root}music/${user_name}">${user_name}</a>`;
+        else if (link_type == 'album')
+            link_field = `<a href="${root}music/${additional_user_reference}/${user_name}">${user_name}</a>`;
+        else if (link_type == 'track')
+            link_field = `<a href="${root}music/${additional_user_reference}/_/${user_name}">${user_name}</a>`;
+
+        let new_header = document.createElement('section');
+        new_header.classList.add('profile-header-subpage-section');
+        new_header.innerHTML = (`
+            <div class="badge-avatar">
+                <img src="${avatar}" alt="${user_name}">
+            </div>
+            <div class="badge-info">
+                ${link_field}
+                <h1>${header_title}</h1>
+            </div>
+        `);
+
+        return new_header;
     }
 
 
@@ -2095,17 +2101,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let obsession_author = obsession_wrap.querySelector('.obsession-details-intro a').textContent;
 
-        let new_header = document.createElement('section');
-        new_header.classList.add('profile-header-subpage-section');
-        new_header.innerHTML = (`
-            <div class="badge-avatar">
-                <img src="${obsession_wrap.querySelector('.obsession-details-intro-avatar-wrap img').getAttribute('src')}" alt="${obsession_author}">
-            </div>
-            <div class="badge-info">
-                <a href="${root}user/${obsession_author}">${obsession_author}</a>
-                <h1>Music <a href="${root}user/${obsession_author}/obsessions">Obsession</a></h1>
-            </div>
-        `);
+        let new_header = generic_subpage_header(
+            obsession_wrap.querySelector('.obsession-details-intro-avatar-wrap img').getAttribute('src'),
+            obsession_author,
+            `Music <a href="${root}user/${obsession_author}/obsessions">Obsession</a>`
+        );
 
 
         let next = page_content.querySelector('.obsession-pagination-next a');
@@ -2210,17 +2210,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         adaptive_skin.removeChild(content_top);
 
         let my_avi = auth_link.querySelector('img').getAttribute('src');
-        let new_header = document.createElement('section');
-        new_header.classList.add('profile-header-subpage-section');
-        new_header.innerHTML = (`
-            <div class="badge-avatar">
-                <img src="${my_avi}" alt="${auth}">
-            </div>
-            <div class="badge-info">
-                <a href="${root}user/${auth}">${auth}</a>
-                <h1>Your Account Settings</h1>
-            </div>
-        `);
+        let new_header = generic_subpage_header(
+            my_avi,
+            auth,
+            'Your Account Settings'
+        );
         col_main.insertBefore(new_header, col_main.firstElementChild);
     }
 
