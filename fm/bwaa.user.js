@@ -1809,19 +1809,29 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         factbox.insertBefore(factbox_header, factbox.firstElementChild);
 
         let wiki_author_element = col_main.querySelector('.wiki-author');
+
+        // ensures splitting still works fine, refer to below
+        wiki_author_element.innerHTML = wiki_author_element.innerHTML.replace('Deleted user', '<span>deleted user</span>');
+
         let wiki_author = wiki_author_element.querySelector(':scope > a');
+        // wiki version is the text before the author element, which we ensure exists
+        // with the "splitting" line above even if user is deleted
         let wiki_version = wiki_author_element.firstChild.textContent.trim();
+        // wiki date is all the text after the author element
         let wiki_date = wiki_author_element.childNodes[2].textContent.trim();
 
         let wiki_history_link = wiki_author_element.querySelector('.wiki-history-link--desktop a');
 
+        // wiki discussion pages no longer exist, direct user to shoutbox
+        // by grabbing the tab's link
         let wiki_discuss_link = document.querySelector('.secondary-nav-item--shoutbox a');
 
+        // compile all that information into one
         let factbox_version = document.createElement('div');
         factbox_version.classList.add('factbox-version-container');
         factbox_version.innerHTML = (`
             <div class="factbox-version">
-                You’re viewing <span class="version">${wiki_version}</span> ${wiki_author.outerHTML}. ${(wiki_history_link != null) ? `<a href="${wiki_history_link.getAttribute('href')}">View older versions</a>, or <a href="${wiki_discuss_link.getAttribute('href')}">discuss</a> this wiki.` : ''}
+                You’re viewing <span class="version">${wiki_version}</span> ${(wiki_author != null) ? wiki_author.outerHTML : 'a deleted user'}. ${(wiki_history_link != null) ? `<a href="${wiki_history_link.getAttribute('href')}">View older versions</a>, or <a href="${wiki_discuss_link.getAttribute('href')}">discuss</a> this wiki.` : ''}
             </div>
             <div class="factbox-author">
                 Last edited ${wiki_date}.
@@ -1830,6 +1840,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         factbox.appendChild(factbox_version);
 
+        // wiki edit
         let wiki_edit_link = col_main.querySelector('.qa-wiki-edit');
         if (wiki_edit_link != null) {
             let wiki_edit_more_link = document.createElement('div');
@@ -1841,6 +1852,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             factbox.appendChild(wiki_edit_more_link);
         }
 
+        // move any alerts (eg. locked wiki, old version notice) to the sidebar
+        // below all factbox elements
         let alerts = col_main.querySelectorAll('.alert');
         alerts.forEach((alert) => {
             factbox.appendChild(alert);
