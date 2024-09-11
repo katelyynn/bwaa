@@ -2868,6 +2868,7 @@
         margin: unset !important;
         padding: unset !important;
         border: none !important;
+        text-align: left;
 
         a {
             font-weight: bold;
@@ -2875,21 +2876,24 @@
             line-height: 14px;
             padding-right: 18px !important;
             margin-left: unset;
-            text-align: left;
+            text-align: inherit;
             background-image: var(--cdn-flatness-icons-see-more-arrow-blue-13x13-2);
             background-repeat: no-repeat;
             background-position: right top;
 
-            .more-link.align-right &,
-            .more-link-fullwidth-right-flush-top &,
-            .more-link-fullwidth-right & {
-                margin-left: 9px;
-                text-align: right;
-            }
-
             &:after,
             &:before {
                 display: none !important;
+            }
+        }
+
+        &.more-link.align-right,
+        &.more-link-fullwidth-right-flush-top,
+        &.more-link-fullwidth-right {
+            text-align: right;
+
+            a {
+                margin-left: 9px;
             }
         }
     }
