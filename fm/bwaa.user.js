@@ -1163,7 +1163,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
 
             let new_header = generic_subpage_header(
-                header_user_data.avatar.getAttribute('src'),
+                header_user_data.avatar,
                 header_user_data.name,
                 header_user_data.page,
                 'artist'
@@ -1180,6 +1180,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
+
+            if (subpage_type.includes('tags_overview')) {
+                generic_tag_patch(col_main);
+            }
         }
     }
 
@@ -1475,10 +1479,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
 
             let new_header = generic_subpage_header(
-                header_user_data.avatar.getAttribute('src'),
-                header_user_data.name,
-                header_user_data.page,
-                header_user_data.artist,
+                header_album_data.avatar,
+                header_album_data.name,
+                header_album_data.page,
+                header_album_data.artist,
                 'album'
             );
 
@@ -1493,6 +1497,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
+
+            if (subpage_type.includes('tags_overview')) {
+                generic_tag_patch(col_main);
+            }
         }
     }
 
@@ -1798,6 +1806,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
+
+            if (subpage_type.includes('tags_overview')) {
+                generic_tag_patch(col_main);
+            }
         }
     }
 
@@ -1934,6 +1946,48 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             wiki = col_main.querySelector('.wiki-block-cta');
 
         return wiki.outerHTML;
+    }
+
+
+    function generic_tag_patch(col_main) {
+        let tag_section_container = col_main.querySelector('.profile-header-subpage-section + section');
+
+        // similar albums?
+        let similar_albums = col_main.querySelector('.similar-albums-body');
+        if (similar_albums != null)
+            col_main.removeChild(similar_albums);
+
+        let btn_add = tag_section_container.querySelector('.btn-add');
+        if (btn_add != null) {
+            btn_add.classList.add('btn-add-tag');
+            btn_add.innerHTML = '<strong>Tag</strong>';
+        }
+
+        let tags = tag_section_container.querySelectorAll('.big-tags-item-name a');
+
+        // let's make a new one now we have the info
+        let new_tag_section = document.createElement('section');
+        new_tag_section.classList.add('tag-section');
+
+        let tag_cloud = document.createElement('div');
+        tag_cloud.classList.add('tag-cloud');
+
+        tags.forEach((tag) => {
+            tag.classList.remove('link-block-target');
+            tag.classList.add('tag-cloud-item');
+
+            tag.setAttribute('data-tag', tag.textContent.trim());
+
+            tag_cloud.appendChild(tag);
+        });
+
+        new_tag_section.appendChild(tag_cloud);
+
+        if (btn_add != null)
+            new_tag_section.appendChild(btn_add);
+
+        col_main.appendChild(new_tag_section);
+        col_main.removeChild(tag_section_container);
     }
 
 
