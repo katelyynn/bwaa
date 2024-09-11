@@ -1786,6 +1786,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
 
+    /**
+     * generic wiki patch to create sidebar factbox
+     * @param {element} col_main col_main element
+     * @param {element} col_sidebar col_sidebar element
+     */
     function generic_wiki_patch(col_main, col_sidebar) {
         let factbox = col_main.querySelector('.factbox');
 
@@ -1845,6 +1850,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
 
+    /**
+     * retrieves longest wiki content on page
+     * @param {element} col_main col_main element
+     * @returns retrieved wiki or cta if missing
+     */
     function get_wiki(col_main) {
         let wiki = col_main.querySelector('.wiki-block.visible-lg');
         if (wiki == null)
