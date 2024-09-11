@@ -428,13 +428,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let site_auth = inner.querySelector('.site-auth');
 
-        let notif_btn_txt = document.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent;
+        let notif_btn_txt = document.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent.trim();
         let notif_badge = document.querySelector('[data-analytics-label="notifications"] .notification-count-badge');
 
         if (settings.no_notifs)
             notif_badge = null;
 
-        let inbox_btn_txt = document.querySelector('[data-analytics-label="inbox"] .auth-dropdown-item-left').textContent;
+        let inbox_btn_txt = document.querySelector('[data-analytics-label="inbox"] .auth-dropdown-item-left').textContent.trim();
         let inbox_badge = document.querySelector('[data-analytics-label="inbox"] .notification-count-badge');
 
         let logout_btn = document.querySelector('[data-require="components/logout-form"]');
