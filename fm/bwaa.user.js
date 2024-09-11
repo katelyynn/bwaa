@@ -1959,6 +1959,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (similar_albums != null)
             col_main.removeChild(similar_albums);
 
+        // buffer standard in between
+        let buffer = col_main.querySelector(':scope > .buffer-standard');
+        if (buffer != null)
+            col_main.removeChild(buffer);
+
         let btn_add = tag_section_container.querySelector('.btn-add');
         if (btn_add != null) {
             btn_add.classList.add('btn-add-tag');
