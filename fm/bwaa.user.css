@@ -3440,10 +3440,11 @@
 
 
     /* account migration */
-    .nag-bar--alert {
+    .nag-bar {
         margin-bottom: 15px;
 
         .container {
+            background: none !important;
             border: none !important;
         }
     }
