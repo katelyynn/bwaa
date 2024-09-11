@@ -489,6 +489,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let row = document.body.querySelector('.row');
         let col_main = document.body.querySelector('.col-main');
+        let col_sidebar = document.body.querySelector('.col-sidebar');
 
         if (col_main == null) {
             let page_content = document.body.querySelector('.page-content');
