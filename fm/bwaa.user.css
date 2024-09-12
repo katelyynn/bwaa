@@ -2768,9 +2768,11 @@
 
             .highcharts-area {
                 fill: var(--header-text) !important;
+                opacity: 0.7;
             }
             .highcharts-graph {
-                stroke: var(--header-text) !important;
+                stroke: transparent !important;
+                opacity: 0.7;
             }
 
             .highcharts-background {
