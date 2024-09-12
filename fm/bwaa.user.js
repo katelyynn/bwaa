@@ -3657,16 +3657,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         chartlist_love.forEach((form) => {
             form.setAttribute('data-bwaa-subscribed', 'true');
 
-            let action = form.querySelector('[name="action"]').getAttribute('value');
             let track = form.querySelector('[name="track"]').getAttribute('value');
             let artist = form.querySelector('[name="artist"]').getAttribute('value');
 
-            console.info('form', action, track, artist, form);
+            let btn = form.querySelector('button');
 
-            form.addEventListener('submit', (event) => {
-                event.preventDefault();
-                console.info('heard');
-                register_activity(action, [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
+            btn.addEventListener('click', (event) => {
+                console.info('heard', event);
+
+                let action = event.target.getAttribute('data-analytics-action');
+
+                register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
             }, false);
         });
     }
