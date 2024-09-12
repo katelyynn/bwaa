@@ -937,7 +937,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 name: artist_header.querySelector('.header-new-title').textContent,
                 link: window.location.href,
                 photos: artist_header.querySelector('.header-new-gallery-inner').textContent,
-                plays: artist_metadata[1].querySelector('abbr').getAttribute('title'),
+                plays: artist_metadata[1].querySelector('abbr').textContent,
                 listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
             }
 
@@ -1365,7 +1365,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 artist: album_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
                 link: window.location.href,
-                plays: album_metadata[1].querySelector('abbr').getAttribute('title'),
+                plays: album_metadata[1].querySelector('abbr').textContent,
                 listeners: album_metadata[0].querySelector('abbr').getAttribute('title'),
                 add_artwork: add_artwork
             }
