@@ -105,7 +105,8 @@ const trans = {
  */
 function lookup_lang() {
     root = document.querySelector('.masthead-logo a').getAttribute('href');
-    my_avi = auth_link.querySelector('img').getAttribute('src');
+    if (auth_link != null)
+        my_avi = auth_link.querySelector('img').getAttribute('src');
     lang = document.documentElement.getAttribute('lang');
     non_override_lang = lang;
 
