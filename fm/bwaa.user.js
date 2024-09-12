@@ -3011,7 +3011,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         bwaa_legal.innerHTML = (`
             <div class="logos"></div>
             <div class="text">
-                <strong>bwaa</strong> is a creation by <a href="${root}user/cutensilly">cutensilly</a> in an attempt to restore the look of Last.fm during 2012. All original works are by Last.fm. Re-creations found within the script and stylesheet are based on Last.fm's designs with some flair of my own where applicable. <a href="https://github.com/katelyynn/bwaa/issues">bwaa is early software, stability is not to be expected.</a>
+                <strong>bwaa</strong> is a creation by <a href="${root}user/cutensilly">cutensilly</a> in an attempt to restore the look of Last.fm during 2012. All original works are by Last.fm. Re-creations found within the script and stylesheet are based on Last.fm's designs with some flair of my own where applicable. <a href="https://github.com/katelyynn/bwaa/issues">bwaa is early software, stability is not guaranteed.</a>
             </div>
         `);
 
