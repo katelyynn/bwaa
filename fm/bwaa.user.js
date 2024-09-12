@@ -2644,7 +2644,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                     Hide extra grid item on profiles
                                 </label>
                                 <div class="alert">
-                                    If you’re top artists/albums display is set to ‘default’, an extra grid item will display otherwise.
+                                    If your top artists/albums display is set to ‘default’, an extra grid item will display otherwise.
                                 </div>
                             </div>
                         </div>
