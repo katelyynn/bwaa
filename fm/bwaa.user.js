@@ -1678,7 +1678,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 link: window.location.href,
                 plays: track_metadata[1].querySelector('abbr').getAttribute('title'),
                 listeners: track_metadata[0].querySelector('abbr').getAttribute('title'),
-                album_amount: parseInt(document.body.querySelectorAll('.source-album').length) - 1
+                primary_album: document.body.querySelector('.source-album-name a')
             }
 
 
@@ -1727,7 +1727,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="track-info">
                         <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a>${track_length}</h1>
-                        <p>On ${(header_track_data.album_amount > 0) ? header_track_data.album_amount : 'no'} albums <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
+                        <p>On ${(header_track_data.primary_album != null) ? header_track_data.primary_album.outerHTML : 'no albums'} <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
                         <div class="actions">
                             ${header_actions[0].outerHTML}
                             ${header_actions[1].outerHTML}
