@@ -130,8 +130,8 @@ function lookup_lang() {
 
 tippy.setDefaultProps({
     arrow: false,
-    duration: [100, 300],
-    delay: [null, 50]
+    duration: [100, 100],
+    delay: [null, 150]
 });
 
 let settings;
