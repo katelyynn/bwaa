@@ -1194,7 +1194,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             col_main.insertBefore(new_header, col_main.firstChild);
             artist_header.style.setProperty('display', 'none');
 
-            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
+            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'), false);
             col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
                 update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
             });
