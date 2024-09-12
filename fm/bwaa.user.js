@@ -2185,8 +2185,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (gallery_sidebar == null)
             return;
 
+        let uploaded_image_title = document.querySelector('.gallery-image-title');
+
         let artist_subpage_text = document.getElementById('artist-subpage-text');
-        artist_subpage_text.textContent = document.querySelector('.subpage-title').textContent;
+        artist_subpage_text.textContent = `${document.querySelector('.subpage-title').textContent.trim()}: ${uploaded_image_title.textContent}`;
 
         /*if (gallery_sidebar.hasAttribute('data-bwaa'))
             return;

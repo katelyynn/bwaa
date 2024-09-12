@@ -1635,6 +1635,7 @@
     }
 
     /* icons */
+    .gallery-image-report:before,
     .date-range-picker-button:before,
     .language-menu-item:before, .language-wrapper a:before,
     .gallery-image-votes:before, .gallery-image-preferred-states:before, .bookmark-votes:before,
@@ -3368,10 +3369,16 @@
 
 
 
+    .js-gallery-image-details > div {
+        display: flex;
+        flex-direction: column;
+    }
     .gallery-image-buttons {
         display: flex;
         gap: 10px;
         align-items: end;
+        margin: 0 0 15px 0;
+        order: -1;
     }
     .gallery-image-bookmark-button,
     .gallery-image-preferred-button,
@@ -3519,6 +3526,38 @@
     }
 
 
+    .gallery-image-report-form {
+        margin-top: 15px;
+    }
+    .gallery-image-report,
+    .gallery-image-uploaded-by {
+        font-size: 11px;
+        line-height: inherit;
+        color: var(--colour-middle);
+        margin: unset;
+
+        &.gallery-image-report {
+            color: var(--colour-lower);
+            padding-left: calc(15px + 3px);
+
+            &:before {
+                background-image: var(--cdn-flatness-sprites-21-icons);
+                background-position: 0 -520px;
+                --top: 1px;
+            }
+        }
+    }
+    .gallery-image-title {
+        /*color: var(--header-text-black);
+        font-size: 17px;
+        margin: 0.15em 0 0 0 !important;
+        font-weight: bold;
+        line-height: 1.2em;*/
+        /* relocated */
+        display: none;
+    }
+
+
 
 
     .avatar-status-dot {
@@ -3534,6 +3573,11 @@
         .shout-user-avatar & {
             --size: 8px;
         }
+    }
+
+
+    .buffer-standard:has(.similar-items-sidebar) {
+        display: none;
     }
 
 
