@@ -3147,7 +3147,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                             Hide all features not available in the time period (within reason)
                                         </label>
                                         <div class="alert">
-                                            Keep in mind, this will hide features such as obsessions, listening reports, and more. This is configurable on a case-by-case basis in settings.
+                                            Keep in mind, this will hide features such as obsessions, listening reports, and more. This is configurable on a case-by-case basis in <a href="${root}bwaa">the settings</a>.
                                         </div>
                                     </div>
                                 </div>
