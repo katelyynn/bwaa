@@ -2266,7 +2266,7 @@
         }
     }
 
-    .section-with-separator:has(.sidebar-image-list),
+    .section-with-separator:has(.sidebar-image-list, .about-artist, .catalogue-overview-similar-artists),
     .external-links-section,
     form[action*="/playlists/create/"],
     .profile-album-section ~ .section-with-separator:has(.metadata-and-wiki-row),
@@ -2663,6 +2663,14 @@
                 opacity: 0.2;
             }
         }
+    }
+    .shouting-unavailable {
+        padding: unset;
+        margin-top: 15px;
+        border-bottom: 1px dotted var(--border);
+    }
+    .shout-list {
+        margin-top: 15px;
     }
     .shout-list-item .shout-list-item .shout-container {
         padding-top: unset;
@@ -4462,6 +4470,11 @@
     .buffer-3 {
         margin-top: 15px;
     }
+    .your-progress-component {
+        [data-bwaa--hide_your_progress="true"] & {
+            display: none;
+        }
+    }
     .your-progress {
         margin-top: calc(15px - 7px);
 
@@ -4501,6 +4514,19 @@
         }
         .btn-subscribe {
             margin: unset;
+        }
+    }
+
+
+    .secondary-nav-item--listening-report,
+    .promo-v3 {
+        [data-bwaa--hide_listening_reports="true"] & {
+            display: none;
+        }
+    }
+    .secondary-nav-item--obsessions {
+        [data-bwaa--hide_obsessions="true"] & {
+            display: none;
         }
     }
 

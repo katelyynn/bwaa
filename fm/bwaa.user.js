@@ -744,6 +744,41 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="date">${date}</div>
                 `);
             });
+
+
+
+
+            // recent activity
+            let recent_activity_section = document.createElement('section');
+            recent_activity_section.classList.add('recent-activity-section');
+            recent_activity_section.innerHTML = (`
+                <h2>Recent Activity</h2>
+            `);
+
+            let recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+
+            let recent_activity = document.createElement('div');
+            recent_activity.classList.add('recent-activity');
+
+            recent_activity_list.forEach((activity) => {
+                let activity_item = document.createElement('div');
+                activity_item.classList.add('activity-item', 'journal-like', `activity--${activity.type}`);
+
+                activity_item.innerHTML = (`
+                    <div class="title">${activity.description}</div>
+                    <div class="date">${activity.date}</div>
+                `);
+
+                recent_activity.appendChild(activity_item);
+            });
+
+            recent_activity_section.appendChild(recent_activity);
+
+            let stationlinks = col_sidebar.querySelector('.stationlinks');
+            if (stationlinks != null)
+                col_sidebar.insertBefore(recent_activity_section, stationlinks);
+            else
+                col_sidebar.insertBefore(recent_activity_section, col_sidebar.firstElementChild);
         } else {
             // profile non-overview stuff
 
