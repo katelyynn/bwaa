@@ -1098,7 +1098,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 plays: abbr_statistic(artist_metadata[1].querySelector('abbr')),
                 listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
             }
-            page.name = header_user_data.name;
+            page.name = header_artist_data.name;
             page.sister = '';
 
 
@@ -1377,19 +1377,19 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (subpage_title == undefined)
                 subpage_title = col_main.querySelector(':scope > h2');
 
-            let header_user_data = {
+            let header_artist_data = {
                 avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
                 name: artist_header.querySelector('.header-new-title').textContent,
                 link: artist_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
                 page: subpage_title.textContent
             }
-            page.name = header_user_data.name;
+            page.name = header_artist_data.name;
             page.sister = '';
 
             let new_header = generic_subpage_header(
-                header_user_data.avatar,
-                header_user_data.name,
-                header_user_data.page,
+                header_artist_data.avatar,
+                header_artist_data.name,
+                header_artist_data.page,
                 'artist'
             );
 
