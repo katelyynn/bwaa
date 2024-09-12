@@ -1433,7 +1433,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return;
         album_header.setAttribute('data-bwaa', 'true');
 
-        page_type = 'album';
+        page.type = 'album';
 
         let is_subpage = album_header.classList.contains('header-new--subpage');
 
