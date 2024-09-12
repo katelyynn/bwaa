@@ -2886,7 +2886,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <section id="welcome" class="form-section settings-form">
                     <h2 class="form-header">About</h2>
                     <p>bwaa is an extension for Last.fm by <a href="${root}user/cutensilly">cutensilly</a> with the aim to bring back the 2012 look of Last.fm. At the moment, it is a one girl project - but community contributions are welcome! <i class="subtext">(if the code is readable that is)</i></p>
-                    <div class="alert">
+                    <div class="alert alert-danger">
                         bwaa is beta software, this is a large project so adjust your expectations to fit <3
                     </div>
                     <fieldset>
