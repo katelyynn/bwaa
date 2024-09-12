@@ -2611,7 +2611,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--hide_your_progress">
                                     <input id="setting--hide_your_progress" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Hide your progress component
+                                    Hide your weekly progress
                                 </label>
                             </div>
                         </div>
@@ -2929,104 +2929,61 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 <h1>Setup bwaa</h1>
                             </div>
                         </section>
-                        <nav class="navlist secondary-nav navlist--more">
-                            <ul class="navlist-items">
-                                <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_setup_page('home')">
-                                        Home
-                                    </a>
-                                </li>
-                                <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="page2" onclick="_change_setup_page('page2')">
-                                        Page 2
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div id="bleh-setup-inject"></div>
+                        <section id="welcome" class="form-section settings-form">
+                            <h2 class="form-header">Thank you for installing!</h2>
+                            <p>bwaa is an extension for Last.fm by <a href="${root}user/cutensilly">cutensilly</a> with the aim to bring back the 2012 look of Last.fm. Since it’s you’re first time installing, here’s a quick setup to get you going. You can configure bwaa at anytime by visiting <a href="${root}bwaa">Settings</a> :3</p>
+                            <fieldset>
+                                <legend>What era suits you best?</legend>
+                                <div class="form-group">
+                                    <div class="radio-box">
+                                        <label for="setting--setup_choose_era--2010">
+                                            <input id="setting--setup_choose_era--2010" type="radio" value="2010" name="setup_choose_era" onchange="_notify_radio_change(this)">
+                                            2010 <i class="subtext">(WIP)</i>
+                                        </label>
+                                    </div>
+                                    <div class="radio-box">
+                                        <label for="setting--setup_choose_era--2012">
+                                            <input id="setting--setup_choose_era--2012" type="radio" value="2012" name="setup_choose_era" checked onchange="_notify_radio_change(this)">
+                                            2012 <i class="subtext">(default, most optimised)</i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>How should modern features be treated?</legend>
+                                <div class="form-group">
+                                    <div class="radio-box">
+                                        <label for="setting--setup_modern_visibility--true">
+                                            <input id="setting--setup_modern_visibility--true" type="radio" value="true" name="setup_modern_visibility" checked onchange="_notify_radio_change(this)">
+                                            Keep visible and attempt to blend in
+                                        </label>
+                                    </div>
+                                    <div class="radio-box">
+                                        <label for="setting--setup_modern_visibility--false">
+                                            <input id="setting--setup_modern_visibility--false" type="radio" value="false" name="setup_modern_visibility" onchange="_notify_radio_change(this)">
+                                            Hide all features not available in the time period (within reason)
+                                        </label>
+                                        <div class="alert">
+                                            Keep in mind, this will hide features such as obsessions, listening reports, and more. This is configurable on a case-by-case basis in settings.
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="more-link align-right">
+                                <a href="${root}bwaa">Configure more of bwaa</a>
+                            </div>
+                            <div class="more-link align-right">
+                                <a href="${root}user/${auth}">Head to your profile</a>
+                            </div>
+                            <fieldset>
+                                <legend>Support bwaa</legend>
+                                <div class="alert">If you end up enjoying bwaa you can <a href="https://github.com/katelyynn/bwaa" target="_blank">star the project</a> <i class="subtext">(if you have GitHub)</i> and/or share the word around! <3</alert>
+                            </fieldset>
+                        </section>
                     </div>
                 </div>
             </div>
         `);
-
-
-        change_setup_page('home');
-    }
-
-    unsafeWindow._change_setup_page = function(page) {
-        change_setup_page(page);
-    }
-    function change_setup_page(page) {
-        let tabs = document.querySelectorAll('.bwaa-settings-tab');
-        tabs.forEach((tab) => {
-            if (tab.getAttribute('data-bwaa-tab') != page) {
-                tab.classList.remove('secondary-nav-item-link--active');
-            } else {
-                tab.classList.add('secondary-nav-item-link--active');
-            }
-        });
-
-        render_setup_page(page, document.getElementById('bleh-setup-inject'));
-    }
-
-    function render_setup_page(page, injector) {
-        if (page == 'home') {
-            injector.innerHTML = (`
-                <section id="welcome" class="form-section settings-form">
-                    <h2 class="form-header">Thank you for installing!</h2>
-                    <p>bwaa is an extension for Last.fm by <a href="${root}user/cutensilly">cutensilly</a> with the aim to bring back the 2012 look of Last.fm. Since it’s you’re first time installing, here’s a quick setup to get you going. You can configure bwaa at anytime by visiting <a href="${root}bwaa">Settings</a> :3</p>
-                    <fieldset>
-                        <legend>What era suits you best?</legend>
-                        <div class="form-group">
-                            <div class="radio-box">
-                                <label for="setting--setup_choose_era--2010">
-                                    <input id="setting--setup_choose_era--2010" type="radio" value="2010" name="setup_choose_era" onchange="_notify_radio_change(this)">
-                                    2010 <i class="subtext">(WIP)</i>
-                                </label>
-                            </div>
-                            <div class="radio-box">
-                                <label for="setting--setup_choose_era--2012">
-                                    <input id="setting--setup_choose_era--2012" type="radio" value="2012" name="setup_choose_era" checked onchange="_notify_radio_change(this)">
-                                    2012 <i class="subtext">(default, most optimised)</i>
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>How should modern features be treated?</legend>
-                        <div class="form-group">
-                            <div class="radio-box">
-                                <label for="setting--setup_modern_visibility--true">
-                                    <input id="setting--setup_modern_visibility--true" type="radio" value="true" name="setup_modern_visibility" checked onchange="_notify_radio_change(this)">
-                                    Keep visible and attempt to blend in
-                                </label>
-                            </div>
-                            <div class="radio-box">
-                                <label for="setting--setup_modern_visibility--false">
-                                    <input id="setting--setup_modern_visibility--false" type="radio" value="false" name="setup_modern_visibility" onchange="_notify_radio_change(this)">
-                                    Hide all features not available in the time period (within reason)
-                                </label>
-                                <div class="alert">
-                                    Keep in mind, this will hide features such as obsessions, listening reports, and more. This is configurable on a case-by-case basis in settings.
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <div class="more-link align-right">
-                        <a href="${root}bwaa">Configure more of bwaa</a>
-                    </div>
-                    <div class="more-link align-right">
-                        <a href="${root}user/${auth}">Head to your profile</a>
-                    </div>
-                    <fieldset>
-                        <legend>Support bwaa</legend>
-                        <div class="alert">If you end up enjoying bwaa you can <a href="https://github.com/katelyynn/bwaa" target="_blank">star the project</a> <i class="subtext">(if you have GitHub)</i> and/or share the word around! <3</alert>
-                    </fieldset>
-                </section>
-            `);
-        } else if (page == 'page2') {
-            injector.innerHTML = '<p>o.O</p>';
-        }
     }
 
     function radio_update(setting, value) {
