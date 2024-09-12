@@ -767,6 +767,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             // recent activity
+            if (auth != header_user_data.name)
+                return;
+
             let recent_activity_section = document.createElement('section');
             recent_activity_section.classList.add('recent-activity-section');
             recent_activity_section.innerHTML = (`
@@ -800,7 +803,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     else if (involved.type == 'album')
                         involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
                     else if (involved.type == 'track')
-                        involved_link = `${root}user/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+                        involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
 
                     if (involved_text != '')
                         involved_text = `${involved_text}, <a href="${involved_link}">${involved.name}</a>`;
