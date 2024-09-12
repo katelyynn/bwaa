@@ -2656,8 +2656,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                     </a>
                                 </li>
                                 <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="page2" onclick="_change_settings_page('page2')">
-                                        Page 2
+                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="about" onclick="_change_settings_page('about')">
+                                        About
                                     </a>
                                 </li>
                             </ul>
@@ -2881,8 +2881,37 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             `);
 
             request_checkbox_update();
-        } else if (page == 'page2') {
-            injector.innerHTML = '<p>o.O</p>';
+        } else if (page == 'about') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">About</h2>
+                    <p>bwaa is an extension for Last.fm by <a href="${root}user/cutensilly">cutensilly</a> with the aim to bring back the 2012 look of Last.fm. At the moment, it is a one girl project - but community contributions are welcome! <i class="subtext">(if the code is readable that is)</i></p>
+                    <div class="alert">
+                        bwaa is beta software, this is a large project so adjust your expectations to fit <3
+                    </div>
+                    <fieldset>
+                        <legend>Did you find a bug?</legend>
+                        <div class="form-group">
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/katelyynn/bwaa/issues/" target="_blank">Submit a report or browse for one existing</a>
+                            </div>
+                        </div>
+                        <div class="alert">
+                            If you are using an ESR version of Firefox, please consider switching to the usual stable builds for stability.
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>How can I support?</legend>
+                        <div class="form-group">
+                            <p>At the moment, the best way to support is sharing the word around to others you think may enjoy and giving the project a star.</p>
+                            <p>If you would like to donate, that will be available in the future but that is obviously not expected.</p>
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/katelyynn/bwaa/" target="_blank">Star the project</a>
+                            </div>
+                        </div>
+                    </fieldset>
+                </section>
+            `);
         }
     }
 
@@ -3131,7 +3160,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             </div>
                             <fieldset>
                                 <legend>Support bwaa</legend>
-                                <div class="alert">If you end up enjoying bwaa you can <a href="https://github.com/katelyynn/bwaa" target="_blank">star the project</a> <i class="subtext">(if you have GitHub)</i> and/or share the word around! <3</alert>
+                                <div class="alert">If you find yourself enjoying bwaa, share the word around to others! You can additionally <a href="https://github.com/katelyynn/bwaa" target="_blank">star the project</a> <i class="subtext">(if you have GitHub)</i> if you would like. <3</alert>
                             </fieldset>
                         </section>
                     </div>
