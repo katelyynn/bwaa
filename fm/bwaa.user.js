@@ -924,7 +924,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let new_header = generic_subpage_header(
                 header_user_data.avatar.getAttribute('src'),
-                header_user_data.name,
                 header_user_data.page
             );
 
@@ -1387,7 +1386,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let new_header = generic_subpage_header(
                 header_artist_data.avatar,
-                header_artist_data.name,
                 header_artist_data.page,
                 'artist'
             );
@@ -1753,9 +1751,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let new_header = generic_subpage_header(
                 header_album_data.avatar,
-                header_album_data.name,
                 header_album_data.page,
-                header_album_data.artist,
                 'album'
             );
 
@@ -2082,9 +2078,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let new_header = generic_subpage_header(
                 header_track_data.avatar,
-                header_track_data.name,
                 header_track_data.page,
-                header_track_data.artist,
                 'track'
             );
 
@@ -2110,29 +2104,27 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     /**
      * subpage header creator for profiles, artists, albums, and tracks
      * @param {string} avatar avatar url
-     * @param {string} user_name name used for small text for profile, artist, track, or album name
      * @param {string} header_title main header text
-     * @param {string} additional_user_reference artist name linked to track/album (not required)
      * @param {string} link_type type of header, controls how top link is created (defaults to user)
      * @returns subpage header
      */
-    function generic_subpage_header(avatar, user_name, header_title, additional_user_reference='', link_type='user') {
+    function generic_subpage_header(avatar, header_title, link_type='user') {
         // determines top text link
-        let link_field = `<a href="${root}user/${sanitise(user_name)}">${user_name}</a>`;
+        let link_field = `<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
 
         // not a user
         if (link_type == 'artist')
-            link_field = `<a href="${root}music/${sanitise(user_name)}">${sanitise(user_name)}</a>`;
+            link_field = `<a href="${root}music/${sanitise(page.name)}">${sanitise(page.name)}</a>`;
         else if (link_type == 'album')
-            link_field = `<a href="${root}music/${sanitise(additional_user_reference)}/${sanitise(user_name)}">${user_name}</a>`;
+            link_field = `<a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${page.name}</a>`;
         else if (link_type == 'track')
-            link_field = `<a href="${root}music/${sanitise(additional_user_reference)}/_/${sanitise(user_name)}">${user_name}</a>`;
+            link_field = `<a href="${root}music/${sanitise(page.sister)}/_/${sanitise(page.name)}">${page.name}</a>`;
 
         let new_header = document.createElement('section');
         new_header.classList.add('profile-header-subpage-section');
         new_header.innerHTML = (`
             <div class="badge-avatar">
-                <img src="${avatar}" alt="${user_name}">
+                <img src="${avatar}" alt="${page.name}">
             </div>
             <div class="badge-info">
                 ${link_field}
@@ -2564,7 +2556,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let new_header = generic_subpage_header(
             obsession_wrap.querySelector('.obsession-details-intro-avatar-wrap img').getAttribute('src'),
-            obsession_author,
             `Music <a href="${root}user/${obsession_author}/obsessions">Obsession</a>`
         );
 
@@ -2634,6 +2625,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (!document.body.classList[2].startsWith('namespace--settings'))
             return;
 
+        page.type = 'settings';
+        page.name = auth;
+
         let page_content = document.querySelector('.page-content');
 
         if (page_content.hasAttribute('data-bwaa'))
@@ -2675,7 +2669,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let new_header = generic_subpage_header(
             my_avi,
-            auth,
             'Your Account Settings'
         );
         col_main.insertBefore(new_header, col_main.firstElementChild);
@@ -2691,6 +2684,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (adaptive_skin == null)
             return;
         adaptive_skin.setAttribute('data-bwaa', 'true');
+
+        page.type = 'bwaa_settings';
+        page.name = auth;
 
         adaptive_skin.innerHTML = '';
         document.title = 'configure your bwaa | Last.fm';
@@ -3162,6 +3158,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return;
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
+        page.type = 'bwaa_settings';
+        page.name = auth;
+
         deliver_notif(`bwaa has installed successfully, welcome aboard!`);
 
         adaptive_skin.innerHTML = '';
@@ -3495,7 +3494,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let new_header = generic_subpage_header(
             my_avi,
-            playlist_info.user_name,
             'Playlists'
         );
 
