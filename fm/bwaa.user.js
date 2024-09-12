@@ -332,7 +332,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
                     if (node instanceof Element) {
-                        console.info(node.className);
                         if (node.classList[0] == 'modal-dialog') {
                             // this is a silly hack to ensure modals get themed, as the creation of this element
                             // causes another run of this script, giving enough time for the modal to load
@@ -342,7 +341,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
                         if (!node.hasAttribute('data-bwaa')) {
                             node.setAttribute('data-bwaa', 'true');
-                            console.info('node', node);
 
                             console.info('bwaa - bwaa\'ing');
 
@@ -937,7 +935,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 name: artist_header.querySelector('.header-new-title').textContent,
                 link: window.location.href,
                 photos: artist_header.querySelector('.header-new-gallery-inner').textContent,
-                plays: artist_metadata[1].querySelector('abbr').textContent,
+                plays: abbr_statistic(artist_metadata[1].querySelector('abbr')),
                 listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
             }
 
@@ -1365,7 +1363,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 artist: album_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
                 link: window.location.href,
-                plays: album_metadata[1].querySelector('abbr').textContent,
+                plays: abbr_statistic(album_metadata[1].querySelector('abbr')),
                 listeners: album_metadata[0].querySelector('abbr').getAttribute('title'),
                 add_artwork: add_artwork
             }
@@ -1676,7 +1674,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 artist: track_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
                 link: window.location.href,
-                plays: track_metadata[1].querySelector('abbr').getAttribute('title'),
+                plays: abbr_statistic(track_metadata[1].querySelector('abbr')),
                 listeners: track_metadata[0].querySelector('abbr').getAttribute('title'),
                 primary_album: document.body.querySelector('.source-album-name a')
             }
@@ -3432,5 +3430,19 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         // remove leftovers
         let row_buffer = document.querySelector('.row._buffer');
         page_content.removeChild(row_buffer);
+    }
+
+
+
+
+    function abbr_statistic(element) {
+        let count = parseInt(element.getAttribute('title').replaceAll(',', '').replaceAll('.', ''));
+
+        console.info(count);
+
+        if (count >= 100_000_000)
+            return element.textContent;
+        else
+            return element.getAttribute('title');
     }
 })();
