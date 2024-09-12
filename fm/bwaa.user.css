@@ -3126,6 +3126,12 @@
             &.activity--image_upload:before {
                 background-position: 0 -1440px;
             }
+            &.activity--update_bwaa:before {
+                background-position: -17px -400px;
+            }
+            &.activity--install_bwaa:before {
+                background-position: -17px -400px;
+            }
 
             flex-direction: row;
             flex-wrap: wrap;

@@ -104,7 +104,9 @@ const trans = {
             obsession_set: 'You’re obsessed with {i}',
             obsession_remove: 'You’re no longer obsessed with {i}',
             love: 'You love {i}',
-            unlove: 'You no longer love {i}'
+            unlove: 'You no longer love {i}',
+            install_bwaa: 'You installed bwaa{i}',
+            update_bwaa: 'You updated bwaa to {i}'
         }
     }
 }
@@ -332,8 +334,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (auth == '')
             return;
 
-        notify_if_new_update();
         load_activities();
+        notify_if_new_update();
 
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
             // start bwaa settings
@@ -804,6 +806,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
                     else if (involved.type == 'track')
                         involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+                    else if (involved.type == 'bwaa')
+                        involved_link = `${root}bwaa`;
 
                     if (involved_text != '')
                         involved_text = `${involved_text}, <a href="${involved_link}">${involved.name}</a>`;
@@ -3295,12 +3299,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (last_version_used == '') {
             window.location.href = `${root}bwaa/setup`;
             localStorage.setItem('bwaa_last_version_used', version.build);
+            register_activity('install_bwaa', [], `${root}bwaa`);
             return;
         }
 
         // otherwise, it's a usual update
         if (last_version_used != version.build) {
             deliver_notif(`bwaa has updated to ${version.build}.${version.sku}, welcome aboard!`, false, false, true);
+            register_activity('update_bwaa', [{name: version.build, type: 'bwaa'}], `${root}bwaa`);
             localStorage.setItem('bwaa_last_version_used', version.build);
         }
     }
