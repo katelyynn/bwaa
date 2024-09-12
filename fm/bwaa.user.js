@@ -22,7 +22,7 @@ let version = {
     sku: 'sweet'
 }
 
-let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »`;
+let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
 
 // loads your selected language in last.fm
 let lang;
@@ -128,11 +128,11 @@ function lookup_lang() {
     }
 }
 
-/*tippy.setDefaultProps({
+tippy.setDefaultProps({
     arrow: false,
     duration: [100, 300],
     delay: [null, 50]
-});*/
+});
 
 let settings;
 let settings_defaults = {
@@ -806,6 +806,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
                 let involved_text = '';
 
+                let tooltip_name;
+                let tooltip_sister;
+
                 activity.involved.forEach((involved) => {
                     let involved_link;
 
@@ -819,6 +822,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
                     else if (involved.type == 'bwaa')
                         involved_link = `${root}bwaa`;
+
+                    // tooltip
+                    if (involved.type != 'user' && involved.type != 'bwaa') {
+                        tooltip_name = involved.name;
+                        tooltip_sister = involved.sister;
+                    }
 
                     if (involved_text != '')
                         involved_text = `${involved_text}, <a href="${involved_link}">${involved.name}</a>`;
@@ -853,6 +862,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 `);
 
                 recent_activity_section.appendChild(activity_item);
+
+                if (tooltip_name != undefined)
+                    tippy(activity_item.querySelector('.title a'), {
+                        content: `${tooltip_sister} - ${tooltip_name}`
+                    });
             });
 
             let stationlinks = col_sidebar.querySelector('.stationlinks');
@@ -3775,7 +3789,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             post_shouts_btn.addEventListener('click', (event) => {
                 console.info('bwaa - heard event', event);
 
-                // wait 1.5s
+                // wait 0.2s
                 window.setTimeout(function() {
                     let actual_btn = document.body.querySelector('.btn-post-shout[data-bwaa-subscribed]');
 
@@ -3786,7 +3800,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         return;
 
                     register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
-                }, 1500);
+                }, 200);
             }, false);
         }
     }
