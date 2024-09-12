@@ -101,7 +101,9 @@ const trans = {
             shout: 'You posted a shout for {i}',
             image_upload: 'You uploaded an image for {i}',
             obsession_set: 'You’re obsessed with {i}',
-            obsession_remove: 'You’re no longer obsessed with {i}'
+            obsession_remove: 'You’re no longer obsessed with {i}',
+            love: 'You love {i}',
+            unlove: 'You no longer love {i}'
         }
     }
 }
@@ -351,6 +353,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_library();
             bwaa_media_items();
             bwaa_playlists();
+            subscribe_to_events();
         }
 
         // last.fm is a single page application, this will be on the lookout
@@ -400,6 +403,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_library();
                                 bwaa_media_items();
                                 bwaa_playlists();
+                                subscribe_to_events();
                             }
                         }
                     }
@@ -2823,6 +2827,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="more-link align-right">
                         <a onclick="_register_activity('shout', [{name: 'Short n\\' Sweet', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new shout (album) activity</a>
                     </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('obsession_set', [{name: 'Taste', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new obsession activity</a>
+                    </div>
                 </section>
             `);
 
@@ -3640,5 +3647,27 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         console.info('bwaa - saved recent activities', recent_activity_list);
         localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
+    }
+
+
+
+
+    function subscribe_to_events() {
+        let chartlist_love = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bwaa-subscribed])`);
+        chartlist_love.forEach((form) => {
+            form.setAttribute('data-bwaa-subscribed', 'true');
+
+            let action = form.querySelector('[name="action"]').getAttribute('value');
+            let track = form.querySelector('[name="track"]').getAttribute('value');
+            let artist = form.querySelector('[name="artist"]').getAttribute('value');
+
+            console.info('form', action, track, artist, form);
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                console.info('heard');
+                register_activity(action, [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
+            }, false);
+        });
     }
 })();

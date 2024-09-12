@@ -3097,6 +3097,21 @@
             background-position: 0 -1480px;
         }
 
+        &.activity-item {
+            &.activity--shout:before {
+                background-position: 0 -1440px;
+            }
+            &.activity--obsession_set:before {
+                background-position: 0 -1660px;
+            }
+
+            .title {
+                a:not(:first-child):not(:hover) {
+                    color: var(--text-link);
+                }
+            }
+        }
+
         color: var(--colour);
         text-decoration: none !important;
 
@@ -3107,6 +3122,10 @@
         &:hover .title {
             text-decoration: underline;
             color: var(--text-link);
+
+            a {
+                color: inherit !important;
+            }
         }
 
         .title {
