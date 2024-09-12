@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0911
+// @version      2024.0912
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -17,7 +17,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0911',
+    build: '2024.0912',
     sku: 'sweet'
 }
 
@@ -99,8 +99,13 @@ const trans = {
     }
 }
 
+/**
+ * lookup information function, used for realtime language changing mainly,
+ * keeping the 'root' variable accurate
+ */
 function lookup_lang() {
     root = document.querySelector('.masthead-logo a').getAttribute('href');
+    my_avi = auth_link.querySelector('img').getAttribute('src');
     lang = document.documentElement.getAttribute('lang');
     non_override_lang = lang;
 
@@ -270,6 +275,13 @@ let profile_badges = {
 let auth = '';
 let auth_link = '';
 
+// stores ur current authorised avatar
+let my_avi = '';
+
+// stores the current root of the page, most applicable in other languages:
+// en: /
+// jp: /jp/
+// etc.
 let root = '';
 
 let bwaa_url = 'https://www.last.fm/bwaa';
@@ -291,8 +303,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     function bwaa() {
         console.info('bwaa - starting up');
 
-        // essentials
+        // replace favicon with 2012 favicon
         document.head.querySelector('link[rel="icon"]').setAttribute('href', 'https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico');
+        // essentials
         lookup_lang();
         load_settings();
         bwaa_load_header();
@@ -301,6 +314,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         bwaa_lastfm_settings();
         bwaa_footer();
 
+        // everything past this point requires authorisation
         if (auth == '')
             return;
 
@@ -327,7 +341,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_playlists();
         }
 
-        // last.fm is a single page application
+        // last.fm is a single page application, this will be on the lookout
+        // for new elements being added so they can be patched if needed
         const observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
@@ -2051,6 +2066,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
 
+    /**
+     * converts tag page on artists/albums/tracks into a tag cloud
+     * @param {element} col_main .col-main
+     */
     function generic_tag_patch(col_main) {
         let tag_section_container = col_main.querySelector('.profile-header-subpage-section + section');
 
@@ -2314,6 +2333,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
     // load settings
+    /**
+     * loads settings from localStorage, applies to page, then stores as 'settings' variable
+     */
     function load_settings() {
         settings = JSON.parse(localStorage.getItem('bwaa')) || create_settings_template();
 
@@ -2335,6 +2357,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * actual obsession view
+     */
     function bwaa_obsessions() {
         let obsession_container = document.querySelector('.obsession-container:not([data-bwaa="true"])');
 
@@ -2411,6 +2436,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * global last.fm settings injector, used to remove .content-form styling and inject bwaa navlist
+     */
     function bwaa_lastfm_settings() {
         console.info('bwaa - last.fm settings host');
 
@@ -2562,6 +2590,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         render_settings_page(page, document.getElementById('bleh-settings-inject'));
     }
 
+    /**
+     * render a bwaa settings page
+     * @param {string} page page id (eg. home)
+     * @param {element} injector element to create html inside of
+     */
     function render_settings_page(page, injector) {
         if (page == 'home') {
             injector.innerHTML = (`
@@ -2789,6 +2822,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * creates the realistic 2012-esc footer
+     */
     function bwaa_footer() {
         let footer = document.querySelector('.footer:not([data-bwaa="true"]');
 
@@ -2843,6 +2879,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * profile library component
+     */
     function bwaa_library() {
         bwaa_library_header();
 
@@ -2872,6 +2911,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             track.appendChild(album_name_col);
         });
     }
+    /**
+     * very small profile library header function to replace separators with '|'
+     */
     function bwaa_library_header() {
         let library_header = document.querySelector('.library-header:not([data-bwaa])');
 
@@ -2885,6 +2927,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * first-time bwaa setup loader
+     */
     function bwaa_setup() {
         console.info('bwaa - loading first-time setup');
         let adaptive_skin = document.querySelector('.adaptive-skin-container:not([data-bwaa="true"])');
@@ -3081,6 +3126,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }, 200);
     }
 
+    /**
+     * fixes modals not inheriting styles by creating a temporary element to trigger reflow or whatever
+     */
     function fix_modal() {
         let fix = document.createElement('div');
         fix.classList.add('modal-fixer');
@@ -3096,6 +3144,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * notify user if new update and stores in localStorage for next time
+     * @returns if first-time installing, redirect to setup
+     */
     function notify_if_new_update() {
         let last_version_used = localStorage.getItem('bwaa_last_version_used') || '';
 
@@ -3116,6 +3168,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * if legacy_cover_art is enabled, cover arts will be ran thru and replaced if contained in 'legacy_cover_art' array, along with replacing fallback artwork
+     */
     function bwaa_media_items() {
         if (!settings.legacy_cover_art)
             return;
@@ -3184,7 +3239,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
-    // run on playlists
+    /**
+     * create playlist view
+     */
     function bwaa_playlists() {
         console.info('bwaa - playlists');
 
@@ -3360,6 +3417,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * creates profile obsession list by looping thru obsession items and created grid-items
+     * @param {element} page_content .page-content
+     * @param {element} col_main .col-main
+     * @param {element} col_sidebar .col-sidebar
+     */
     function bwaa_obsessions_list(page_content, col_main, col_sidebar) {
         let obsession_list = document.createElement('section');
         obsession_list.classList.add('obsession-list', 'grid-items');
@@ -3435,6 +3498,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    /**
+     * abbreviate scrobble statistic if necessary
+     * @param {element} element specifically an artist/album/track SCROBBLE count's .abbr element
+     * @returns abbreviated scrobble count if over 100M or raw count
+     */
     function abbr_statistic(element) {
         let count = parseInt(element.getAttribute('title').replaceAll(',', '').replaceAll('.', ''));
 
