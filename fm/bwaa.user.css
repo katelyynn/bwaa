@@ -2079,14 +2079,17 @@
         width: unset;
 
         h3 {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .more-link-fullwidth-right {
+            margin-top: 15px !important;
         }
 
         .source-album,
         li {
             position: relative;
             margin: unset !important;
-            margin-bottom: 15px !important;
             padding: 0 15px 0 85px !important;
             min-height: 70px;
             overflow: hidden;
