@@ -106,7 +106,9 @@ const trans = {
             love: 'You love {i}',
             unlove: 'You no longer love {i}',
             install_bwaa: 'You installed bwaa{i}',
-            update_bwaa: 'You updated bwaa to {i}'
+            update_bwaa: 'You updated bwaa to {i}',
+            bookmark: 'You bookmarked {i}',
+            unbookmark: 'You removed {i}’s bookmark'
         }
     }
 }
@@ -1411,22 +1413,26 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
     }
 
-    function update_bookmark_btn(button) {
+    function update_bookmark_btn(button, modify=true) {
         let action = button.getAttribute('data-analytics-action');
         console.info('action', action);
         if (action.startsWith('Bookmark')) {
+            if (modify) register_activity('unbookmark', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             button.innerHTML = '<strong>Add to my Library</strong>';
         } else {
-            button.innerHTML = '<strong>Added to my Library</strong>'
+            if (modify) register_activity('bookmark', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+            button.innerHTML = '<strong>Added to my Library</strong>';
         }
     }
-    function update_love_btn(button) {
+    function update_love_btn(button, modify=true) {
         let action = button.getAttribute('data-analytics-action');
         console.info('action', action);
         if (action.startsWith('Love')) {
+            if (modify) register_activity('unlove', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             button.innerHTML = '<strong>Love this track</strong>';
         } else {
-            button.innerHTML = '<strong>You love this track</strong>'
+            if (modify) register_activity('love', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+            button.innerHTML = '<strong>You love this track</strong>';
         }
     }
 
@@ -1965,11 +1971,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             col_main.insertBefore(new_header, col_main.firstChild);
             track_header.style.setProperty('display', 'none');
 
-            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
+            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'), false);
             col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
                 update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
             });
-            update_love_btn(col_main.querySelector('.header-new-love-button'));
+            update_love_btn(col_main.querySelector('.header-new-love-button'), false);
             col_main.querySelector('.header-new-love-button').addEventListener('click', (e) => {
                 update_love_btn(col_main.querySelector('.header-new-love-button'));
             });

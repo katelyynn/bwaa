@@ -3137,6 +3137,13 @@
             &.activity--install_bwaa:before {
                 background-position: -17px -400px;
             }
+            &.activity--bookmark:before {
+                background-position: 0 -1720px;
+            }
+            &.activity--unbookmark:before {
+                background-position: 0 -1720px;
+                filter: saturate(0.2);
+            }
 
             flex-direction: row;
             flex-wrap: wrap;
