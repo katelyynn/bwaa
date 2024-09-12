@@ -622,6 +622,11 @@
         font-weight: bold;
         line-height: 20px;
 
+        /* display over vertical dotted line */
+        position: relative;
+        z-index: 3;
+
+        &.user-type--cute,
         &.user-type--subscriber {
             background: var(--user-type-banner);
         }

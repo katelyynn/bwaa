@@ -736,12 +736,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             profile_header.style.setProperty('display', 'none');
 
             // user type
-            /*if (user_type != 'user') {
+            if (header_user_data.name == 'cutensilly') {
                 let user_type_banner = document.createElement('div');
-                user_type_banner.classList.add('user-type-banner', `user-type--${user_type}`);
-                user_type_banner.textContent = trans[lang].profile.user_types[user_type];
+                user_type_banner.classList.add('user-type-banner', `user-type--cute`);
+                user_type_banner.textContent = 'bwaa creator';
                 row.insertBefore(user_type_banner, col_main);
-            }*/
+            }
 
 
 
