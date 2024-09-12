@@ -285,6 +285,9 @@ let my_avi = '';
 // etc.
 let root = '';
 
+// recent activity
+let recent_activity_list;
+
 let bwaa_url = 'https://www.last.fm/bwaa';
 let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
@@ -320,6 +323,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return;
 
         notify_if_new_update();
+        load_activities();
 
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
             // start bwaa settings
@@ -367,6 +371,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
                             bwaa_lastfm_settings();
                             bwaa_footer();
+
+                            load_activities();
 
                             if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
                                 // start bwaa settings
@@ -755,7 +761,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <h2>Recent Activity</h2>
             `);
 
-            let recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+            recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
 
             let recent_activity = document.createElement('div');
             recent_activity.classList.add('recent-activity');
@@ -2773,6 +2779,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="more-link align-right">
                         <a href="${root}bwaa/setup">Enter first-time setup</a>
                     </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('test', ['cutensilly'])">Register a new test activity</a>
+                    </div>
                 </section>
             `);
 
@@ -3540,5 +3549,53 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return element.textContent;
         else
             return element.getAttribute('title');
+    }
+
+
+
+
+    function load_activities() {
+        recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+        console.info('bwaa - loaded recent activities', recent_activity_list);
+
+        // check if over 10
+        check_activities_length();
+
+        console.info('bwaa - saved recent activities', recent_activity_list);
+        localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
+    }
+
+    function check_activities_length() {
+        if (recent_activity_list.length > 10) {
+            let to_delete = recent_activity_list.length - 10;
+
+            recent_activity_list.splice(0, to_delete);
+            console.info('bwaa - list was over 10, removed leftovers');
+        }
+
+        return recent_activity_list;
+    }
+
+    unsafeWindow._register_activity = function(type, involved, date=new Date()) {
+        register_activity(type, involved, date);
+    }
+    function register_activity(type, involved, date=new Date()) {
+        recent_activity_list.push({
+            type: type,
+            involved: involved,
+            date: date
+        });
+
+        console.info('bwaa - registered new activity', {
+            type: type,
+            involved: involved,
+            date: date
+        });
+
+        // check if over 10
+        check_activities_length();
+
+        console.info('bwaa - saved recent activities', recent_activity_list);
+        localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
     }
 })();
