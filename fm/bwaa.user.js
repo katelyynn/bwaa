@@ -761,6 +761,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <h2>Recent Activity</h2>
             `);
 
+            // we want to show in date order from latest to oldest down
+            // but .reverse() is destructive, so we copy first
             let recent_activity_list_r = recent_activity_list;
             recent_activity_list_r.reverse();
 
@@ -768,6 +770,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             recent_activity.classList.add('recent-activity');
 
             recent_activity_list_r.forEach((activity) => {
+                // type: string,
+                // involved: [{name: string, type: user | artist | album | track}],
+                // context: string,
+                // date: string
+
                 let activity_item = document.createElement('div');
                 activity_item.classList.add('activity-item', 'journal-like', `activity--${activity.type}`);
 
