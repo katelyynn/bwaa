@@ -1504,7 +1504,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             // sidebar
-            let my_avi = auth_link.querySelector('img').getAttribute('src');
             let scrobble_count_element = col_main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
@@ -1826,7 +1825,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             new_header.after(about_this_track);
 
             // sidebar
-            let my_avi = auth_link.querySelector('img').getAttribute('src');
             let scrobble_count_element = col_main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
@@ -2493,7 +2491,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         adaptive_skin.removeChild(content_top);
 
-        let my_avi = auth_link.querySelector('img').getAttribute('src');
         let new_header = generic_subpage_header(
             my_avi,
             auth,
@@ -2515,8 +2512,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         adaptive_skin.innerHTML = '';
         document.title = 'configure your bwaa | Last.fm';
-
-        let my_avi = auth_link.querySelector('img').getAttribute('src');
 
         adaptive_skin.innerHTML = (`
             <div class="container page-content bwaa-settings lastfm-settings subpage">
@@ -2943,8 +2938,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         adaptive_skin.innerHTML = '';
         document.title = 'first-time bwaa | Last.fm';
 
-        let my_avi = auth_link.querySelector('img').getAttribute('src');
-
         adaptive_skin.innerHTML = (`
             <div class="container page-content bwaa-settings lastfm-settings subpage">
                 <div class="row">
@@ -3268,8 +3261,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         playlist_info.publishing_btn = playlist_info.menu.querySelector('li:first-child > div');
         playlist_info.delete_btn = playlist_info.menu.querySelector('li:nth-child(2) > div');
         playlist_info.export_btn = playlist_info.menu.querySelector('li:nth-child(3) > div');
-
-        let my_avi = auth_link.querySelector('img').getAttribute('src');
 
         let new_header = generic_subpage_header(
             my_avi,
