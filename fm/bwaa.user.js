@@ -1194,10 +1194,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             col_main.insertBefore(new_header, col_main.firstChild);
             artist_header.style.setProperty('display', 'none');
 
-            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'), false);
-            col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
-                update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
-            });
+            prep_bookmark_btn(col_main);
 
             // sidebar
 
@@ -1413,27 +1410,48 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
     }
 
-    function update_bookmark_btn(button, modify=true) {
-        let action = button.getAttribute('data-analytics-action');
-        console.info('action', action);
-        if (action.startsWith('Bookmark')) {
-            if (modify) register_activity('unbookmark', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
-            button.innerHTML = '<strong>Add to my Library</strong>';
-        } else {
-            if (modify) register_activity('bookmark', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
-            button.innerHTML = '<strong>Added to my Library</strong>';
-        }
+    function prep_bookmark_btn(col_main) {
+        let btn = col_main.querySelector('.header-new-bookmark-button');
+
+        update_bookmark_btn(btn);
     }
-    function update_love_btn(button, modify=true) {
-        let action = button.getAttribute('data-analytics-action');
-        console.info('action', action);
-        if (action.startsWith('Love')) {
-            if (modify) register_activity('unlove', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
-            button.innerHTML = '<strong>Love this track</strong>';
-        } else {
-            if (modify) register_activity('love', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
-            button.innerHTML = '<strong>You love this track</strong>';
-        }
+    function prep_love_btn(col_main) {
+        let btn = col_main.querySelector('.header-new-love-button');
+
+        update_love_btn(btn);
+    }
+
+    function update_bookmark_btn(button) {
+        button.setAttribute('data-bwaa-fired', 'true');
+
+        // this prevents a reload apparently
+        window.setTimeout(function() {
+            let action = button.getAttribute('data-analytics-action');
+            console.info('action', action);
+            if (action.startsWith('Bookmark')) {
+                button.innerHTML = '<strong>Add to my Library</strong>';
+            } else {
+                button.innerHTML = '<strong>Added to my Library</strong>';
+            }
+
+            button.removeAttribute('data-bwaa-fired');
+        }, 2);
+    }
+    function update_love_btn(button) {
+        button.setAttribute('data-bwaa-fired', 'true');
+
+        // this prevents a reload apparently
+        window.setTimeout(function() {
+            let action = button.getAttribute('data-analytics-action');
+            console.info('action', action);
+            if (action.startsWith('Love')) {
+                button.innerHTML = '<strong>Love this track</strong>';
+            } else {
+                button.innerHTML = '<strong>You love this track</strong>';
+            }
+
+            button.removeAttribute('data-bwaa-fired');
+        }, 2);
     }
 
 
@@ -1600,10 +1618,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             col_main.insertBefore(new_header, col_main.firstChild);
             album_header.style.setProperty('display', 'none');
 
-            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'), false);
-            col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
-                update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
-            });
+            prep_bookmark_btn(col_main);
 
 
             // about this album
@@ -1971,14 +1986,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             col_main.insertBefore(new_header, col_main.firstChild);
             track_header.style.setProperty('display', 'none');
 
-            update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'), false);
-            col_main.querySelector('.header-new-bookmark-button').addEventListener('click', (e) => {
-                update_bookmark_btn(col_main.querySelector('.header-new-bookmark-button'));
-            });
-            update_love_btn(col_main.querySelector('.header-new-love-button'), false);
-            col_main.querySelector('.header-new-love-button').addEventListener('click', (e) => {
-                update_love_btn(col_main.querySelector('.header-new-love-button'));
-            });
+            prep_bookmark_btn(col_main);
+            prep_love_btn(col_main);
 
 
             // about this track
@@ -3781,8 +3790,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
     function subscribe_to_events() {
-        let chartlist_love = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bwaa-subscribed])`);
-        chartlist_love.forEach((form) => {
+        let love_track = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bwaa-subscribed])`);
+        love_track.forEach((form) => {
             form.setAttribute('data-bwaa-subscribed', 'true');
 
             let track = form.querySelector('[name="track"]').getAttribute('value');
@@ -3793,9 +3802,30 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             btn.addEventListener('click', (event) => {
                 console.info('bwaa - heard event', event);
 
-                let action = event.target.getAttribute('data-analytics-action');
+                let action = btn.getAttribute('data-analytics-action');
 
                 register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
+
+                if (page.type == 'track')
+                    update_love_btn(btn);
+            }, false);
+        });
+
+
+        let bookmark_item = document.body.querySelectorAll(`form[action="/music/+bookmarks"]:not([data-bwaa-subscribed])`);
+        bookmark_item.forEach((form) => {
+            form.setAttribute('data-bwaa-subscribed', 'true');
+
+            let btn = form.querySelector('button');
+
+            btn.addEventListener('click', (event) => {
+                console.info('bwaa - heard event', event);
+
+                let action = btn.getAttribute('data-analytics-action');
+
+                register_activity((action.startsWith('Bookmark')) ? 'bookmark' : 'unbookmark', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+
+                update_bookmark_btn(btn);
             }, false);
         });
 
