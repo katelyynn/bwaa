@@ -12,6 +12,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js
 // @require      https://unpkg.com/@popperjs/core@2
 // @require      https://unpkg.com/tippy.js@6
+// @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // ==/UserScript==
 
 console.info('bwaa - beginning to load');
@@ -809,9 +810,28 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
                 let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
 
+                moment.locale('en', {
+                    relativeTime: {
+                    future: 'in %s',
+                    past: '%s ago',
+                    s:  'seconds',
+                    ss: '%ss',
+                    m:  'a minute',
+                    mm: '%dm',
+                    h:  'an hour',
+                    hh: '%dh',
+                    d:  'a day',
+                    dd: '%dd',
+                    M:  'a month',
+                    MM: '%dM',
+                    y:  'a year',
+                    yy: '%dY'
+                    }
+                });
+
                 activity_item.innerHTML = (`
                     <div class="title">${activity_text}</div>
-                    <div class="date">${activity.date}</div>
+                    <div class="date">${moment(activity.date).fromNow(true)}</div>
                 `);
 
                 recent_activity_section.appendChild(activity_item);
