@@ -783,8 +783,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 // context: string,
                 // date: string
 
-                let activity_item = document.createElement('div');
+                let activity_item = document.createElement('a');
                 activity_item.classList.add('activity-item', 'journal-like', `activity--${activity.type}`);
+                activity_item.setAttribute('href', activity.context);
 
                 let involved_text = '';
 
@@ -809,7 +810,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
 
                 activity_item.innerHTML = (`
-                    <div class="title"><a href="${activity.context}">${activity_text}</a></div>
+                    <div class="title">${activity_text}</div>
                     <div class="date">${activity.date}</div>
                 `);
 
