@@ -300,6 +300,14 @@ let root = '';
 // recent activity
 let recent_activity_list;
 
+// page type
+let page = {
+    type: '',
+    name: '',
+    sister: '',
+    subpage: ''
+};
+
 let bwaa_url = 'https://www.last.fm/bwaa';
 let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 
@@ -530,6 +538,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         profile_header.setAttribute('data-bwaa', 'true');
 
         console.info('bwaa - user is on a profile');
+        page.type = 'user';
 
         // are we on the overview page?
         let profile_header_overview = profile_header.classList.contains('header--overview');
@@ -571,6 +580,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         if (profile_header_overview) {
             // profile overview stuff
+            page.subpage = 'overview';
 
             // fetch some data from the header
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
@@ -584,6 +594,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 artists: header_metadata[1].querySelector('a'),
                 loved_tracks: (header_metadata[2] != undefined) ? header_metadata[2].querySelector('a') : placeholder_loved_tracks()
             }
+            page.name = header_user_data.name;
 
             journal_nav_btn.innerHTML = (`
                 <a class="secondary-nav-item-link" href="${root}user/${header_user_data.name}/journal">
@@ -856,6 +867,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             // which subpage is it?
             let subpage_type = document.body.classList[1].replace('namespace--', '');
+            page.subpage = subpage_type;
             deliver_notif(`Subpage type of ${subpage_type}`, true);
 
             let header_user_data = {
@@ -864,6 +876,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 link: profile_header.querySelector('.header-title a').getAttribute('href'),
                 page: document.body.querySelector('.content-top-header').textContent
             }
+            page.name = header_user_data.name;
 
             if (subpage_type.startsWith('user_journal')) {
                 journal_nav_btn.innerHTML = (`
@@ -954,6 +967,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (artist_header.hasAttribute('data-bwaa'))
             return;
         artist_header.setAttribute('data-bwaa', 'true');
+
+        page.type = 'artist';
 
         let is_subpage = artist_header.classList.contains('header-new--subpage');
 
@@ -1050,6 +1065,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
 
         if (!is_subpage) {
+            page.subpage = 'overview';
             let artist_metadata = artist_header.querySelectorAll('.header-metadata-tnew-display');
             let header_artist_data = {
                 avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
@@ -1059,6 +1075,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 plays: abbr_statistic(artist_metadata[1].querySelector('abbr')),
                 listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
             }
+            page.name = header_user_data.name;
+            page.sister = '';
 
 
             let origin = '';
@@ -1329,6 +1347,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         } else {
             // which subpage is it?
             let subpage_type = document.body.classList[2].replace('namespace--', '');
+            page.subpage = subpage_type;
             deliver_notif(`Subpage type of ${subpage_type}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
@@ -1341,6 +1360,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 link: artist_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
                 page: subpage_title.textContent
             }
+            page.name = header_user_data.name;
+            page.sister = '';
 
             let new_header = generic_subpage_header(
                 header_user_data.avatar,
@@ -1397,6 +1418,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (album_header.hasAttribute('data-bwaa'))
             return;
         album_header.setAttribute('data-bwaa', 'true');
+
+        page_type = 'album';
 
         let is_subpage = album_header.classList.contains('header-new--subpage');
 
@@ -1467,6 +1490,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
 
         if (!is_subpage) {
+            page.subpage = 'overview';
             let album_metadata = album_header.querySelectorAll('.header-metadata-tnew-display');
 
             let avatar_element = document.body.querySelector('.album-overview-cover-art img');
@@ -1487,6 +1511,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 listeners: album_metadata[0].querySelector('abbr').getAttribute('title'),
                 add_artwork: add_artwork
             }
+            page.name = header_album_data.name;
+            page.sister = header_album_data.artist;
 
             if (settings.legacy_cover_art) {
                 let url_split = avatar.split('/');
@@ -1663,6 +1689,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         } else {
             // which subpage is it?
             let subpage_type = document.body.classList[2].replace('namespace--', '');
+            page.subpage = subpage_type;
             deliver_notif(`Subpage type of ${subpage_type}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
@@ -1677,6 +1704,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 link: album_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
                 page: subpage_title.textContent
             }
+            page.name = header_album_data.name;
+            page.sister = header_album_data.artist;
 
             let new_header = generic_subpage_header(
                 header_album_data.avatar,
@@ -1713,6 +1742,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (track_header.hasAttribute('data-bwaa'))
             return;
         track_header.setAttribute('data-bwaa', 'true');
+
+        page.type = 'track';
 
         let is_subpage = track_header.classList.contains('header-new--subpage');
 
@@ -1779,6 +1810,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
 
         if (!is_subpage) {
+            page.subpage = 'overview';
             let col_sidebar = document.body.querySelector('.col-sidebar.buffer-standard');
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
@@ -1797,6 +1829,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 listeners: track_metadata[0].querySelector('abbr').getAttribute('title'),
                 primary_album: document.body.querySelector('.source-album-name a')
             }
+            page.name = header_track_data.name;
+            page.sister = header_track_data.artist;
 
 
             let track_video_element = document.body.querySelector('.video-preview');
@@ -1984,6 +2018,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         } else {
             // which subpage is it?
             let subpage_type = document.body.classList[2].replace('namespace--', '');
+            page.subpage = subpage_type;
             deliver_notif(`Subpage type of ${subpage_type}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
@@ -2004,6 +2039,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 link: track_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
                 page: subpage_title.textContent
             }
+            page.name = header_track_data.name;
+            page.sister = header_track_data.artist;
 
             let new_header = generic_subpage_header(
                 header_track_data.avatar,
@@ -3722,12 +3759,35 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let btn = form.querySelector('button');
 
             btn.addEventListener('click', (event) => {
-                console.info('heard', event);
+                console.info('bwaa - heard event', event);
 
                 let action = event.target.getAttribute('data-analytics-action');
 
                 register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
             }, false);
         });
+
+
+        let post_shouts_btn = document.body.querySelector('.btn-post-shout:not([data-bwaa-subscribed])');
+        if (post_shouts_btn != null) {
+            post_shouts_btn.setAttribute('data-bwaa-subscribed', 'true');
+
+            post_shouts_btn.addEventListener('click', (event) => {
+                console.info('bwaa - heard event', event);
+
+                // wait 1.5s
+                window.setTimeout(function() {
+                    let actual_btn = document.body.querySelector('.btn-post-shout[data-bwaa-subscribed]');
+
+                    let is_loading = actual_btn.classList.contains('btn--loading');
+                    console.info('is button loading', is_loading, actual_btn, event.target);
+
+                    if (!is_loading)
+                        return;
+
+                    register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+                }, 1500);
+            }, false);
+        }
     }
 })();
