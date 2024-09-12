@@ -3371,7 +3371,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             let obsession_item = document.createElement('li');
-            obsession_item.classList.add('grid-items-item');
+            obsession_item.classList.add('grid-items-item', 'link-block');
             obsession_item.innerHTML = (`
                 <div class="grid-items-cover-image">
                     <div class="grid-items-cover-image-image">

@@ -1862,6 +1862,7 @@
                     &:hover,
                     .grid-items-item:has(.link-block-cover-link:hover) & {
                         color: var(--text-link);
+                        text-decoration: underline;
                     }
                 }
 
@@ -1878,6 +1879,15 @@
                 }
             }
         }
+    }
+    /* default css */
+    .link-block .link-block-cover-link {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 0;
     }
 
     .obsession-list.grid-items li,
