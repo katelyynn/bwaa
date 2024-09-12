@@ -2597,6 +2597,32 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 </div>
                             </div>
                         </div>
+                        <div class="sep"></div>
+                        <h3 class="control-label">Newer feature visibility</h3>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_obsessions">
+                                    <input id="setting--hide_obsessions" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Hide obsessions
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_your_progress">
+                                    <input id="setting--hide_your_progress" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Hide your progress component
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_listening_reports">
+                                    <input id="setting--hide_listening_reports" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Hide listening reports
+                                </label>
+                            </div>
+                        </div>
                     </fieldset>
                     <fieldset>
                         <legend>Social</legend>
@@ -2610,6 +2636,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                     Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--hide_extra_grid_item">
                                     <input id="setting--hide_extra_grid_item" type="checkbox" onchange="_notify_checkbox_change(this)">
