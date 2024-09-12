@@ -97,8 +97,8 @@
             --header-text-black: #fff;
             --header-text: #ec6f68;
 
-            --listening-trend-head: #2b2b2b;
-            --listening-trend: #1b1b1b;
+            --listening-trend-head: #1b1b1b;
+            --listening-trend: #111111;
 
             --chartlist-odd: #111;
             --chartlist-hover: #101d24;
@@ -1709,6 +1709,10 @@
         font-size: 11px;
         line-height: 1.181818em;
 
+        [data-bwaa--hide_extra_grid_item="true"] &.grid-items--big-first li:last-child {
+            display: none;
+        }
+
         li {
             width: 132px;
             height: 155px;
@@ -1780,6 +1784,10 @@
     [data-endpoint$="/library/albums"] .grid-items,
     #top-albums .grid-items {
         line-height: 1.25em;
+
+        [data-bwaa--hide_extra_grid_item="true"] &.grid-items--big-first li:last-child {
+            display: none;
+        }
 
         li {
             width: 49.5%;

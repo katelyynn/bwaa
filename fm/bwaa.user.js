@@ -129,6 +129,7 @@ let settings_defaults = {
     no_notifs: false,
     hide_redirect_banner: false,
     legacy_cover_art: true,
+    hide_extra_grid_item: true,
 
     hide_obsessions: false,
     hide_your_progress: false,
@@ -175,6 +176,22 @@ let settings_store = {
         values: [true, false]
     },
     legacy_cover_art: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    hide_extra_grid_item: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    hide_obsessions: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    hide_your_progress: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    hide_listening_reports: {
         type: 'toggle',
         values: [true, false]
     }
@@ -2591,6 +2608,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 </label>
                                 <div class="alert">
                                     Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.
+                                </div>
+                            </div>
+                            <div class="checkbox">
+                                <label for="setting--hide_extra_grid_item">
+                                    <input id="setting--hide_extra_grid_item" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Hide extra grid item on profiles
+                                </label>
+                                <div class="alert">
+                                    If you’re top artists/albums display is set to ‘default’, an extra grid item will display otherwise.
                                 </div>
                             </div>
                         </div>
