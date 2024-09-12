@@ -2478,6 +2478,13 @@
     }
 
     /* shouts */
+    .shout-container {
+        &.shout-container--active {
+            padding: unset !important;
+            margin: unset !important;
+            background-color: var(--chartlist-highlight);
+        }
+    }
     .shout {
         margin: 0 0 12px 0;
         padding: 0 0 6px 80px;
@@ -2870,6 +2877,10 @@
                 .user {
                     color: var(--colour);
                     font-weight: bold;
+
+                    max-width: 96px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
 
                     &:hover {
                         color: var(--text-link);
