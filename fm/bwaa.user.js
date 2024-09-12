@@ -95,6 +95,13 @@ const trans = {
                     name: 'Paint It Black'
                 }
             }
+        },
+        activities: {
+            test: 'TEST {involved}',
+            shout: 'You posted a shout for {i}',
+            image_upload: 'You uploaded an image for {i}',
+            obsession_set: 'You’re obsessed with {i}',
+            obsession_remove: 'You’re no longer obsessed with {i}'
         }
     }
 }
@@ -766,27 +773,44 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let recent_activity_list_r = recent_activity_list;
             recent_activity_list_r.reverse();
 
-            let recent_activity = document.createElement('div');
-            recent_activity.classList.add('recent-activity');
-
             recent_activity_list_r.forEach((activity) => {
                 // type: string,
-                // involved: [{name: string, type: user | artist | album | track}],
+                // involved: [{name: string, type: user | artist | album | track}, sister?: string],
                 // context: string,
                 // date: string
 
                 let activity_item = document.createElement('div');
                 activity_item.classList.add('activity-item', 'journal-like', `activity--${activity.type}`);
 
+                let involved_text = '';
+
+                activity.involved.forEach((involved) => {
+                    let involved_link;
+
+                    if (involved.type == 'user')
+                        involved_link = `${root}user/${involved.name}`;
+                    else if (involved.type == 'artist')
+                        involved_link = `${root}music/${sanitise(involved.name)}`;
+                    else if (involved.type == 'album')
+                        involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+                    else if (involved.type == 'track')
+                        involved_link = `${root}user/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+
+                    if (involved_text != '')
+                        involved_text = `${involved_text}, <a href="${involved_link}">${involved.name}</a>`;
+                    else
+                        involved_text = `${involved_text}<a href="${involved_link}">${involved.name}</a>`;
+                });
+
+                let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
+
                 activity_item.innerHTML = (`
-                    <div class="title">${activity.type} with ${JSON.stringify(activity.involved)} <a href="${activity.context}">context</a></div>
+                    <div class="title"><a href="${activity.context}">${activity_text}</a></div>
                     <div class="date">${activity.date}</div>
                 `);
 
-                recent_activity.appendChild(activity_item);
+                recent_activity_section.appendChild(activity_item);
             });
-
-            recent_activity_section.appendChild(recent_activity);
 
             let stationlinks = col_sidebar.querySelector('.stationlinks');
             if (stationlinks != null)
@@ -2795,6 +2819,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="more-link align-right">
                         <a onclick="_register_activity('image_upload', [{name: 'Sabrina Carpenter', type: 'artist'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new image upload activity</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('shout', [{name: 'Short n\\' Sweet', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new shout (album) activity</a>
                     </div>
                 </section>
             `);

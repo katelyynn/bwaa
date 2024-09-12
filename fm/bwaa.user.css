@@ -3111,6 +3111,10 @@
 
         .title {
             font-weight: bold;
+
+            a {
+                color: inherit;
+            }
         }
         .date {
             color: #696969;
