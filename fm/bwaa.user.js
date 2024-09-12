@@ -761,17 +761,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <h2>Recent Activity</h2>
             `);
 
-            recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+            let recent_activity_list_r = recent_activity_list;
+            recent_activity_list_r.reverse();
 
             let recent_activity = document.createElement('div');
             recent_activity.classList.add('recent-activity');
 
-            recent_activity_list.forEach((activity) => {
+            recent_activity_list_r.forEach((activity) => {
                 let activity_item = document.createElement('div');
                 activity_item.classList.add('activity-item', 'journal-like', `activity--${activity.type}`);
 
                 activity_item.innerHTML = (`
-                    <div class="title">${activity.description}</div>
+                    <div class="title">${activity.type} with ${JSON.stringify(activity.involved)} <a href="${activity.context}">context</a></div>
                     <div class="date">${activity.date}</div>
                 `);
 
@@ -2782,6 +2783,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="more-link align-right">
                         <a onclick="_register_activity('test', ['cutensilly'])">Register a new test activity</a>
                     </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('shout', [{name: 'LAST.HQ', type: 'user'}], '${root}user/LAST.HQ')">Register a new shout activity</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('image_upload', [{name: 'Sabrina Carpenter', type: 'artist'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new image upload activity</a>
+                    </div>
                 </section>
             `);
 
@@ -3576,19 +3583,21 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         return recent_activity_list;
     }
 
-    unsafeWindow._register_activity = function(type, involved, date=new Date()) {
-        register_activity(type, involved, date);
+    unsafeWindow._register_activity = function(type, involved, context, date=new Date()) {
+        register_activity(type, involved, context, date);
     }
-    function register_activity(type, involved, date=new Date()) {
+    function register_activity(type, involved, context, date=new Date()) {
         recent_activity_list.push({
             type: type,
             involved: involved,
+            context: context,
             date: date
         });
 
         console.info('bwaa - registered new activity', {
             type: type,
             involved: involved,
+            context: context,
             date: date
         });
 
