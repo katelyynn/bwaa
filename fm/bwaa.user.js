@@ -826,7 +826,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         involved_link = `${root}bwaa`;
 
                     // tooltip
-                    if (involved.type != 'user' && involved.type != 'bwaa') {
+                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa') {
                         tooltip_name = involved.name;
                         tooltip_sister = involved.sister;
                     }
