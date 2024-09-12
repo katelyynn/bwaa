@@ -3105,7 +3105,8 @@
             }
 
             &.activity--shout:before {
-                background-position: 0 -1440px;
+                /* technically it used background-position: 0 -1440px; */
+                background-position: -16px -1220px;
             }
             &.activity--obsession_set:before {
                 background-position: 0 -1660px;
@@ -3116,6 +3117,9 @@
             &.activity--unlove:before {
                 background-position: 0 -1700px;
                 filter: saturate(0);
+            }
+            &.activity--image_upload:before {
+                background-position: 0 -1440px;
             }
 
             flex-direction: row;
