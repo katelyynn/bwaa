@@ -2862,9 +2862,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
                     <h2 class="form-header">Media Corrections</h2>
-                    <div class="alert">Capitalisation corrections for artists, albums, and tracks are currently not supported. Sorry for the inconvenience.</div>
+                    <div class="alert">In-built capitalisation corrections for artists, albums, and tracks are <strong>currently not supported</strong>. Sorry for the inconvenience.</div>
                     <div class="more-link align-left space-self">
-                        <a href="https://github.com/katelyynn/bleh/issues/new" target="_blank">Submit a correction</a>
+                        <a href="https://github.com/katelyynn/bleh/issues/new" target="_blank">Submit a correction in bleh</a>
                     </div>
                     <fieldset>
                         <legend>Artist Redirection</legend>
