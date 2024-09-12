@@ -869,6 +869,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     });
             });
 
+            if (!settings.no_notifs) {
+                let notification_more_link = document.createElement('div');
+                notification_more_link.classList.add('more-link', 'align-right');
+                notification_more_link.innerHTML = (`
+                    <a href="${root}inbox/notifications">Read your notifications</a>
+                `);
+                recent_activity_section.appendChild(notification_more_link);
+            }
+
             let stationlinks = col_sidebar.querySelector('.stationlinks');
             if (stationlinks != null)
                 col_sidebar.insertBefore(recent_activity_section, stationlinks);
@@ -2908,6 +2917,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="more-link align-right">
                         <a onclick="_register_activity('obsession_set', [{name: 'Taste', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new obsession activity</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('shout', [{name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}], '${root}user/LAST.HQ')">Register a new shout activity</a>
                     </div>
                 </section>
             `);

@@ -3086,6 +3086,11 @@
 
 
 
+    .recent-activity-section {
+        .more-link {
+            margin-top: 6px !important;
+        }
+    }
     .journal-like {
         display: flex;
         flex-direction: column;
@@ -3137,9 +3142,6 @@
             flex-wrap: wrap;
 
             .title {
-                a:not(:first-child):not(:hover) {
-                    color: var(--text-link);
-                }
                 padding-right: 4px;
             }
 
