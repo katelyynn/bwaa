@@ -692,7 +692,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             journal_nav_btn.innerHTML = (`
                 <a class="secondary-nav-item-link" href="${root}user/${header_user_data.name}/journal">
-                    ${trans[lang].profile.journal.name}
+                    ${trans[lang].profile.tabs.journal}
                 </a>
             `);
 
@@ -873,6 +873,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+            // about me
+            let about_me = col_sidebar.querySelector('.about-me-sidebar p');
+
+            if (about_me != null)
+                about_me.innerHTML = parse_markdown_text(about_me.textContent);
+
+
+
+
             // featured track
             let featured_item_wrapper = document.body.querySelector('.header-featured-track');
 
@@ -1049,6 +1058,33 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 deliver_notif('This page is currently not finished, sorry!');
             }
         }
+    }
+
+    function parse_markdown_text(text) {
+        let converter = new showdown.Converter({
+            emoji: true,
+            excludeTrailingPunctuationFromURLs: true,
+            ghMentions: true,
+            ghMentionsLink: `${root}user/{u}`,
+            headerLevelStart: 5,
+            noHeaderId: true,
+            openLinksInNewWindow: true,
+            requireSpaceBeforeHeadingText: true,
+            simpleLineBreaks: true,
+            simplifiedAutoLink: true,
+            strikethrough: true,
+            underline: true,
+            ghCodeBlocks: false,
+            smartIndentationFix: true
+        });
+        let parsed_text = converter.makeHtml(text
+        .replace(/([@])([a-zA-Z0-9_]+)/g, '[$1$2](/user/$2)')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;'));
+        return parsed_text;
     }
 
     function bwaa_profile_featured_item(col_sidebar, featured_item_wrapper) {
