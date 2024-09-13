@@ -783,6 +783,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+            // featured track
+            let featured_item_wrapper = document.body.querySelector('.header-featured-track');
+
+            if (featured_item_wrapper != null)
+                bwaa_profile_featured_item(col_sidebar, featured_item_wrapper);
+
+
+
+
             // recent activity
             if (auth != header_user_data.name)
                 return;
@@ -882,11 +891,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 recent_activity_section.appendChild(notification_more_link);
             }
 
-            let stationlinks = col_sidebar.querySelector('.stationlinks');
-            if (stationlinks != null)
-                col_sidebar.insertBefore(recent_activity_section, stationlinks);
+            let featured_item_section = col_sidebar.querySelector('.featured-item-section');
+            if (featured_item_section != null)
+                col_sidebar.insertBefore(recent_activity_section, featured_item_section);
             else
-                col_sidebar.insertBefore(recent_activity_section, col_sidebar.firstElementChild);
+                col_sidebar.firstElementChild.after(recent_activity_section);
         } else {
             // profile non-overview stuff
 
@@ -937,7 +946,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page_content.classList.add('subpage');
 
             if (subpage_type == 'user_obsessions_overview') {
-                bwaa_obsessions_list(page_content, col_main, col_sidebar);
+                bwaa_obsessions_list(page_content, col_main);
             } else if (
                 subpage_type.startsWith('user_events') ||
                 subpage_type.startsWith('user_playlists') ||
@@ -946,6 +955,53 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 deliver_notif('This page is currently not finished, sorry!');
             }
         }
+    }
+
+    function bwaa_profile_featured_item(col_sidebar, featured_item_wrapper) {
+        let cover = featured_item_wrapper.querySelector('.cover-art img').getAttribute('src');
+
+        let header = featured_item_wrapper.querySelector('.featured-item-heading');
+        let header_link = header.querySelector('.featured-item-heading-link');
+        if (header_link == null) {
+            header_link = document.body.querySelector('#top-tracks .more-link a');
+        }
+
+        let track_name = featured_item_wrapper.querySelector('.featured-item-name').textContent;
+        let artist_name = featured_item_wrapper.querySelector('.featured-item-artist');
+
+        let featured_item_section = document.createElement('section');
+        featured_item_section.classList.add('featured-item-section');
+        featured_item_section.innerHTML = (`
+            <h2>${header.textContent}</h2>
+            <div class="grid-items">
+                <li class="grid-items-item link-block">
+                    <div class="grid-items-cover-image">
+                        <div class="grid-items-cover-image-image">
+                            <img src="${cover}" alt="Image for '${track_name}'" loading="lazy">
+                        </div>
+                        <div class="grid-items-item-details">
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${header_link.getAttribute('href')}" title="${track_name}">
+                                    ${track_name}
+                                </a>
+                            </p>
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-items-item-aux-block" href="${artist_name}">
+                                    ${artist_name.textContent.trim()}
+                                </a>
+                            </p>
+                        </div>
+                        <a class="link-block-cover-link" href="${header_link.getAttribute('href')}" tabindex="-1" aria-hidden="true"></a>
+                    </div>
+                </li>
+            </div>
+        `);
+
+        let stationlinks = col_sidebar.querySelector('.stationlinks');
+        if (stationlinks != null)
+            col_sidebar.insertBefore(featured_item_section, stationlinks);
+        else
+            col_sidebar.insertBefore(featured_item_section, col_sidebar.firstElementChild);
     }
 
     unsafeWindow._update_follow_btn = function(button) {
@@ -3481,6 +3537,24 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         });
     }
 
+    function request_media_item_check(url) {
+        let url_split = url.split('/');
+
+        if (legacy_cover_art.hasOwnProperty(url_split[6])) {
+            return url.replace(url_split[6], legacy_cover_art[url_split[6]]);
+        }
+
+        // or maybe it's blank?
+        if (
+            url_split[6] == '4128a6eb29f94943c9d206c08e625904.jpg' || // track
+            url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb.jpg' // album
+        ) {
+            return fallback_cover_art;
+        }
+
+        return url;
+    }
+
 
 
 
@@ -3663,9 +3737,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
      * creates profile obsession list by looping thru obsession items and created grid-items
      * @param {element} page_content .page-content
      * @param {element} col_main .col-main
-     * @param {element} col_sidebar .col-sidebar
      */
-    function bwaa_obsessions_list(page_content, col_main, col_sidebar) {
+    function bwaa_obsessions_list(page_content, col_main) {
         let obsession_list = document.createElement('section');
         obsession_list.classList.add('obsession-list', 'grid-items');
 

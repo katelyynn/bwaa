@@ -1797,6 +1797,7 @@
             }
         }
     }
+    .featured-item-section .grid-items,
     .obsession-list.grid-items,
     [data-endpoint$="/library/albums"] .grid-items,
     #top-albums .grid-items {
@@ -1918,6 +1919,10 @@
     .obsession-list.grid-items li,
     [data-endpoint$="/library/albums"] .grid-items li {
         width: 33% !important;
+    }
+    .featured-item-section .grid-items li {
+        width: 100% !important;
+        margin-bottom: unset !important;
     }
 
     /* top albums on artist page */
