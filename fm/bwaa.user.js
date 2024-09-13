@@ -355,6 +355,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_setup();
         } else {
             // things that load when not in bwaa settings
+            bwaa_media_items();
+
             bwaa_profiles();
             bwaa_artists();
             bwaa_albums();
@@ -364,7 +366,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_friends();
             bwaa_obsessions();
             bwaa_library();
-            bwaa_media_items();
             bwaa_playlists();
             subscribe_to_events();
         }
@@ -405,6 +406,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_setup();
                             } else {
                                 // things that load when not in bwaa settings
+                                bwaa_media_items();
+
                                 bwaa_profiles();
                                 bwaa_artists();
                                 bwaa_albums();
@@ -414,7 +417,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_friends();
                                 bwaa_obsessions();
                                 bwaa_library();
-                                bwaa_media_items();
                                 bwaa_playlists();
                                 subscribe_to_events();
                             }
@@ -3455,6 +3457,26 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb.jpg' // album
             ) {
                 grid_image.setAttribute('src', fallback_cover_art);
+            }
+        });
+
+        let cover_arts = document.querySelectorAll('.cover-art img:not([data-bwaa])');
+        cover_arts.forEach((cover_art) => {
+            cover_art.setAttribute('data-bwaa', 'true');
+
+            let url = cover_art.getAttribute('src');
+            let url_split = url.split('/');
+
+            if (legacy_cover_art.hasOwnProperty(url_split[6])) {
+                cover_art.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
+            }
+
+            // or maybe it's blank?
+            if (
+                url_split[6] == '4128a6eb29f94943c9d206c08e625904.jpg' || // track
+                url_split[6] == 'c6f59c1e5e7240a4c0d427abd71f3dbb.jpg' // album
+            ) {
+                cover_art.setAttribute('src', fallback_cover_art);
             }
         });
     }
