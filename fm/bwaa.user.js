@@ -99,7 +99,7 @@ const trans = {
         },
         activities: {
             test: 'TEST {involved}',
-            shout: 'You posted a shout for {i}',
+            shout: 'You left a shout for {i}',
             image_upload: 'You uploaded an image for {i}',
             obsess: 'You’re obsessed with {i}',
             unobsess: 'You’re no longer obsessed with {i}',
@@ -843,9 +843,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     }
 
                     if (involved_text != '')
-                        involved_text = `${involved_text}, <a href="${involved_link}">${involved.name}</a>`;
+                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
                     else
-                        involved_text = `${involved_text}<a href="${involved_link}">${involved.name}</a>`;
+                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
                 });
 
                 let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);

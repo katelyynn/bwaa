@@ -3124,6 +3124,11 @@
                 font-weight: normal;
             }
 
+            /*.involved--user {
+                padding: 0 2px;
+                background: var(--chartlist-hover);
+            }*/
+
             &.activity--shout:before {
                 /* technically it used background-position: 0 -1440px; */
                 background-position: -16px -1220px;
