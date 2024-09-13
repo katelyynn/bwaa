@@ -1612,9 +1612,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             artist_header.style.setProperty('display', 'none');
 
             if (subpage_type.includes('wiki')) {
-                generic_wiki_patch(col_main, col_sidebar);
+                if (subpage_type.includes('wiki_history')) {
+                    bwaa_wiki_history(col_main, col_sidebar);
+                } else {
+                    generic_wiki_patch(col_main, col_sidebar);
 
-                return;
+                    return;
+                }
             }
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
@@ -1979,9 +1983,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             album_header.style.setProperty('display', 'none');
 
             if (subpage_type.includes('wiki')) {
-                generic_wiki_patch(col_main, col_sidebar);
+                if (subpage_type.includes('wiki_history')) {
+                    bwaa_wiki_history(col_main, col_sidebar);
+                } else {
+                    generic_wiki_patch(col_main, col_sidebar);
 
-                return;
+                    return;
+                }
             }
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
@@ -2308,9 +2316,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             track_header.style.setProperty('display', 'none');
 
             if (subpage_type.includes('wiki')) {
-                generic_wiki_patch(col_main, col_sidebar);
+                if (subpage_type.includes('wiki_history')) {
+                    bwaa_wiki_history(col_main, col_sidebar);
+                } else {
+                    generic_wiki_patch(col_main, col_sidebar);
 
-                return;
+                    return;
+                }
             }
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
@@ -2440,6 +2452,32 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         });
 
         col_sidebar.appendChild(factbox);
+    }
+
+
+    /**
+     * patch wiki history to fit
+     * @param {element} col_main col_main element
+     * @param {element} col_sidebar col_sidebar element
+     */
+    function bwaa_wiki_history(col_main, col_sidebar) {
+        let page_content = document.body.querySelector('.page-content');
+        let buffer_to_remove = page_content.querySelector('.row + .buffer-4');
+
+        let table = buffer_to_remove.querySelector('.wiki-history');
+        let pagination = buffer_to_remove.querySelector('.pagination');
+
+
+        let revision_numbers = table.querySelectorAll('.wiki-history-revision-number');
+        revision_numbers.forEach((number) => {
+            number.textContent = `Version ${number.textContent}`;
+        });
+
+
+        col_main.appendChild(table);
+        if (pagination != null) col_main.appendChild(pagination);
+
+        page_content.removeChild(buffer_to_remove);
     }
 
 

@@ -5176,4 +5176,103 @@
     .playlisting-playlist-author {
         display: none;
     }
+
+
+
+
+    /* wiki history */
+    .wiki-history-table {
+        th {
+            color: inherit;
+            font: inherit;
+            padding: 0 10px 7px 10px;
+            font-weight: bold;
+            box-shadow: unset;
+        }
+
+        td {
+            padding: 8px 10px;
+            vertical-align: top;
+            border-top: 1px solid #F0F0F0;
+            box-shadow: unset;
+
+            &.wiki-history-revision {
+                width: 130px;
+
+                .wiki-history-revision-number {
+                    font: inherit;
+                    color: var(--text-link);
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+            &.wiki-history-action {
+                color: #696969;
+
+                /* todo: revisit */
+                &:before {
+                    display: none;
+                }
+            }
+
+            &.wiki-history-summary {
+                color: #696969;
+                font-size: 90%;
+
+                .link-block-cover-link {
+                    display: none;
+                }
+            }
+
+            &.wiki-history-author {
+                padding-left: calc(8px + 38px + 8px);
+
+                &.link-block--hover, &:has(a:hover) {
+                    color: var(--text-link);
+
+                    .avatar img {
+                        border-color: var(--text-link);
+                    }
+                }
+
+                .avatar {
+                    width: 38px;
+                    height: 38px;
+                    margin: unset;
+                    top: 8px;
+
+                    img {
+                        margin: -2px 7px 0px 0;
+                        padding: 1px;
+                        border: 1px solid var(--border);
+                    }
+
+                    .avatar-status-dot {
+                        top: -1px !important;
+                    }
+
+                    &:after {
+                        display: none;
+                    }
+                }
+
+                p a {
+                    line-height: 1.3;
+                    margin: 0 0 2px 0;
+                    min-width: 160px;
+                    font-size: 11px;
+                    font-weight: bold;
+                    color: var(--text-link);
+                }
+                .wiki-history-date {
+                    font: inherit;
+                    font-size: 85%;
+                    color: #696969;
+                }
+            }
+        }
+    }
 }
