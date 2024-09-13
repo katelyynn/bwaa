@@ -209,7 +209,7 @@ const trans = {
             update_bwaa: 'You updated bwaa to {i}',
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
-            wiki: 'You edited the wiki for {i}'
+            wiki: 'You edited on {i}'
         }
     }
 }
