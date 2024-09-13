@@ -101,8 +101,8 @@ const trans = {
             test: 'TEST {involved}',
             shout: 'You posted a shout for {i}',
             image_upload: 'You uploaded an image for {i}',
-            obsession_set: 'You’re obsessed with {i}',
-            obsession_remove: 'You’re no longer obsessed with {i}',
+            obsess: 'You’re obsessed with {i}',
+            unobsess: 'You’re no longer obsessed with {i}',
             love: 'You love {i}',
             unlove: 'You no longer love {i}',
             install_bwaa: 'You installed bwaa{i}',
@@ -2927,7 +2927,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         <a onclick="_register_activity('shout', [{name: 'Short n\\' Sweet', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new shout (album) activity</a>
                     </div>
                     <div class="more-link align-right">
-                        <a onclick="_register_activity('obsession_set', [{name: 'Taste', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new obsession activity</a>
+                        <a onclick="_register_activity('obsess', [{name: 'Taste', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new obsession activity</a>
                     </div>
                     <div class="more-link align-right">
                         <a onclick="_register_activity('shout', [{name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}], '${root}user/LAST.HQ')">Register a new shout activity</a>
@@ -3824,6 +3824,24 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 register_activity((action.startsWith('Bookmark')) ? 'bookmark' : 'unbookmark', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
 
                 update_bookmark_btn(btn);
+            }, false);
+        });
+
+
+        let obsess = document.body.querySelectorAll(`.settings-form form[action$="${auth}/obsessions"]:not([data-bwaa-subscribed])`);
+        obsess.forEach((form) => {
+            form.setAttribute('data-bwaa-subscribed', 'true');
+
+            let track = form.querySelector('[name="name"]').getAttribute('value');
+            let artist = form.querySelector('[name="artist_name"]').getAttribute('value');
+
+            let btn = form.querySelector('button');
+
+            btn.addEventListener('click', (event) => {
+                console.info('bwaa - heard event', event);
+
+                // TODO: investigate this may be firing twice
+                register_activity('obsess', [{name: track, type: 'track', sister: artist}], window.location.href);
             }, false);
         });
 

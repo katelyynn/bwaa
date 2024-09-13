@@ -2087,8 +2087,13 @@
             margin-bottom: 15px;
         }
 
+        .more-link,
         .more-link-fullwidth-right {
-            margin-top: 15px !important;
+            margin-top: 6px !important;
+        }
+
+        .source-album-nodata {
+            margin-top: unset !important;
         }
 
         .source-album,
