@@ -61,6 +61,39 @@ const trans = {
                     month: 'Last month',
                     year: 'Last year'
                 }
+            },
+            journal: {
+                name: 'Journal'
+            },
+            last_seen: {
+                name: 'Last seen: {time}',
+                active_now: 'active now',
+                private: 'unknown..'
+            },
+            follows_you: {
+                name: '(follows you!)'
+            },
+            edit: {
+                link: 'Edit profile details »'
+            },
+            user_data: {
+                // copy these exactly from last.fm's interface, this is used for
+                // string manipulation within bwaa
+
+                // in order to get this value, navigate to a profile and run '_dev_request_scrobble_since()'
+                // in the browser console (CTRL + SHIFT + I)
+                // which, in english, returns "• scrobbling since 20 Jun 2022"
+
+                // copy this exactly but remove 'since 20 Jun 2022', leaving '• scrobbling ' (SPACE ON THE END IMPORTANT)
+                // obviously, apply to ur language
+
+                scrobbling_since_replace: '• scrobbling ',
+
+                //
+
+                loved_tracks: '{count} Loved Tracks',
+                artists: '{count} Artists',
+                shouts: 'Shouts'
             }
         },
         gallery: {
@@ -98,7 +131,9 @@ const trans = {
             }
         },
         activities: {
+            name: 'Recent Activity',
             description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
+            notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
             shout: 'You left a shout for {i}',
@@ -604,7 +639,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             journal_nav_btn.innerHTML = (`
                 <a class="secondary-nav-item-link" href="${root}user/${header_user_data.name}/journal">
-                    Journal
+                    ${trans[lang].profile.journal.name}
                 </a>
             `);
 
@@ -649,9 +684,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 if (scrobbling_now == undefined)
                     last_seen = latest_chartlist_timestamp.querySelector('span').textContent;
                 else
-                    last_seen = 'active now';
+                    last_seen = trans[lang].profile.last_seen.active_now;
             } else {
-                last_seen = 'unknown o.O';
+                last_seen = trans[lang].profile.last_seen.private;
             }
 
 
@@ -721,15 +756,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <h1>${header_user_data.name}</h1>
                     <div class="user-info">
                         <div class="top">
-                            <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? '(follows you!)' : ''}
+                            <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
                         </div>
                         ${(auth != header_user_data.name) ? `
                         <div class="bottom user-last-seen">
-                            Last seen: ${last_seen}
+                            ${trans[lang].profile.last_seen.name.replace('{time}', last_seen)}
                         </div>
                         ` : `
                         <div class="bottom edit-profile-details">
-                            <a href="${root}settings">Edit profile details »</a>
+                            <a href="${root}settings">${trans[lang].profile.edit.link}</a>
                         </div>
                         `}
                     </div>
@@ -739,12 +774,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 ${scrobble_flip(header_user_data.scrobbles).outerHTML} plays
                             </div>
                             <div class="since">
-                                ${header_user_data.since.replace('• scrobbling ', '')}
+                                ${header_user_data.since.replace(trans[lang].profile.user_data.scrobbling_since_replace, '')}
                             </div>
                         </div>
                     </div>
                     <div class="user-activity">
-                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${header_user_data.loved_tracks.textContent} Loved Tracks</a> | <a href="${header_user_data.artists.getAttribute('href')}">${header_user_data.artists.textContent} Artists</a> | <a href="${header_user_data.link}/shoutbox">Shouts</a>
+                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">$${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${header_user_data.link}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
                     </div>
                 </div>
             `);
@@ -801,7 +836,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let recent_activity_section = document.createElement('section');
             recent_activity_section.classList.add('recent-activity-section');
             recent_activity_section.innerHTML = (`
-                <h2>Recent Activity <i class="subtext"><a id="what-are-activities">(?)</a></i></h2>
+                <h2>${trans[lang].activities.name} <i class="subtext"><a id="what-are-activities">(?)</a></i></h2>
             `);
 
             // we want to show in date order from latest to oldest down
@@ -888,7 +923,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 let notification_more_link = document.createElement('div');
                 notification_more_link.classList.add('more-link', 'align-right');
                 notification_more_link.innerHTML = (`
-                    <a href="${root}inbox/notifications">Read your notifications</a>
+                    <a href="${root}inbox/notifications">${trans[lang].activities.notifications}</a>
                 `);
                 recent_activity_section.appendChild(notification_more_link);
             }
@@ -1013,13 +1048,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             col_sidebar.insertBefore(featured_item_section, col_sidebar.firstElementChild);
     }
 
-    unsafeWindow._update_follow_btn = function(button) {
-        if (button.getAttribute('data-analytics-action') == 'UnfollowUser')
-            button.textContent = 'You are friends';
-        else
-            button.textContent = 'Add as friend';
-    }
-
     function placeholder_loved_tracks() {
         let placeholder = document.createElement('a');
         placeholder.setAttribute('href', '');
@@ -1031,12 +1059,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     function scrobble_flip(element) {
         let tooltip = element.getAttribute('title');
         let link = element.querySelector('a').getAttribute('href');
-        let scrobbles = element.querySelector('a').textContent.replaceAll(',', '');
+
+        let scrobbles = element.querySelector('a').textContent
+        .replaceAll(',', '')
+        .replaceAll('.', '');
 
         let scrobbles_split = scrobbles.split('');
+
         let flipper = document.createElement('div');
         flipper.classList.add('flipper-wrap');
         flipper.setAttribute('title', tooltip);
+
         for (let split in scrobbles_split) {
             let counter = document.createElement('div');
             counter.classList.add('flip');
@@ -3971,5 +4004,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 }, 150);
             }, false);
         }
+    }
+
+
+
+
+    unsafeWindow._dev_request_scrobble_since = function() {
+        return document.body.querySelector('.header-scrobble-since').textContent.trim();
     }
 })();
