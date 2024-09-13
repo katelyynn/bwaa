@@ -3363,6 +3363,7 @@
 
     .about-me-sidebar p {
         overflow: hidden !important;
+        margin-top: 15px;
     }
 
 
