@@ -843,7 +843,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                     </div>
                     <div class="user-activity">
-                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">$${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${header_user_data.link}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
+                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${header_user_data.link}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
                     </div>
                 </div>
             `);
