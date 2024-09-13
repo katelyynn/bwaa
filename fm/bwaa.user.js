@@ -1107,7 +1107,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.container.classList.add('subpage');
 
             if (page.subpage == 'user_obsessions_overview') {
-                bwaa_obsessions_list(page.structure.container, page.structure.main);
+                bwaa_obsessions_list();
             } else if (
                 page.subpage.startsWith('user_events') ||
                 page.subpage.startsWith('user_playlists') ||
@@ -1399,7 +1399,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     ${origin}
                     <div class="wiki">
-                        ${get_wiki(page.structure.main)}
+                        ${get_wiki()}
                     </div>
                     <div class="tags">
                         Popular tags: ${tags_html}
@@ -1435,7 +1435,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             artist_header.style.setProperty('display', 'none');
 
-            prep_bookmark_btn(page.structure.main);
+            prep_bookmark_btn();
 
             // sidebar
 
@@ -1640,9 +1640,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             if (subpage_type.includes('wiki')) {
                 if (subpage_type.includes('wiki_history')) {
-                    bwaa_wiki_history(page.structure.main, page.structure.side);
+                    bwaa_wiki_history();
                 } else {
-                    generic_wiki_patch(page.structure.main, page.structure.side);
+                    generic_wiki_patch();
 
                     return;
                 }
@@ -1651,7 +1651,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             document.body.querySelector('.container.page-content').classList.add('subpage');
 
             if (subpage_type.includes('tags_overview')) {
-                generic_tag_patch(page.structure.main);
+                generic_tag_patch();
             }
         }
     }
@@ -1844,7 +1844,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             album_header.style.setProperty('display', 'none');
 
-            prep_bookmark_btn(page.structure.main);
+            prep_bookmark_btn();
 
 
             // about this album
@@ -1889,7 +1889,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
                 <div class="wiki">
-                    ${get_wiki(page.structure.main)}
+                    ${get_wiki()}
                 </div>
             `);
             try {
@@ -1991,9 +1991,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             if (subpage_type.includes('wiki')) {
                 if (subpage_type.includes('wiki_history')) {
-                    bwaa_wiki_history(page.structure.main, page.structure.side);
+                    bwaa_wiki_history();
                 } else {
-                    generic_wiki_patch(page.structure.main, page.structure.side);
+                    generic_wiki_patch();
 
                     return;
                 }
@@ -2002,7 +2002,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             document.body.querySelector('.container.page-content').classList.add('subpage');
 
             if (subpage_type.includes('tags_overview')) {
-                generic_tag_patch(page.structure.main);
+                generic_tag_patch();
             }
         }
     }
@@ -2200,8 +2200,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             track_header.style.setProperty('display', 'none');
 
-            prep_bookmark_btn(page.structure.main);
-            prep_love_btn(page.structure.main);
+            prep_bookmark_btn();
+            prep_love_btn();
 
 
             // about this track
@@ -2210,7 +2210,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             about_this_track.innerHTML = (`
                 <h2><a href="${window.location.href}/+wiki">About this track</a></h2>
                 <div class="wiki">
-                    ${get_wiki(page.structure.main)}
+                    ${get_wiki()}
                 </div>
             `);
             new_header.after(about_this_track);
@@ -2308,9 +2308,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             if (subpage_type.includes('wiki')) {
                 if (subpage_type.includes('wiki_history')) {
-                    bwaa_wiki_history(page.structure.main, page.structure.side);
+                    bwaa_wiki_history();
                 } else {
-                    generic_wiki_patch(page.structure.main, page.structure.side);
+                    generic_wiki_patch();
 
                     return;
                 }
@@ -2319,7 +2319,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             document.body.querySelector('.container.page-content').classList.add('subpage');
 
             if (subpage_type.includes('tags_overview')) {
-                generic_tag_patch(page.structure.main);
+                generic_tag_patch();
             }
         }
     }
