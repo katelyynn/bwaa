@@ -34,7 +34,35 @@ let valid_langs = ['en'];
 
 const trans = {
     en: {
+        see_more: 'See more',
+        see_count_more: 'See {count} more',
+
+        plays: '{count} plays',
+        listeners: '{count} listeners',
+        popular_tags: 'Popular tags: {list}',
+        shouts: 'Shouts: {link}',
+        leave_a_shout: 'Leave a shout',
+        see_all_images: 'See all {placeholder}',
+
+        your_scrobbles: {
+            name: 'Your Scrobbles',
+            count_scrobbles: '{count} scrobbles'
+        },
+
+        trend: {
+            name: 'Recent Listening Trend',
+            artist: 'Artist Stats',
+            album: 'Album Stats',
+            track: 'Track Stats'
+        },
+
         profile: {
+            tabs: {
+                overview: 'Profile',
+
+                // copy 1:1 from last.fm's interface
+                journal: 'Journal'
+            },
             user_types: {
                 user: 'User',
                 subscriber: 'Subscriber',
@@ -61,9 +89,6 @@ const trans = {
                     month: 'Last month',
                     year: 'Last year'
                 }
-            },
-            journal: {
-                name: 'Journal'
             },
             last_seen: {
                 name: 'Last seen: {time}',
@@ -94,6 +119,34 @@ const trans = {
                 loved_tracks: '{count} Loved Tracks',
                 artists: '{count} Artists',
                 shouts: 'Shouts'
+            }
+        },
+        artist: {
+            tabs: {
+                overview: 'Artist',
+
+                // copy the rest 1:1 from last.fm's interface
+                tracks: 'Tracks',
+                albums: 'Albums',
+                photos: 'Photos',
+                similar: 'Similar Artists',
+                events: 'Events',
+                wiki: 'Biography',
+                tags: 'Tags',
+                shoutbox: 'Shoutbox',
+                listeners: 'Listeners'
+            },
+            share: 'Share this artist:',
+            more_information: {
+                name: 'More information',
+                links: 'Links'
+            },
+            top_listeners: {
+                name: 'Top Listeners',
+                subtext: 'Top Listener'
+            },
+            listeners_you_know: {
+                name: 'Listeners You Know'
             }
         },
         gallery: {
@@ -142,7 +195,7 @@ const trans = {
             unobsess: 'You’re no longer obsessed with {i}',
             love: 'You love {i}',
             unlove: 'You no longer love {i}',
-            install_bwaa: 'You installed bwaa{i}',
+            install_bwaa: 'You installed bwaa',
             update_bwaa: 'You updated bwaa to {i}',
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark'
@@ -1136,6 +1189,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
                             Overview
+                            <span class="sr-only">(current section)</span>
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
@@ -1146,7 +1200,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
                             Albums
-                            <span class="sr-only">(current section)</span>
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
@@ -1229,7 +1282,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">See more</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
             let gallery_sidebar_photos_ems = document.body.querySelectorAll('.sidebar-image-list-item');
@@ -1364,7 +1417,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <h2>Top Listeners</h2>
                 ${top_global_listeners_placeholder.outerHTML}
                 <div class="module-options">
-                    <a href="${window.location.href}/+listeners">See more</a>
+                    <a href="${window.location.href}/+listeners">${trans[lang].see_more}</a>
                 </div>
             `);
             col_sidebar.insertBefore(top_global_listeners_you_know, col_sidebar.firstChild);
@@ -1408,7 +1461,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <h2>Listeners You Know</h2>
                     ${listeners_placeholder.outerHTML}
                     <div class="module-options">
-                        <a href="${more_listeners.getAttribute('href')}">See ${more_listeners.textContent} more</a>
+                        <a href="${more_listeners.getAttribute('href')}">${trans[lang].see_count_more.replace('{count}', more_listeners.textContent)}</a>
                     </div>
                 `);
                 col_sidebar.insertBefore(listeners_you_know, col_sidebar.firstChild);
