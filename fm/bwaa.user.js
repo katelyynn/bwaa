@@ -2334,7 +2334,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         // not a user
         if (link_type == 'artist')
-            link_field = `<a href="${root}music/${sanitise(page.name)}">${sanitise(page.name)}</a>`;
+            link_field = `<a href="${root}music/${sanitise(page.name)}">${page.name}</a>`;
         else if (link_type == 'album')
             link_field = `<a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${page.name}</a>`;
         else if (link_type == 'track')
