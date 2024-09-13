@@ -1495,6 +1495,7 @@
                         background-image: var(--cdn-flatness-sprites-21-icons);
                         box-shadow: unset;
                         background-position: 0 -1038px;
+                        background-size: unset !important;
                         margin: unset;
                         width: 16px;
                         height: 16px;
@@ -3408,6 +3409,7 @@
         font-size: 10px;
         padding: unset !important;
         margin: -10px 0 0 0 !important;
+        overflow: hidden;
 
         [data-bwaa--theme="paint_it_black"] & {
             box-shadow: var(--dropdown-border-override, 3px 3px 5px 2px var(--background)) !important;
@@ -4373,6 +4375,7 @@
             font-size: 10px;
             line-height: 17px;
             height: 22px;
+            overflow: visible;
 
             position: static !important;
             background: unset !important;
