@@ -1261,8 +1261,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         page.structure.container = document.body.querySelector('.page-content');
         page.structure.row = page.structure.container.querySelector('.row');
-        page.structure.main = page.structure.row.querySelector('.col-main');
-        page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
 
         checkup_page_structure();
 
@@ -1719,8 +1723,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         page.structure.container = document.body.querySelector('.page-content');
         page.structure.row = page.structure.container.querySelector('.row');
-        page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs)');
-        page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs)');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
 
         checkup_page_structure();
 
@@ -2024,8 +2032,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         page.structure.container = document.body.querySelector('.page-content');
         page.structure.row = page.structure.container.querySelector('.row');
-        page.structure.main = page.structure.row.querySelector('.col-main');
-        page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
 
         checkup_page_structure();
 
