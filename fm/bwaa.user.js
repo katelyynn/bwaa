@@ -98,6 +98,8 @@ const trans = {
             }
         },
         activities: {
+            description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
+
             test: 'TEST {involved}',
             shout: 'You left a shout for {i}',
             image_upload: 'You uploaded an image for {i}',
@@ -799,7 +801,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let recent_activity_section = document.createElement('section');
             recent_activity_section.classList.add('recent-activity-section');
             recent_activity_section.innerHTML = (`
-                <h2>Recent Activity</h2>
+                <h2>Recent Activity <i class="subtext"><a id="what-are-activities">(?)</a></i></h2>
             `);
 
             // we want to show in date order from latest to oldest down
@@ -896,6 +898,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 col_sidebar.insertBefore(recent_activity_section, featured_item_section);
             else
                 col_sidebar.firstElementChild.after(recent_activity_section);
+
+            tippy(document.getElementById('what-are-activities'), {
+                content: trans[lang].activities.description
+            })
         } else {
             // profile non-overview stuff
 

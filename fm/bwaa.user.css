@@ -4697,6 +4697,11 @@
     .subtext {
         font-size: 10px;
         color: var(--colour-middle);
+
+        a:hover {
+            color: var(--text-link) !important;
+            cursor: pointer;
+        }
     }
 
 
@@ -4762,6 +4767,7 @@
         border: 1px solid var(--border);
         border-radius: unset;
         padding: 3px 6px;
+        text-align: center;
 
         margin-bottom: -6px;
 
