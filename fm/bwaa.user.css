@@ -3123,8 +3123,12 @@
                 /* technically it used background-position: 0 -1440px; */
                 background-position: -16px -1220px;
             }
-            &.activity--obsession_set:before {
+            &.activity--obsess:before {
                 background-position: 0 -1660px;
+            }
+            &.activity--unobsess:before {
+                background-position: 0 -1660px;
+                filter: saturate(0);
             }
             &.activity--love:before {
                 background-position: 0 -1700px;
