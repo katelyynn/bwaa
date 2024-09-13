@@ -3951,9 +3951,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             post_shouts_btn.addEventListener('click', (event) => {
                 console.info('bwaa - heard event', event);
 
-                // wait 0.2s
+                // wait 0.15s
                 window.setTimeout(function() {
-                    let actual_btn = document.body.querySelector('.btn-post-shout[data-bwaa-subscribed]');
+                    let actual_btn = event.target.parentElement;
 
                     let is_loading = actual_btn.classList.contains('btn--loading');
                     console.info('is button loading', is_loading, actual_btn, event.target);
@@ -3962,7 +3962,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         return;
 
                     register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
-                }, 200);
+                }, 150);
             }, false);
         }
     }
