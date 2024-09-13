@@ -4649,12 +4649,18 @@
         &.alert-danger {
             background: #ffe7e4;
         }
+        &.alert-success {
+            background: #e4ffe8;
+        }
 
         [data-bwaa--theme="paint_it_black"] & {
             background: #182838;
 
             &.alert-danger {
                 background: #381818;
+            }
+            &.alert-success {
+                background: #183825;
             }
         }
 
