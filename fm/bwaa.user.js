@@ -408,7 +408,13 @@ let page = {
     type: '',
     name: '',
     sister: '',
-    subpage: ''
+    subpage: '',
+    structure: {
+        container: null,
+        row: null,
+        main: null,
+        side: null
+    }
 };
 
 let bwaa_url = 'https://www.last.fm/bwaa';
@@ -628,6 +634,44 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
 
+    // general health
+    function checkup_page_structure() {
+        if (page.structure.row == null) {
+            console.info('bwaa - page structure checkup - page is missing a row, creating');
+            page.structure.row = document.createElement('div');
+            page.structure.row.classList.add('row');
+
+            page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
+        }
+
+        if (page.structure.main == null) {
+            console.info('bwaa - page structure checkup - page is missing a main, creating');
+            page.structure.main = document.createElement('div');
+            page.structure.main.classList.add('col-main');
+
+            page.structure.row.appendChild(page.structure.main);
+        }
+
+        if (page.structure.side == null) {
+            console.info('bwaa - page structure checkup - page is missing a side');
+            // check first if another sidebar exists
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+
+            if (page.structure != null)
+                return;
+            console.info('bwaa - page structure checkup - creating new side');
+
+            // otherwise, make anew
+            page.structure.side = document.createElement('div');
+            page.structure.side.classList.add('col-sidebar');
+
+            page.structure.row.appendChild(page.structure.side);
+        }
+
+        console.info('bwaa - page structure checkup - finished');
+    }
+
+
     // run on profile
     function bwaa_profiles() {
         console.info('bwaa - profiles');
@@ -656,24 +700,25 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             content_top.style.setProperty('display', 'none');
         }
 
-        let row = document.body.querySelector('.row');
-        let col_main = document.body.querySelector('.col-main');
-        let col_sidebar = document.body.querySelector('.col-sidebar');
+        page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
+        page.structure.row = page.structure.container.querySelector('.row');
+        page.structure.main = page.structure.row.querySelector('.col-main');
+        page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-        if (col_main == null) {
-            let page_content = document.body.querySelector('.page-content');
+        if (page.structure.main == null) {
+            page.structure.container = document.body.querySelector('.page-content');
 
-            row = document.createElement('div');
-            row.classList.add('row');
+            page.structure.row = document.createElement('div');
+            page.structure.row.classList.add('row');
 
-            col_main = document.createElement('div');
-            col_main.classList.add('col-main');
+            page.structure.main = document.createElement('div');
+            page.structure.main.classList.add('col-main');
 
-            col_sidebar = document.createElement('div');
-            col_sidebar.classList.add('col-sidebar');
+            page.structure.side = document.createElement('div');
+            page.structure.side.classList.add('col-sidebar');
 
-            row.appendChild(col_main, col_sidebar);
-            page_content.insertBefore(row, page_content.firstElementChild);
+            page.structure.row.appendChild(page.structure.main, page.structure.side);
+            page.structure.container.insertBefore(row, page.structure.container.firstElementChild);
         }
 
         let navlist = profile_header.querySelector('.navlist');
@@ -791,7 +836,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         <p>${music_you_have_in_common}</p>
                     </div>
                 `);
-                col_main.insertBefore(profile_actions, col_main.firstChild);
+                page.structure.main.insertBefore(profile_actions, page.structure.main.firstChild);
 
                 /*let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
                 follow_button2.setAttribute('onclick', '_update_follow_btn(this)');
@@ -850,8 +895,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             `);
 
             navlist_items.appendChild(journal_nav_btn);
-            row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, col_main.firstChild);
+            page.structure.row.insertBefore(navlist, page.structure.main);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
             // user type
@@ -859,7 +904,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 let user_type_banner = document.createElement('div');
                 user_type_banner.classList.add('user-type-banner', `user-type--cute`);
                 user_type_banner.textContent = 'bwaa creator';
-                row.insertBefore(user_type_banner, col_main);
+                page.structure.row.insertBefore(user_type_banner, page.structure.main);
             }
 
 
@@ -886,7 +931,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             // about me
-            let about_me = col_sidebar.querySelector('.about-me-sidebar p');
+            let about_me = page.structure.side.querySelector('.about-me-sidebar p');
 
             if (about_me != null)
                 about_me.innerHTML = parse_markdown_text(about_me.textContent);
@@ -898,7 +943,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let featured_item_wrapper = document.body.querySelector('.header-featured-track');
 
             if (featured_item_wrapper != null)
-                bwaa_profile_featured_item(col_sidebar, featured_item_wrapper);
+                bwaa_profile_featured_item(featured_item_wrapper);
 
 
 
@@ -1002,24 +1047,21 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 recent_activity_section.appendChild(notification_more_link);
             }
 
-            let featured_item_section = col_sidebar.querySelector('.featured-item-section');
+            let featured_item_section = page.structure.side.querySelector('.featured-item-section');
             if (featured_item_section != null)
-                col_sidebar.insertBefore(recent_activity_section, featured_item_section);
+                page.structure.side.insertBefore(recent_activity_section, featured_item_section);
             else
-                col_sidebar.firstElementChild.after(recent_activity_section);
+                page.structure.side.firstElementChild.after(recent_activity_section);
 
             tippy(document.getElementById('what-are-activities'), {
                 content: trans[lang].activities.description
-            })
+            });
         } else {
             // profile non-overview stuff
 
-            let page_content = document.body.querySelector('.page-content');
-
             // which subpage is it?
-            let subpage_type = document.body.classList[1].replace('namespace--', '');
-            page.subpage = subpage_type;
-            deliver_notif(`Subpage type of ${subpage_type}`, true);
+            page.subpage = document.body.classList[1].replace('namespace--', '');
+            deliver_notif(`Subpage type of ${page.subpage}`, true);
 
             let header_user_data = {
                 avatar: profile_header.querySelector('.avatar img'),
@@ -1029,7 +1071,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
             page.name = header_user_data.name;
 
-            if (subpage_type.startsWith('user_journal')) {
+            if (page.subpage.startsWith('user_journal')) {
                 journal_nav_btn.innerHTML = (`
                     <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${header_user_data.name}/journal">
                         Journal
@@ -1045,7 +1087,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let library_controls = content_top.querySelector('.library-controls');
             if (library_controls != undefined) {
-                col_main.insertBefore(library_controls, col_main.firstChild);
+                page.structure.main.insertBefore(library_controls, page.structure.main.firstChild);
             }
 
             let new_header = generic_subpage_header(
@@ -1054,22 +1096,27 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             );
 
             navlist_items.appendChild(journal_nav_btn);
-            try { row.insertBefore(navlist, col_main); } catch(e) { col_main.insertBefore(navlist, col_main.firstElementChild) }
-            col_main.insertBefore(new_header, col_main.firstElementChild);
+            try {
+                page.structure.row.insertBefore(navlist, page.structure.main);
+            } catch(e) {
+                page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild)
+            }
+            page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
-            page_content.classList.add('subpage');
+            page.structure.container.classList.add('subpage');
 
-            if (subpage_type == 'user_obsessions_overview') {
-                bwaa_obsessions_list(page_content, col_main);
+            if (page.subpage == 'user_obsessions_overview') {
+                bwaa_obsessions_list(page.structure.container, page.structure.main);
             } else if (
-                subpage_type.startsWith('user_events') ||
-                subpage_type.startsWith('user_playlists') ||
-                subpage_type == 'user_neighbours'
+                page.subpage.startsWith('user_events') ||
+                page.subpage.startsWith('user_playlists') ||
+                page.subpage == 'user_neighbours'
             ) {
                 deliver_notif('This page is currently not finished, sorry!');
             }
         }
+        console.info(page);
     }
 
     function parse_markdown_text(text) {
@@ -1099,7 +1146,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         return parsed_text;
     }
 
-    function bwaa_profile_featured_item(col_sidebar, featured_item_wrapper) {
+    function bwaa_profile_featured_item(featured_item_wrapper) {
         if (settings.hide_obsessions)
             return;
 
@@ -1142,11 +1189,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             </div>
         `);
 
-        let stationlinks = col_sidebar.querySelector('.stationlinks');
+        let stationlinks = page.structure_side.querySelector('.stationlinks');
         if (stationlinks != null)
-            col_sidebar.insertBefore(featured_item_section, stationlinks);
+            page.structure_side.insertBefore(featured_item_section, stationlinks);
         else
-            col_sidebar.insertBefore(featured_item_section, col_sidebar.firstElementChild);
+            page.structure_side.insertBefore(featured_item_section, page.structure_side.firstElementChild);
     }
 
     function placeholder_loved_tracks() {
@@ -1212,32 +1259,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let is_subpage = artist_header.classList.contains('header-new--subpage');
 
 
-        let row = document.body.querySelector('.row');
-        let col_main = document.body.querySelector('.col-main');
-        let col_sidebar = document.body.querySelector('.col-sidebar.hidden-xs');
+        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        page.structure.main = page.structure.row.querySelector('.col-main');
+        page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
 
-        // attempt to see if there's a normal sidebar first
-        if (col_sidebar == null)
-            col_sidebar = document.body.querySelector('.col-sidebar');
-
-        if (col_main == null) {
-            let page_content = document.body.querySelector('.page-content');
-
-            row = document.createElement('div');
-            row.classList.add('row');
-
-            col_main = document.createElement('div');
-            col_main.classList.add('col-main');
-
-            row.appendChild(col_main);
-            page_content.insertBefore(row, page_content.firstElementChild);
-        }
-        if (col_sidebar == null) {
-            col_sidebar = document.createElement('div');
-            col_sidebar.classList.add('col-sidebar');
-
-            row.appendChild(col_sidebar);
-        }
+        checkup_page_structure();
 
         let navlist = artist_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -1319,7 +1346,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             let origin = '';
-            let origin_elements = col_main.querySelectorAll('.metadata-column .catalogue-metadata-description');
+            let origin_elements = page.structure.main.querySelectorAll('.metadata-column .catalogue-metadata-description');
             if (origin_elements.length > 0) {
                 origin = '<div class="origin">';
 
@@ -1332,8 +1359,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             let tags_html = '';
-            let tags = col_main.querySelectorAll('.tag a');
-            let tags_see_more = col_main.querySelector('.tags-view-all');
+            let tags = page.structure.main.querySelectorAll('.tag a');
+            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -1372,7 +1399,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     ${origin}
                     <div class="wiki">
-                        ${get_wiki(col_main)}
+                        ${get_wiki(page.structure.main)}
                     </div>
                     <div class="tags">
                         Popular tags: ${tags_html}
@@ -1404,11 +1431,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 </div>
             `);
 
-            row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, col_main.firstChild);
+            page.structure.row.insertBefore(navlist, page.structure.main);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             artist_header.style.setProperty('display', 'none');
 
-            prep_bookmark_btn(col_main);
+            prep_bookmark_btn(page.structure.main);
 
             // sidebar
 
@@ -1438,7 +1465,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                     </div>
                 `);
-                col_sidebar.insertBefore(more_information, col_sidebar.firstChild);
+                page.structure.side.insertBefore(more_information, page.structure.side.firstChild);
             }
 
 
@@ -1482,12 +1509,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <a href="${window.location.href}/+listeners">${trans[lang].see_more}</a>
                 </div>
             `);
-            col_sidebar.insertBefore(top_global_listeners_you_know, col_sidebar.firstChild);
+            page.structure.side.insertBefore(top_global_listeners_you_know, page.structure.side.firstChild);
 
             // listeners you! know
             let listeners_placeholder = document.createElement('div');
             listeners_placeholder.classList.add('top-listeners-small');
-            let listeners_you_know_list = col_main.querySelectorAll('.personal-stats-listener');
+            let listeners_you_know_list = page.structure.main.querySelectorAll('.personal-stats-listener');
             console.info(listeners_you_know_list);
             let listener_index = 0;
             listeners_you_know_list.forEach((listener) => {
@@ -1516,7 +1543,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 listener_index += 1;
             });
 
-            let more_listeners = col_main.querySelector('.personal-stats-item--listeners .header-metadata-display a');
+            let more_listeners = page.structure.main.querySelector('.personal-stats-item--listeners .header-metadata-display a');
             if (more_listeners != null) {
                 let listeners_you_know = document.createElement('section');
                 listeners_you_know.innerHTML = (`
@@ -1526,10 +1553,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         <a href="${more_listeners.getAttribute('href')}">${trans[lang].see_count_more.replace('{count}', more_listeners.textContent)}</a>
                     </div>
                 `);
-                col_sidebar.insertBefore(listeners_you_know, col_sidebar.firstChild);
+                page.structure.side.insertBefore(listeners_you_know, page.structure.side.firstChild);
             }
 
-            let scrobble_count_element = col_main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -1552,7 +1579,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
             `);
-            col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
+            page.structure.side.insertBefore(your_scrobbles, page.structure.side.firstChild);
 
             let listener_trend = document.body.querySelector('.listener-trend');
             if (listener_trend == null)
@@ -1579,7 +1606,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
             `);
-            col_sidebar.insertBefore(artist_stats, col_sidebar.firstChild);
+            page.structure.side.insertBefore(artist_stats, page.structure.side.firstChild);
         } else {
             patch_tab_overview_btn(navlist);
 
@@ -1590,7 +1617,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
-                subpage_title = col_main.querySelector(':scope > h2');
+                subpage_title = page.structure.main.querySelector(':scope > h2');
 
             let header_artist_data = {
                 avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
@@ -1607,15 +1634,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 'artist'
             );
 
-            row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, col_main.firstChild);
+            page.structure.row.insertBefore(navlist, page.structure.main);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             artist_header.style.setProperty('display', 'none');
 
             if (subpage_type.includes('wiki')) {
                 if (subpage_type.includes('wiki_history')) {
-                    bwaa_wiki_history(col_main, col_sidebar);
+                    bwaa_wiki_history(page.structure.main, page.structure.side);
                 } else {
-                    generic_wiki_patch(col_main, col_sidebar);
+                    generic_wiki_patch(page.structure.main, page.structure.side);
 
                     return;
                 }
@@ -1624,18 +1651,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             document.body.querySelector('.container.page-content').classList.add('subpage');
 
             if (subpage_type.includes('tags_overview')) {
-                generic_tag_patch(col_main);
+                generic_tag_patch(page.structure.main);
             }
         }
     }
 
-    function prep_bookmark_btn(col_main) {
-        let btn = col_main.querySelector('.header-new-bookmark-button');
+    function prep_bookmark_btn() {
+        let btn = page.structure.main.querySelector('.header-new-bookmark-button');
 
         update_bookmark_btn(btn);
     }
-    function prep_love_btn(col_main) {
-        let btn = col_main.querySelector('.header-new-love-button');
+    function prep_love_btn() {
+        let btn = page.structure.main.querySelector('.header-new-love-button');
 
         update_love_btn(btn);
     }
@@ -1690,32 +1717,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let is_subpage = album_header.classList.contains('header-new--subpage');
 
 
-        let row = document.body.querySelector('.row');
-        let col_main = document.body.querySelector('.col-main:not(.visible-xs)');
-        let col_sidebar = document.body.querySelector('.col-sidebar.hidden-xs');
+        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs)');
+        page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
 
-        // attempt to see if there's a normal sidebar first
-        if (col_sidebar == null)
-            col_sidebar = document.body.querySelector('.col-sidebar');
-
-        if (col_main == null) {
-            let page_content = document.body.querySelector('.page-content');
-
-            row = document.createElement('div');
-            row.classList.add('row');
-
-            col_main = document.createElement('div');
-            col_main.classList.add('col-main');
-
-            row.appendChild(col_main);
-            page_content.insertBefore(row, page_content.firstElementChild);
-        }
-        if (col_sidebar == null) {
-            col_sidebar = document.createElement('div');
-            col_sidebar.classList.add('col-sidebar');
-
-            row.appendChild(col_sidebar);
-        }
+        checkup_page_structure();
 
         let navlist = album_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -1790,8 +1797,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             let tags_html = '';
-            let tags = col_main.querySelectorAll('.tag a');
-            let tags_see_more = col_main.querySelector('.tags-view-all');
+            let tags = page.structure.main.querySelectorAll('.tag a');
+            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -1833,11 +1840,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 </div>
             `);
 
-            row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, col_main.firstChild);
+            page.structure.row.insertBefore(navlist, page.structure.main);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             album_header.style.setProperty('display', 'none');
 
-            prep_bookmark_btn(col_main);
+            prep_bookmark_btn(page.structure.main);
 
 
             // about this album
@@ -1846,7 +1853,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let track_count = 'No tracks';
             let album_length = '0:00'
 
-            let meta = col_main.querySelectorAll('.metadata-column .catalogue-metadata-description');
+            let meta = page.structure.main.querySelectorAll('.metadata-column .catalogue-metadata-description');
             meta.forEach((meta_item, index) => {
                 let meta_text = meta_item.textContent;
 
@@ -1882,7 +1889,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
                 <div class="wiki">
-                    ${get_wiki(col_main)}
+                    ${get_wiki(page.structure.main)}
                 </div>
             `);
             try {
@@ -1898,7 +1905,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             // sidebar
-            let scrobble_count_element = col_main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -1921,7 +1928,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
             `);
-            col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
+            page.structure.side.insertBefore(your_scrobbles, page.structure.side.firstChild);
 
             let listener_trend = document.body.querySelector('.listener-trend');
             if (listener_trend == null)
@@ -1948,7 +1955,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
             `);
-            col_sidebar.insertBefore(album_stats, col_sidebar.firstChild);;
+            page.structure.side.insertBefore(album_stats, page.structure.side.firstChild);;
         } else {
             patch_tab_overview_btn(navlist);
 
@@ -1959,7 +1966,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
-                subpage_title = col_main.querySelector(':scope > h2');
+                subpage_title = page.structure.main.querySelector(':scope > h2');
 
             let header_album_data = {
                 avatar: album_header.querySelector('.header-new-background-image').getAttribute('content'),
@@ -1978,15 +1985,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 'album'
             );
 
-            row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, col_main.firstChild);
+            page.structure.row.insertBefore(navlist, page.structure.main);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             album_header.style.setProperty('display', 'none');
 
             if (subpage_type.includes('wiki')) {
                 if (subpage_type.includes('wiki_history')) {
-                    bwaa_wiki_history(col_main, col_sidebar);
+                    bwaa_wiki_history(page.structure.main, page.structure.side);
                 } else {
-                    generic_wiki_patch(col_main, col_sidebar);
+                    generic_wiki_patch(page.structure.main, page.structure.side);
 
                     return;
                 }
@@ -1995,7 +2002,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             document.body.querySelector('.container.page-content').classList.add('subpage');
 
             if (subpage_type.includes('tags_overview')) {
-                generic_tag_patch(col_main);
+                generic_tag_patch(page.structure.main);
             }
         }
     }
@@ -2015,28 +2022,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let is_subpage = track_header.classList.contains('header-new--subpage');
 
 
-        let row = document.body.querySelector('.row');
-        let col_main = document.body.querySelector('.col-main');
-        let col_sidebar = document.body.querySelector('.col-sidebar');
+        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        page.structure.main = page.structure.row.querySelector('.col-main');
+        page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-        if (col_main == null) {
-            let page_content = document.body.querySelector('.page-content');
-
-            row = document.createElement('div');
-            row.classList.add('row');
-
-            col_main = document.createElement('div');
-            col_main.classList.add('col-main');
-
-            row.appendChild(col_main);
-            page_content.insertBefore(row, page_content.firstElementChild);
-        }
-        if (col_sidebar == null) {
-            col_sidebar = document.createElement('div');
-            col_sidebar.classList.add('col-sidebar');
-
-            row.appendChild(col_sidebar);
-        }
+        checkup_page_structure();
 
         let navlist = track_header.querySelector('.navlist');
         if (!is_subpage) {
@@ -2078,7 +2069,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         if (!is_subpage) {
             page.subpage = 'overview';
-            let col_sidebar = document.body.querySelector('.col-sidebar.buffer-standard');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar.buffer-standard');
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
             let avatar_element = document.body.querySelector('.source-album-art img');
@@ -2107,8 +2098,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             let tags_html = '';
-            let tags = col_main.querySelectorAll('.tag a');
-            let tags_see_more = col_main.querySelector('.tags-view-all');
+            let tags = page.structure.main.querySelectorAll('.tag a');
+            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -2128,7 +2119,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let header_actions = track_header.querySelectorAll('.header-new-actions > [data-toggle-button=""]');
 
-            let first_meta = col_main.querySelector('.catalogue-metadata-description');
+            let first_meta = page.structure.main.querySelector('.catalogue-metadata-description');
             console.info(first_meta, first_meta.querySelector('a'));
             let track_length = '';
             if (first_meta.querySelector('a') == null)
@@ -2205,12 +2196,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 )}
             `);
 
-            row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, col_main.firstChild);
+            page.structure.row.insertBefore(navlist, page.structure.main);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             track_header.style.setProperty('display', 'none');
 
-            prep_bookmark_btn(col_main);
-            prep_love_btn(col_main);
+            prep_bookmark_btn(page.structure.main);
+            prep_love_btn(page.structure.main);
 
 
             // about this track
@@ -2219,13 +2210,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             about_this_track.innerHTML = (`
                 <h2><a href="${window.location.href}/+wiki">About this track</a></h2>
                 <div class="wiki">
-                    ${get_wiki(col_main)}
+                    ${get_wiki(page.structure.main)}
                 </div>
             `);
             new_header.after(about_this_track);
 
             // sidebar
-            let scrobble_count_element = col_main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -2248,7 +2239,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
             `);
-            col_sidebar.insertBefore(your_scrobbles, col_sidebar.firstChild);
+            page.structure.side.insertBefore(your_scrobbles, page.structure.side.firstChild);
 
             let listener_trend = document.body.querySelector('.listener-trend');
             if (listener_trend == null)
@@ -2275,7 +2266,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
             `);
-            col_sidebar.insertBefore(track_stats, col_sidebar.firstChild);
+            page.structure.side.insertBefore(track_stats, page.structure.side.firstChild);
         } else {
             patch_tab_overview_btn(navlist);
 
@@ -2286,7 +2277,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
-                subpage_title = col_main.querySelector(':scope > h2');
+                subpage_title = page.structure.main.querySelector(':scope > h2');
 
             let pre_fetch_avatar = track_header.querySelector('.header-new-background-image');
             if (pre_fetch_avatar == null)
@@ -2311,15 +2302,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 'track'
             );
 
-            row.insertBefore(navlist, col_main);
-            col_main.insertBefore(new_header, col_main.firstChild);
+            page.structure.row.insertBefore(navlist, page.structure.main);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             track_header.style.setProperty('display', 'none');
 
             if (subpage_type.includes('wiki')) {
                 if (subpage_type.includes('wiki_history')) {
-                    bwaa_wiki_history(col_main, col_sidebar);
+                    bwaa_wiki_history(page.structure.main, page.structure.side);
                 } else {
-                    generic_wiki_patch(col_main, col_sidebar);
+                    generic_wiki_patch(page.structure.main, page.structure.side);
 
                     return;
                 }
@@ -2328,7 +2319,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             document.body.querySelector('.container.page-content').classList.add('subpage');
 
             if (subpage_type.includes('tags_overview')) {
-                generic_tag_patch(col_main);
+                generic_tag_patch(page.structure.main);
             }
         }
     }
@@ -2378,13 +2369,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     /**
      * generic wiki patch to create sidebar factbox
-     * @param {element} col_main col_main element
-     * @param {element} col_sidebar col_sidebar element
      */
-    function generic_wiki_patch(col_main, col_sidebar) {
-        let factbox = col_main.querySelector('.factbox');
+    function generic_wiki_patch() {
+        let factbox = page.structure.main.querySelector('.factbox');
 
-        col_sidebar.innerHTML = '';
+        page.structure.side.innerHTML = '';
         if (factbox == null) {
             factbox = document.createElement('div');
             factbox.classList.add('factbox');
@@ -2398,7 +2387,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         factbox_header.innerHTML = 'Factbox (<a href="#" title="What’s This?">?</a>)';
         factbox.insertBefore(factbox_header, factbox.firstElementChild);
 
-        let wiki_author_element = col_main.querySelector('.wiki-author');
+        let wiki_author_element = page.structure.main.querySelector('.wiki-author');
         if (wiki_author_element == null)
             return;
 
@@ -2433,7 +2422,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         factbox.appendChild(factbox_version);
 
         // wiki edit
-        let wiki_edit_link = col_main.querySelector('.qa-wiki-edit');
+        let wiki_edit_link = page.structure.main.querySelector('.qa-wiki-edit');
         if (wiki_edit_link != null) {
             let wiki_edit_more_link = document.createElement('div');
             wiki_edit_more_link.classList.add('more-link', 'align-right');
@@ -2446,23 +2435,21 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         // move any alerts (eg. locked wiki, old version notice) to the sidebar
         // below all factbox elements
-        let alerts = col_main.querySelectorAll('.alert');
+        let alerts = page.structure.main.querySelectorAll('.alert');
         alerts.forEach((alert) => {
             factbox.appendChild(alert);
         });
 
-        col_sidebar.appendChild(factbox);
+        page.structure.side.appendChild(factbox);
     }
 
 
     /**
      * patch wiki history to fit
-     * @param {element} col_main col_main element
-     * @param {element} col_sidebar col_sidebar element
      */
-    function bwaa_wiki_history(col_main, col_sidebar) {
-        let page_content = document.body.querySelector('.page-content');
-        let buffer_to_remove = page_content.querySelector('.row + .buffer-4');
+    function bwaa_wiki_history() {
+        page.structure.container = document.body.querySelector('.page-content');
+        let buffer_to_remove = page.structure.container.querySelector('.row + .buffer-4');
 
         let table = buffer_to_remove.querySelector('.wiki-history');
         let pagination = buffer_to_remove.querySelector('.pagination');
@@ -2474,22 +2461,21 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         });
 
 
-        col_main.appendChild(table);
-        if (pagination != null) col_main.appendChild(pagination);
+        page.structure.main.appendChild(table);
+        if (pagination != null) page.structure.main.appendChild(pagination);
 
-        page_content.removeChild(buffer_to_remove);
+        page.structure.container.removeChild(buffer_to_remove);
     }
 
 
     /**
      * retrieves longest wiki content on page
-     * @param {element} col_main col_main element
      * @returns retrieved wiki or cta if missing
      */
-    function get_wiki(col_main) {
-        let wiki = col_main.querySelector('.wiki-block.visible-lg');
+    function get_wiki() {
+        let wiki = page.structure.main.querySelector('.wiki-block.visible-lg');
         if (wiki == null)
-            wiki = col_main.querySelector('.wiki-block-cta');
+            wiki = page.structure.main.querySelector('.wiki-block-cta');
 
         return wiki.outerHTML;
     }
@@ -2497,20 +2483,19 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     /**
      * converts tag page on artists/albums/tracks into a tag cloud
-     * @param {element} col_main .col-main
      */
-    function generic_tag_patch(col_main) {
-        let tag_section_container = col_main.querySelector('.profile-header-subpage-section + section');
+    function generic_tag_patch() {
+        let tag_section_container = page.structure.main.querySelector('.profile-header-subpage-section + section');
 
         // similar albums?
-        let similar_albums = col_main.querySelector('.similar-albums-body');
+        let similar_albums = page.structure.main.querySelector('.similar-albums-body');
         if (similar_albums != null)
-            col_main.removeChild(similar_albums);
+            page.structure.main.removeChild(similar_albums);
 
         // buffer standard in between
-        let buffer = col_main.querySelector(':scope > .buffer-standard');
+        let buffer = page.structure.main.querySelector(':scope > .buffer-standard');
         if (buffer != null)
-            col_main.removeChild(buffer);
+            page.structure.main.removeChild(buffer);
 
         let btn_add = tag_section_container.querySelector('.btn-add');
         if (btn_add != null) {
@@ -2541,8 +2526,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (btn_add != null)
             new_tag_section.appendChild(btn_add);
 
-        col_main.appendChild(new_tag_section);
-        col_main.removeChild(tag_section_container);
+        page.structure.main.appendChild(new_tag_section);
+        page.structure.main.removeChild(tag_section_container);
     }
 
 
@@ -2799,16 +2784,16 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         obsession_container.setAttribute('data-bwaa', 'true');
 
-        let page_content = obsession_container.querySelector('.page-content');
-        page_content.classList.add('subpage');
+        page.structure.container = obsession_container.querySelector('.page-content');
+        page.structure.container.classList.add('subpage');
 
         let row = document.createElement('div');
-        row.classList.add('row');
+        page.structure.row.classList.add('row');
 
-        let col_main = document.createElement('div');
-        col_main.classList.add('col-main');
+        page.structure.main = document.createElement('div');
+        page.structure.main.classList.add('col-main');
 
-        let obsession_wrap = page_content.querySelector('.obsession-details-wrap');
+        let obsession_wrap = page.structure.container.querySelector('.obsession-details-wrap');
 
 
         let obsession_author = obsession_wrap.querySelector('.obsession-details-intro a').textContent;
@@ -2819,8 +2804,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         );
 
 
-        let next = page_content.querySelector('.obsession-pagination-next a');
-        let previous = page_content.querySelector('.obsession-pagination-previous a');
+        let next = page.structure.container.querySelector('.obsession-pagination-next a');
+        let previous = page.structure.container.querySelector('.obsession-pagination-previous a');
 
         let navlist_switcher = document.createElement('nav');
         navlist_switcher.classList.add('navlist', 'secondary-nav', 'navlist--more');
@@ -2850,13 +2835,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 </li>
             </ul>
         `);
-        row.appendChild(navlist_switcher);
-        col_main.appendChild(new_header);
-        col_main.appendChild(obsession_wrap);
+        page.structure.row.appendChild(navlist_switcher);
+        page.structure.main.appendChild(new_header);
+        page.structure.main.appendChild(obsession_wrap);
 
-        row.appendChild(col_main);
+        page.structure.row.appendChild(page.structure.main);
 
-        page_content.appendChild(row);
+        page.structure.container.appendChild(row);
 
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
         let content_top = adaptive_skin.querySelector('.content-top');
@@ -2887,14 +2872,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         page.type = 'settings';
         page.name = auth;
 
-        let page_content = document.querySelector('.page-content');
+        page.structure.container = document.querySelector('.page-content');
 
-        if (page_content.hasAttribute('data-bwaa'))
+        if (page.structure.container.hasAttribute('data-bwaa'))
             return;
-        page_content.setAttribute('data-bwaa', 'true');
-        page_content.classList.add('lastfm-settings', 'subpage');
+        page.structure.container.setAttribute('data-bwaa', 'true');
+        page.structure.container.classList.add('lastfm-settings', 'subpage');
 
-        let row = page_content.querySelector(':scope > .row');
+        let row = page.structure.container.querySelector(':scope > .row');
 
 
         let navlist_switcher = document.createElement('nav');
@@ -2913,16 +2898,16 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 </li>
             </ul>
         `);
-        row.insertBefore(navlist_switcher, row.firstElementChild);
+        page.structure.row.insertBefore(navlist_switcher, page.structure.row.firstElementChild);
 
 
-        let col_main = row.querySelector('.col-main');
+        page.structure.main = page.structure.row.querySelector('.col-main');
 
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
         let content_top = adaptive_skin.querySelector('.content-top');
 
         let navlist = content_top.querySelector('.navlist');
-        col_main.insertBefore(navlist, col_main.firstElementChild);
+        page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild);
 
         adaptive_skin.removeChild(content_top);
 
@@ -2930,7 +2915,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             my_avi,
             'Your Account Settings'
         );
-        col_main.insertBefore(new_header, col_main.firstElementChild);
+        page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
     }
 
 
@@ -3774,8 +3759,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         console.info('bwaa - user is on a playlist');
 
-        let row = document.body.querySelector('.row');
-        let col_main = document.body.querySelector('.col-main');
+        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        page.structure.main = page.structure.row.querySelector('.col-main');
 
 
         let playlist_info = {
@@ -3904,17 +3890,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <img src="${playlist_info.cover}">
                 </div>
                 <div class="desc">
-                    ${col_main.querySelector('form').outerHTML}
+                    ${page.structure.main.querySelector('form').outerHTML}
                 </div>
             </div>
             <div class="alert">This page is a work in progress</div>
         `);
-        col_main.insertBefore(playlist_section, col_main.firstElementChild);
+        page.structure.main.insertBefore(playlist_section, page.structure.main.firstElementChild);
 
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
 
-        row.insertBefore(navlist, col_main);
-        col_main.insertBefore(new_header, col_main.firstChild);
+        page.structure.row.insertBefore(navlist, page.structure.main);
+        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
         adaptive_skin.removeChild(playlist_header);
     }
 
@@ -3936,10 +3922,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     /**
      * creates profile obsession list by looping thru obsession items and created grid-items
-     * @param {element} page_content .page-content
-     * @param {element} col_main .col-main
      */
-    function bwaa_obsessions_list(page_content, col_main) {
+    function bwaa_obsessions_list() {
         let obsession_list = document.createElement('section');
         obsession_list.classList.add('obsession-list', 'grid-items');
 
@@ -3988,7 +3972,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             obsession_list.appendChild(obsession_item);
         });
 
-        col_main.appendChild(obsession_list);
+        page.structure.main.appendChild(obsession_list);
 
         let obsession_btn_section = document.createElement('div');
         obsession_btn_section.classList.add('obsession-button-section');
@@ -3997,18 +3981,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let obsession_btn = section_controls.querySelector('.section-controls .btn-primary');
         if (obsession_btn != null)
             obsession_btn_section.appendChild(obsession_btn);
-        page_content.removeChild(section_controls);
+        page.structure.container.removeChild(section_controls);
 
         let pagination = document.querySelector('.pagination');
         if (pagination != null)
             obsession_btn_section.appendChild(pagination);
 
-        col_main.appendChild(obsession_btn_section);
+        page.structure.main.appendChild(obsession_btn_section);
 
 
         // remove leftovers
-        let row_buffer = document.querySelector('.row._buffer');
-        page_content.removeChild(row_buffer);
+        let row_buffer = document.querySelector('.page.structure.row._buffer');
+        page.structure.container.removeChild(row_buffer);
     }
 
 
