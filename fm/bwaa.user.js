@@ -208,7 +208,8 @@ const trans = {
             install_bwaa: 'You installed bwaa',
             update_bwaa: 'You updated bwaa to {i}',
             bookmark: 'You bookmarked {i}',
-            unbookmark: 'You removed {i}’s bookmark'
+            unbookmark: 'You removed {i}’s bookmark',
+            wiki: 'You edited the wiki for {i}'
         }
     }
 }
@@ -4122,6 +4123,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
                     register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
                 }, 150);
+            }, false);
+        }
+
+
+        let save_wiki_form = document.body.querySelector('.wiki-edit-form:not([data-bwaa-subscribed])');
+        if (save_wiki_form != null) {
+            save_wiki_form.setAttribute('data-bwaa-subscribed', 'true');
+
+            let btn = save_wiki_form.querySelector('.form-submit button');
+
+            btn.addEventListener('click', (event) => {
+                console.info('bwaa - heard event', event);
+
+                register_activity('wiki', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             }, false);
         }
     }

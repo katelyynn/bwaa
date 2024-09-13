@@ -3163,6 +3163,9 @@
                 background-position: 0 -1720px;
                 filter: saturate(0.2);
             }
+            &.activity--wiki:before {
+                background-position: -17px -1420px;
+            }
 
             flex-direction: row;
             flex-wrap: wrap;
