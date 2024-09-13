@@ -958,6 +958,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
     function bwaa_profile_featured_item(col_sidebar, featured_item_wrapper) {
+        if (settings.hide_obsessions)
+            return;
+
         let cover = featured_item_wrapper.querySelector('.cover-art img').getAttribute('src');
 
         let header = featured_item_wrapper.querySelector('.featured-item-heading');
