@@ -1189,11 +1189,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             </div>
         `);
 
-        let stationlinks = page.structure_side.querySelector('.stationlinks');
+        let stationlinks = page.structure.side.querySelector('.stationlinks');
         if (stationlinks != null)
-            page.structure_side.insertBefore(featured_item_section, stationlinks);
+            page.structure.side.insertBefore(featured_item_section, stationlinks);
         else
-            page.structure_side.insertBefore(featured_item_section, page.structure_side.firstElementChild);
+            page.structure.side.insertBefore(featured_item_section, page.structure.side.firstElementChild);
     }
 
     function placeholder_loved_tracks() {
