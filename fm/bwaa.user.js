@@ -149,6 +149,16 @@ const trans = {
                 name: 'Listeners You Know'
             }
         },
+        album: {
+            tabs: {
+                overview: 'Album'
+            }
+        },
+        track: {
+            tabs: {
+                overview: 'Track'
+            }
+        },
         gallery: {
             tabs: {
                 overview: 'Photos',
@@ -666,6 +676,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
 
         let navlist = profile_header.querySelector('.navlist');
+        patch_tab_overview_btn(navlist);
         let navlist_items = navlist.querySelector('.navlist-items');
 
         let journal_nav_btn = document.createElement('li');
@@ -1171,6 +1182,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
 
+
+
+    function patch_tab_overview_btn(navlist) {
+        let tab = navlist.querySelector('.secondary-nav-item--overview a');
+
+        if (page.type == 'user')
+            tab.textContent = trans[lang].profile.tabs.overview;
+        else
+            tab.textContent = trans[lang][page.type].tabs.overview;
+    }
+
+
+
+
     function bwaa_artists() {
         let artist_header = document.body.querySelector('.header-new--artist');
 
@@ -1224,7 +1249,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <ul class="navlist-items js-navlist-items" style="position: relative;">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            Overview
+                            ${trans[lang].artist.tabs.overview}
                             <span class="sr-only">(current section)</span>
                         </a>
                     </li>
@@ -1555,6 +1580,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             `);
             col_sidebar.insertBefore(artist_stats, col_sidebar.firstChild);
         } else {
+            patch_tab_overview_btn(navlist);
+
             // which subpage is it?
             let subpage_type = document.body.classList[2].replace('namespace--', '');
             page.subpage = subpage_type;
@@ -1696,7 +1723,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <ul class="navlist-items js-navlist-items" style="position: relative;">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            Overview
+                            ${trans[lang].album.tabs.overview}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
@@ -1918,6 +1945,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             `);
             col_sidebar.insertBefore(album_stats, col_sidebar.firstChild);;
         } else {
+            patch_tab_overview_btn(navlist);
+
             // which subpage is it?
             let subpage_type = document.body.classList[2].replace('namespace--', '');
             page.subpage = subpage_type;
@@ -2011,7 +2040,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <ul class="navlist-items js-navlist-items" style="position: relative;">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            Overview
+                            ${trans[lang].track.tabs.overview}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
@@ -2239,6 +2268,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             `);
             col_sidebar.insertBefore(track_stats, col_sidebar.firstChild);
         } else {
+            patch_tab_overview_btn(navlist);
+
             // which subpage is it?
             let subpage_type = document.body.classList[2].replace('namespace--', '');
             page.subpage = subpage_type;
