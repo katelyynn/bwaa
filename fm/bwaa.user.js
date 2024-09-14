@@ -1651,7 +1651,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 }
             }
 
-            page.structure.container.classList.add('subpage');
+            if (!page.subpage.endsWith('image'))
+                page.structure.container.classList.add('subpage');
 
             if (page.subpage.includes('tags_overview')) {
                 generic_tag_patch();
@@ -2005,7 +2006,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 }
             }
 
-            page.structure.container.classList.add('subpage');
+            if (!page.subpage.endsWith('image'))
+                page.structure.container.classList.add('subpage');
 
             if (page.subpage.includes('tags_overview')) {
                 generic_tag_patch();
