@@ -702,24 +702,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
         page.structure.row = page.structure.container.querySelector('.row');
-        page.structure.main = page.structure.row.querySelector('.col-main');
-        page.structure.side = page.structure.row.querySelector('.col-sidebar');
-
-        if (page.structure.main == null) {
-            page.structure.container = document.body.querySelector('.page-content');
-
-            page.structure.row = document.createElement('div');
-            page.structure.row.classList.add('row');
-
-            page.structure.main = document.createElement('div');
-            page.structure.main.classList.add('col-main');
-
-            page.structure.side = document.createElement('div');
-            page.structure.side.classList.add('col-sidebar');
-
-            page.structure.row.appendChild(page.structure.main, page.structure.side);
-            page.structure.container.insertBefore(row, page.structure.container.firstElementChild);
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
         }
+
+        checkup_page_structure();
 
         let navlist = profile_header.querySelector('.navlist');
         patch_tab_overview_btn(navlist);
@@ -2884,14 +2874,21 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         page.type = 'settings';
         page.name = auth;
 
-        page.structure.container = document.querySelector('.page-content');
+        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
+
+        checkup_page_structure();
 
         if (page.structure.container.hasAttribute('data-bwaa'))
             return;
         page.structure.container.setAttribute('data-bwaa', 'true');
         page.structure.container.classList.add('lastfm-settings', 'subpage');
-
-        let row = page.structure.container.querySelector(':scope > .row');
 
 
         let navlist_switcher = document.createElement('nav');
@@ -2912,8 +2909,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         `);
         page.structure.row.insertBefore(navlist_switcher, page.structure.row.firstElementChild);
 
-
-        page.structure.main = page.structure.row.querySelector('.col-main');
 
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
         let content_top = adaptive_skin.querySelector('.content-top');
