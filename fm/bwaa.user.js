@@ -252,6 +252,7 @@ let settings_defaults = {
     hide_redirect_banner: false,
     legacy_cover_art: true,
     hide_extra_grid_item: true,
+    julie: false,
 
     hide_obsessions: false,
     hide_your_progress: false,
@@ -302,6 +303,10 @@ let settings_store = {
         values: [true, false]
     },
     hide_extra_grid_item: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    julie: {
         type: 'toggle',
         values: [true, false]
     },
@@ -842,6 +847,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     follow_button2.textContent = 'Add as friend';*/
             }
 
+            let is_cute = (header_user_data.name == 'cutensilly');
+
             let user_avatar = header_user_data.avatar.getAttribute('src');
             if (settings.varied_avatar_shapes)
                 user_avatar = user_avatar.replace('/i/u/avatar170s/', '/i/u/550x0/');
@@ -858,7 +865,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
                 <div class="badge-info">
-                    <h1>${header_user_data.name}</h1>
+                    <h1 data-bwaa--is-cute="${is_cute}">${header_user_data.name}</h1>
                     <div class="user-info">
                         <div class="top">
                             <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
@@ -3172,6 +3179,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 <label for="setting--no_notifs">
                                     <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     Hide notifications, only display inbox
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Extra</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--julie">
+                                    <input id="setting--julie" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    Header text alt
                                 </label>
                             </div>
                         </div>

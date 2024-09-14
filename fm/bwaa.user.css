@@ -283,6 +283,16 @@
             h1 {
                 padding: 5px 0;
                 font-size: 16px;
+
+                &[data-bwaa--is-cute="true"],
+                [data-bwaa--julie="true"] & {
+                    font-family: Times New Roman, serif;
+                    font-size: 60px;
+                    line-height: 40px;
+                    font-weight: 400;
+                    transform: scaleX(0.7) skewX(-5deg);
+                    transform-origin: left;
+                }
             }
 
             .user-info {
@@ -2216,6 +2226,15 @@
 
             h1 {
                 font-size: 18px;
+
+                [data-bwaa--julie="true"] & {
+                    font-family: Times New Roman, serif;
+                    font-size: 60px;
+                    line-height: 40px;
+                    font-weight: 400;
+                    transform: scaleX(0.7);
+                    transform-origin: left;
+                }
             }
 
             .stats {
