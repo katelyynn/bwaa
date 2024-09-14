@@ -646,7 +646,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     // general health
     function checkup_page_structure() {
-        if (page.structure.row == null) {
+        if (page.structure.row == null || !document.body.contains(page.structure.row)) {
             console.info('bwaa - page structure checkup - page is missing a row, creating');
             page.structure.row = document.createElement('div');
             page.structure.row.classList.add('row');
@@ -654,7 +654,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
         }
 
-        if (page.structure.main == null) {
+        if (page.structure.main == null || !document.body.contains(page.structure.main)) {
             console.info('bwaa - page structure checkup - page is missing a main, creating');
             page.structure.main = document.createElement('div');
             page.structure.main.classList.add('col-main');
@@ -662,7 +662,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.row.appendChild(page.structure.main);
         }
 
-        if (page.structure.side == null) {
+        if (page.structure.side == null || !document.body.contains(page.structure.side)) {
             console.info('bwaa - page structure checkup - page is missing a side');
             // check first if another sidebar exists
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
@@ -2831,7 +2831,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     function bwaa_obsessions() {
         console.info('bwaa - obsessions');
         let obsession_container = document.body.querySelector('.obsession-container');
-        console.info(obsession_container);
 
         if (obsession_container == null)
             return;
@@ -2925,11 +2924,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         `);
 
         page.structure.main.appendChild(view_more_obsessions);
-
-
-        let adaptive_skin = document.querySelector('.adaptive-skin-container');
-        let content_top = adaptive_skin.querySelector('.content-top');
-        adaptive_skin.removeChild(content_top);
     }
 
 
