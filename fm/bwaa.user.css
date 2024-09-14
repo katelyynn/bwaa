@@ -293,6 +293,24 @@
                     transform: scaleX(0.7) skewX(-5deg);
                     transform-origin: left;
                 }
+
+                &[data-bwaa--is-cute="true"] {
+                    &:before {
+                        content: 'cutensilly';
+                        color: #D299DF;
+
+                        pointer-events: none;
+
+                        position: absolute;
+                        top: 9px;
+                        left: -20px;
+
+                        font-family: ARIAL;
+                        font-weight: 700;
+                        transform: scaleY(0.4);
+                        mix-blend-mode: overlay;
+                    }
+                }
             }
 
             .user-info {
