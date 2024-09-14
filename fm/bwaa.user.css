@@ -187,6 +187,7 @@
             display: none;
         }
 
+        .user-dashboard &,
         &.subpage {
             /*background: var(--body);*/
             &:after {
@@ -1649,6 +1650,19 @@
             }
         }
     }
+    .listening-report-row + .listening-report-row {
+        margin: unset !important;
+        padding: 15px !important;
+
+        &:not(.listening-report-row--category + &) {
+            border-top: 1px dotted var(--border);
+            margin: 30px 0 0 0 !important;
+        }
+
+        &:first-child {
+            margin-top: unset !important;
+        }
+    }
     #tracklist {
         margin-top: unset !important;
 
@@ -1716,9 +1730,11 @@
     h3.text-18,
     h2 {
         color: var(--header-text);
+        font-family: inherit;
         font-weight: bold;
         font-size: 18px;
         line-height: 13px;
+        text-transform: unset;
 
         .col-sidebar & {
             font-size: 14px;
@@ -4236,7 +4252,7 @@
         line-height: 1.181818em;
         margin: 10px 0;
         padding-top: 25px;
-        background: unset;
+        background: unset !important;
         color: inherit;
         overflow: hidden;
 
@@ -5322,6 +5338,32 @@
 
         & + button {
             display: none;
+        }
+    }
+
+
+
+
+    .user-dashboard {
+        .listening-report-row {
+            width: 100%;
+
+            .report-box-container {
+                height: fit-content;
+            }
+        }
+
+        .listening-report-row--category {
+            padding: 15px 15px 0 15px !important;
+            font: inherit;
+            border: unset;
+            text-transform: unset;
+            margin-bottom: 15px;
+        }
+        .report-headline-title {
+            font: inherit;
+            text-transform: unset;
+            font-weight: 600;
         }
     }
 }

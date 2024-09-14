@@ -59,6 +59,7 @@ const trans = {
         profile: {
             tabs: {
                 overview: 'Profile',
+                reports: 'Charts',
 
                 // copy 1:1 from last.fm's interface
                 journal: 'Journal'
@@ -1057,9 +1058,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 avatar: profile_header.querySelector('.avatar img'),
                 name: profile_header.querySelector('.header-title a').textContent,
                 link: profile_header.querySelector('.header-title a').getAttribute('href'),
-                page: document.body.querySelector('.content-top-header').textContent
+                page: document.body.querySelector('.content-top-header')
             }
             page.name = header_user_data.name;
+
+            if (page.subpage.startsWith('user-dashboard-layout'))
+                header_user_data.page = trans[lang].profile.tabs.reports;
+            else
+                header_user_data.page = header_user_data.page.textContent;
 
             if (page.subpage.startsWith('user_journal')) {
                 journal_nav_btn.innerHTML = (`
