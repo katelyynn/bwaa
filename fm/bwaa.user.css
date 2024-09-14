@@ -3187,11 +3187,11 @@
                 background-position: -17px -400px;
             }
             &.activity--bookmark:before {
-                background-position: 0 -1720px;
+                background-position: 0 -1460px;
             }
             &.activity--unbookmark:before {
-                background-position: 0 -1720px;
-                filter: saturate(0.2);
+                background-position: 0 -1460px;
+                filter: saturate(0);
             }
             &.activity--wiki:before {
                 background-position: -17px -1420px;
