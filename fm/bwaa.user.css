@@ -227,6 +227,10 @@
         line-height: 1.181818em;
     }
 
+    .content-top {
+        display: none;
+    }
+
     /* skin profile header to be part of container flow */
     .profile-header-section {
         display: flex;
@@ -4415,9 +4419,21 @@
 
     .obsession-container {
         margin-bottom: 18px;
+        background: unset !important;
 
-        .obsession-pagination {
+        .obsession-background-inner,
+        .obsession-pagination
+        {
             display: none;
+        }
+
+        .obsession-quote {
+            font-family: Times New Roman, serif;
+            font-size: 60px;
+            line-height: 40px;
+            font-weight: 400;
+            transform: scaleX(0.7) skewX(-5deg);
+            transform-origin: left;
         }
     }
     .obsession-history {

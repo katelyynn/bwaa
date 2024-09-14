@@ -194,6 +194,10 @@ const trans = {
                 }
             }
         },
+        obsession: {
+            name: 'Music Obsession',
+            view_more: 'View more obsessions'
+        },
         activities: {
             name: 'Recent Activity',
             description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
@@ -496,8 +500,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             fix_modal();
                         }
 
-                        if (!node.hasAttribute('data-bwaa')) {
-                            node.setAttribute('data-bwaa', 'true');
+                        if (!node.hasAttribute('data-bwaa-cycle')) {
+                            node.setAttribute('data-bwaa-cycle', 'true');
 
                             console.info('bwaa - bwaa\'ing');
 
@@ -702,13 +706,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         // are we on the overview page?
         let profile_header_overview = profile_header.classList.contains('header--overview');
         console.info('bwaa - profile overview?', profile_header_overview);
-
-        // remove the profile card-related stuff
-        let content_top = document.body.querySelector('.content-top');
-        if (!content_top.hasAttribute('data-bwaa')) {
-            content_top.setAttribute('data-bwaa', 'true');
-            content_top.style.setProperty('display', 'none');
-        }
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
         page.structure.row = page.structure.container.querySelector('.row');
@@ -2832,30 +2829,39 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
      * actual obsession view
      */
     function bwaa_obsessions() {
-        let obsession_container = document.querySelector('.obsession-container:not([data-bwaa="true"])');
+        console.info('bwaa - obsessions');
+        let obsession_container = document.body.querySelector('.obsession-container');
+        console.info(obsession_container);
 
         if (obsession_container == null)
             return;
 
+        if (obsession_container.hasAttribute('data-bwaa'))
+            return;
+
         obsession_container.setAttribute('data-bwaa', 'true');
 
+        page.type = 'obsession';
+
         page.structure.container = obsession_container.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
+
+        checkup_page_structure();
+
         page.structure.container.classList.add('subpage');
 
-        let row = document.createElement('div');
-        page.structure.row.classList.add('row');
-
-        page.structure.main = document.createElement('div');
-        page.structure.main.classList.add('col-main');
-
         let obsession_wrap = page.structure.container.querySelector('.obsession-details-wrap');
-
-
-        let obsession_author = obsession_wrap.querySelector('.obsession-details-intro a').textContent;
+        page.name = obsession_wrap.querySelector('.obsession-details-intro a').textContent;
 
         let new_header = generic_subpage_header(
             obsession_wrap.querySelector('.obsession-details-intro-avatar-wrap img').getAttribute('src'),
-            `Music <a href="${root}user/${obsession_author}/obsessions">Obsession</a>`
+            trans[lang].obsession.name
         );
 
 
@@ -2894,9 +2900,32 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         page.structure.main.appendChild(new_header);
         page.structure.main.appendChild(obsession_wrap);
 
-        page.structure.row.appendChild(page.structure.main);
 
-        page.structure.container.appendChild(row);
+        // obsession hero
+        let obsession_hero = obsession_container.querySelector('.obsession-hero-container');
+
+
+        // quote
+        let obsession_reason = obsession_container.querySelector('.obsession-reason');
+
+        if (obsession_reason != null) {
+            let quote = document.createElement('div');
+            quote.classList.add('obsession-quote');
+            quote.textContent = obsession_reason.textContent.trim().substring(1).slice(0, -1);
+
+            page.structure.main.appendChild(quote);
+        }
+
+
+        // view more obsessions
+        let view_more_obsessions = document.createElement('div');
+        view_more_obsessions.classList.add('more-link');
+        view_more_obsessions.innerHTML = (`
+            <a href="${root}user/${page.name}/obsessions">${trans[lang].obsession.view_more}</a>
+        `);
+
+        page.structure.main.appendChild(view_more_obsessions);
+
 
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
         let content_top = adaptive_skin.querySelector('.content-top');
