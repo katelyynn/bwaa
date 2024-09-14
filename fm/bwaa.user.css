@@ -2232,7 +2232,7 @@
                     font-size: 60px;
                     line-height: 40px;
                     font-weight: 400;
-                    transform: scaleX(0.7);
+                    transform: scaleX(0.7) skewX(-5deg);
                     transform-origin: left;
                 }
             }
