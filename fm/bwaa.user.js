@@ -658,8 +658,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             // check first if another sidebar exists
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-            if (page.structure != null)
+            if (page.structure != null) {
+                console.info('bwaa - page structure checkup - finished');
+                console.info(page);
                 return;
+            }
             console.info('bwaa - page structure checkup - creating new side');
 
             // otherwise, make anew
@@ -670,6 +673,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
 
         console.info('bwaa - page structure checkup - finished');
+        console.info(page);
     }
 
 
@@ -1255,7 +1259,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let is_subpage = artist_header.classList.contains('header-new--subpage');
 
 
-        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row))');
+        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main');
@@ -1611,9 +1615,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             patch_tab_overview_btn(navlist);
 
             // which subpage is it?
-            let subpage_type = document.body.classList[2].replace('namespace--', '');
-            page.subpage = subpage_type;
-            deliver_notif(`Subpage type of ${subpage_type}`, true);
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+            deliver_notif(`Subpage type of ${page.subpage}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
@@ -1638,8 +1641,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             artist_header.style.setProperty('display', 'none');
 
-            if (subpage_type.includes('wiki')) {
-                if (subpage_type.includes('wiki_history')) {
+            if (page.subpage.includes('wiki')) {
+                if (page.subpage.includes('wiki_history')) {
                     bwaa_wiki_history();
                 } else {
                     generic_wiki_patch();
@@ -1648,9 +1651,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 }
             }
 
-            document.body.querySelector('.container.page-content').classList.add('subpage');
+            page.structure.container.classList.add('subpage');
 
-            if (subpage_type.includes('tags_overview')) {
+            if (page.subpage.includes('tags_overview')) {
                 generic_tag_patch();
             }
         }
@@ -1717,7 +1720,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let is_subpage = album_header.classList.contains('header-new--subpage');
 
 
-        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row))');
+        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs)');
@@ -1964,9 +1967,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             patch_tab_overview_btn(navlist);
 
             // which subpage is it?
-            let subpage_type = document.body.classList[2].replace('namespace--', '');
-            page.subpage = subpage_type;
-            deliver_notif(`Subpage type of ${subpage_type}`, true);
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+            deliver_notif(`Subpage type of ${page.subpage}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
@@ -1993,8 +1995,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             album_header.style.setProperty('display', 'none');
 
-            if (subpage_type.includes('wiki')) {
-                if (subpage_type.includes('wiki_history')) {
+            if (page.subpage.includes('wiki')) {
+                if (page.subpage.includes('wiki_history')) {
                     bwaa_wiki_history();
                 } else {
                     generic_wiki_patch();
@@ -2003,9 +2005,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 }
             }
 
-            document.body.querySelector('.container.page-content').classList.add('subpage');
+            page.structure.container.classList.add('subpage');
 
-            if (subpage_type.includes('tags_overview')) {
+            if (page.subpage.includes('tags_overview')) {
                 generic_tag_patch();
             }
         }

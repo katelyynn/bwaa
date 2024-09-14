@@ -2767,6 +2767,7 @@
     }
 
 
+    .page-content:has(a + .js-gallery-heading) /* upload image page */,
     .subpage-title {
         display: none;
     }
