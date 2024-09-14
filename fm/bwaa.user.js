@@ -1255,7 +1255,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let is_subpage = artist_header.classList.contains('header-new--subpage');
 
 
-        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row))');
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main');
