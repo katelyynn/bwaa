@@ -1089,7 +1089,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 `);
             }
 
-            let library_controls = content_top.querySelector('.library-controls');
+            let library_controls = document.body.querySelector('.library-controls');
             if (library_controls != undefined) {
                 page.structure.main.insertBefore(library_controls, page.structure.main.firstChild);
             }
@@ -2904,16 +2904,73 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let obsession_hero = obsession_container.querySelector('.obsession-hero-container');
 
 
+        // object
+        let obsession_meta = obsession_hero.querySelector('.obsession-meta');
+
+        let track_name = obsession_meta.querySelector('.obsession-meta-track a');
+        let artist_name = obsession_meta.querySelector('.obsession-meta-artist a');
+        let scrobbles = obsession_meta.querySelector('.obsession-meta-scrobbles a');
+
+        let cover_original = obsession_container.querySelector('.obsession-background-inner').getAttribute('style').trim();
+        let cover_substr = cover_original.indexOf('url');
+        let cover = cover_original.substring(cover_substr).replace('url(', '').replace(');', '').trim();
+
+        let obsession_object = document.createElement('section');
+        obsession_object.classList.add('obsession-object');
+        obsession_object.innerHTML = (`
+            <div class="grid-items">
+                <li class="grid-items-item link-block">
+                    <div class="grid-items-cover-image">
+                        <div class="grid-items-cover-image-image">
+                            <img src="${cover}" alt="Image for '${track_name.textContent.trim()}'" loading="lazy">
+                        </div>
+                        <div class="grid-items-item-details">
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${track_name.getAttribute('href')}" title="${track_name.textContent.trim()}">
+                                    ${track_name.textContent.trim()}
+                                </a>
+                            </p>
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-items-item-aux-block" href="${artist_name.getAttribute('href')}">
+                                    ${artist_name.textContent.trim()}
+                                </a>
+                                <a href="${scrobbles.getAttribute('href')}">
+                                    ${scrobbles.textContent.trim()}
+                                </a>
+                            </p>
+                        </div>
+                        <a class="link-block-cover-link" href="${track_name.getAttribute('href')}" tabindex="-1" aria-hidden="true"></a>
+                    </div>
+                </li>
+            </div>
+        `);
+
+        page.structure.main.appendChild(obsession_object);
+
+
         // quote
         let obsession_reason = obsession_container.querySelector('.obsession-reason');
 
-        if (obsession_reason != null) {
-            let quote = document.createElement('div');
-            quote.classList.add('obsession-quote');
-            quote.textContent = obsession_reason.textContent.trim().substring(1).slice(0, -1);
+        if (obsession_reason != null)
+            obsession_reason = obsession_reason.textContent.trim().substring(1).slice(0, -1);
+        else
+            obsession_reason = '...';
 
-            page.structure.main.appendChild(quote);
-        }
+        let quote = document.createElement('div');
+        quote.classList.add('obsession-quote');
+        quote.textContent = obsession_reason;
+
+        page.structure.main.appendChild(quote);
+
+        // date
+        let obsession_date = obsession_container.querySelector('.obsession-details-date-short');
+        page.structure.main.appendChild(obsession_date);
+
+
+        // video
+        let obsession_video_preview = obsession_hero.querySelector('.video-preview');
+        if (obsession_video_preview != null)
+            page.structure.main.appendChild(obsession_video_preview);
 
 
         // view more obsessions

@@ -1860,6 +1860,7 @@
             }
         }
     }
+    .obsession-object .grid-items,
     .featured-item-section .grid-items,
     .obsession-list.grid-items,
     [data-endpoint$="/library/albums"] .grid-items,
@@ -1875,6 +1876,7 @@
             margin-bottom: 15px;
             height: fit-content;
             min-height: 70px;
+            display: inline-block;
 
             .grid-items-cover-image {
                 padding: 0 15px 0 0;
@@ -1922,6 +1924,7 @@
                 }
 
                 &:after {
+                    content: '';
                     background-image: var(--cdn-flatness-catalogue-album-jewelcase-medium);
                     width: 73px;
                     height: 68px;
@@ -1948,6 +1951,10 @@
                     font-weight: bold;
                     color: var(--header-text-black);
 
+                    a {
+                        color: inherit;
+                    }
+
                     &:hover,
                     .grid-items-item:has(.link-block-cover-link:hover) & {
                         color: var(--text-link);
@@ -1955,15 +1962,21 @@
                     }
                 }
 
-                .grid-items-item-aux-text a {
-                    font-size: 11px;
-                    line-height: 1.25em;
-                    color: var(--header-text-black);
+                .grid-items-item-aux-text {
+                    a {
+                        font-size: 11px;
+                        line-height: 1.25em;
+                        color: var(--header-text-black);
 
-                    & + a {
-                        margin: 3px 0 0 0;
-                        color: #696969;
-                        font-size: 10px;
+                        &.grid-items-item-aux-block {
+                            display: block;
+                        }
+
+                        & + a {
+                            margin: 3px 0 0 0;
+                            color: #696969;
+                            font-size: 10px;
+                        }
                     }
                 }
             }
@@ -1983,6 +1996,7 @@
     [data-endpoint$="/library/albums"] .grid-items li {
         width: 33% !important;
     }
+    .obsession-object .grid-items li,
     .featured-item-section .grid-items li {
         width: 100% !important;
         margin-bottom: unset !important;
@@ -4421,10 +4435,15 @@
         margin-bottom: 18px;
         background: unset !important;
 
+        .obsession-details-wrap,
         .obsession-background-inner,
         .obsession-pagination
         {
             display: none;
+        }
+
+        .obsession-object {
+            margin-bottom: 15px;
         }
 
         .obsession-quote {
@@ -4434,6 +4453,17 @@
             font-weight: 400;
             transform: scaleX(0.7) skewX(-5deg);
             transform-origin: left;
+            position: relative;
+            z-index: 10;
+        }
+        .obsession-details-date-short {
+            display: flex;
+            color: var(--colour-middle);
+            margin-bottom: 15px;
+        }
+
+        .more-link {
+            margin-top: 15px !important;
         }
     }
     .obsession-history {
