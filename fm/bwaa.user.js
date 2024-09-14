@@ -2217,6 +2217,42 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             `);
             new_header.after(about_this_track);
 
+
+            // similar tracks
+            let similar_tracks_container = document.body.querySelector('.track-similar-tracks');
+            if (similar_tracks_container != null) {
+                similar_tracks_container.classList = [];
+                similar_tracks_container.classList.add('similar-tracks-container');
+
+                let chartlist = document.createElement('table');
+                chartlist.classList.add('chartlist', 'chartlist--with-artist', 'chartlist--candy-bar');
+
+                let chartlist_body = document.createElement('tbody');
+
+                let similar_tracks = similar_tracks_container.querySelectorAll('.track-similar-tracks-item');
+                similar_tracks.forEach((track) => {
+                    let row = document.createElement('tr');
+                    row.classList.add('chartlist-row', 'chartlist-row--with-artist');
+
+                    row.innerHTML = (`
+                        <td class="chartlist-name">
+                            ${track.querySelector('.track-similar-tracks-item-name a').outerHTML}
+                        </td>
+                        <td class="chartlist-artist">
+                            ${track.querySelector('.track-similar-tracks-item-artist a').outerHTML}
+                        </td>
+                    `);
+
+                    chartlist_body.appendChild(row);
+                });
+
+                chartlist.appendChild(chartlist_body);
+
+                similar_tracks_container.innerHTML = '';
+                similar_tracks_container.appendChild(chartlist);
+            }
+
+
             // sidebar
             let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;

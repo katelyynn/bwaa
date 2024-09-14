@@ -1346,9 +1346,10 @@
 
                 &:after {
                     content: '–';
-                    margin-right: 2px;
+                    margin-right: 3px;
                 }
             }
+            .chartlist--candy-bar &,
             #top-tracks-section &,
             #tracklist &,
             #top-tracks & {
@@ -1356,8 +1357,18 @@
                     display: none;
                 }
 
-                .chartlist-artist {
-                    display: none;
+                &:not(.chartlist--candy-bar &) {
+                    .chartlist-artist {
+                        display: none;
+                    }
+                }
+                .chartlist--candy-bar & {
+                    .chartlist-name {
+                        padding-left: unset;
+                    }
+                    .chartlist-artist {
+                        padding-right: unset;
+                    }
                 }
 
                 .chartlist-play {
@@ -5294,6 +5305,23 @@
                     color: #696969;
                 }
             }
+        }
+    }
+
+
+
+
+    /*.album-and-lyrics-row + section {
+        h3 {
+            font-size: 13px;
+            line-height: 18px;
+        }
+    }*/
+    .similar-tracks-container {
+        padding-top: 15px;
+
+        & + button {
+            display: none;
         }
     }
 }
