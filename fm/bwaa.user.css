@@ -4460,6 +4460,11 @@
             display: flex;
             color: var(--colour-middle);
             margin-bottom: 15px;
+            background: var(--body);
+            position: relative;
+            z-index: 11;
+
+            width: fit-content;
         }
 
         .more-link {
