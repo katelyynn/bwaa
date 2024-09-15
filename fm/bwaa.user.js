@@ -73,6 +73,20 @@ const trans = {
             view_profile: 'View Profile'
         },
 
+        home: {
+            name: 'haiii {user}',
+            your_profile: 'Your profile',
+            settings: 'Settings',
+            inbox: 'Inbox',
+
+            library: {
+                name: 'New to Your Library'
+            },
+            recs: {
+                name: 'Last.fm Recommendations'
+            }
+        },
+
         profile: {
             tabs: {
                 overview: 'Profile',
@@ -647,6 +661,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_library();
             bwaa_playlists();
             bwaa_search();
+            bwaa_home();
+
             subscribe_to_events();
         }
 
@@ -699,6 +715,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_library();
                                 bwaa_playlists();
                                 bwaa_search();
+                                bwaa_home();
+
                                 subscribe_to_events();
                             }
                         }
@@ -3056,10 +3074,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         page.structure.container.classList.add('subpage');
 
         let obsession_wrap = page.structure.container.querySelector('.obsession-details-wrap');
+        page.avatar = obsession_wrap.querySelector('.obsession-details-intro-avatar-wrap img').getAttribute('src');
         page.name = obsession_wrap.querySelector('.obsession-details-intro a').textContent;
 
         let new_header = generic_subpage_header(
-            obsession_wrap.querySelector('.obsession-details-intro-avatar-wrap img').getAttribute('src'),
             trans[lang].obsession.name
         );
 
@@ -4603,6 +4621,58 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 register_activity('image_upload', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             }, false);
         }
+    }
+
+
+
+
+    function bwaa_home() {
+        let recs_feed = document.body.querySelector('.recs-feed:not([data-bwaa])');
+
+        if (recs_feed == null)
+            return;
+        recs_feed.setAttribute('data-bwaa', 'true');
+
+        page.type = 'home';
+        page.avatar = my_avi;
+        page.name = auth;
+
+        page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
+
+        checkup_page_structure();
+
+        let navlist = document.body.querySelector('.content-top .navlist');
+
+        // we're gonna make the subpage header ourselves, it needs to be reversed
+        let new_header = document.createElement('section');
+        new_header.classList.add('profile-header-subpage-section');
+        new_header.innerHTML = (`
+            <div class="badge-avatar">
+                <img src="${page.avatar}" alt="${page.name}">
+            </div>
+            <div class="badge-info">
+                <h1>${trans[lang].home.name.replace('{user}', `<a href="${root}user/${page.name}">${page.name}</a>`)}</h1>
+                <p class="links"><a href="${root}user/${page.name}">${trans[lang].home.your_profile}</a> | <a href="${root}settings">${trans[lang].home.settings}</a> | <a href="${root}inbox">${trans[lang].home.inbox}</a></p>
+            </div>
+        `);
+
+        let wip_alert = document.createElement('section');
+        wip_alert.classList.add('alert-section');
+        wip_alert.innerHTML = (`
+            <div class="alert alert-danger">This page is a work-in-progress</div>
+        `);
+        page.structure.main.insertBefore(wip_alert, page.structure.main.firstElementChild);
+
+
+        page.structure.row.insertBefore(navlist, page.structure.main);
+        page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
     }
 
 
