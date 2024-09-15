@@ -1065,7 +1065,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                     </div>
                     <div class="user-activity">
-                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${header_user_data.link}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
+                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${window.location.href}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
                     </div>
                 </div>
             `);
@@ -2327,7 +2327,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="track-info">
                         <h1>${page.name} by <a href="${header_track_data.artist_link}">${page.sister}</a>${track_length}</h1>
-                        <p>On ${(header_track_data.primary_album != null) ? header_track_data.primary_album.outerHTML : 'no albums'} <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
+                        <p>On ${(header_track_data.primary_album != null) ? header_track_data.primary_album.outerHTML : 'no albums'} <strong><a href="${window.location.href}/+albums">see all</a></strong></p>
                         <div class="actions">
                             ${header_actions[0].outerHTML}
                             ${header_actions[1].outerHTML}
