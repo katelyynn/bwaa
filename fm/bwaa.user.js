@@ -4309,7 +4309,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         });
 
 
-        let obsess = document.body.querySelectorAll(`.settings-form form[action$="${auth}/obsessions"]:not([data-bwaa-subscribed])`);
+        let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth}/obsessions"]:not([data-bwaa-subscribed])`);
         obsess.forEach((form) => {
             form.setAttribute('data-bwaa-subscribed', 'true');
 
@@ -4321,7 +4321,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             btn.addEventListener('click', (event) => {
                 console.info('bwaa - heard event', event);
 
-                // TODO: investigate this may be firing twice
                 register_activity('obsess', [{name: track, type: 'track', sister: artist}], window.location.href);
             }, false);
         });
