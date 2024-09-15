@@ -2961,6 +2961,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let artist_name = obsession_meta.querySelector('.obsession-meta-artist a');
         let scrobbles = obsession_meta.querySelector('.obsession-meta-scrobbles a');
 
+        let obsession_is_first = (obsession_container.querySelector('.obsession-first') != null);
+
         let cover_original = obsession_container.querySelector('.obsession-background-inner').getAttribute('style').trim();
         let cover_substr = cover_original.indexOf('url');
         let cover = cover_original.substring(cover_substr).replace('url(', '').replace(');', '').trim();
@@ -2973,6 +2975,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="grid-items-cover-image">
                         <div class="grid-items-cover-image-image">
                             <img src="${cover}" alt="Image for '${track_name.textContent.trim()}'" loading="lazy">
+                            ${(obsession_is_first) ? `<div class="image-sticker first-obsession">#1</div>` : ''}
                         </div>
                         <div class="grid-items-item-details">
                             <p class="grid-items-item-main-text">
