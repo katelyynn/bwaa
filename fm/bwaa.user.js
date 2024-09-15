@@ -185,9 +185,9 @@ const trans = {
 
                 // copy the rest 1:1 from last.fm's interface
                 wiki: 'Wiki',
-                tags: 'Tags',
-                images: 'Artwork',
-                shoutbox: 'Shoutbox'
+                albums: 'Albums',
+                shoutbox: 'Shoutbox',
+                tags: 'Tags'
             },
             share: 'Share this track:',
             love: {
@@ -481,6 +481,7 @@ let page = {
     name: '',
     sister: '',
     subpage: '',
+    avatar: '',
     structure: {
         container: null,
         row: null,
@@ -795,10 +796,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.subpage = 'overview';
 
             // fetch some data from the header
+            page.name = profile_header.querySelector('.header-title a').textContent;
+            page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
+
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
             let header_user_data = {
-                avatar: profile_header.querySelector('.avatar img'),
-                name: profile_header.querySelector('.header-title a').textContent,
                 link: profile_header.querySelector('.header-title a').getAttribute('href'),
                 display_name: profile_header.querySelector('.header-title-display-name').textContent,
                 since: profile_header.querySelector('.header-scrobble-since').textContent,
@@ -806,10 +808,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 artists: header_metadata[1].querySelector('a'),
                 loved_tracks: (header_metadata[2] != undefined) ? header_metadata[2].querySelector('a') : placeholder_loved_tracks()
             }
-            page.name = header_user_data.name;
 
             journal_nav_btn.innerHTML = (`
-                <a class="secondary-nav-item-link" href="${root}user/${header_user_data.name}/journal">
+                <a class="secondary-nav-item-link" href="${root}user/${page.name}/journal">
                     ${trans[lang].profile.tabs.journal}
                 </a>
             `);
@@ -819,17 +820,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let user_follows_you = (profile_header.querySelector('.label.user-follow') != undefined);
 
             // custom badges
-            if (profile_badges.hasOwnProperty(header_user_data.name)) {
-                if (!Array.isArray(profile_badges[header_user_data.name])) {
+            if (profile_badges.hasOwnProperty(page.name)) {
+                if (!Array.isArray(profile_badges[page.name])) {
                     // default
-                    console.info('bwaa - profile has 1 custom badge', profile_badges[header_user_data.name]);
+                    console.info('bwaa - profile has 1 custom badge', profile_badges[page.name]);
 
-                    user_type = profile_badges[header_user_data.name].type;
+                    user_type = profile_badges[page.name].type;
                 } else {
                     // multiple
-                    console.info('bwaa - profile has multiple custom badges', profile_badges[header_user_data.name]);
+                    console.info('bwaa - profile has multiple custom badges', profile_badges[page.name]);
 
-                    user_type = profile_badges[header_user_data.name][profile_badges[header_user_data.name].length-1].type;
+                    user_type = profile_badges[page.name][profile_badges[page.name].length-1].type;
                 }
             } else {
                 let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
@@ -862,7 +863,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             // user interactions
-            if (auth != header_user_data.name) {
+            if (auth != page.name) {
                 let follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]').outerHTML;
 
                 let tasteometer = profile_header.querySelector('.tasteometer');
@@ -886,11 +887,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 profile_actions.innerHTML = (`
                     <div class="options">
                         ${follow_button}
-                        <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${header_user_data.name}">Send a message</a>
+                        <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
                         <a class="has-icon leave-a-shout" href="${header_user_data.link}/shoutbox">Leave a shout</a>
                     </div>
                     <div class="tasteometer ${tasteometer_lvl}" data-taste="${tasteometer_lvl.replace('tasteometer-compat-', '')}">
-                        <p>Your musical compatibility with <strong>${header_user_data.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
+                        <p>Your musical compatibility with <strong>${page.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
                         <div class="bar">
                             <div class="fill" style="width: ${tasteometer_percent}"></div>
                         </div>
@@ -908,11 +909,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     follow_button2.textContent = 'Add as friend';*/
             }
 
-            let is_cute = (header_user_data.name == 'cutensilly');
+            let is_cute = (page.name == 'cutensilly');
 
-            let user_avatar = header_user_data.avatar.getAttribute('src');
             if (settings.varied_avatar_shapes)
-                user_avatar = user_avatar.replace('/i/u/avatar170s/', '/i/u/550x0/');
+                page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/550x0/');
 
             // main user header
             // this is on top of the actions, but appending is backwards
@@ -920,18 +920,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             new_header.classList.add('profile-header-section');
             new_header.innerHTML = (`
                 <div class="badge-avatar">
-                    <img src="${user_avatar}" alt="${header_user_data.avatar.getAttribute('alt')}">
+                    <img src="${page.avatar}" alt="${page.name}">
                     <div class="user-type user-type--${user_type}">
                         <a>${trans[lang].profile.user_types[user_type]}</a>
                     </div>
                 </div>
                 <div class="badge-info">
-                    <h1 data-bwaa--is-cute="${is_cute}">${header_user_data.name}</h1>
+                    <h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>
                     <div class="user-info">
                         <div class="top">
                             <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
                         </div>
-                        ${(auth != header_user_data.name) ? `
+                        ${(auth != page.name) ? `
                         <div class="bottom user-last-seen">
                             ${trans[lang].profile.last_seen.name.replace('{time}', last_seen)}
                         </div>
@@ -963,7 +963,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             profile_header.style.setProperty('display', 'none');
 
             // user type
-            if (header_user_data.name == 'cutensilly') {
+            if (page.name == 'cutensilly') {
                 let user_type_banner = document.createElement('div');
                 user_type_banner.classList.add('user-type-banner', `user-type--cute`);
                 user_type_banner.textContent = 'bwaa creator';
@@ -1012,7 +1012,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
             // recent activity
-            if (auth != header_user_data.name)
+            if (auth != page.name)
                 return;
 
             let recent_activity_section = document.createElement('section');
@@ -1126,13 +1126,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.subpage = document.body.classList[1].replace('namespace--', '');
             deliver_notif(`Subpage type of ${page.subpage}`, true);
 
+            page.name = profile_header.querySelector('.header-title a').textContent;
+            page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
+
             let header_user_data = {
-                avatar: profile_header.querySelector('.avatar img'),
-                name: profile_header.querySelector('.header-title a').textContent,
                 link: profile_header.querySelector('.header-title a').getAttribute('href'),
                 page: document.body.querySelector('.content-top-header')
             }
-            page.name = header_user_data.name;
 
             if (page.subpage.startsWith('user-dashboard-layout'))
                 header_user_data.page = trans[lang].profile.tabs.reports;
@@ -1141,13 +1141,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             if (page.subpage.startsWith('user_journal')) {
                 journal_nav_btn.innerHTML = (`
-                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${header_user_data.name}/journal">
+                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${page.name}/journal">
                         Journal
                     </a>
                 `);
             } else {
                 journal_nav_btn.innerHTML = (`
-                    <a class="secondary-nav-item-link" href="${root}user/${header_user_data.name}/journal">
+                    <a class="secondary-nav-item-link" href="${root}user/${page.name}/journal">
                         Journal
                     </a>
                 `);
@@ -1159,7 +1159,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
 
             let new_header = generic_subpage_header(
-                header_user_data.avatar.getAttribute('src'),
                 header_user_data.page
             );
 
@@ -1404,17 +1403,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         if (!is_subpage) {
             page.subpage = 'overview';
+            page.name = artist_header.querySelector('.header-new-title').textContent;
+            page.sister = '';
+            page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
+
             let artist_metadata = artist_header.querySelectorAll('.header-metadata-tnew-display');
             let header_artist_data = {
-                avatar: pre_fetch_avatar(artist_header.querySelector('.header-new-background-image')),
-                name: artist_header.querySelector('.header-new-title').textContent,
                 link: window.location.href,
                 photos: artist_header.querySelector('.header-new-gallery-inner').textContent,
                 plays: abbr_statistic(artist_metadata[1].querySelector('abbr')),
                 listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
             }
-            page.name = header_artist_data.name;
-            page.sister = '';
 
 
             let origin = '';
@@ -1462,7 +1461,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             new_header.classList.add('profile-artist-section');
             new_header.innerHTML = (`
                 <div class="artist-info">
-                    <h1>${header_artist_data.name}</h1>
+                    <h1>${page.name}</h1>
                     <div class="stats">
                         ${header_artist_data.plays} plays (${header_artist_data.listeners} listeners)
                     </div>
@@ -1487,8 +1486,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <div class="artist-image-side">
                     <div class="images">
                         <div class="top">
-                            <a href="${header_artist_data.link}/+images">
-                                <img src="${header_artist_data.avatar}">
+                            <a href="${window.location.href}/+images">
+                                <img src="${page.avatar}">
                             </a>
                         </div>
                         <div class="bottom">
@@ -1499,7 +1498,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                     </div>
                     <div class="option">
-                        <a href="${header_artist_data.link}/+images">${trans[lang].see_all_placeholder.replace('{placeholder}', header_artist_data.photos)}</a>
+                        <a href="${window.location.href}/+images">${trans[lang].see_all_placeholder.replace('{placeholder}', header_artist_data.photos)}</a>
                     </div>
                 </div>
             `);
@@ -1691,17 +1690,16 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (subpage_title == undefined)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
+            page.avatar = artist_header.querySelector('.header-new-background-image').getAttribute('content');
+            page.name = artist_header.querySelector('.header-new-title').textContent;
+            page.sister = '';
+
             let header_artist_data = {
-                avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
-                name: artist_header.querySelector('.header-new-title').textContent,
                 link: artist_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
                 page: subpage_title.textContent
             }
-            page.name = header_artist_data.name;
-            page.sister = '';
 
             let new_header = generic_subpage_header(
-                header_artist_data.avatar,
                 header_artist_data.page,
                 'artist'
             );
@@ -1846,32 +1844,29 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.subpage = 'overview';
             let album_metadata = album_header.querySelectorAll('.header-metadata-tnew-display');
 
+            page.avatar = '';
+            page.name = album_header.querySelector('.header-new-title').textContent;
+            page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+
             let avatar_element = document.body.querySelector('.album-overview-cover-art img');
-            let avatar = '';
             let add_artwork = '';
             if (avatar_element != undefined) {
-                avatar = avatar_element.getAttribute('src');
+                page.avatar = avatar_element.getAttribute('src');
                 add_artwork = document.body.querySelector('.album-overview-cover-art a').getAttribute('href');
             }
 
             let header_album_data = {
-                avatar: avatar,
-                name: album_header.querySelector('.header-new-title').textContent,
-                artist: album_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
-                link: window.location.href,
                 plays: abbr_statistic(album_metadata[1].querySelector('abbr')),
                 listeners: album_metadata[0].querySelector('abbr').getAttribute('title'),
                 add_artwork: add_artwork
             }
-            page.name = header_album_data.name;
-            page.sister = header_album_data.artist;
 
             if (settings.legacy_cover_art) {
-                let url_split = avatar.split('/');
+                let url_split = page.avatar.split('/');
 
                 if (legacy_cover_art.hasOwnProperty(url_split[6])) {
-                    header_album_data.avatar = header_album_data.avatar.replace(url_split[6], legacy_cover_art[url_split[6]]);
+                    page.avatar = page.avatar.replace(url_split[6], legacy_cover_art[url_split[6]]);
                 }
             }
 
@@ -1896,7 +1891,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             new_header.classList.add('profile-album-section');
             new_header.innerHTML = (`
                 <div class="album-info">
-                    <h1>${header_album_data.name} by <a href="${header_album_data.artist_link}">${header_album_data.artist}</a></h1>
+                    <h1>${page.name} by <a href="${header_album_data.artist_link}">${page.sister}</a></h1>
                     <div class="stats">
                         ${header_album_data.plays} plays (${header_album_data.listeners} listeners)
                     </div>
@@ -1916,7 +1911,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 </div>
                 <div class="album-image-side">
                     <a class="image" href="${header_album_data.add_artwork}">
-                        <img src="${header_album_data.avatar}">
+                        <img src="${page.avatar}">
                     </a>
                 </div>
             `);
@@ -2048,19 +2043,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (subpage_title == undefined)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
+            page.avatar = pre_fetch_avatar(album_header.querySelector('.header-new-background-image'));
+            page.name = album_header.querySelector('.header-new-title').textContent;
+            page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+
             let header_album_data = {
-                avatar: pre_fetch_avatar(album_header.querySelector('.header-new-background-image')),
-                name: album_header.querySelector('.header-new-title').textContent,
-                artist: album_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
                 link: album_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
                 page: subpage_title.textContent
             }
-            page.name = header_album_data.name;
-            page.sister = header_album_data.artist;
 
             let new_header = generic_subpage_header(
-                header_album_data.avatar,
                 header_album_data.page,
                 'album'
             );
@@ -2160,23 +2153,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.structure.side = page.structure.row.querySelector('.col-sidebar.buffer-standard');
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
+            page.avatar = fallback_cover_art;
+            page.name = track_header.querySelector('.header-new-title').textContent;
+            page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+
             let avatar_element = document.body.querySelector('.source-album-art img');
-            let avatar = fallback_cover_art;
-            if (avatar_element != undefined)
-                avatar = avatar_element.getAttribute('src');
+            if (avatar_element != null)
+                page.avatar = avatar_element.getAttribute('src');
 
             let header_track_data = {
-                avatar: avatar,
-                name: track_header.querySelector('.header-new-title').textContent,
-                artist: track_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
-                link: window.location.href,
                 plays: abbr_statistic(track_metadata[1].querySelector('abbr')),
                 listeners: track_metadata[0].querySelector('abbr').getAttribute('title'),
                 primary_album: document.body.querySelector('.source-album-name a')
             }
-            page.name = header_track_data.name;
-            page.sister = header_track_data.artist;
 
 
             let track_video_element = document.body.querySelector('.video-preview');
@@ -2219,11 +2209,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <div class="header">
                     <div class="track-image-side">
                         <a class="image">
-                            <img src="${header_track_data.avatar}">
+                            <img src="${page.avatar}">
                         </a>
                     </div>
                     <div class="track-info">
-                        <h1>${header_track_data.name} by <a href="${header_track_data.artist_link}">${header_track_data.artist}</a>${track_length}</h1>
+                        <h1>${page.name} by <a href="${header_track_data.artist_link}">${page.sister}</a>${track_length}</h1>
                         <p>On ${(header_track_data.primary_album != null) ? header_track_data.primary_album.outerHTML : 'no albums'} <strong><a href="${header_track_data.link}/+albums">see all</a></strong></p>
                         <div class="actions">
                             ${header_actions[0].outerHTML}
@@ -2425,19 +2415,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (subpage_title == undefined)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
+            page.avatar = pre_fetch_avatar(track_header.querySelector('.header-new-background-image'));
+            page.name = track_header.querySelector('.header-new-title').textContent;
+            page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+
             let header_track_data = {
-                avatar: pre_fetch_avatar(track_header.querySelector('.header-new-background-image')),
-                name: track_header.querySelector('.header-new-title').textContent,
-                artist: track_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
                 link: track_header.querySelector('.secondary-nav-item--overview a').getAttribute('href'),
                 page: subpage_title.textContent
             }
-            page.name = header_track_data.name;
-            page.sister = header_track_data.artist;
 
             let new_header = generic_subpage_header(
-                header_track_data.avatar,
                 header_track_data.page,
                 'track'
             );
@@ -2480,12 +2468,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     /**
      * subpage header creator for profiles, artists, albums, and tracks
-     * @param {string} avatar avatar url
      * @param {string} header_title main header text
      * @param {string} link_type type of header, controls how top link is created (defaults to user)
      * @returns subpage header
      */
-    function generic_subpage_header(avatar, header_title, link_type='user') {
+    function generic_subpage_header(header_title, link_type='user') {
         // determines top text link
         let link_field = `<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
 
@@ -2501,7 +2488,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         new_header.classList.add('profile-header-subpage-section');
         new_header.innerHTML = (`
             <div class="badge-avatar">
-                <img src="${avatar}" alt="${page.name}">
+                <img src="${page.avatar}" alt="${page.name}">
             </div>
             <div class="badge-info">
                 ${link_field}
