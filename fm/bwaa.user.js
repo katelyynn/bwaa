@@ -234,6 +234,14 @@ const trans = {
             }
         },
         settings: {
+            title: 'Configure bwaa settings',
+            tabs: {
+                home: 'Home',
+                corrections: 'Corrections',
+                account: 'Account',
+                privacy: 'Privacy',
+                about: 'About'
+            },
             themes: {
                 simply_red: {
                     name: 'Simply Red'
@@ -241,6 +249,97 @@ const trans = {
                 paint_it_black: {
                     name: 'Paint It Black'
                 }
+            },
+            check_for_updates: 'Check for updates',
+            not_implemented: '(not yet implemented)',
+            welcome: {
+                name: 'Welcome to bwaa!',
+                body: 'You currently have version {v} of bwaa installed. Think you’re behind?'
+            },
+            navigation: {
+                name: 'Navigation'
+            },
+            accuracy: {
+                name: 'Accuracy',
+                visibility: 'Newer feature visibility'
+            },
+            social: {
+                name: 'Social'
+            },
+            extra: {
+                name: 'Extra'
+            },
+            sticky_nav: {
+                name: 'Make the navigation bar persistent on scroll'
+            },
+            legacy_cover_art: {
+                name: 'Override album cover art for 2012-era images',
+                alert: 'All personal preference, check out {+n}Nirvana{-a}’s {+e}Nevermind{-a} or more fittingly {+k}Kanye{-a}’s {+y}Yeezus{-a} for an example.'
+            },
+            hide_obsessions: {
+                name: 'Hide obsessions'
+            },
+            hide_your_progress: {
+                name: 'Hide your weekly progress'
+            },
+            hide_listening_reports: {
+                name: 'Hide charts (listening reports)'
+            },
+            varied_avatar_shapes: {
+                name: 'Allow varied avatar shapes',
+                alert: 'Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.'
+            },
+            hide_extra_grid_item: {
+                name: 'Hide extra grid item on profiles',
+                alert: 'If your top artists/albums display is set to ‘default’, an extra grid item will display otherwise.'
+            },
+            shouts_2010: {
+                name: 'Prefer 2010-era shout design'
+            },
+            shouts_no_votes: {
+                name: 'Do not display shout votes'
+            },
+            no_notifs: {
+                name: 'Hide notifications, only display inbox'
+            },
+            julie: {
+                name: 'Header text alt'
+            },
+            developer: {
+                name: 'Enable developer features'
+            },
+            inbuilt_style_loading: {
+                name: 'Automatically load the stylesheet',
+                alert: 'Once disabled, you are in control of loading the stylesheet with browser extensions such as Stylus.'
+            },
+            corrections: {
+                name: 'Media Corrections',
+                alert: 'In-built capitalisation corrections for artists, albums, and tracks are <strong>currently not supported</strong>. Sorry for the inconvenience.',
+                submit: 'Submit a correction in bleh (temporary)'
+            },
+            artist_redirection: {
+                name: 'Artist Redirection'
+            },
+            hide_redirect_banner: {
+                name: 'Do not display redirection banners'
+            },
+            about: {
+                name: 'About',
+                body: 'bwaa is an extension for Last.fm by {cute} with the aim to bring back the 2012 look of Last.fm. At the moment, it is a one girl project - but community contributions are welcome! {+i}(if the code is readable that is){-i}',
+                alert: 'bwaa is beta software, this is a large project so adjust your expectations to fit <3'
+            },
+            find_a_bug: {
+                name: 'Did you find a bug?',
+                submit: 'Submit a report or browse for one existing',
+                esr: 'If you are using an ESR version of Firefox, please consider switching to the usual stable builds for stability.'
+            },
+            support: {
+                name: 'How can I support?',
+                body: [
+                    'At the moment, the best way to support is sharing the word around to others you think may enjoy and giving the project a star.',
+                    'If you would like to donate, that will be available in the future but that is obviously not expected.'
+                ],
+                star: 'Star the project'
             }
         },
         wiki: {
@@ -796,6 +895,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let navlist = profile_header.querySelector('.navlist');
         patch_tab_overview_btn(navlist);
+
+        let report_tab = navlist.querySelector('.secondary-nav-item--listening-report a');
+        report_tab.textContent = trans[lang].profile.tabs.reports;
+
         let navlist_items = navlist.querySelector('.navlist-items');
 
         let journal_nav_btn = document.createElement('li');
@@ -3176,7 +3279,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         page.name = auth;
 
         adaptive_skin.innerHTML = '';
-        document.title = 'configure your bwaa | Last.fm';
+        document.title = `${trans[lang].settings.title} | Last.fm`;
 
         adaptive_skin.innerHTML = (`
             <div class="container page-content bwaa-settings lastfm-settings subpage">
@@ -3202,24 +3305,24 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             </div>
                             <div class="badge-info">
                                 <a href="${root}user/${auth}">${auth}</a>
-                                <h1>Configure bwaa Settings</h1>
+                                <h1>${trans[lang].settings.title}</h1>
                             </div>
                         </section>
                         <nav class="navlist secondary-nav navlist--more">
                             <ul class="navlist-items">
                                 <li class="navlist-item secondary-nav-item">
                                     <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_settings_page('home')">
-                                        Home
+                                        ${trans[lang].settings.tabs.home}
                                     </a>
                                 </li>
                                 <li class="navlist-item secondary-nav-item">
                                     <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="corrections" onclick="_change_settings_page('corrections')">
-                                        Corrections
+                                        ${trans[lang].settings.tabs.corrections}
                                     </a>
                                 </li>
                                 <li class="navlist-item secondary-nav-item">
                                     <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="about" onclick="_change_settings_page('about')">
-                                        About
+                                        ${trans[lang].settings.tabs.about}
                                     </a>
                                 </li>
                             </ul>
@@ -3259,42 +3362,42 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         if (page == 'home') {
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
-                    <h2 class="form-header">Welcome to bwaa!</h2>
-                    <p>You currently have version <strong>${version.build}.${version.sku}</strong> of bwaa installed. Think you’re behind?</p>
+                    <h2 class="form-header">${trans[lang].settings.welcome.name}</h2>
+                    <p>${trans[lang].settings.welcome.body.replace('{v}', `<strong>${version.build}.${version.sku}</strong>`)}</p>
                     <div class="more-link align-left space-self">
-                        <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js" target="_blank">Check for updates</a>
+                        <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js" target="_blank">${trans[lang].settings.check_for_updates}</a>
                     </div>
                     <fieldset>
-                        <legend>Navigation</legend>
+                        <legend>${trans[lang].settings.navigation.name}</legend>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--sticky_nav">
                                     <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Make the navigation bar persistent on scroll
+                                    ${trans[lang].settings.sticky_nav.name}
                                 </label>
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>Accuracy</legend>
+                        <legend>${trans[lang].settings.accuracy.name}</legend>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--legacy_cover_art">
                                     <input id="setting--legacy_cover_art" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Override album cover art for 2012-era images
+                                    ${trans[lang].settings.legacy_cover_art.name}
                                 </label>
                                 <div class="alert">
-                                    All personal preference, check out <a href="${root}music/Nirvana" target="_blank">Nirvana</a>’s <a href="${root}music/Nirvana/Nevermind" target="_blank">Nevermind</a> or more fittingly <a href="${root}music/Kanye+West" target="_blank">Kanye</a>’s <a href="${root}music/Kanye+West/Yeezus" target="_blank">Yeezus</a> for an example.
+                                    ${trans[lang].settings.legacy_cover_art.alert.replaceAll('{-a}', '</a>').replace('{+n}', `<a href="${root}music/Nirvana" target="_blank">`).replace('{+e}', `<a href="${root}music/Nirvana/Nevermind" target="_blank">`).replace('{+k}', `<a href="${root}music/Kanye+West" target="_blank">`).replace('{+y}', `<a href="${root}music/Kanye+West/Yeezus" target="_blank">`)}
                                 </div>
                             </div>
                         </div>
                         <div class="sep"></div>
-                        <h3 class="control-label">Newer feature visibility</h3>
+                        <h3 class="control-label">${trans[lang].settings.accuracy.visibility}</h3>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--hide_obsessions">
                                     <input id="setting--hide_obsessions" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Hide obsessions
+                                    ${trans[lang].settings.hide_obsessions.name}
                                 </label>
                             </div>
                         </div>
@@ -3302,7 +3405,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--hide_your_progress">
                                     <input id="setting--hide_your_progress" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Hide your weekly progress
+                                    ${trans[lang].settings.hide_your_progress.name}
                                 </label>
                             </div>
                         </div>
@@ -3310,21 +3413,21 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--hide_listening_reports">
                                     <input id="setting--hide_listening_reports" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Hide listening reports
+                                    ${trans[lang].settings.hide_listening_reports.name}
                                 </label>
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>Social</legend>
+                        <legend>${trans[lang].settings.social.name}</legend>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--varied_avatar_shapes">
                                     <input id="setting--varied_avatar_shapes" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Allow varied avatar shapes
+                                    ${trans[lang].settings.varied_avatar_shapes.name}
                                 </label>
                                 <div class="alert">
-                                    Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.
+                                    ${trans[lang].settings.varied_avatar_shapes.alert}
                                 </div>
                             </div>
                         </div>
@@ -3332,10 +3435,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--hide_extra_grid_item">
                                     <input id="setting--hide_extra_grid_item" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Hide extra grid item on profiles
+                                    ${trans[lang].settings.hide_extra_grid_item.name}
                                 </label>
                                 <div class="alert">
-                                    If your top artists/albums display is set to ‘default’, an extra grid item will display otherwise.
+                                    ${trans[lang].settings.hide_extra_grid_item.alert}
                                 </div>
                             </div>
                         </div>
@@ -3344,7 +3447,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--shouts_2010">
                                     <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Prefer 2010-era shout design
+                                    ${trans[lang].settings.shouts_2010.name}
                                 </label>
                             </div>
                         </div>
@@ -3352,7 +3455,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--shouts_no_votes">
                                     <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Do not display shout votes
+                                    ${trans[lang].settings.shouts_no_votes.name}
                                 </label>
                             </div>
                         </div>
@@ -3361,18 +3464,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--no_notifs">
                                     <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Hide notifications, only display inbox
+                                    ${trans[lang].settings.no_notifs.name}
                                 </label>
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>Extra</legend>
+                        <legend>${trans[lang].settings.extra.name}</legend>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--julie">
                                     <input id="setting--julie" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Header text alt
+                                    ${trans[lang].settings.julie.name}
                                 </label>
                             </div>
                         </div>
@@ -3383,7 +3486,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--developer">
                                     <input id="setting--developer" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Enable developer features
+                                    ${trans[lang].settings.developer.name}
                                 </label>
                             </div>
                         </div>
@@ -3392,14 +3495,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             <div class="checkbox">
                                 <label for="setting--inbuilt_style_loading">
                                     <input id="setting--inbuilt_style_loading" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Automatically load the stylesheet <i class="subtext">(not yet implemented)</i>
+                                    ${trans[lang].settings.inbuilt_style_loading.name} <i class="subtext">${trans[lang].settings.not_implemented}</i>
                                 </label>
                                 <div class="alert">
-                                    Once disabled, you are in control of loading the stylesheet with browser extensions such as Stylus.
+                                    ${trans[lang].settings.inbuilt_style_loading.alert}
                                 </div>
                             </div>
                         </div>
                     </fieldset>
+                    <!--
                     <div class="more-link align-right">
                         <a onclick="_deliver_notif('This is a quick test notification with text!')">Create a notification</a>
                     </div>
@@ -3430,6 +3534,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="more-link align-right">
                         <a onclick="_register_activity('shout', [{name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}], '${root}user/LAST.HQ')">Register a new shout activity</a>
                     </div>
+                    -->
                 </section>
             `);
 
@@ -3437,18 +3542,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         } else if (page == 'corrections') {
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
-                    <h2 class="form-header">Media Corrections</h2>
-                    <div class="alert">In-built capitalisation corrections for artists, albums, and tracks are <strong>currently not supported</strong>. Sorry for the inconvenience.</div>
+                    <h2 class="form-header">${trans[lang].settings.corrections.name}</h2>
+                    <div class="alert">${trans[lang].settings.corrections.alert}</div>
                     <div class="more-link align-left space-self">
-                        <a href="https://github.com/katelyynn/bleh/issues/new" target="_blank">Submit a correction in bleh</a>
+                        <a href="https://github.com/katelyynn/bleh/issues/new" target="_blank">${trans[lang].settings.corrections.submit}</a>
                     </div>
                     <fieldset>
-                        <legend>Artist Redirection</legend>
+                        <legend>${trans[lang].settings.artist_redirection.name}</legend>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="setting--hide_redirect_banner">
                                     <input id="setting--hide_redirect_banner" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    Do not display redirection banners
+                                    ${trans[lang].settings.hide_redirect_banner.name}
                                 </label>
                             </div>
                         </div>
@@ -3460,29 +3565,29 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         } else if (page == 'about') {
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
-                    <h2 class="form-header">About</h2>
-                    <p>bwaa is an extension for Last.fm by <a href="${root}user/cutensilly">cutensilly</a> with the aim to bring back the 2012 look of Last.fm. At the moment, it is a one girl project - but community contributions are welcome! <i class="subtext">(if the code is readable that is)</i></p>
+                    <h2 class="form-header">${trans[lang].settings.about.name}</h2>
+                    <p>${trans[lang].settings.about.body.replace('{cute}', `<a href="${root}user/cutensilly">cutensilly</a>`).replace('{+i}', '<i class="subtext">').replace('{-i}', '</i>')}</p>
                     <div class="alert alert-danger">
-                        bwaa is beta software, this is a large project so adjust your expectations to fit <3
+                        ${trans[lang].settings.about.alert}
                     </div>
                     <fieldset>
-                        <legend>Did you find a bug?</legend>
+                        <legend>${trans[lang].settings.find_a_bug.name}</legend>
                         <div class="form-group">
                             <div class="more-link align-left space-self">
-                                <a href="https://github.com/katelyynn/bwaa/issues/" target="_blank">Submit a report or browse for one existing</a>
+                                <a href="https://github.com/katelyynn/bwaa/issues/" target="_blank">${trans[lang].settings.find_a_bug.submit}</a>
                             </div>
                         </div>
                         <div class="alert">
-                            If you are using an ESR version of Firefox, please consider switching to the usual stable builds for stability.
+                            ${trans[lang].settings.find_a_bug.esr}
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>How can I support?</legend>
+                        <legend>${trans[lang].settings.support.name}</legend>
                         <div class="form-group">
-                            <p>At the moment, the best way to support is sharing the word around to others you think may enjoy and giving the project a star.</p>
-                            <p>If you would like to donate, that will be available in the future but that is obviously not expected.</p>
+                            <p>${trans[lang].settings.support.body[0]}</p>
+                            <p>${trans[lang].settings.support.body[1]}</p>
                             <div class="more-link align-left space-self">
-                                <a href="https://github.com/katelyynn/bwaa/" target="_blank">Star the project</a>
+                                <a href="https://github.com/katelyynn/bwaa/" target="_blank">${trans[lang].settings.support.star}</a>
                             </div>
                         </div>
                     </fieldset>
