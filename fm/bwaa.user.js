@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0913
+// @version      2024.0915
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,7 +18,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0913',
+    build: '2024.0915',
     sku: 'sweet'
 }
 
