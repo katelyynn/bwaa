@@ -3230,6 +3230,11 @@
 
         &.activity-item {
             font-size: 11px;
+            display: block;
+
+            & > div {
+                display: inline;
+            }
 
             .title {
                 font-weight: normal;
@@ -3292,9 +3297,6 @@
             &.activity--wiki:before {
                 background-position: -17px -1420px;
             }
-
-            flex-direction: row;
-            flex-wrap: wrap;
 
             .title {
                 padding-right: 4px;
