@@ -711,6 +711,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     // general health
     function checkup_page_structure() {
+        if (page.structure.container == null || !document.body.contains(page.structure.container)) {
+            console.info('bwaa - page structure checkup - page is missing a container, creating');
+            page.structure.container = document.createElement('div');
+            page.structure.container.classList.add('page-content', 'container');
+
+            // listening report error
+            let container_full_width = document.body.querySelector('.container--full-width');
+
+            container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+        }
+
         if (page.structure.row == null || !document.body.contains(page.structure.row)) {
             console.info('bwaa - page structure checkup - page is missing a row, creating');
             page.structure.row = document.createElement('div');
@@ -773,8 +784,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         console.info('bwaa - profile overview?', profile_header_overview);
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
-        page.structure.row = page.structure.container.querySelector('.row');
         try {
+            page.structure.row = page.structure.container.querySelector('.row');
             page.structure.main = page.structure.row.querySelector('.col-main');
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
         } catch(e) {
