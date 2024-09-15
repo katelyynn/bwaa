@@ -2987,9 +2987,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 <a class="grid-items-item-aux-block" href="${artist_name.getAttribute('href')}">
                                     ${artist_name.textContent.trim()}
                                 </a>
+                                ${(scrobbles != null) ? (`
                                 <a href="${scrobbles.getAttribute('href')}">
                                     ${scrobbles.textContent.trim()}
                                 </a>
+                                `) : ''}
                             </p>
                         </div>
                         <a class="link-block-cover-link" href="${track_name.getAttribute('href')}" tabindex="-1" aria-hidden="true"></a>
