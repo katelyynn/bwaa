@@ -546,6 +546,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_obsessions();
             bwaa_library();
             bwaa_playlists();
+            bwaa_search();
             subscribe_to_events();
         }
 
@@ -597,6 +598,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_obsessions();
                                 bwaa_library();
                                 bwaa_playlists();
+                                bwaa_search();
                                 subscribe_to_events();
                             }
                         }
@@ -3094,7 +3096,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             content_form.classList.remove('content-form');
             content_form.classList.add('settings-form');
 
-            content_form.setAttribute('data-bwaa', 'true');
+            content_form.setAttribute('data-bwaa-cycle-form', 'true');
         });
 
         if (!document.body.classList[2].startsWith('namespace--settings'))
@@ -4162,6 +4164,47 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         companion.dispatchEvent(new Event('keydown'));
         companion.dispatchEvent(new Event('input'));
         companion_textbox.dispatchEvent(new Event('input'));
+    }
+
+
+
+
+    function bwaa_search() {
+        let search_form = document.body.querySelector('.search-form');
+
+        if (search_form == null)
+            return;
+
+        if (search_form.hasAttribute('data-bwaa'))
+            return;
+        search_form.setAttribute('data-bwaa', 'true');
+
+        page.type = 'search';
+        page.name = auth;
+
+        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
+
+        checkup_page_structure();
+
+        let content_top = document.body.querySelector('.content-top');
+
+        let navlist = content_top.querySelector('.navlist');
+        let page_title = content_top.querySelector('.content-top-header').textContent;
+
+        let new_header = generic_subpage_header(
+            my_avi,
+            page_title
+        );
+
+        page.structure.row.insertBefore(navlist, page.structure.main);
+        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
     }
 
 

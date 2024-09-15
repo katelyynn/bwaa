@@ -1782,6 +1782,7 @@
     .grid-items {
         margin-top: 15px;
     }
+    h2:has([href^="/search/artists"]) + .grid-items,
     #line-up .grid-items,
     [data-endpoint$="/library/artists"] .grid-items,
     #top-artists .grid-items {
@@ -1860,6 +1861,7 @@
             }
         }
     }
+    h2:has([href^="/search/albums"]) + .grid-items,
     .obsession-object .grid-items,
     .featured-item-section .grid-items,
     .obsession-list.grid-items,
@@ -1936,6 +1938,7 @@
                 }
             }
 
+            .grid-items-item-playlink,
             .lazy-buylinks {
                 display: none;
             }
@@ -4101,6 +4104,27 @@
             a {
                 cursor: pointer;
                 user-select: none;
+            }
+        }
+
+        &.search-form {
+            .search-field {
+                width: 100%;
+                padding-right: 40px;
+            }
+
+            .search-reset {
+                right: 0 !important;
+            }
+
+            &:after {
+                display: none;
+            }
+
+            &:not([data-search-state="loading"]) {
+                .search-submit {
+                    display: none;
+                }
             }
         }
     }
