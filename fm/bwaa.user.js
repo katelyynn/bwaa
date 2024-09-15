@@ -151,7 +151,7 @@ const trans = {
                 events: 'Events',
                 wiki: 'Biography',
                 tags: 'Tags',
-                shoutbox: 'Shoutbox',
+                shoutbox: 'Shouts',
                 listeners: 'Listeners'
             },
             share: 'Share this artist:',
@@ -175,7 +175,7 @@ const trans = {
                 wiki: 'Wiki',
                 tags: 'Tags',
                 images: 'Artwork',
-                shoutbox: 'Shoutbox'
+                shoutbox: 'Shouts'
             },
             share: 'Share this album:'
         },
@@ -186,7 +186,7 @@ const trans = {
                 // copy the rest 1:1 from last.fm's interface
                 wiki: 'Wiki',
                 albums: 'Albums',
-                shoutbox: 'Shoutbox',
+                shoutbox: 'Shouts',
                 tags: 'Tags'
             },
             share: 'Share this track:',
