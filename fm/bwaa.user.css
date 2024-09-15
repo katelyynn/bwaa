@@ -5634,4 +5634,12 @@
             margin: unset !important;
         }
     }
+
+
+
+
+    /* settings */
+    #current-subscription {
+        margin-top: 15px;
+    }
 }

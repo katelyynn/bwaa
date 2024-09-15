@@ -3224,7 +3224,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             content_form.setAttribute('data-bwaa-cycle-form', 'true');
         });
 
-        if (!document.body.classList[2].startsWith('namespace--settings'))
+        if (!document.body.classList[2].startsWith('namespace--settings') && !document.body.classList[1].startsWith('namespace--settings'))
             return;
 
         page.type = 'settings';
@@ -3279,6 +3279,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             'Your Account Settings'
         );
         page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
+
+        // subscription page
+        if (document.body.classList[1].startsWith('namespace--settings')) {
+            let content = page.structure.container.querySelector(`.row + div`);
+
+            page.structure.main.appendChild(content);
+        }
     }
 
 
