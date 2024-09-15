@@ -64,6 +64,15 @@ const trans = {
             added: 'Added to my Library'
         },
 
+        tag: {
+            action: 'Tag'
+        },
+
+        shouts: {
+            user_wrote: '{user} wrote:',
+            view_profile: 'View Profile'
+        },
+
         profile: {
             tabs: {
                 overview: 'Profile',
@@ -208,6 +217,20 @@ const trans = {
                         bio: 'Unsave this image'
                     }
                 }
+            },
+            vote: {
+                to_vote: 'Vote',
+                voted: 'Voted'
+            },
+            star: {
+                to_star: 'Star',
+                starred: 'Starred'
+            },
+            save: {
+                to_save: 'Save',
+                saved: 'Saved',
+                added: 'Added to {artist}’s saved images',
+                removed: 'Removed from {artist}’s saved images'
             }
         },
         settings: {
@@ -232,7 +255,9 @@ const trans = {
         },
         obsession: {
             name: 'Music Obsession',
-            view_more: 'View more obsessions'
+            view_more: 'View more obsessions',
+            previous: 'Previous »',
+            forward: '« Forward'
         },
         activities: {
             name: 'Recent Activity',
@@ -2620,7 +2645,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let btn_add = tag_section_container.querySelector('.btn-add');
         if (btn_add != null) {
             btn_add.classList.add('btn-add-tag');
-            btn_add.innerHTML = '<strong>Tag</strong>';
+            btn_add.innerHTML = `<strong>${trans[lang].tag.action}</strong>`;
         }
 
         let tags = tag_section_container.querySelectorAll('.big-tags-item-name a');
@@ -2661,7 +2686,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 return;
 
             if (settings.shouts_2010)
-                shout_name.innerHTML = `${shout_name.innerHTML} wrote:`;
+                shout_name.innerHTML = trans[lang].shouts.user_wrote.replace('{user}', shout_name.innerHTML);
 
             let shout_actions = shout.querySelector('.shout-actions');
 
@@ -2676,7 +2701,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
 
             if (settings.shouts_2010)
-                shout_actions.innerHTML = `<a href="${root}user/${shout_name.textContent}">View Profile</a> | ${shout_actions.innerHTML}`;
+                shout_actions.innerHTML = `<a href="${root}user/${shout_name.textContent}">${trans[lang].shouts.view_profile}</a> | ${shout_actions.innerHTML}`;
         });
 
         if (!settings.varied_avatar_shapes)
@@ -2739,7 +2764,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let vote_text = document.createElement('span');
             vote_text.classList.add('vote-text');
-            vote_text.innerHTML = '<span class="to-vote">Vote</span><span class="voted">Voted</span>';
+            vote_text.innerHTML = `<span class="to-vote">${trans[lang].gallery.vote.to_vote}</span><span class="voted">${trans[lang].gallery.vote.voted}</span>`;
             button.after(vote_text);
         });
 
@@ -2751,7 +2776,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let vote_text = document.createElement('span');
             vote_text.classList.add('vote-text');
-            vote_text.innerHTML = '<span class="to-vote">Star</span><span class="voted">Starred</span>';
+            vote_text.innerHTML = `<span class="to-vote">${trans[lang].gallery.star.to_star}</span><span class="voted">${trans[lang].gallery.star.starred}</span>`;
             button.after(vote_text);
         });
 
@@ -2785,13 +2810,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         gallery_bookmark_button.classList.add('gallery-image-bookmark-button');
         gallery_bookmark_button.innerHTML = (`
             <button class="gallery-image-bookmark-button-button" data-bleh--image-is-bookmarked="${image_is_bookmarked}" onclick="_update_image_bookmark(this, '${artist_name}', '${focused_image_id}')">
-                <span class="bookmark-votes">
-
-                </span>
+                <span class="bookmark-votes"></span>
                 <span class="vote-text" id="bookmark-vote-text">
                     ${(image_is_bookmarked)
-                    ? 'Saved'
-                    : 'Save'}
+                    ? trans[lang].gallery.save.saved
+                    : trans[lang].gallery.save.to_save}
                 </span>
             </button>
         `);
@@ -2806,8 +2829,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let is_bookmarked = (button.getAttribute('data-bleh--image-is-bookmarked') === 'true');
 
         document.getElementById('bookmark-vote-text').textContent = (is_bookmarked)
-        ? 'Save'
-        : 'Saved';
+        ? trans[lang].gallery.save.to_save
+        : trans[lang].gallery.save.saved;
 
         if (!bookmarked_images.hasOwnProperty(artist))
             bookmarked_images[artist] = [];
@@ -2825,14 +2848,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             }
             bookmarked_images[artist] = new_artist_bookmarks;
 
-            deliver_notif(`Removed from ${artist}’s saved images`);
+            deliver_notif(trans[lang].gallery.save.removed.replace('{artist}', artist));
             console.info('bleh - image', id, 'from artist', artist, 'has been removed from bookmarks');
         } else {
             // add to bookmarks
 
             button.setAttribute('data-bleh--image-is-bookmarked', 'true');
             bookmarked_images[artist].push(id);
-            deliver_notif(`Added to ${artist}’s saved images`);
+            deliver_notif(trans[lang].gallery.save.added.replace('{artist}', artist));
             console.info('bleh - image', id, 'from artist', artist, 'has been added to bookmarks');
         }
 
@@ -2942,22 +2965,22 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <li class="navlist-item secondary-nav-item secondary-nav-item--next-obsession">
                     ${(next != null) ? `
                         <a class="secondary-nav-item-link" href="${next.getAttribute('href')}">
-                            « Forward
+                            ${trans[lang].obsession.forward}
                         </a>
                     ` : `
                         <a class="secondary-nav-item-link" disabled>
-                            « Forward
+                            ${trans[lang].obsession.forward}
                         </a>
                     `}
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--previous-obsession">
                     ${(previous != null) ? `
                         <a class="secondary-nav-item-link" href="${previous.getAttribute('href')}">
-                            Previous »
+                            ${trans[lang].obsession.previous}
                         </a>
                     ` : `
                         <a class="secondary-nav-item-link" disabled>
-                            Previous »
+                            ${trans[lang].obsession.previous}
                         </a>
                     `}
                 </li>
