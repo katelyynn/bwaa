@@ -2558,7 +2558,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
      */
     function bwaa_wiki_history() {
         page.structure.container = document.body.querySelector('.page-content');
-        let buffer_to_remove = page.structure.container.querySelector('.row + .buffer-4');
+        let buffer_to_remove = page.structure.container.querySelector('.buffer-4');
 
         let table = buffer_to_remove.querySelector('.wiki-history');
         let pagination = buffer_to_remove.querySelector('.pagination');
