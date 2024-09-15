@@ -3107,6 +3107,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return;
 
         page.type = 'settings';
+        page.avatar = my_avi;
         page.name = auth;
 
         page.structure.container = document.body.querySelector('.page-content');
@@ -3154,7 +3155,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         adaptive_skin.removeChild(content_top);
 
         let new_header = generic_subpage_header(
-            my_avi,
             'Your Account Settings'
         );
         page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
@@ -3172,6 +3172,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
         page.type = 'bwaa_settings';
+        page.avatar = my_avi;
         page.name = auth;
 
         adaptive_skin.innerHTML = '';
@@ -3656,6 +3657,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
         page.type = 'bwaa_settings';
+        page.avatar = my_avi;
         page.name = auth;
 
         deliver_notif(`bwaa has installed successfully, welcome aboard!`);

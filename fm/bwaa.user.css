@@ -5500,6 +5500,40 @@
 
 
     .user-dashboard {
+        margin: unset;
+
+        .report-box-container--overview {
+            margin: unset;
+            padding: unset;
+
+            background: unset;
+            color: inherit;
+
+            .report-headline-border {
+                display: none;
+            }
+
+            .col-main {
+                margin-bottom: -15px;
+            }
+            .listening-report-row {
+                padding: 0 15px;
+            }
+
+            .page-content {
+                border-bottom: unset;
+                min-height: 460px;
+            }
+
+            & + .page-content {
+                border-top: unset;
+
+                .listening-report-row--category:first-child {
+                    border-top: 1px dotted var(--border);
+                }
+            }
+        }
+
         .listening-report-row {
             width: 100%;
 
