@@ -220,6 +220,16 @@ const trans = {
                 }
             }
         },
+        wiki: {
+            no_facts: 'This wiki has no facts listed :(',
+            whats_this: 'What’s This?',
+            version: 'You’re viewing {version_edited_by}',
+            history: 'View older versions',
+            discuss: '{start}discuss{end} this wiki.',
+            deleted_user: 'a deleted user',
+            last_edited: 'Last edited {date}.',
+            edit: 'Edit this wiki’s contents'
+        },
         obsession: {
             name: 'Music Obsession',
             view_more: 'View more obsessions'
@@ -2487,13 +2497,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             factbox = document.createElement('div');
             factbox.classList.add('factbox');
             factbox.innerHTML = (`
-                <div class="no-facts">This wiki has no facts listed :(</div>
+                <div class="no-facts">${trans[lang].wiki.no_facts}</div>
             `);
         }
 
         let factbox_header = document.createElement('h4');
         factbox_header.classList.add('factbox-header');
-        factbox_header.innerHTML = 'Factbox (<a href="#" title="What’s This?">?</a>)';
+        factbox_header.innerHTML = `Factbox (<a href="#" title="${trans[lang].wiki.whats_this}">?</a>)`;
         factbox.insertBefore(factbox_header, factbox.firstElementChild);
 
         let wiki_author_element = page.structure.main.querySelector('.wiki-author');
@@ -2501,7 +2511,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return;
 
         // ensures splitting still works fine, refer to below
-        wiki_author_element.innerHTML = wiki_author_element.innerHTML.replace('Deleted user', '<span>deleted user</span>');
+        wiki_author_element.innerHTML = wiki_author_element.innerHTML.replace('Deleted user', `<span>${trans[lang].wiki.deleted_user}</span>`);
 
         let wiki_author = wiki_author_element.querySelector(':scope > a');
         // wiki version is the text before the author element, which we ensure exists
@@ -2519,12 +2529,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         // compile all that information into one
         let factbox_version = document.createElement('div');
         factbox_version.classList.add('factbox-version-container');
+        // sorry for anyone who has to read this
         factbox_version.innerHTML = (`
             <div class="factbox-version">
-                You’re viewing <span class="version">${wiki_version}</span> ${(wiki_author != null) ? wiki_author.outerHTML : 'a deleted user'}. ${(wiki_history_link != null) ? `<a href="${wiki_history_link.getAttribute('href')}">View older versions</a>, or <a href="${wiki_discuss_link.getAttribute('href')}">discuss</a> this wiki.` : ''}
+                ${trans[lang].wiki.version.replace('{version_edited_by}', `<span class="version">${wiki_version}</span>`)} ${(wiki_author != null) ? wiki_author.outerHTML : trans[lang].wiki.deleted_user}. ${(wiki_history_link != null) ? `<a href="${wiki_history_link.getAttribute('href')}">${trans[lang].wiki.history}</a>, or ${trans[lang].wiki.discuss.replace('{start}', `<a href="${wiki_discuss_link.getAttribute('href')}">`).replace('{end}', '</a>')}` : ''}
             </div>
             <div class="factbox-author">
-                Last edited ${wiki_date}.
+                ${trans[lang].wiki.last_edited.replace('{date}', wiki_date)}
             </div>
         `);
 
@@ -2536,7 +2547,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let wiki_edit_more_link = document.createElement('div');
             wiki_edit_more_link.classList.add('more-link', 'align-right');
             wiki_edit_more_link.innerHTML = (`
-                <a href="${wiki_edit_link.getAttribute('href')}">Edit this wiki’s contents</a>
+                <a href="${wiki_edit_link.getAttribute('href')}">${trans[lang].wiki.edit}</a>
             `);
 
             factbox.appendChild(wiki_edit_more_link);
