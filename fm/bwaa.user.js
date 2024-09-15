@@ -40,7 +40,7 @@ const trans = {
         plays: '{count} plays',
         listeners: '{count} listeners',
         popular_tags: 'Popular tags: {list}',
-        shouts: 'Shouts: {link}',
+        shouts_link: 'Shouts: {link}',
         leave_a_shout: 'Leave a shout',
         see_all_placeholder: 'See all {placeholder}',
         share_link: 'Share link',
@@ -1475,7 +1475,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         ${trans[lang].popular_tags.replace('{list}', tags_html)}
                     </div>
                     <div class="shouts">
-                        ${trans[lang].shouts.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
+                        ${trans[lang].shouts_link.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
                     </div>
                     <div class="share-bar">
                         <strong>${trans[lang].artist.share}</strong>
@@ -1905,7 +1905,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         ${trans[lang].popular_tags.replace('{list}', tags_html)}
                     </div>
                     <div class="shouts">
-                        ${trans[lang].shouts.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
+                        ${trans[lang].shouts_link.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
                     </div>
                     <div class="share-bar">
                         <strong>${trans[lang].album.share}</strong>
@@ -2233,7 +2233,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     ${trans[lang].popular_tags.replace('{list}', tags_html)}
                 </div>
                 <div class="shouts">
-                    ${trans[lang].shouts.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
+                    ${trans[lang].shouts_link.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
                 </div>
                 <div class="share-bar">
                         <strong>${trans[lang].track.share}</strong>
