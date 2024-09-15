@@ -3707,6 +3707,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
      */
     function bwaa_library() {
         bwaa_library_header();
+        bwaa_library_search();
 
         let top_tracks = document.querySelectorAll('#top-tracks-section .chartlist .chartlist-row:not(.chartlist__placeholder-row, [data-bwaa="true"])');
 
@@ -3745,6 +3746,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         library_header.setAttribute('data-bwaa', 'true');
 
         library_header.innerHTML = library_header.innerHTML.replaceAll('·', '|');
+    }
+
+    function bwaa_library_search() {
+        let library_search = document.body.querySelector('.library-search:not([data-bwaa])');
+
+        if (library_search == null)
+            return;
+        library_search.setAttribute('data-bwaa', 'true');
+
+        let library_controls = document.querySelector('.library-controls');
+        library_controls.appendChild(library_search);
     }
 
 
@@ -4281,7 +4293,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
     function bwaa_search() {
-        let search_form = document.body.querySelector('.search-form');
+        let search_form = document.body.querySelector('.search-form:not(.library-search)');
 
         if (search_form == null)
             return;

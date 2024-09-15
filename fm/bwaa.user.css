@@ -5111,6 +5111,57 @@
         }
     }
 
+    .library-search {
+        margin: unset !important;
+        display: flex;
+        align-items: center;
+        width: 260px !important;
+        border-bottom: 1px solid var(--border);
+
+        font-size: 10px;
+        line-height: 17px;
+
+        form {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+
+            & > .sr-only:first-child {
+                clip: unset;
+                border: unset;
+                width: fit-content;
+                height: fit-content;
+                margin: unset;
+                overflow: unset;
+                padding: unset;
+                position: static;
+                cursor: pointer;
+
+                color: var(--colour-middle);
+            }
+        }
+
+        .library-search-input {
+            border: unset !important;
+            box-shadow: unset !important;
+            padding: unset !important;
+            border-radius: unset !important;
+            font: inherit !important;
+
+            width: 100% !important;
+
+            input {
+                caret-color: initial !important;
+                width: unset !important;
+                border: initial !important;
+            }
+
+            .library-search-submit {
+                display: none;
+            }
+        }
+    }
+
     .library-overview-header {
         display: flex;
         flex-direction: column;
@@ -5218,6 +5269,7 @@
     .modal-dialog {
         width: fit-content;
     }
+    .library-search-results,
     .date-range-picker-content,
     .modal-body {
         border: 5px solid var(--colour-upper);
