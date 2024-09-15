@@ -2571,6 +2571,17 @@
                 .note {
                     flex: 1;
                     text-align: right;
+
+                    .replace-playlink {
+                        position: static;
+                        opacity: unset !important;
+                        color: var(--text-link);
+                        padding: unset;
+
+                        &:before {
+                            display: none;
+                        }
+                    }
                 }
             }
         }

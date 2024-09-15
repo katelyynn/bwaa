@@ -2171,39 +2171,60 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <div class="playback">
                     <div class="playback-item">
                         ${(!play_on_youtube.classList.contains('play-this-track-playlink--disabled'))
-                        ? `<a class="provider provider--youtube" href="${play_on_youtube.getAttribute('href')}" target="_blank">
+                        ? (`
+                        <a class="provider provider--youtube" href="${play_on_youtube.getAttribute('href')}" target="_blank">
                             Play on <strong>YouTube</strong>
-                        </a>`
-                        : `<a class="provider provider--youtube" href="${play_on_youtube.getAttribute('href')}" data-open-modal="${play_on_youtube.getAttribute('data-open-modal')}">
+                        </a>
+                        <div class="note">
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--youtube + .replace-playlink').outerHTML}
+                        </div>
+                        `)
+                        : (`
+                        <a class="provider provider--youtube" href="${play_on_youtube.getAttribute('href')}" data-open-modal="${play_on_youtube.getAttribute('data-open-modal')}">
                             Add a <strong>YouTube</strong> link
-                        </a>`}
+                        </a>
                         <div class="note">
                             Yes, it <a>scrobbles!</a> <a>Learn more</a>
                         </div>
+                        `)}
                     </div>
                     <div class="playback-item">
                         ${(!play_on_spotify.classList.contains('play-this-track-playlink--disabled'))
-                        ? `<a class="provider provider--spotify" href="${play_on_spotify.getAttribute('href')}" target="_blank">
+                        ? (`
+                        <a class="provider provider--spotify" href="${play_on_spotify.getAttribute('href')}" target="_blank">
                             Play on <strong>Spotify</strong>
-                        </a>`
-                        : `<a class="provider provider--spotify" href="${play_on_spotify.getAttribute('href')}" data-open-modal="${play_on_spotify.getAttribute('data-open-modal')}">
+                        </a>
+                        <div class="note">
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--spotify + .replace-playlink').outerHTML}
+                        </div>
+                        `)
+                        : (`
+                        <a class="provider provider--spotify" href="${play_on_spotify.getAttribute('href')}" data-open-modal="${play_on_spotify.getAttribute('data-open-modal')}">
                             Add a <strong>Spotify</strong> link
-                        </a>`}
+                        </a>
                         <div class="note">
                             Yes, it <a>scrobbles!</a> <a>Learn more</a>
                         </div>
+                        `)}
                     </div>
                     <div class="playback-item">
                         ${(!play_on_apple_music.classList.contains('play-this-track-playlink--disabled'))
-                        ? `<a class="provider provider--apple-music" href="${play_on_apple_music.getAttribute('href')}" target="_blank">
+                        ? (`
+                        <a class="provider provider--apple-music" href="${play_on_apple_music.getAttribute('href')}" target="_blank">
                             Play on <strong>Apple Music</strong>
-                        </a>`
-                        : `<a class="provider provider--apple-music" href="${play_on_apple_music.getAttribute('href')}" data-open-modal="${play_on_apple_music.getAttribute('data-open-modal')}">
+                        </a>
+                        <div class="note">
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--itunes + .replace-playlink').outerHTML}
+                        </div>
+                        `)
+                        : (`
+                        <a class="provider provider--apple-music" href="${play_on_apple_music.getAttribute('href')}" data-open-modal="${play_on_apple_music.getAttribute('data-open-modal')}">
                             Add an <strong>Apple Music</strong> link
-                        </a>`}
+                        </a>
                         <div class="note">
                             Yes, it <a>scrobbles!</a> <a>Learn more</a>
                         </div>
+                        `)}
                     </div>
                 </div>
                 ${(track_video != ''
