@@ -796,12 +796,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.subpage = 'overview';
 
             // fetch some data from the header
-            page.name = profile_header.querySelector('.header-title a').textContent;
             page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
+            page.name = profile_header.querySelector('.header-title a').textContent;
 
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
             let header_user_data = {
-                link: profile_header.querySelector('.header-title a').getAttribute('href'),
                 display_name: profile_header.querySelector('.header-title-display-name').textContent,
                 since: profile_header.querySelector('.header-scrobble-since').textContent,
                 scrobbles: header_metadata[0],
@@ -963,7 +962,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             profile_header.style.setProperty('display', 'none');
 
             // user type
-            if (page.name == 'cutensilly') {
+            if (is_cute) {
                 let user_type_banner = document.createElement('div');
                 user_type_banner.classList.add('user-type-banner', `user-type--cute`);
                 user_type_banner.textContent = 'bwaa creator';
@@ -1126,8 +1125,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.subpage = document.body.classList[1].replace('namespace--', '');
             deliver_notif(`Subpage type of ${page.subpage}`, true);
 
-            page.name = profile_header.querySelector('.header-title a').textContent;
             page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
+            page.name = profile_header.querySelector('.header-title a').textContent;
 
             let header_user_data = {
                 link: profile_header.querySelector('.header-title a').getAttribute('href'),
