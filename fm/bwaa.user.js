@@ -42,7 +42,8 @@ const trans = {
         popular_tags: 'Popular tags: {list}',
         shouts: 'Shouts: {link}',
         leave_a_shout: 'Leave a shout',
-        see_all_images: 'See all {placeholder}',
+        see_all_placeholder: 'See all {placeholder}',
+        share_link: 'Share link',
 
         your_scrobbles: {
             name: 'Your Scrobbles',
@@ -53,7 +54,14 @@ const trans = {
             name: 'Recent Listening Trend',
             artist: 'Artist Stats',
             album: 'Album Stats',
-            track: 'Track Stats'
+            track: 'Track Stats',
+            scrobbles: 'Scrobbles',
+            listeners: 'Listeners'
+        },
+
+        bookmark: {
+            add: 'Add to my Library',
+            added: 'Added to my Library'
         },
 
         profile: {
@@ -129,7 +137,7 @@ const trans = {
                 // copy the rest 1:1 from last.fm's interface
                 tracks: 'Tracks',
                 albums: 'Albums',
-                photos: 'Photos',
+                images: 'Photos',
                 similar: 'Similar Artists',
                 events: 'Events',
                 wiki: 'Biography',
@@ -152,12 +160,30 @@ const trans = {
         },
         album: {
             tabs: {
-                overview: 'Album'
-            }
+                overview: 'Album',
+
+                // copy the rest 1:1 from last.fm's interface
+                wiki: 'Wiki',
+                tags: 'Tags',
+                images: 'Artwork',
+                shoutbox: 'Shoutbox'
+            },
+            share: 'Share this album:'
         },
         track: {
             tabs: {
-                overview: 'Track'
+                overview: 'Track',
+
+                // copy the rest 1:1 from last.fm's interface
+                wiki: 'Wiki',
+                tags: 'Tags',
+                images: 'Artwork',
+                shoutbox: 'Shoutbox'
+            },
+            share: 'Share this track:',
+            love: {
+                add: 'Love this track',
+                added: 'You love this track'
             }
         },
         gallery: {
@@ -1291,47 +1317,47 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tracks">
-                            Tracks
+                            ${trans[lang].artist.tabs.tracks}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
-                            Albums
+                            ${trans[lang].artist.tabs.albums}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
-                            Photos
+                            ${trans[lang].artist.tabs.images}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+similar">
-                            Similar Artists
+                            ${trans[lang].artist.tabs.similar}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--events">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+events">
-                            Events
+                            ${trans[lang].artist.tabs.events}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            Biography
+                            ${trans[lang].artist.tabs.wiki}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            Tags
+                            ${trans[lang].artist.tabs.tags}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            Shouts
+                            ${trans[lang].artist.tabs.shoutbox}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--listeners">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+listeners">
-                            Listeners
+                            ${trans[lang].artist.tabs.listeners}
                         </a>
                     </li>
                 </ul>
@@ -1410,13 +1436,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         ${get_wiki()}
                     </div>
                     <div class="tags">
-                        Popular tags: ${tags_html}
+                        ${trans[lang].popular_tags.replace('{list}', tags_html)}
                     </div>
                     <div class="shouts">
-                        Shouts: <a href="${window.location.href}/+shoutbox">Leave a shout</a>
+                        ${trans[lang].shouts.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
                     </div>
                     <div class="share-bar">
-                        <strong>Share this artist:</strong>
+                        <strong>${trans[lang].artist.share}</strong>
+                        <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
                     </div>
                 </div>
                 <div class="artist-image-side">
@@ -1434,7 +1461,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                     </div>
                     <div class="option">
-                        <a href="${header_artist_data.link}/+images">See all ${header_artist_data.photos}</a>
+                        <a href="${header_artist_data.link}/+images">${trans[lang].see_all_placeholder.replace('{placeholder}', header_artist_data.photos)}</a>
                     </div>
                 </div>
             `);
@@ -1463,10 +1490,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
                 let more_information = document.createElement('section');
                 more_information.innerHTML = (`
-                    <h2>More information</h2>
+                    <h2>${trans[lang].artist.more_information.name}</h2>
                     <div class="more-information-links">
                         <div class="title">
-                            <h3>Links</h3>
+                            <h3>${trans[lang].artist.more_information.links}</h3>
                         </div>
                         <div class="links">
                             ${links_html.innerHTML}
@@ -1501,7 +1528,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="info">
                         <a class="user" href="${auth_link.getAttribute('href').replace(auth, name)}">${name}</a>
-                        <a class="scrobbles" href="${link}">Top Listener</a>
+                        <a class="scrobbles" href="${link}">${trans[lang].artist.top_listeners.subtext}</a>
                     </div>
                 `);
                 top_global_listeners_placeholder.appendChild(listener_element);
@@ -1511,7 +1538,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let top_global_listeners_you_know = document.createElement('section');
             top_global_listeners_you_know.innerHTML = (`
-                <h2>Top Listeners</h2>
+                <h2>${trans[lang].artist.top_listeners.name}</h2>
                 ${top_global_listeners_placeholder.outerHTML}
                 <div class="module-options">
                     <a href="${window.location.href}/+listeners">${trans[lang].see_more}</a>
@@ -1543,7 +1570,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="info">
                         <a class="user" href="${auth_link.getAttribute('href').replace(auth, name)}">${name}</a>
-                        <a class="scrobbles" href="${link}">Top Listener</a>
+                        <a class="scrobbles" href="${link}">${trans[lang].artist.top_listeners.subtext}</a>
                     </div>
                 `);
                 listeners_placeholder.appendChild(listener_element);
@@ -1555,7 +1582,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (more_listeners != null) {
                 let listeners_you_know = document.createElement('section');
                 listeners_you_know.innerHTML = (`
-                    <h2>Listeners You Know</h2>
+                    <h2>${trans[lang].artist.listeners_you_know.name}</h2>
                     ${listeners_placeholder.outerHTML}
                     <div class="module-options">
                         <a href="${more_listeners.getAttribute('href')}">${trans[lang].see_count_more.replace('{count}', more_listeners.textContent)}</a>
@@ -1574,7 +1601,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let your_scrobbles = document.createElement('section');
             your_scrobbles.innerHTML = (`
-                <h2>Your Scrobbles</h2>
+                <h2>${trans[lang].your_scrobbles.name}</h2>
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
@@ -1582,7 +1609,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                         <div class="info">
                             <a class="user" href="${auth_link}">${auth}</a>
-                            <a class="scrobbles" href="${scrobble_link}">${scrobble_count} scrobbles</a>
+                            <a class="scrobbles" href="${scrobble_link}">${trans[lang].your_scrobbles.count_scrobbles.replace('{count}', scrobble_count)}</a>
                         </div>
                     </div>
                 </div>
@@ -1596,20 +1623,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let artist_stats = document.createElement('section');
             artist_stats.innerHTML = (`
-                <h2>Artist Stats</h2>
+                <h2>${trans[lang].trend.artist}</h2>
                 <div class="stats-container">
                     <div class="scrobbles-and-listeners">
                         <div class="scrobbles">
                             <h1>${header_artist_data.plays}</h1>
-                            <p>Scrobbles</p>
+                            <p>${trans[lang].trend.scrobbles}</p>
                         </div>
                         <div class="listeners">
                             <h1>${header_artist_data.listeners}</h1>
-                            <p>Listeners</p>
+                            <p>${trans[lang].trend.listeners}</p>
                         </div>
                     </div>
                     <div class="recent-listening-trend">
-                        <p>Recent Listening Trend</p>
+                        <p>${trans[lang].trend.name}</p>
                         ${listener_trend}
                     </div>
                 </div>
@@ -1683,9 +1710,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let action = button.getAttribute('data-analytics-action');
             console.info('action', action);
             if (action.startsWith('Bookmark')) {
-                button.innerHTML = '<strong>Add to my Library</strong>';
+                button.innerHTML = `<strong>${trans[lang].bookmark.add}</strong>`;
             } else {
-                button.innerHTML = '<strong>Added to my Library</strong>';
+                button.innerHTML = `<strong>${trans[lang].bookmark.added}</strong>`;
             }
 
             button.removeAttribute('data-bwaa-fired');
@@ -1699,9 +1726,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let action = button.getAttribute('data-analytics-action');
             console.info('action', action);
             if (action.startsWith('Love')) {
-                button.innerHTML = '<strong>Love this track</strong>';
+                button.innerHTML = `<strong>${trans[lang].track.love.add}</strong>`;
             } else {
-                button.innerHTML = '<strong>You love this track</strong>';
+                button.innerHTML = `<strong>${trans[lang].track.love.added}</strong>`;
             }
 
             button.removeAttribute('data-bwaa-fired');
@@ -1752,22 +1779,22 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            Wiki
+                            ${trans[lang].album.tabs.wiki}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            Tags
+                            ${trans[lang].album.tabs.tags}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
-                            Artwork
+                            ${trans[lang].album.tabs.images}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            Shouts
+                            ${trans[lang].album.tabs.shoutbox}
                         </a>
                     </li>
                 </ul>
@@ -1836,13 +1863,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         ${album_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
                     </div>
                     <div class="tags">
-                        Popular tags: ${tags_html}
+                        ${trans[lang].popular_tags.replace('{list}', tags_html)}
                     </div>
                     <div class="shouts">
-                        Shouts: <a href="${window.location.href}/+shoutbox">Leave a shout</a>
+                        ${trans[lang].shouts.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
                     </div>
                     <div class="share-bar">
-                        <strong>Share this album:</strong>
+                        <strong>${trans[lang].album.share}</strong>
+                        <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
                     </div>
                 </div>
                 <div class="album-image-side">
@@ -2061,22 +2089,22 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
-                            Albums
+                            ${trans[lang].track.tabs.albums}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            Wiki
+                            ${trans[lang].track.tabs.wiki}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            Tags
+                            ${trans[lang].track.tabs.tags}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            Shouts
+                            ${trans[lang].track.tabs.shoutbox}
                         </a>
                     </li>
                 </ul>
@@ -2160,13 +2188,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                 </div>
                 <div class="tags">
-                    Popular tags: ${tags_html}
+                    ${trans[lang].popular_tags.replace('{list}', tags_html)}
                 </div>
                 <div class="shouts">
-                    Shouts: <a href="${window.location.href}/+shoutbox">Leave a shout</a>
+                    ${trans[lang].shouts.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
                 </div>
                 <div class="share-bar">
-                    <strong>Share this artist:</strong>
+                        <strong>${trans[lang].track.share}</strong>
+                        <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
                 </div>
                 <div class="playback">
                     <div class="playback-item">
@@ -4340,5 +4369,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     unsafeWindow._dev_request_scrobble_since = function() {
         return document.body.querySelector('.header-scrobble-since').textContent.trim();
+    }
+    unsafeWindow._what_page_am_i_on = function() {
+        return page;
     }
 })();

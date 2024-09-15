@@ -2088,6 +2088,7 @@
 
         li {
             width: 49.5%;
+            margin-top: unset;
             margin-bottom: 30px;
             padding: unset;
             overflow: hidden;
@@ -2309,6 +2310,10 @@
             .share-bar {
                 margin: 1em 0;
                 line-height: 1.6em;
+
+                .btn-primary {
+                    display: block;
+                }
             }
         }
         .artist-image-side {
@@ -2420,6 +2425,10 @@
             .share-bar {
                 margin: 1em 0;
                 line-height: 1.6em;
+
+                .btn-primary {
+                    display: block;
+                }
             }
         }
         .album-image-side {
@@ -2533,6 +2542,10 @@
         .share-bar {
             margin: 1em 0;
             line-height: 1.6em;
+
+            .btn-primary {
+                display: block;
+            }
         }
 
         .playback {
@@ -5215,6 +5228,11 @@
             font-weight: bold;
             vertical-align: middle;
 
+            /* just random really */
+            &[data-tag="punk"],
+            &[data-tag="post-punk"],
+            &[data-tag="shoegaze"],
+            &[data-tag="grunge"],
             &[data-tag="country"],
             &[data-tag="rnb"],
             &[data-tag="pop"],
