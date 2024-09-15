@@ -1406,7 +1406,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.subpage = 'overview';
             let artist_metadata = artist_header.querySelectorAll('.header-metadata-tnew-display');
             let header_artist_data = {
-                avatar: artist_header.querySelector('.header-new-background-image').getAttribute('content'),
+                avatar: pre_fetch_avatar(artist_header.querySelector('.header-new-background-image')),
                 name: artist_header.querySelector('.header-new-title').textContent,
                 link: window.location.href,
                 photos: artist_header.querySelector('.header-new-gallery-inner').textContent,
@@ -2049,7 +2049,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             let header_album_data = {
-                avatar: album_header.querySelector('.header-new-background-image').getAttribute('content'),
+                avatar: pre_fetch_avatar(album_header.querySelector('.header-new-background-image')),
                 name: album_header.querySelector('.header-new-title').textContent,
                 artist: album_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
@@ -2425,14 +2425,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (subpage_title == undefined)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
-            let pre_fetch_avatar = track_header.querySelector('.header-new-background-image');
-            if (pre_fetch_avatar == null)
-                pre_fetch_avatar = '';
-            else
-                pre_fetch_avatar = pre_fetch_avatar.getAttribute('content')
-
             let header_track_data = {
-                avatar: pre_fetch_avatar,
+                avatar: pre_fetch_avatar(track_header.querySelector('.header-new-background-image')),
                 name: track_header.querySelector('.header-new-title').textContent,
                 artist: track_header.querySelector('.header-new-crumb span').textContent,
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
@@ -2468,6 +2462,19 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 generic_tag_patch();
             }
         }
+    }
+
+
+    /**
+     * pre-fetch header-new-background-image for subpages
+     * @param {element} element .header-new-background-image
+     * @returns either empty string or url content
+     */
+    function pre_fetch_avatar(element) {
+        if (element == null)
+            return '';
+        else
+            return element.getAttribute('content');
     }
 
 

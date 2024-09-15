@@ -1156,6 +1156,10 @@
             margin-top: calc(15px + 7px);
         }
 
+        p + & {
+            margin-top: 6px;
+        }
+
         #top-tracks-section &,
         #tracklist & {
             thead {
@@ -1656,6 +1660,11 @@
                 }
             }
         }
+    }
+    .footnotes {
+        color: var(--colour-middle);
+        font-size: 10px;
+        line-height: inherit;
     }
 
     /* section */
@@ -3399,6 +3408,7 @@
     }
 
 
+    .navlist + .buffer-standard,
     .buffer-standard:has(> .events-list-sidebar) {
         margin-top: 15px;
     }
