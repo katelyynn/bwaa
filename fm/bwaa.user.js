@@ -232,6 +232,7 @@ const trans = {
             test: 'TEST {involved}',
             shout: 'You left a shout for {i}',
             image_upload: 'You uploaded an image for {i}',
+            image_star: 'You starred an image for {i}',
             obsess: 'You’re obsessed with {i}',
             unobsess: 'You’re no longer obsessed with {i}',
             love: 'You love {i}',
@@ -1682,6 +1683,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 }
             }
 
+            if (page.subpage.endsWith('image-upload'))
+                bwaa_image_upload_check();
+
             if (!page.subpage.endsWith('image'))
                 page.structure.container.classList.add('subpage');
 
@@ -2037,6 +2041,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     return;
                 }
             }
+
+            if (page.subpage.endsWith('image-upload'))
+                bwaa_image_upload_check();
 
             if (!page.subpage.endsWith('image'))
                 page.structure.container.classList.add('subpage');
@@ -4273,6 +4280,22 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
 
+    function bwaa_image_upload_check() {
+        let error = page.structure.main.querySelector('.form-group-error');
+
+        if (error == null)
+            return;
+
+        // TODO
+        // there was an image upload error, remove the last activity if
+        // it was an image upload
+        //if (activities[activities.length - 1].type == 'image_upload')
+        //    activities.pop()
+    }
+
+
+
+
     function subscribe_to_events() {
         let love_track = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bwaa-subscribed])`);
         love_track.forEach((form) => {
@@ -4364,6 +4387,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 console.info('bwaa - heard event', event);
 
                 register_activity('wiki', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+            }, false);
+        }
+
+
+        let upload_img_form = document.body.querySelector('form[action$="/+images/upload"]:not([data-bwaa-subscribed])');
+        if (upload_img_form != null) {
+            upload_img_form.setAttribute('data-bwaa-subscribed', 'true');
+
+            let btn = upload_img_form.querySelector('.form-submit button');
+
+            btn.addEventListener('click', (event) => {
+                console.info('bwaa - heard event', event);
+
+                register_activity('image_upload', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             }, false);
         }
     }
