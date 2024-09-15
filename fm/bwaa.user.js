@@ -1001,7 +1001,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="options">
                         ${follow_button}
                         <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
-                        <a class="has-icon leave-a-shout" href="${header_user_data.link}/shoutbox">Leave a shout</a>
+                        <a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>
                     </div>
                     <div class="tasteometer ${tasteometer_lvl}" data-taste="${tasteometer_lvl.replace('tasteometer-compat-', '')}">
                         <p>Your musical compatibility with <strong>${page.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
