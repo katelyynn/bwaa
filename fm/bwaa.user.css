@@ -227,6 +227,7 @@
         line-height: 1.181818em;
     }
 
+    .row._buffer > .col-sm-4.col-sm-push-4, /* otherwise 1px offset on obsessions page top */
     .content-top {
         display: none;
     }
