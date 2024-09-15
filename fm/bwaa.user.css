@@ -5134,6 +5134,10 @@
         }
     }
 
+    .col-main:has(.library-top--no-sort) + .col-sidebar .date-range-picker-button {
+        top: calc(157px - 38px);
+    }
+
     .library-controls-datepicker {
         padding: unset;
         position: static;
