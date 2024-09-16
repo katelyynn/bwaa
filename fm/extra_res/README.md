@@ -1,1 +1,1 @@
-empty_disc.png is sourced from http://www.altimus.ae/cd-jewel-case-transparent, cropped and rotated to align - maybe one day i'll try get a picture of this myself
+empty_disc.png is sourced from http://www.discmakers.com/shop/ItemGroup.aspx?ItemGroup=CDCASES, cropped and rotated to align - maybe one day i'll try get a picture of this myself
