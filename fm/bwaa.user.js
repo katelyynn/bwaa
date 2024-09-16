@@ -265,6 +265,7 @@ const trans = {
                 }
             },
             check_for_updates: 'Check for updates',
+            request_style_reload: 'Update your stylesheet',
             not_implemented: '(not yet implemented)',
             welcome: {
                 name: 'Welcome to bwaa!',
@@ -808,6 +809,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
 
         xhr.send();
+    }
+
+    unsafeWindow._request_style_reload = function() {
+        localStorage.removeItem('bwaa_cached_style');
+        window.location.reload();
     }
 
 
@@ -3473,6 +3479,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <p>${trans[lang].settings.welcome.body.replace('{v}', `<strong>${version.build}.${version.sku}</strong>`)}</p>
                     <div class="more-link align-left space-self">
                         <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js" target="_blank">${trans[lang].settings.check_for_updates}</a>
+                    </div>
+                    <div class="more-link align-left space-self hide-if-not-developer">
+                        <a onclick="_request_style_reload()">${trans[lang].settings.request_style_reload.replace('{+i}', '<i class="subtext">').replace('{-i}', '</i>')}</a>
                     </div>
                     <fieldset>
                         <legend>${trans[lang].settings.navigation.name}</legend>
