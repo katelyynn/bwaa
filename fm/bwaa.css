@@ -4821,6 +4821,11 @@ img {
 .your-progress {
     margin-top: calc(15px - 7px);
 
+    .data-loading {
+        background: url('https://katelyynn.github.io/bwaa/fm/res/spinner_big.gif') 50% 50% no-repeat;
+        height: 111px;
+    }
+
     h4 {
         display: none;
     }
@@ -5691,4 +5696,7 @@ img {
     /*.lastfm-bulk-edit-progress {
 
     }*/
+}
+.async-content-loading {
+    background: url('https://katelyynn.github.io/bwaa/fm/res/spinner_big.gif') 50% 50% no-repeat !important;
 }
