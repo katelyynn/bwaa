@@ -1916,7 +1916,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (subpage_title == undefined)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
-            page.avatar = artist_header.querySelector('.header-new-background-image').getAttribute('content');
+            page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
             page.name = artist_header.querySelector('.header-new-title').textContent;
             page.sister = '';
 
@@ -2070,7 +2070,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             page.subpage = 'overview';
             let album_metadata = album_header.querySelectorAll('.header-metadata-tnew-display');
 
-            page.avatar = '';
+            page.avatar = fallback_cover_art;
             page.name = album_header.querySelector('.header-new-title').textContent;
             page.sister = album_header.querySelector('.header-new-crumb span').textContent;
 
@@ -2843,6 +2843,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let wiki = page.structure.main.querySelector('.wiki-block.visible-lg');
         if (wiki == null)
             wiki = page.structure.main.querySelector('.wiki-block-cta');
+        if (wiki == null)
+            wiki = page.structure.main.querySelector('.coloured-cta--wiki-icon');
 
         return wiki.outerHTML;
     }
