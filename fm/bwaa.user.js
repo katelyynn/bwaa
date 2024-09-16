@@ -3859,6 +3859,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 album_name = track_image.querySelector('img').getAttribute('alt');
             }
 
+            track.classList.add('chartlist-row--has-album');
+
             let album_name_col = document.createElement('td');
             album_name_col.classList.add('chartlist-album');
             album_name_col.innerHTML = (`

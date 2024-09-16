@@ -1336,6 +1336,12 @@ b, strong {
                     max-width: unset;
                 }
             }
+
+            .chartlist-row:not(.chartlist-row--has-album) & {
+                /* last.fm bulk edit */
+                /* it looks like a mess in it's current state sorry */
+                display: none;
+            }
         }
 
         &:after {
@@ -1380,12 +1386,6 @@ b, strong {
                     background-position: right bottom;
                 }
             }
-        }
-
-        /* last.fm bulk edit */
-        /* it looks like a mess in it's current state sorry */
-        .chartlist-album[data-processed="true"] {
-            display: none;
         }
 
         &.chartlist-row--with-artist .chartlist-artist {
