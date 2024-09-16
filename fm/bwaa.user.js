@@ -2970,8 +2970,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 
     function bwaa_gallery() {
-        if (page.type != 'artist')
+        if (page.type != 'artist') {
+            if (page.type == 'album')
+                bwaa_artworks();
+
             return;
+        }
 
         if (page.subpage == 'music_artist_images_overview')
             bwaa_gallery_listing();
