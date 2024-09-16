@@ -3597,12 +3597,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 </label>
                             </div>
                         </div>
-                        <div class="sep"></div>
-                        <div class="form-group">
+                        <div class="sep hide-if-not-developer"></div>
+                        <div class="form-group hide-if-not-developer">
                             <div class="checkbox">
                                 <label for="setting--inbuilt_style_loading">
                                     <input id="setting--inbuilt_style_loading" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.inbuilt_style_loading.name} <i class="subtext">${trans[lang].settings.not_implemented}</i>
+                                    ${trans[lang].settings.inbuilt_style_loading.name}
                                 </label>
                                 <div class="alert">
                                     ${trans[lang].settings.inbuilt_style_loading.alert}

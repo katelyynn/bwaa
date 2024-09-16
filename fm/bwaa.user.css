@@ -4040,6 +4040,11 @@
     .dropdown-menu-clickable--padded {
         padding: 6px !important;
     }
+
+    [data-bwaa--developer="false"] .hide-if-not-developer {
+        display: none !important;
+    }
+
     .settings-form {
         .form-header {
             margin-bottom: 15px;
