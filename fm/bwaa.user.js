@@ -274,6 +274,7 @@ const trans = {
                     name: 'Paint It Black'
                 }
             },
+            update_picture: 'Uploaded images may be displayed either in full-resolution (varied sizes) or square cropped from the top. You can adjust this in the dedicated {+l}bwaa settings{-l}.',
             check_for_updates: 'Check for updates',
             request_style_reload: 'Update your stylesheet',
             not_implemented: '(not yet implemented)',
@@ -3386,6 +3387,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             page.structure.main.appendChild(content);
         }
+
+        // update picture notice
+        let update_picture_notice = page.structure.main.querySelector('.avatar-upload-form .form-row-help-text');
+        update_picture_notice.innerHTML = trans[lang].settings.update_picture.replace('{+l}', `<a href="${root}bwaa">`).replace('{-l}', '</a>');
     }
 
 
