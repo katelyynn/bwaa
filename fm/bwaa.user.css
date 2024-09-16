@@ -79,6 +79,8 @@
         --chartlist-hover: #bfdff4;
         --chartlist-highlight: #fffcca;
 
+        accent-color: var(--text-link);
+
         [data-bwaa--theme="paint_it_black"] & {
             --background: #000000;
             --navlist-grad: #222;
