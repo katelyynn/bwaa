@@ -668,6 +668,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         // last.fm is a single page application, this will be on the lookout
         // for new elements being added so they can be patched if needed
+        // wish there was a better way
         const observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
