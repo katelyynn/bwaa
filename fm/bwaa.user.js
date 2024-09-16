@@ -3536,7 +3536,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         // update picture notice
         let update_picture_notice = page.structure.main.querySelector('.avatar-upload-form .form-row-help-text');
-        update_picture_notice.innerHTML = trans[lang].settings.update_picture.replace('{+l}', `<a href="${root}bwaa">`).replace('{-l}', '</a>');
+        if (update_picture_notice != null) update_picture_notice.innerHTML = trans[lang].settings.update_picture.replace('{+l}', `<a href="${root}bwaa">`).replace('{-l}', '</a>');
     }
 
 
