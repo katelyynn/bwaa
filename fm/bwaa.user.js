@@ -4247,14 +4247,24 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         console.info('bwaa - user is on a playlist');
 
-        page.structure.container = document.body.querySelector('.page-content');
-        page.structure.row = page.structure.container.querySelector('.row');
-        page.structure.main = page.structure.row.querySelector('.col-main');
+        page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
 
+        checkup_page_structure();
+
+
+        page.type = 'playlist';
+        page.avatar = page.structure.main.querySelector('.playlisting-playlist-author-image img').getAttribute('src');
+        page.name = playlist_header.querySelector('.subpage-breadcrumb a').textContent;
 
         let playlist_info = {
             cover: playlist_header.querySelector('.playlisting-playlist-header-image').getAttribute('src'),
-            user_name: playlist_header.querySelector('.subpage-breadcrumb a').textContent,
             name_form: playlist_header.querySelector('.inplace-form'),
             play_btn: playlist_header.querySelector('.js-playlink-station'),
             menu: playlist_header.querySelector('.dropdown-menu-clickable')
@@ -4264,7 +4274,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         playlist_info.export_btn = playlist_info.menu.querySelector('li:nth-child(3) > div');
 
         let new_header = generic_subpage_header(
-            my_avi,
             'Playlists'
         );
 
@@ -4273,7 +4282,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         navlist.setAttribute('aria-label', 'Secondary navigation');
         navlist.setAttribute('data-require', 'components/collapsing-nav-v2');
 
-        let base_link = `${root}user/${playlist_info.user_name}`;
+        let base_link = `${root}user/${page.name}`;
 
         navlist.innerHTML = (`
             <ul class="navlist-items js-navlist-items" style="position: relative;">
@@ -4419,6 +4428,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         search_form.setAttribute('data-bwaa', 'true');
 
         page.type = 'search';
+        page.avatar = my_avi;
         page.name = auth;
 
         page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
@@ -4438,7 +4448,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let page_title = content_top.querySelector('.content-top-header').textContent;
 
         let new_header = generic_subpage_header(
-            my_avi,
             page_title
         );
 
