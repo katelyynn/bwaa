@@ -2815,6 +2815,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (settings.shouts_2010)
                 shout_name.innerHTML = trans[lang].shouts.user_wrote.replace('{user}', shout_name.innerHTML);
 
+            let shout_body = shout.querySelector('.shout-body p');
+            shout_body.innerHTML = shout_body.innerHTML.replace('󠄼', '<span class="special">').replace('󠄛', '</span>');
+
             let shout_actions = shout.querySelector('.shout-actions');
 
             if (!settings.shouts_no_votes) {
@@ -3271,7 +3274,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let content_top = adaptive_skin.querySelector('.content-top');
 
         let navlist = content_top.querySelector('.navlist');
-        page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild);
+        if (navlist != null) page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild);
 
         adaptive_skin.removeChild(content_top);
 
@@ -3282,7 +3285,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         // subscription page
         if (document.body.classList[1].startsWith('namespace--settings')) {
-            let content = page.structure.container.querySelector(`.row + div`);
+            let content = page.structure.container.querySelector(`.row + *`);
 
             page.structure.main.appendChild(content);
         }
