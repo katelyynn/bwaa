@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0915
+// @version      2024.0916
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,8 +18,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0915',
-    sku: 'sweet'
+    build: '2024.0916',
+    sku: 'feminine'
 }
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
@@ -625,8 +625,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         // replace favicon with 2012 favicon
         document.head.querySelector('link[rel="icon"]').setAttribute('href', 'https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico');
         // essentials
-        lookup_lang();
         load_settings();
+        append_style();
+        lookup_lang();
         bwaa_load_header();
         load_notifs();
 
@@ -730,6 +731,83 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             childList: true,
             subtree: true
         });
+    }
+
+
+    function append_style() {
+        let cached_style = localStorage.getItem('bwaa_cached_style') || '';
+
+        // style is not fetched in dev mode
+        if (!settings.inbuilt_style_loading || document.body.classList.contains('namespace--user_listening-report_playback') || (document.body.classList.contains('labs-section') && !document.body.classList.contains('namespace--labs_overview')))
+            return;
+
+        if (cached_style == '') {
+            // style has never been cached
+            console.info('bwaa - style has never been cached, fetching now');
+            fetch_new_style();
+        } else {
+            // style is currently cached, load that first
+            // ensures no flashing missing styles hopefully
+            console.info('bwaa - requesting cached style');
+            load_cached_style(cached_style);
+
+            // now, analyse if we should fetch a new one
+            console.info('bwaa - checking cache timeout status of style');
+            check_if_style_cache_is_valid();
+        }
+    }
+
+    function load_cached_style(cached_style) {
+        let style_cache = document.createElement('style');
+        style_cache.setAttribute('id', 'bwaa--cached-style');
+        style_cache.textContent = cached_style;
+        document.documentElement.appendChild(style_cache);
+
+        console.info('bwaa - loaded cached style');
+        setTimeout(function() {document.body.classList.add('bwaa');}, 200);
+    }
+
+    function check_if_style_cache_is_valid() {
+        let cached_style_timeout = new Date(localStorage.getItem('bwaa_cached_style_timeout'));
+        let current_time = new Date();
+
+        // check if timeout has expired
+        if (cached_style_timeout < current_time) {
+            console.info('bwaa - fetching new style, timeout has expired');
+            fetch_new_style();
+        } else {
+            console.info('bwaa - style timeout is still valid');
+        }
+    }
+
+    function fetch_new_style(delete_old_style = false) {
+        let xhr = new XMLHttpRequest();
+        let url = 'https://katelyynn.github.io/bwaa/fm/bwaa.css';
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            console.info('bwaa - style responded with', xhr.status);
+
+            // create style element
+            let style = document.createElement('style');
+            style.textContent = this.response;
+            document.documentElement.appendChild(style);
+
+            // remove the old style, if needed
+            if (delete_old_style)
+                document.documentElement.removeChild(document.getElementById('bwaa--cached-style'));
+
+            // save to cache for next page load
+            localStorage.setItem('bwaa_cached_style',this.response);
+
+            // set expire date
+            let api_expire = new Date();
+            api_expire.setHours(api_expire.getHours() + 1);
+            localStorage.setItem('bwaa_cached_style_timeout',api_expire);
+            console.info('bwaa - style is cached until', api_expire);
+        }
+
+        xhr.send();
     }
 
 
