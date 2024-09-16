@@ -1166,6 +1166,10 @@ b, strong {
         margin-top: 6px;
     }
 
+    &.chartlist--teaser:before {
+        background: linear-gradient(180deg, transparent, var(--body));
+    }
+
     #top-tracks-section &,
     #tracklist & {
         thead {
