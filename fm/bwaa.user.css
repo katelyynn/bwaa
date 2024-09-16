@@ -2171,6 +2171,7 @@
                 }
 
                 h3 {
+                    color: var(--header-text-black);
                     font-size: inherit;
                     line-height: inherit;
                     font-weight: bold;
