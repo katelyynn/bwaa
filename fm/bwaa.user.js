@@ -93,6 +93,16 @@ const trans = {
                 reports: 'Charts',
 
                 // copy 1:1 from last.fm's interface
+                library: 'Library',
+                playlists: 'Playlists',
+                following: 'Following',
+                followers: 'Followers',
+                loved: 'Loved Tracks',
+                obsessions: 'Obsessions',
+                events: 'Events',
+                neighbours: 'Neighbours',
+                tags: 'Tags',
+                shoutbox: 'Shouts',
                 journal: 'Journal'
             },
             user_types: {
@@ -4288,67 +4298,67 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             <ul class="navlist-items js-navlist-items" style="position: relative;">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                     <a class="secondary-nav-item-link" href="${base_link}">
-                        Overview
+                        ${trans[lang].profile.tabs.overview}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--listening-report">
                     <a class="secondary-nav-item-link" href="${base_link}/listening-report">
-                        Reports
+                        ${trans[lang].profile.tabs.reports}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--library">
                     <a class="secondary-nav-item-link" href="${base_link}/library">
-                        Library
+                        ${trans[lang].profile.tabs.library}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--playlists">
                     <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${base_link}/playlists">
-                        Playlists
+                        ${trans[lang].profile.tabs.playlists}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--following">
                     <a class="secondary-nav-item-link" href="${base_link}/following">
-                        Following
+                        ${trans[lang].profile.tabs.following}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--followers">
                     <a class="secondary-nav-item-link" href="${base_link}/followers">
-                        Followers
+                        ${trans[lang].profile.tabs.followers}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--loved">
                     <a class="secondary-nav-item-link" href="${base_link}/loved">
-                        Loved Tracks
+                        ${trans[lang].profile.tabs.loved}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--obsessions">
                     <a class="secondary-nav-item-link" href="${base_link}/obsessions">
-                        Obsessions
+                        ${trans[lang].profile.tabs.obsessions}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--events">
                     <a class="secondary-nav-item-link" href="${base_link}/events">
-                        Events
+                        ${trans[lang].profile.tabs.events}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--neighbours">
                     <a class="secondary-nav-item-link" href="${base_link}/neighbours">
-                        Neighbours
+                        ${trans[lang].profile.tabs.neighbours}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                     <a class="secondary-nav-item-link" href="${base_link}/tags">
-                        Tags
+                        ${trans[lang].profile.tabs.tags}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                     <a class="secondary-nav-item-link" href="${base_link}/shoutbox">
-                        Shouts
+                        ${trans[lang].profile.tabs.shoutbox}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--journal">
                     <a class="secondary-nav-item-link" href="${base_link}/journal">
-                        Journal
+                        ${trans[lang].profile.tabs.journal}
                     </a>
                 </li>
             </ul>
