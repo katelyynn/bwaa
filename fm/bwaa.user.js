@@ -3480,9 +3480,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="more-link align-left space-self">
                         <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js" target="_blank">${trans[lang].settings.check_for_updates}</a>
                     </div>
-                    <div class="more-link align-left space-self hide-if-not-developer">
-                        <a onclick="_request_style_reload()">${trans[lang].settings.request_style_reload.replace('{+i}', '<i class="subtext">').replace('{-i}', '</i>')}</a>
-                    </div>
                     <fieldset>
                         <legend>${trans[lang].settings.navigation.name}</legend>
                         <div class="form-group">
@@ -3617,6 +3614,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                     ${trans[lang].settings.inbuilt_style_loading.alert}
                                 </div>
                             </div>
+                        </div>
+                        <div class="more-link align-left space-self hide-if-not-developer">
+                            <a onclick="_request_style_reload()">${trans[lang].settings.request_style_reload.replace('{+i}', '<i class="subtext">').replace('{-i}', '</i>')}</a>
                         </div>
                     </fieldset>
                     <!--
