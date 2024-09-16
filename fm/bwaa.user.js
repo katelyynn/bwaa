@@ -1019,12 +1019,21 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         journal_nav_btn.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--journal');
 
 
+        let is_new_account = false;
+
+
         if (profile_header_overview) {
             // profile overview stuff
             page.subpage = 'overview';
 
             // fetch some data from the header
-            page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
+            try {
+                page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
+            } catch(e) {
+                // new account
+                page.avatar = '';
+                is_new_account = true;
+            }
             page.name = profile_header.querySelector('.header-title a').textContent;
 
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
@@ -1147,7 +1156,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             new_header.classList.add('profile-header-section');
             new_header.innerHTML = (`
                 <div class="badge-avatar">
-                    <img src="${page.avatar}" alt="${page.name}">
+                    ${(!is_new_account) ? (`
+                        <img src="${page.avatar}" alt="${page.name}">
+                    `) : (`
+                        <a href="${root}settings">
+                            <img src="${page.avatar}" alt="${page.name}">
+                        </a>
+                    `)}
                     <div class="user-type user-type--${user_type}">
                         <a>${trans[lang].profile.user_types[user_type]}</a>
                     </div>
