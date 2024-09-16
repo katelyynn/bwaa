@@ -1382,6 +1382,12 @@ b, strong {
             }
         }
 
+        /* last.fm bulk edit */
+        /* it looks like a mess in it's current state sorry */
+        .chartlist-album[data-processed="true"] {
+            display: none;
+        }
+
         &.chartlist-row--with-artist .chartlist-artist {
             order: 2;
             width: fit-content;
@@ -5666,4 +5672,23 @@ img {
 /* settings */
 #current-subscription {
     margin-top: 15px;
+}
+
+
+
+
+/* bulk edit */
+.lastfm-bulk-edit-text-info {
+    color: var(--text-link);
+}
+
+.lastfm-bulk-edit-loading {
+    /*background: url("/static/images/loading_dark_light_64.gif") 50% 50% no-repeat;
+    height: 64px;*/
+    background: url('https://katelyynn.github.io/bwaa/fm/res/spinner_big.gif') 50% 50% no-repeat;
+    padding-top: 64px;
+
+    /*.lastfm-bulk-edit-progress {
+
+    }*/
 }
