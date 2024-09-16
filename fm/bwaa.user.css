@@ -3508,6 +3508,7 @@
         }
 
         .events-list-item-event {
+            color: var(--header-text-black);
             margin-top: -2px;
             &:hover {
                 color: var(--text-link);
