@@ -3698,6 +3698,7 @@
             display: none;
         }
 
+        a,
         button {
             font-size: 16px;
             font-weight: bold;
@@ -3714,6 +3715,11 @@
             min-height: unset;
             flex: 0;
             position: relative;
+
+            /* needs pro */
+            &:not(button) {
+                opacity: 0.5 !important;
+            }
 
             .bookmark-votes,
             .gallery-image-preferred-states,
@@ -3878,6 +3884,13 @@
 
 
     /* gallery listing */
+    [data-gallery-page="main"] .gallery-saved-page,
+    [data-gallery-page="saved"] .gallery-main-page {
+        display: none;
+    }
+    nav + .section-controls {
+        margin-top: 15px;
+    }
     .image-list {
         margin: 6px -15px 0 0;
     }

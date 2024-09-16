@@ -668,7 +668,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_albums();
             bwaa_tracks();
             bwaa_shouts();
-            bwaa_artworks();
+            bwaa_gallery();
             bwaa_friends();
             bwaa_obsessions();
             bwaa_library();
@@ -723,7 +723,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_albums();
                                 bwaa_tracks();
                                 bwaa_shouts();
-                                bwaa_artworks();
+                                bwaa_gallery();
                                 bwaa_friends();
                                 bwaa_obsessions();
                                 bwaa_library();
@@ -2967,6 +2967,133 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
 
 
+
+
+    function bwaa_gallery() {
+        if (page.type != 'artist')
+            return;
+
+        if (page.subpage == 'music_artist_images_overview')
+            bwaa_gallery_listing();
+        else
+            bwaa_artworks();
+    }
+
+
+    function bwaa_gallery_listing() {
+        let image_list = page.structure.main.querySelector('.image-list');
+
+        if (image_list == null)
+            return;
+
+        if (image_list.hasAttribute('data-bwaa'))
+            return;
+        image_list.setAttribute('data-bwaa', 'true');
+
+        page.structure.main.classList.add('gallery-main-page');
+
+
+        let tabs = document.createElement('nav');
+        tabs.classList.add('navlist', 'secondary-nav', 'navlist--more');
+        tabs.innerHTML = (`
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                    <a class="secondary-nav-item-link secondary-nav-item-link--active" onclick="_change_gallery_page('main')">
+                        ${trans[lang].gallery.tabs.overview}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
+                    <a class="secondary-nav-item-link" onclick="_change_gallery_page('saved')">
+                        ${trans[lang].gallery.tabs.bookmarks}
+                    </a>
+                </li>
+            </ul>
+        `);
+
+        let subpage_section = page.structure.main.querySelector('.profile-header-subpage-section');
+        subpage_section.after(tabs);
+
+
+        //
+
+
+        let gallery_saved_page = document.createElement('div');
+        gallery_saved_page.classList.add('col-main', 'gallery-saved-page');
+
+        let new_header = generic_subpage_header(
+            page.structure.main.querySelector('#artist-subpage-text').textContent,
+            'artist'
+        );
+        gallery_saved_page.appendChild(new_header);
+
+        let tabs2 = document.createElement('nav');
+        tabs2.classList.add('navlist', 'secondary-nav', 'navlist--more');
+        tabs2.innerHTML = (`
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                    <a class="secondary-nav-item-link" onclick="_change_gallery_page('main')">
+                        ${trans[lang].gallery.tabs.overview}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
+                    <a class="secondary-nav-item-link secondary-nav-item-link--active" onclick="_change_gallery_page('saved')">
+                        ${trans[lang].gallery.tabs.bookmarks}
+                    </a>
+                </li>
+            </ul>
+        `);
+        gallery_saved_page.appendChild(tabs2);
+
+        let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
+
+        let bookmarked_images_container = document.createElement('ul');
+        bookmarked_images_container.classList.add('image-list');
+
+        // append images
+        if (bookmarked_images.hasOwnProperty(page.name)) {
+            bookmarked_images[page.name].forEach((image) => {
+                console.info(image);
+                let image_element = document.createElement('li');
+                image_element.classList.add('image-list-item-wrapper');
+                image_element.innerHTML = (`
+                    <a class="image-list-item" href="${root}music/${page.name}/+images/${image}">
+                        <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" loading="lazy">
+                    </a>
+                `);
+
+                bookmarked_images_container.appendChild(image_element);
+            });
+
+
+            // mark images as bookmarked
+            let image_list_items = page.structure.main.querySelectorAll('.image-list-item');
+            image_list_items.forEach((image_list_item) => {
+                let image_id_split = image_list_item.getAttribute('href').split('/');
+                let image_id_length = image_id_split.length;
+                let image_id = image_id_split[image_id_length - 1];
+
+                if (bookmarked_images[page.name].includes(image_id)) {
+                    image_list_item.classList.add('image-list-item-bookmarked');
+                }
+            });
+        } else {
+            bookmarked_images_container.outerHTML = (`
+                <div class="alert">
+                    <p>${trans[lang].gallery.bookmarks.no_data}</p>
+                </div>
+            `);
+        }
+
+        gallery_saved_page.appendChild(bookmarked_images_container);
+
+        page.structure.row.setAttribute('data-gallery-page', 'main');
+        page.structure.row.appendChild(gallery_saved_page);
+    }
+
+
+    unsafeWindow._change_gallery_page = function(page_name) {
+        page.structure.row.setAttribute('data-gallery-page', page_name);
+    }
 
 
     function bwaa_artworks() {
