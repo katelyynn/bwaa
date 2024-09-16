@@ -4521,7 +4521,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         // remove leftovers
         let row_buffer = document.querySelector('.page.structure.row._buffer');
-        page.structure.container.removeChild(row_buffer);
+        if (row_buffer != null) page.structure.container.removeChild(row_buffer);
     }
 
 
