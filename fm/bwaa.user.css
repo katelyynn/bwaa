@@ -2702,7 +2702,12 @@
 
             .special {
                 display: inline-block;
-                transform: scaleX(0.9) skewX(-5deg);
+                font-family: Times New Roman, serif;
+                font-size: 40px;
+                line-height: 40px;
+                font-weight: 400;
+                margin-top: -4px;
+                transform: scaleX(0.7) skewX(-5deg);
                 transform-origin: left;
             }
         }
