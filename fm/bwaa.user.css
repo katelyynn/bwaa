@@ -1210,15 +1210,25 @@
                             font-weight: normal;
                         }
 
+                        &:nth-child(8) {
+                            display: none !important;
+                        }
+
                         &:nth-child(5) {
+                            width: 332px !important;
                             margin-left: 56px;
-                            flex: 1;
+                            flex-grow: 0;
                         }
                         &:nth-child(9) {
                             width: 56px;
                         }
                         &:nth-child(10) {
                             width: 80px;
+                        }
+
+                        &:nth-child(9),
+                        &:nth-child(10) {
+                            order: 7;
                         }
                     }
                 }
