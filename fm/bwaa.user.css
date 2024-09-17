@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2024.0916
+@version        2024.0918
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -1351,7 +1351,7 @@
                     }
                 }
 
-                .chartlist-row:not(.chartlist-row--has-album) & {
+                .chartlist-row:not(.chartlist-row--has-album, #library-sort-section .chartlist-row) & {
                     /* last.fm bulk edit */
                     /* it looks like a mess in it's current state sorry */
                     display: none;
@@ -1422,6 +1422,7 @@
                     margin-right: 3px;
                 }
             }
+            #library-sort-section &,
             .chartlist--candy-bar &,
             #top-tracks-section &,
             #tracklist &,

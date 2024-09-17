@@ -1341,7 +1341,7 @@ b, strong {
                 }
             }
 
-            .chartlist-row:not(.chartlist-row--has-album) & {
+            .chartlist-row:not(.chartlist-row--has-album, #library-sort-section .chartlist-row) & {
                 /* last.fm bulk edit */
                 /* it looks like a mess in it's current state sorry */
                 display: none;
@@ -1412,6 +1412,7 @@ b, strong {
                 margin-right: 3px;
             }
         }
+        #library-sort-section &,
         .chartlist--candy-bar &,
         #top-tracks-section &,
         #tracklist &,
