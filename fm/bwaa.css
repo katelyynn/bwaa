@@ -1708,7 +1708,7 @@ b, strong {
         margin: -15px -15px 0 -15px;
         padding: 15px 15px;
 
-        &:not(.profile-header-subpage-section + &) {
+        &:not(.profile-header-subpage-section + &, .async-content-error-message) {
             border-top: 1px dotted var(--border);
             margin: 30px -15px 0 -15px;
         }
@@ -4906,6 +4906,7 @@ img {
     margin-top: 15px;
 }
 
+.async-content-error-message,
 .free-description,
 .wiki-style-rules,
 .form-row-help-text,
@@ -4930,6 +4931,7 @@ img {
         font-weight: bold;
     }
 
+    &.async-content-error-message,
     &.alert-danger {
         background: #ffe7e4;
     }
