@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0916
+// @version      2024.0922
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,8 +18,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0916',
-    sku: 'feminine'
+    build: '2024.0922',
+    sku: 'scawy'
 }
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
@@ -423,6 +423,77 @@ function lookup_lang() {
     }
 }
 
+// seasonal
+let stored_season;
+let seasonal_events = [
+    {
+        id: 'halloween',
+        icon: 'moon',
+        name: 'Halloween',
+        start: 'y0-09-22',
+        end: 'y0-11-02',
+
+        snowflakes: {
+            state: false,
+            count: 0
+        }
+    },
+    {
+        id: 'fall',
+        icon: 'leaf',
+        name: 'Fall',
+        start: 'y0-11-05',
+        end: 'y0-11-19',
+
+        snowflakes: {
+            state: true,
+            count: 2
+        }
+    },
+    {
+        id: 'christmas',
+        icon: 'snowflake',
+        name: 'Christmas',
+        start: 'y0-11-19',
+        end: 'y0-12-31',
+
+        snowflakes: {
+            state: true,
+            count: 30
+        }
+    },
+    {
+        id: 'new_years',
+        icon: 'party-popper',
+        name: 'New Years',
+        start: 'y0-01-01',
+        end: 'y0-01-10',
+
+        snowflakes: {
+            state: true,
+            count: 18
+        }
+    }
+];
+
+function set_season() {
+    let now = new Date();
+
+    let current_year = now.getFullYear();
+
+    seasonal_events.forEach((season) => {
+        if (
+            now >= new Date(season.start.replace('y0', current_year)) &&
+            now <= new Date(season.end.replace('y0', current_year))
+        ) {
+            stored_season = season;
+            console.info('bwaa - it is season', season.name, 'starting', season.start, 'ending', season.end, season);
+
+            document.documentElement.setAttribute('data-bwaa--season', season.id);
+        }
+    });
+}
+
 tippy.setDefaultProps({
     arrow: false,
     duration: [100, 100],
@@ -643,6 +714,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         bwaa_load_header();
         load_notifs();
 
+        // load seasonal data
+        set_season();
+
         bwaa_lastfm_settings();
         bwaa_footer();
 
@@ -702,6 +776,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             lookup_lang();
                             load_settings();
                             bwaa_load_header();
+
+                            // load seasonal data
+                            set_season();
 
                             bwaa_lastfm_settings();
                             bwaa_footer();
