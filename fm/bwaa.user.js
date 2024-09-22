@@ -366,6 +366,16 @@ const trans = {
                     'If you would like to donate, that will be available in the future but that is obviously not expected.'
                 ],
                 star: 'Star the project'
+            },
+            seasonal: {
+                category: 'Fun',
+                name: 'Match bwaa to the seasonal events',
+                alert: 'Get into the spirit of the season!',
+                marker: {
+                    name: 'Currently, it is {season} for {end}.',
+                    none: 'There is no season currently active.',
+                    disabled: ''
+                }
             }
         },
         wiki: {
@@ -477,6 +487,9 @@ let seasonal_events = [
 ];
 
 function set_season() {
+    if (!settings.seasonal)
+        return;
+
     let now = new Date();
 
     let current_year = now.getFullYear();
@@ -500,6 +513,25 @@ tippy.setDefaultProps({
     delay: [null, 50]
 });
 
+moment.locale('en', {
+    relativeTime: {
+        future: 'in %s',
+        past: '%s ago',
+        s:  'now',
+        ss: '%ss',
+        m:  '1m',
+        mm: '%dm',
+        h:  '1h',
+        hh: '%dh',
+        d:  '1d',
+        dd: '%dd',
+        M:  '1mo',
+        MM: '%dmo',
+        y:  '1yr',
+        yy: '%dyr'
+    }
+});
+
 let settings;
 let settings_defaults = {
     developer: false,
@@ -518,7 +550,9 @@ let settings_defaults = {
 
     hide_obsessions: false,
     hide_your_progress: false,
-    hide_listening_reports: false
+    hide_listening_reports: false,
+
+    seasonal: true
 }
 let settings_store = {
     developer: {
@@ -581,6 +615,10 @@ let settings_store = {
         values: [true, false]
     },
     hide_listening_reports: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    seasonal: {
         type: 'toggle',
         values: [true, false]
     }
@@ -1387,25 +1425,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 });
 
                 let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
-
-                moment.locale('en', {
-                    relativeTime: {
-                        future: 'in %s',
-                        past: '%s ago',
-                        s:  'now',
-                        ss: '%ss',
-                        m:  '1m',
-                        mm: '%dm',
-                        h:  '1h',
-                        hh: '%dh',
-                        d:  '1d',
-                        dd: '%dd',
-                        M:  '1mo',
-                        MM: '%dmo',
-                        y:  '1yr',
-                        yy: '%dyr'
-                    }
-                });
 
                 activity_item.innerHTML = (`
                     <div class="title">${activity_text}</div>
@@ -3720,6 +3739,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="more-link align-left space-self">
                         <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js" target="_blank">${trans[lang].settings.check_for_updates}</a>
                     </div>
+                    <fieldset>
+                        <legend>${trans[lang].settings.seasonal.category}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal">
+                                    <input id="setting--seasonal" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.name}
+                                </label>
+                                <div class="alert">
+                                    ${trans[lang].settings.seasonal.alert} ${(stored_season != undefined) ? trans[lang].settings.seasonal.marker.name.replace('{season}', stored_season.name).replace('{end}', moment(stored_season.end.replace('y0', new Date().getFullYear())).toNow(true)) : (settings.seasonal) ? trans[lang].settings.seasonal.marker.none : trans[lang].settings.seasonal.marker.disabled}
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
                     <fieldset>
                         <legend>${trans[lang].settings.navigation.name}</legend>
                         <div class="form-group">
