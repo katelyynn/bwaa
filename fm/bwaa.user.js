@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0922
+// @version      2024.0924
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=last.fm
+// @icon         https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico
 // @updateURL    https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js
 // @downloadURL  https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js
 // @run-at       document-body
@@ -18,7 +18,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0922',
+    build: '2024.0924',
     sku: 'scawy'
 }
 
@@ -375,7 +375,9 @@ const trans = {
                     name: 'Currently, it is {season} for {end}.',
                     none: 'There is no season currently active.',
                     disabled: ''
-                }
+                },
+                accent: 'Theme accent colours to the current season',
+                particles: 'Show particles (eg. snow) during seasons'
             }
         },
         wiki: {
@@ -434,26 +436,27 @@ function lookup_lang() {
 }
 
 // seasonal
-let stored_season;
+let stored_season = {
+    id: 'none'
+};
 let seasonal_events = [
     {
         id: 'halloween',
         icon: 'moon',
         name: 'Halloween',
         start: 'y0-09-22',
-        end: 'y0-11-02',
+        end: 'y0-11-02T23:59:59',
 
         snowflakes: {
-            state: false,
-            count: 0
+            state: false
         }
     },
     {
-        id: 'fall',
+        id: 'pre_fall',
         icon: 'leaf',
-        name: 'Fall',
+        name: 'Pre-Fall',
         start: 'y0-11-05',
-        end: 'y0-11-19',
+        end: 'y0-11-12T23:59:59',
 
         snowflakes: {
             state: true,
@@ -461,15 +464,27 @@ let seasonal_events = [
         }
     },
     {
-        id: 'christmas',
-        icon: 'snowflake',
-        name: 'Christmas',
-        start: 'y0-11-19',
-        end: 'y0-12-31',
+        id: 'fall',
+        icon: 'leaf',
+        name: 'Fall',
+        start: 'y0-11-13',
+        end: 'y0-11-22T23:59:59',
 
         snowflakes: {
             state: true,
-            count: 30
+            count: 16
+        }
+    },
+    {
+        id: 'christmas',
+        icon: 'snowflake',
+        name: 'Christmas',
+        start: 'y0-11-23',
+        end: 'y0-12-31T23:59:59',
+
+        snowflakes: {
+            state: true,
+            count: 80
         }
     },
     {
@@ -477,11 +492,11 @@ let seasonal_events = [
         icon: 'party-popper',
         name: 'New Years',
         start: 'y0-01-01',
-        end: 'y0-01-10',
+        end: 'y0-01-10T23:59:59',
 
         snowflakes: {
             state: true,
-            count: 18
+            count: 50
         }
     }
 ];
@@ -500,6 +515,8 @@ function set_season() {
             now <= new Date(season.end.replace('y0', current_year))
         ) {
             stored_season = season;
+            stored_season.now = now;
+            stored_season.year = current_year;
             console.info('bwaa - it is season', season.name, 'starting', season.start, 'ending', season.end, season);
 
             document.documentElement.setAttribute('data-bwaa--season', season.id);
@@ -552,7 +569,9 @@ let settings_defaults = {
     hide_your_progress: false,
     hide_listening_reports: false,
 
-    seasonal: true
+    seasonal: true,
+    seasonal_accent: true,
+    seasonal_particles: true
 }
 let settings_store = {
     developer: {
@@ -619,6 +638,14 @@ let settings_store = {
         values: [true, false]
     },
     seasonal: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    seasonal_accent: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    seasonal_particles: {
         type: 'toggle',
         values: [true, false]
     }
@@ -3748,8 +3775,24 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                     ${trans[lang].settings.seasonal.name}
                                 </label>
                                 <div class="alert">
-                                    ${trans[lang].settings.seasonal.alert} ${(stored_season != undefined) ? trans[lang].settings.seasonal.marker.name.replace('{season}', stored_season.name).replace('{end}', moment(stored_season.end.replace('y0', new Date().getFullYear())).toNow(true)) : (settings.seasonal) ? trans[lang].settings.seasonal.marker.none : trans[lang].settings.seasonal.marker.disabled}
+                                    ${trans[lang].settings.seasonal.alert} ${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', stored_season.name).replace('{end}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)) : (settings.seasonal) ? trans[lang].settings.seasonal.marker.none : trans[lang].settings.seasonal.marker.disabled}
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal_accent">
+                                    <input id="setting--seasonal_accent" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.accent}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal_particles">
+                                    <input id="setting--seasonal_particles" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.particles}
+                                </label>
                             </div>
                         </div>
                     </fieldset>
