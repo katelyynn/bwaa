@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0916
+// @version      2024.0924
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=last.fm
+// @icon         https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico
 // @updateURL    https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js
 // @downloadURL  https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js
 // @run-at       document-body
@@ -18,8 +18,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0916',
-    sku: 'feminine'
+    build: '2024.0924',
+    sku: 'scawy'
 }
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
@@ -366,6 +366,18 @@ const trans = {
                     'If you would like to donate, that will be available in the future but that is obviously not expected.'
                 ],
                 star: 'Star the project'
+            },
+            seasonal: {
+                category: 'Fun',
+                name: 'Match bwaa to the seasonal events',
+                alert: 'Get into the spirit of the season!',
+                marker: {
+                    name: 'Currently, it is {season} for {end}.',
+                    none: 'There is no season currently active.',
+                    disabled: ''
+                },
+                accent: 'Theme accent colours to the current season',
+                particles: 'Show particles (eg. snow) during seasons'
             }
         },
         wiki: {
@@ -423,10 +435,118 @@ function lookup_lang() {
     }
 }
 
+// seasonal
+let stored_season = {
+    id: 'none'
+};
+let seasonal_events = [
+    {
+        id: 'halloween',
+        icon: 'moon',
+        name: 'Halloween',
+        start: 'y0-09-22',
+        end: 'y0-11-02T23:59:59',
+
+        snowflakes: {
+            state: false
+        }
+    },
+    {
+        id: 'pre_fall',
+        icon: 'leaf',
+        name: 'Pre-Fall',
+        start: 'y0-11-05',
+        end: 'y0-11-12T23:59:59',
+
+        snowflakes: {
+            state: true,
+            count: 2
+        }
+    },
+    {
+        id: 'fall',
+        icon: 'leaf',
+        name: 'Fall',
+        start: 'y0-11-13',
+        end: 'y0-11-22T23:59:59',
+
+        snowflakes: {
+            state: true,
+            count: 16
+        }
+    },
+    {
+        id: 'christmas',
+        icon: 'snowflake',
+        name: 'Christmas',
+        start: 'y0-11-23',
+        end: 'y0-12-31T23:59:59',
+
+        snowflakes: {
+            state: true,
+            count: 80
+        }
+    },
+    {
+        id: 'new_years',
+        icon: 'party-popper',
+        name: 'New Years',
+        start: 'y0-01-01',
+        end: 'y0-01-10T23:59:59',
+
+        snowflakes: {
+            state: true,
+            count: 50
+        }
+    }
+];
+
+function set_season() {
+    if (!settings.seasonal)
+        return;
+
+    let now = new Date();
+
+    let current_year = now.getFullYear();
+
+    seasonal_events.forEach((season) => {
+        if (
+            now >= new Date(season.start.replace('y0', current_year)) &&
+            now <= new Date(season.end.replace('y0', current_year))
+        ) {
+            stored_season = season;
+            stored_season.now = now;
+            stored_season.year = current_year;
+            console.info('bwaa - it is season', season.name, 'starting', season.start, 'ending', season.end, season);
+
+            document.documentElement.setAttribute('data-bwaa--season', season.id);
+        }
+    });
+}
+
 tippy.setDefaultProps({
     arrow: false,
     duration: [100, 100],
     delay: [null, 50]
+});
+
+moment.locale('en', {
+    relativeTime: {
+        future: 'in %s',
+        past: '%s ago',
+        s:  'now',
+        ss: '%ss',
+        m:  '1m',
+        mm: '%dm',
+        h:  '1h',
+        hh: '%dh',
+        d:  '1d',
+        dd: '%dd',
+        M:  '1mo',
+        MM: '%dmo',
+        y:  '1yr',
+        yy: '%dyr'
+    }
 });
 
 let settings;
@@ -447,7 +567,11 @@ let settings_defaults = {
 
     hide_obsessions: false,
     hide_your_progress: false,
-    hide_listening_reports: false
+    hide_listening_reports: false,
+
+    seasonal: true,
+    seasonal_accent: true,
+    seasonal_particles: true
 }
 let settings_store = {
     developer: {
@@ -510,6 +634,18 @@ let settings_store = {
         values: [true, false]
     },
     hide_listening_reports: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    seasonal: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    seasonal_accent: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    seasonal_particles: {
         type: 'toggle',
         values: [true, false]
     }
@@ -643,6 +779,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         bwaa_load_header();
         load_notifs();
 
+        // load seasonal data
+        set_season();
+
         bwaa_lastfm_settings();
         bwaa_footer();
 
@@ -702,6 +841,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             lookup_lang();
                             load_settings();
                             bwaa_load_header();
+
+                            // load seasonal data
+                            set_season();
 
                             bwaa_lastfm_settings();
                             bwaa_footer();
@@ -1310,25 +1452,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 });
 
                 let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
-
-                moment.locale('en', {
-                    relativeTime: {
-                        future: 'in %s',
-                        past: '%s ago',
-                        s:  'now',
-                        ss: '%ss',
-                        m:  '1m',
-                        mm: '%dm',
-                        h:  '1h',
-                        hh: '%dh',
-                        d:  '1d',
-                        dd: '%dd',
-                        M:  '1mo',
-                        MM: '%dmo',
-                        y:  '1yr',
-                        yy: '%dyr'
-                    }
-                });
 
                 activity_item.innerHTML = (`
                     <div class="title">${activity_text}</div>
@@ -3643,6 +3766,36 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <div class="more-link align-left space-self">
                         <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js" target="_blank">${trans[lang].settings.check_for_updates}</a>
                     </div>
+                    <fieldset>
+                        <legend>${trans[lang].settings.seasonal.category}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal">
+                                    <input id="setting--seasonal" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.name}
+                                </label>
+                                <div class="alert">
+                                    ${trans[lang].settings.seasonal.alert} ${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', stored_season.name).replace('{end}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)) : (settings.seasonal) ? trans[lang].settings.seasonal.marker.none : trans[lang].settings.seasonal.marker.disabled}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal_accent">
+                                    <input id="setting--seasonal_accent" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.accent}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal_particles">
+                                    <input id="setting--seasonal_particles" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.particles}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
                     <fieldset>
                         <legend>${trans[lang].settings.navigation.name}</legend>
                         <div class="form-group">
