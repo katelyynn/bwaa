@@ -3797,17 +3797,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>${trans[lang].settings.navigation.name}</legend>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--sticky_nav">
-                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.sticky_nav.name}
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
                         <legend>${trans[lang].settings.accuracy.name}</legend>
                         <div class="form-group">
                             <div class="checkbox">
@@ -3894,6 +3883,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 <label for="setting--no_notifs">
                                     <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     ${trans[lang].settings.no_notifs.name}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.navigation.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--sticky_nav">
+                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.sticky_nav.name}
                                 </label>
                             </div>
                         </div>
