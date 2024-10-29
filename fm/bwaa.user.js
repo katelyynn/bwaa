@@ -498,7 +498,7 @@ let seasonal_events = [
     {
         id: 'halloween',
         start: 'y0-09-22',
-        end: 'y0-11-02T23:59:59',
+        end: 'y0-11-01T23:59:59',
 
         snowflakes: {
             state: false
@@ -506,7 +506,7 @@ let seasonal_events = [
     },
     {
         id: 'pre_fall',
-        start: 'y0-11-03',
+        start: 'y0-11-02',
         end: 'y0-11-12T23:59:59',
 
         snowflakes: {
@@ -540,7 +540,7 @@ function set_season() {
     if (!settings.seasonal)
         return;
 
-    let now = new Date('2024-11-29');
+    let now = new Date();
 
     let current_year = now.getFullYear();
 
