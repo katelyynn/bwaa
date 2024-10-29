@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.0924
+// @version      2024.1028
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -13,16 +13,19 @@
 // @require      https://unpkg.com/@popperjs/core@2
 // @require      https://unpkg.com/tippy.js@6
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
+// @require      https://katelyynn.github.io/bleh/fm/js/snow.js?a=b
 // ==/UserScript==
 
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.0924',
-    sku: 'scawy'
+    build: '2024.1028',
+    sku: 'chilly'
 }
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
+
+let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
 
 // loads your selected language in last.fm
 let lang;
@@ -258,6 +261,8 @@ const trans = {
             }
         },
         settings: {
+            finish: 'Finish',
+            reload: 'A setting you changed requires a page reload to take effect, click to reload.',
             title: 'Configure bwaa settings',
             tabs: {
                 home: 'Home',
@@ -377,9 +382,31 @@ const trans = {
                     disabled: ''
                 },
                 accent: 'Theme accent colours to the current season',
-                particles: 'Show particles (eg. snow) during seasons'
+                particles: 'Show particles (eg. snow) during seasons',
+                listing: {
+                    easter: 'Easter',
+                    pride: 'Pride',
+                    halloween: 'Halloween',
+                    pre_fall: 'Pre-Fall',
+                    fall: 'Fall',
+                    christmas: 'Christmas',
+                    new_years: 'New Years'
+                }
             }
         },
+
+        update: {
+            name: 'Update checker',
+            bio: 'It’s time for bwaa updating.',
+            updates_available: 'There are updates available!',
+            update_now: 'Update bwaa now',
+            update_style: 'Update style (required too)',
+            ignore: 'Ignore for 1 hour',
+
+            you_have: 'You have',
+            latest: 'Latest is'
+        },
+
         wiki: {
             no_facts: 'This wiki has no facts listed :(',
             whats_this: 'What’s This?',
@@ -441,11 +468,37 @@ let stored_season = {
 };
 let seasonal_events = [
     {
+        id: 'new_years',
+        start: 'y0-01-01',
+        end: 'y0-01-10T23:59:59',
+
+        snowflakes: {
+            state: true,
+            count: 50
+        }
+    },
+    {
+        id: 'easter',
+        start: 'y0-04-05',
+        end: 'y0-04-30T23:59:59',
+
+        snowflakes: {
+            state: false
+        }
+    },
+    {
+        id: 'pride',
+        start: 'y0-05-31',
+        end: 'y0-07-07T23:59:59',
+
+        snowflakes: {
+            state: false
+        }
+    },
+    {
         id: 'halloween',
-        icon: 'moon',
-        name: 'Halloween',
         start: 'y0-09-22',
-        end: 'y0-11-02T23:59:59',
+        end: 'y0-11-01T23:59:59',
 
         snowflakes: {
             state: false
@@ -453,9 +506,7 @@ let seasonal_events = [
     },
     {
         id: 'pre_fall',
-        icon: 'leaf',
-        name: 'Pre-Fall',
-        start: 'y0-11-05',
+        start: 'y0-11-02',
         end: 'y0-11-12T23:59:59',
 
         snowflakes: {
@@ -465,8 +516,6 @@ let seasonal_events = [
     },
     {
         id: 'fall',
-        icon: 'leaf',
-        name: 'Fall',
         start: 'y0-11-13',
         end: 'y0-11-22T23:59:59',
 
@@ -477,26 +526,12 @@ let seasonal_events = [
     },
     {
         id: 'christmas',
-        icon: 'snowflake',
-        name: 'Christmas',
         start: 'y0-11-23',
         end: 'y0-12-31T23:59:59',
 
         snowflakes: {
             state: true,
             count: 80
-        }
-    },
-    {
-        id: 'new_years',
-        icon: 'party-popper',
-        name: 'New Years',
-        start: 'y0-01-01',
-        end: 'y0-01-10T23:59:59',
-
-        snowflakes: {
-            state: true,
-            count: 50
         }
     }
 ];
@@ -512,7 +547,8 @@ function set_season() {
     seasonal_events.forEach((season) => {
         if (
             now >= new Date(season.start.replace('y0', current_year)) &&
-            now <= new Date(season.end.replace('y0', current_year))
+            now <= new Date(season.end.replace('y0', current_year)) &&
+            stored_season != season
         ) {
             stored_season = season;
             stored_season.now = now;
@@ -520,9 +556,38 @@ function set_season() {
             console.info('bwaa - it is season', season.name, 'starting', season.start, 'ending', season.end, season);
 
             document.documentElement.setAttribute('data-bwaa--season', season.id);
+
+            // snow
+            if (season.snowflakes.state && settings.seasonal_particles) {
+                prep_snow();
+
+                snowflakes_enabled = true;
+                snowflakes_count = season.snowflakes.count;
+                begin_snowflakes();
+            }
         }
     });
 }
+
+function prep_snow() {
+    let prev_container = document.getElementById('snowflakes');
+    if (prev_container != null)
+        return;
+
+    let container = document.createElement('div');
+    container.classList.add('snow-container');
+    container.setAttribute('id', 'snowflakes');
+    container.innerHTML = (`
+        <span class="snow snowflake"></span>
+    `);
+
+    document.documentElement.appendChild(container);
+}
+
+let cute = ['cutensilly', 'inozom'];
+
+// require page reload
+let reload_pending = false;
 
 tippy.setDefaultProps({
     arrow: false,
@@ -890,9 +955,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     function append_style() {
         let cached_style = localStorage.getItem('bwaa_cached_style') || '';
+        let body = document.body.classList;
 
         // style is not fetched in dev mode
-        if (!settings.inbuilt_style_loading || document.body.classList.contains('namespace--user_listening-report_playback') || (document.body.classList.contains('labs-section') && !document.body.classList.contains('namespace--labs_overview')))
+        if (!settings.inbuilt_style_loading || body.contains('namespace--user_listening-report_playback') || (body.contains('labs-section') && !body.contains('namespace--labs_overview')))
             return;
 
         if (cached_style == '') {
@@ -918,7 +984,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         document.documentElement.appendChild(style_cache);
 
         console.info('bwaa - loaded cached style');
-        setTimeout(function() {document.body.classList.add('bwaa');}, 200);
+        setTimeout(function() {
+            document.body.classList.add('bwaa');
+            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+        }, 200);
     }
 
     function check_if_style_cache_is_valid() {
@@ -927,6 +996,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         // check if timeout has expired
         if (cached_style_timeout < current_time) {
+            // in versions 2024.1028 and onwards, the css stores version itself
+            // we can use this to compare if we should fetch a new one
+            // as we don't want to fetch a new css while the js is out of date
+            if (theme_version != version.build && theme_version != '') {
+                // script is either out of date, or more in date (not gonna happen)
+                console.info('bwaa - attempted to fetch new style, however theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
+
+                prompt_for_update();
+                return;
+            }
+
             console.info('bwaa - fetching new style, timeout has expired');
             fetch_new_style();
         } else {
@@ -934,7 +1014,73 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         }
     }
 
-    function fetch_new_style(delete_old_style = false) {
+    unsafeWindow._prompt_for_update = function() {
+        prompt_for_update();
+    }
+    function prompt_for_update() {
+        // prompt the user
+        create_window('bwaa_update',trans[lang].update.name,(`
+            <p>${trans[lang].update.bio}</p>
+            <div class="update-row">
+                <div class="update-entry update-you-have">
+                    <p>${trans[lang].update.you_have}</p>
+                    <div class="alert alert-danger">
+                        ${version.build}
+                    </div>
+                </div>
+                <div class="update-entry update-latest">
+                    <p>${trans[lang].update.latest}</p>
+                    <div class="alert alert-success">
+                        ${theme_version}
+                    </div>
+                </div>
+            </div>
+            <div class="more-link">
+                <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js">
+                    ${trans[lang].update.update_now}
+                </a>
+            </div>
+            ${(settings.dev ? (`
+            <div class="more-link">
+                <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css">
+                    ${trans[lang].update.update_style}
+                </a>
+            </div>
+            `) : '')}
+            <div class="modal-footer">
+                <button class="btn" onclick="_ignore_update()">
+                    <strong>${trans[lang].update.ignore}</strong>
+                </button>
+                <button class="btn primary continue" onclick="_finish_update()">
+                    <strong>${trans[lang].settings.finish}</strong>
+                </button>
+            </div>
+        `));
+    }
+
+    unsafeWindow._ignore_update = function() {
+        kill_window('bwaa_update');
+
+        // set expire date
+        let api_expire = new Date();
+        api_expire.setHours(api_expire.getHours() + 1);
+        localStorage.setItem('bwaa_cached_style_timeout',api_expire);
+        console.info('bwaa - style is cached until', api_expire);
+    }
+
+    unsafeWindow._finish_update = function() {
+        kill_window('bwaa_update');
+
+        if (settings.inbuilt_style_loading) {
+            create_window('bwaa_wait',trans[lang].update.name,'');
+            fetch_new_style(false, true);
+        } else {
+            // dev
+            invoke_reload();
+        }
+    }
+
+    function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
         let xhr = new XMLHttpRequest();
         let url = 'https://katelyynn.github.io/bwaa/fm/bwaa.css';
         xhr.open('GET',url,true);
@@ -959,6 +1105,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             api_expire.setHours(api_expire.getHours() + 1);
             localStorage.setItem('bwaa_cached_style_timeout',api_expire);
             console.info('bwaa - style is cached until', api_expire);
+
+            if (reload_on_finish)
+                invoke_reload();
+
+            setTimeout(function() {
+                document.body.classList.add('bwaa');
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+            }, 200);
         }
 
         xhr.send();
@@ -3764,7 +3918,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     <h2 class="form-header">${trans[lang].settings.welcome.name}</h2>
                     <p>${trans[lang].settings.welcome.body.replace('{v}', `<strong>${version.build}.${version.sku}</strong>`)}</p>
                     <div class="more-link align-left space-self">
-                        <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js" target="_blank">${trans[lang].settings.check_for_updates}</a>
+                        <a onclick="_request_style_reload()">${trans[lang].settings.check_for_updates}</a>
                     </div>
                     <fieldset>
                         <legend>${trans[lang].settings.seasonal.category}</legend>
@@ -3775,7 +3929,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                     ${trans[lang].settings.seasonal.name}
                                 </label>
                                 <div class="alert">
-                                    ${trans[lang].settings.seasonal.alert} ${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', stored_season.name).replace('{end}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)) : (settings.seasonal) ? trans[lang].settings.seasonal.marker.none : trans[lang].settings.seasonal.marker.disabled}
+                                    ${trans[lang].settings.seasonal.alert} ${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)) : (settings.seasonal) ? trans[lang].settings.seasonal.marker.none : trans[lang].settings.seasonal.marker.disabled}
                                 </div>
                             </div>
                         </div>
@@ -3792,17 +3946,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 <label for="setting--seasonal_particles">
                                     <input id="setting--seasonal_particles" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     ${trans[lang].settings.seasonal.particles}
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>${trans[lang].settings.navigation.name}</legend>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--sticky_nav">
-                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.sticky_nav.name}
                                 </label>
                             </div>
                         </div>
@@ -3894,6 +4037,17 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 <label for="setting--no_notifs">
                                     <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     ${trans[lang].settings.no_notifs.name}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.navigation.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--sticky_nav">
+                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.sticky_nav.name}
                                 </label>
                             </div>
                         </div>
@@ -4211,7 +4365,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         page.avatar = my_avi;
         page.name = auth;
 
-        deliver_notif(`bwaa has installed successfully, welcome aboard!`);
+        deliver_notif(`bwaa has installed successfully!`);
 
         adaptive_skin.innerHTML = '';
         document.title = 'first-time bwaa | Last.fm';
@@ -4432,7 +4586,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         // otherwise, it's a usual update
         if (last_version_used != version.build) {
-            deliver_notif(`bwaa has updated to ${version.build}.${version.sku}, welcome aboard!`, false, false, true);
+            deliver_notif(`bwaa has updated to ${version.build}.${version.sku}!`, false, false, true);
             register_activity('update_bwaa', [{name: version.build, type: 'bwaa'}], `${root}bwaa`);
             localStorage.setItem('bwaa_last_version_used', version.build);
         }
@@ -5108,5 +5262,110 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
     unsafeWindow._what_page_am_i_on = function() {
         return page;
+    }
+
+
+
+
+    // create a window
+    function create_window(id, title, inner_content, classname='') {
+        let background = document.createElement('div');
+        background.classList.add('popup_background');
+        background.setAttribute('id',`bwaa--window-${id}--background`);
+        background.style = 'opacity: 0.8; visibility: visible; background-color: rgb(0, 0, 0); position: fixed; inset: 0px;';
+        background.setAttribute('data-kate-processed','true');
+
+        let wrapper = document.createElement('div');
+        wrapper.classList.add('popup_wrapper','popup_wrapper_visible');
+        wrapper.setAttribute('id',`bwaa--window-${id}--wrapper`);
+        wrapper.style = 'opacity: 1; visibility: visible; position: fixed; overflow: auto; width: 100%; height: 100%; top: 0px; left: 0px; text-align: center;';
+        wrapper.setAttribute('data-kate-processed','true');
+
+
+        // dialog
+        let dialog = document.createElement('div');
+        dialog.classList.add('modal-dialog');
+        dialog.setAttribute('id',`bwaa--window-${id}--dialog`);
+        dialog.style = 'opacity: 1; visibility: visible; pointer-events: auto; display: inline-block; outline: none; text-align: left; position: relative; vertical-align: middle;';
+        dialog.setAttribute('data-kate-processed','true');
+
+        // content
+        let content = document.createElement('div');
+        content.classList.add('modal-content');
+        content.setAttribute('id',`bwaa--window-${id}--content`);
+        content.setAttribute('data-kate-processed','true');
+
+        // share content
+        let share = document.createElement('div');
+        share.classList.add('modal-share-content');
+        share.setAttribute('id',`bwaa--window-${id}--share`);
+        share.setAttribute('data-kate-processed','true');
+
+        // body
+        let body = document.createElement('div');
+        body.classList.add('modal-body');
+        body.setAttribute('id',`bwaa--window-${id}--body`);
+        body.setAttribute('data-kate-processed','true');
+
+        if (classname != '')
+            body.classList.add(`modal--${classname}`);
+
+        // title
+        let header = document.createElement('h2');
+        header.classList.add('modal-title');
+        header.textContent = title;
+        header.setAttribute('data-kate-processed','true');
+
+        // inner content
+        let inner_content_em = document.createElement('div');
+        inner_content_em.classList.add('modal-inner-content');
+        inner_content_em.innerHTML = inner_content;
+        inner_content_em.setAttribute('data-kate-processed','true');
+
+
+        let align = document.createElement('div');
+        align.classList.add('popup_align');
+        align.setAttribute('id',`bwaa--window-${id}--align`);
+        align.style = 'display: inline-block; vertical-align: middle; height: 100%;';
+        align.setAttribute('data-kate-processed','true');
+
+
+        body.appendChild(header);
+        body.appendChild(inner_content_em)
+        share.appendChild(body);
+        content.appendChild(share);
+        dialog.appendChild(content);
+        wrapper.appendChild(dialog);
+        wrapper.appendChild(align);
+
+
+        document.body.appendChild(background);
+        document.body.appendChild(wrapper);
+    }
+
+    // kill a window
+    function kill_window(id) {
+        try {
+            document.body.removeChild(document.getElementById(`bwaa--window-${id}--background`));
+            document.body.removeChild(document.getElementById(`bwaa--window-${id}--wrapper`));
+        } catch(e) {}
+    }
+
+    unsafeWindow._kill_window = function(id) {
+        kill_window(id);
+    }
+
+
+
+
+    function request_reload() {
+        reload_pending = true;
+        deliver_notif(trans[lang].settings.reload, true, false, '', '_invoke_reload()');
+    }
+    unsafeWindow._invoke_reload = function() {
+        invoke_reload();
+    }
+    function invoke_reload() {
+        window.location.reload();
     }
 })();
