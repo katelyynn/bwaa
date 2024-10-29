@@ -1,13 +1,17 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2024.0924
+@version        2024.1028
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
 ==/UserStyle== */
 
 @-moz-document domain("last.fm") {
+    :root {
+        --version-build: '2024.1028';
+    }
+
     :root {
         --vote-up: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJLSURBVDhP7ZJNaNNgHMafph9bu7Z2rnTVKp3iB3PUQyqiTgURdhIR0augh6kXL06cF29C8etetoFXjw4RdtiEfWiVFebs6Cq41i1ra9dtbZO2M03z+raGgSzpRK8+8BLIm+eXX/5v8D//HJ1y1cxk9CXJvAsjF4nBdcqPC1cfNuwwylUz36emsVs243T3GaSnwspd7WwLLK/l0NxihdVmgU4oYezDIFG2VNMQ+D7ximRm5uH2elEt5cHzRTTtdCi76mkIjL95Cx/rp5p5CAUepMWM7oNX/m6GocVhEh+ZRCfLQuCi4IUiTK2N7WrRBBYWU3C63dDJEgh9bOOHCD7O4fG1c2Tw0Q0y/PqJ6iw19Qdo6ZDDDU+bGcWlOdi8XUjGviDLJcHoDbTJQJZEMPs7cPH+0CZH1XAg0EsIt4q9nl3IfZ1FVZLBJyJ12NlbfTh8nEV7xx54T5yHvJBQWr+iavig5yi5fvsmhKV5iOtJ6PU65HNljH3mUK5IMBsN2GE20mWCvdkI50k/enqf11nUfWuqhEASK+DTS3UYIToI/Ab6AgGsR0MoCwKK+QJKdNm8R8BNjytNDaBMgVVqUvtUyPTFFGgwMHja37/VcDkNu6ddaWoAzW2t4Ol/Z7S7IObS9VOWKPxPDFVn+CJ4j5RmFsB2HkClkKXQDEQ6golYatsZqgJrGXp2h6yFI2B9XbBZLWAYBtzsx/opr3waR24lC5NzH76FRnEpOLrJ0QTWUjOdG5lANrWKsijBYWmidvrfDF3HfLh8N6hwgJ+UdgTpS0l9IgAAAABJRU5ErkJggg==');
         --vote-down: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEXUExURbd6Z5hZOolQNHpHL3FCK3JDK3NDK4BKMJVcQ72FerBnQ+vHq9mgecmLZdatl+KthNiieqpxT9GvpsSEcaZhP8B5TdiTXN2hcsmmkbqDed2mf9Sac798V9Opk9iSW+XDqpVdRbhzVrduR+zIrYdPM+vGqoRNMt6kderEp4FLMdWPWteRW+e8m6BuUqdzZrh4YrJrSLFqRsOBXd6qg+KuhsSYeqJuYcCNiaBtYIZTP4BNNL2JZ9mec+S4l5NiR8uYl5FfTsGMa9WZb92xkXdGLuCssIJRPcuVdNyriqd4XKh2bNqmqnhJMdSfftamiHlKNN6qrsyZmYNSOtOegLOCZ5tqXoZWRL6Lb6V0Wal3brSCfNejpgAAAEFxMooAAABddFJOU///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AOGvnZAAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC6SURBVChTY4jBAqgjyMDIxMzCysbOwQnmgcViuLh5ePm4+PkFBIXggsIiIJXMomLi/BKSMEEubilpXhlZLjk5cXkFmKAiRKWSnJyYsgqmSjFVNXQz5eTUNTRhglDbtbTldHT14IL6XAaGXEbGWiamZkAeVDAmxtzC0sraxtbOHsiGCwKBg6OTs4srkIEs6Obu4ekFYiAJevv4+vkHgFhIgoFBwSGhYBay9rDwiEgwA1kwKiwyGkjFxAAA2EButh4+YGMAAAAASUVORK5CYII=');
@@ -3196,6 +3200,26 @@
         }
     }
 
+    .more-link-with-alert {
+        display: flex;
+        align-items: center;
+        margin: 10px 0 15px 0 !important;
+
+        .space {
+            flex: 1;
+        }
+
+        .alert {
+            margin: unset !important;
+        }
+    }
+
+    .modal-footer {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
     .section-with-separator:has(.listeners-section),
     .personal-stats {
         display: none;
@@ -4009,6 +4033,7 @@
 
 
     /* generic button */
+    .btn,
     .btn-add:not(.btn-add-tag),
     .btn-subscribe,
     .js-shout-reply-cancel,
@@ -5755,5 +5780,30 @@
     }
     .async-content-loading {
         background: url('https://katelyynn.github.io/bwaa/fm/res/spinner_big.gif') 50% 50% no-repeat !important;
+    }
+
+
+
+
+    .update-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+
+        .update-entry {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            p {
+                font-size: 11px;
+                line-height: 1.3em;
+                color: var(--colour-lower);
+            }
+
+            .alert {
+                margin: unset !important;
+            }
+        }
     }
 }
