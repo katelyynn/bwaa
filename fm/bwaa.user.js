@@ -540,14 +540,15 @@ function set_season() {
     if (!settings.seasonal)
         return;
 
-    let now = new Date();
+    let now = new Date('2024-11-29');
 
     let current_year = now.getFullYear();
 
     seasonal_events.forEach((season) => {
         if (
             now >= new Date(season.start.replace('y0', current_year)) &&
-            now <= new Date(season.end.replace('y0', current_year))
+            now <= new Date(season.end.replace('y0', current_year)) &&
+            stored_season != season
         ) {
             stored_season = season;
             stored_season.now = now;
