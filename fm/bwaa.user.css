@@ -3190,6 +3190,7 @@
                         color: var(--text-link);
                     }
                 }
+                .note,
                 .scrobbles {
                     color: var(--colour-middle);
                     font-size: 11px;
@@ -6138,5 +6139,18 @@
         .event-metadata + &:before {
             content: '|';
         }
+    }
+
+
+    .attendee-header {
+        font-size: 12px !important;
+        line-height: 1.181818em !important;
+        margin: 5px 0 10px;
+        color: var(--header-text-black);
+    }
+
+
+    .share-desktop {
+        display: none;
     }
 }
