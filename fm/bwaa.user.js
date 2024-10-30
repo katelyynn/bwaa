@@ -5547,30 +5547,32 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let friends_placeholder = document.createElement('div');
             friends_placeholder.classList.add('top-listeners-small', 'attendee-list');
             let friends_list = document.body.querySelectorAll('.attendee-you-know-avatar img');
-            friends_list.forEach((attendee, index) => {
-                let avi = attendee.getAttribute('src');
-                let name = attendee.getAttribute('title');
+            if (friends_list.length > 0) {
+                friends_list.forEach((attendee, index) => {
+                    let avi = attendee.getAttribute('src');
+                    let name = attendee.getAttribute('title');
 
-                let attendee_element = document.createElement('div');
-                attendee_element.classList.add('listener', 'attendee', 'attendee-friend');
-                attendee_element.innerHTML = (`
-                    <div class="image">
-                        <img src="${avi}">
-                    </div>
-                    <div class="info">
-                        <a class="user" href="${root}user/${name}">${name}</a>
-                        <p class="note">${trans[lang].event.friends.note}</p>
-                    </div>
+                    let attendee_element = document.createElement('div');
+                    attendee_element.classList.add('listener', 'attendee', 'attendee-friend');
+                    attendee_element.innerHTML = (`
+                        <div class="image">
+                            <img src="${avi}">
+                        </div>
+                        <div class="info">
+                            <a class="user" href="${root}user/${name}">${name}</a>
+                            <p class="note">${trans[lang].event.friends.note}</p>
+                        </div>
+                    `);
+                    friends_placeholder.appendChild(attendee_element);
+                });
+
+                let friends = document.createElement('section');
+                friends.innerHTML = (`
+                    <h2 class="attendee-header">${trans[lang].event.friends.name}</h2>
+                    ${friends_placeholder.outerHTML}
                 `);
-                friends_placeholder.appendChild(attendee_element);
-            });
-
-            let friends = document.createElement('section');
-            friends.innerHTML = (`
-                <h2 class="attendee-header">${trans[lang].event.friends.name}</h2>
-                ${friends_placeholder.outerHTML}
-            `);
-            buttons.after(friends);
+                buttons.after(friends);
+            }
 
 
             let counts = document.body.querySelectorAll('.header-metadata-display a');
