@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1028
+// @version      2024.1030
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,8 +19,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1028',
-    sku: 'chilly'
+    build: '2024.1030',
+    sku: 'event'
 }
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
@@ -318,7 +318,7 @@ const trans = {
             },
             varied_avatar_shapes: {
                 name: 'Allow varied avatar shapes',
-                alert: 'Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.'
+                alert: 'This allows avatars to be rectangles based on the original image uploaded.'
             },
             hide_extra_grid_item: {
                 name: 'Hide extra grid item on profiles',
@@ -395,6 +395,24 @@ const trans = {
             }
         },
 
+        event: {
+            tabs: {
+                overview: 'Event'
+            },
+            are_you_going: 'Are you going?',
+            going: {
+                name: '{c} going:'
+            },
+            maybe: {
+                name: '{c} interested:'
+            },
+            friends: {
+                name: 'Who you know:',
+                note: 'Mutual'
+            },
+            you: '(you!)'
+        },
+
         update: {
             name: 'Update checker',
             bio: 'It’s time for bwaa updating.',
@@ -402,6 +420,8 @@ const trans = {
             update_now: 'Update bwaa now',
             update_style: 'Update style (required too)',
             ignore: 'Ignore for 1 hour',
+
+            or: '..or alternatively',
 
             you_have: 'You have',
             latest: 'Latest is'
@@ -839,8 +859,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         document.head.querySelector('link[rel="icon"]').setAttribute('href', 'https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico');
         // essentials
         load_settings();
-        append_style();
         lookup_lang();
+        append_style();
         bwaa_load_header();
         load_notifs();
 
@@ -879,6 +899,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_playlists();
             bwaa_search();
             bwaa_home();
+            bwaa_events();
 
             subscribe_to_events();
         }
@@ -937,6 +958,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_playlists();
                                 bwaa_search();
                                 bwaa_home();
+                                bwaa_events();
 
                                 subscribe_to_events();
                             }
@@ -1036,24 +1058,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 </div>
             </div>
             <div class="more-link">
-                <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js">
+                <a onclick="_start_update()">
                     ${trans[lang].update.update_now}
                 </a>
             </div>
-            ${(settings.dev ? (`
+            <p class="align-right">${trans[lang].update.or}</p>
             <div class="more-link">
-                <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css">
-                    ${trans[lang].update.update_style}
+                <a onclick="_ignore_update()">
+                    ${trans[lang].update.ignore}
                 </a>
-            </div>
-            `) : '')}
-            <div class="modal-footer">
-                <button class="btn" onclick="_ignore_update()">
-                    <strong>${trans[lang].update.ignore}</strong>
-                </button>
-                <button class="btn primary continue" onclick="_finish_update()">
-                    <strong>${trans[lang].settings.finish}</strong>
-                </button>
             </div>
         `));
     }
@@ -1066,6 +1079,56 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         api_expire.setHours(api_expire.getHours() + 1);
         localStorage.setItem('bwaa_cached_style_timeout',api_expire);
         console.info('bwaa - style is cached until', api_expire);
+    }
+
+    unsafeWindow._start_update = function() {
+        open('https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js');
+
+        kill_window('bwaa_update');
+
+        if (settings.inbuilt_style_loading) {
+            _final_update();
+        } else {
+            create_window('bwaa_update',trans[lang].update.name,(`
+                <p>${trans[lang].update.bio}</p>
+                <div class="update-row">
+                    <div class="update-entry update-you-have">
+                        <p>${trans[lang].update.you_have}</p>
+                        <div class="alert alert-danger">
+                            ${version.build}
+                        </div>
+                    </div>
+                    <div class="update-entry update-latest">
+                        <p>${trans[lang].update.latest}</p>
+                        <div class="alert alert-success">
+                            ${theme_version}
+                        </div>
+                    </div>
+                </div>
+                <div class="more-link">
+                    <a onclick="_start_css_update()">
+                        ${trans[lang].update.update_style}
+                    </a>
+                </div>
+            `));
+        }
+    }
+
+    unsafeWindow._start_css_update = function() {
+        open('https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css');
+
+        kill_window('bwaa_update');
+        _final_update();
+    }
+
+    unsafeWindow._final_update = function() {
+        create_window('bwaa_update',trans[lang].update.name,(`
+            <div class="more-link">
+                <a onclick="_finish_update()">
+                    ${trans[lang].settings.finish}
+                </a>
+            </div>
+        `));
     }
 
     unsafeWindow._finish_update = function() {
@@ -1444,7 +1507,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let is_cute = (page.name == 'cutensilly');
 
             if (settings.varied_avatar_shapes)
-                page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/550x0/');
+                page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/arXL/');
 
             // main user header
             // this is on top of the actions, but appending is backwards
@@ -2984,6 +3047,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return element.getAttribute('content');
     }
 
+    function pre_fetch_background(element) {
+        let style = element.getAttribute('style');
+
+        if (style == null)
+            return '';
+        else
+            return style.replace('background-image: url(', '').replace(');', '');
+    }
+
 
     /**
      * subpage header creator for profiles, artists, albums, and tracks
@@ -3234,7 +3306,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             // this allows shout avatars to be varied in shape
             let src = shout_avatar.getAttribute('src');
-            src = src.replace('/i/u/avatar70s/', '/i/u/550x0/');
+            src = src.replace('/i/u/avatar70s/', '/i/u/arXL/');
             shout_avatar.setAttribute('src', src);
         });
     }
@@ -3253,7 +3325,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             // this allows friend avatars to be varied in shape
             let src = friend_avatar.getAttribute('src');
-            src = src.replace('/i/u/avatar70s/', '/i/u/550x0/');
+            src = src.replace('/i/u/avatar70s/', '/i/u/arXL/');
             friend_avatar.setAttribute('src', src);
         });
     }
@@ -5367,5 +5439,217 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
     function invoke_reload() {
         window.location.reload();
+    }
+
+
+
+
+    function bwaa_events() {
+        console.info('bwaa - events');
+
+        let event_header = document.body.querySelector('.header-info-primary--with-calendar');
+
+        if (event_header == null)
+            return;
+
+        if (event_header.hasAttribute('data-bwaa'))
+            return;
+        event_header.setAttribute('data-bwaa', 'true');
+
+        page.type = 'event';
+
+        let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
+
+
+        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
+
+        checkup_page_structure();
+
+        let navlist = event_header.querySelector('.navlist');
+
+        page.name = event_header.querySelector('.header-title-secondary a').textContent;
+        page.sister = event_header.querySelector('.header-title').textContent;
+        page.avatar = pre_fetch_background(document.body.querySelector('.header-background--has-image'));
+
+        patch_tab_overview_btn(navlist);
+
+        let new_header = generic_subpage_header(
+            trans[lang].artist.tabs.events,
+            'artist'
+        );
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+
+            let calendar = document.body.querySelector('.calendar-icon');
+
+            let date = page.structure.main.querySelector('.qa-event-date');
+            let poster = page.structure.main.querySelector('.event-poster');
+            let poster_full = page.structure.main.querySelector('.event-poster-full-width');
+
+            let address = page.structure.main.querySelector('.event-detail-address');
+            let address_tel = page.structure.main.querySelector('.event-detail-tel');
+            let address_web = page.structure.main.querySelector('.event-detail-web');
+
+            let link = page.structure.main.querySelector('.external-link');
+
+            let details = page.structure.main.querySelector('.event-details section:last-child');
+
+            let new_main_header = document.createElement('section');
+            new_main_header.classList.add('profile-event-section');
+            new_main_header.innerHTML = (`
+                <div class="event-info">
+                    <h1>${page.sister}</h1>
+                    <div class="date">
+                        ${calendar.outerHTML}
+                        <strong>${date.textContent}</strong>
+                    </div>
+                    <div class="location">
+                        ${address.outerHTML}
+                        ${(address_tel != null) ? address_tel.outerHTML : ''}
+                        ${(address_web != null) ? address_web.outerHTML : ''}
+                    </div>
+                </div>
+                <div class="event-poster-side" id="event_poster"></div>
+            `);
+
+            page.structure.main.insertBefore(new_main_header, page.structure.main.firstElementChild);
+
+            document.getElementById('event_poster').appendChild(poster);
+            document.getElementById('event_poster').appendChild(poster_full);
+
+
+            let lineup = page.structure.main.querySelector('#line-up');
+            lineup.after(details);
+
+            details.insertBefore(link, details.firstElementChild);
+
+
+            let buttons = document.body.querySelector('.header-metadata-item--event-attendance');
+            buttons.classList = 'event-buttons';
+            page.structure.side.insertBefore(buttons, page.structure.side.firstElementChild);
+
+            let are_you_going = document.createElement('h2');
+            are_you_going.innerHTML = (`<a href="${window.location.href}/attendance">${trans[lang].event.are_you_going}</a>`);
+            page.structure.side.insertBefore(are_you_going, buttons);
+
+
+
+
+            // friends
+            let friends_placeholder = document.createElement('div');
+            friends_placeholder.classList.add('top-listeners-small', 'attendee-list');
+            let friends_list = document.body.querySelectorAll('.attendee-you-know-avatar img');
+            if (friends_list.length > 0) {
+                friends_list.forEach((attendee, index) => {
+                    let avi = attendee.getAttribute('src');
+                    let name = attendee.getAttribute('title');
+
+                    let attendee_element = document.createElement('div');
+                    attendee_element.classList.add('listener', 'attendee', 'attendee-friend');
+                    attendee_element.innerHTML = (`
+                        <div class="image">
+                            <img src="${avi}">
+                        </div>
+                        <div class="info">
+                            <a class="user" href="${root}user/${name}">${name}</a>
+                            <p class="note">${trans[lang].event.friends.note}</p>
+                        </div>
+                    `);
+                    friends_placeholder.appendChild(attendee_element);
+                });
+
+                let friends = document.createElement('section');
+                friends.innerHTML = (`
+                    <h2 class="attendee-header">${trans[lang].event.friends.name}</h2>
+                    ${friends_placeholder.outerHTML}
+                `);
+                buttons.after(friends);
+            }
+
+
+            let counts = document.body.querySelectorAll('.header-metadata-display a');
+            let lists = page.structure.main.querySelectorAll('.attendee-summary-users');
+
+
+            if (lists.length > 1) {
+                let maybe_placeholder = document.createElement('div');
+                maybe_placeholder.classList.add('top-listeners-small', 'attendee-list');
+                let maybe_list = lists[1].querySelectorAll('.attendee-summary-user-inner-wrap');
+                maybe_list.forEach((attendee, index) => {
+                    let avi = attendee.querySelector('img').getAttribute('src');
+                    let name = attendee.querySelector('.attendee-summary-user-link').textContent.trim();
+
+                    let attendee_element = document.createElement('div');
+                    attendee_element.classList.add('listener', 'attendee');
+                    attendee_element.innerHTML = (`
+                        <div class="image">
+                            <img src="${avi}">
+                        </div>
+                        <div class="info">
+                            <a class="user" href="${root}user/${name}">${name}</a>
+                            ${(auth == name) ? `<p class="note">${trans[lang].event.you}</p>` : ''}
+                        </div>
+                    `);
+                    maybe_placeholder.appendChild(attendee_element);
+                });
+
+                let maybe = document.createElement('section');
+                maybe.innerHTML = (`
+                    <h2 class="attendee-header"><a href="${window.location.href}/attendance/interested">${trans[lang].event.maybe.name.replace('{c}', counts[1].textContent)}</a></h2>
+                    ${maybe_placeholder.outerHTML}
+                    <div class="module-options">
+                        <a href="${window.location.href}/attendance/interested">${trans[lang].see_more}</a>
+                    </div>
+                `);
+                buttons.after(maybe);
+
+                lists[1].parentElement.style.setProperty('display', 'none');
+            }
+
+            let going_placeholder = document.createElement('div');
+            going_placeholder.classList.add('top-listeners-small', 'attendee-list');
+            let going_list = lists[0].querySelectorAll('.attendee-summary-user-inner-wrap');
+            going_list.forEach((attendee, index) => {
+                let avi = attendee.querySelector('img').getAttribute('src');
+                let name = attendee.querySelector('.attendee-summary-user-link').textContent.trim();
+
+                let attendee_element = document.createElement('div');
+                attendee_element.classList.add('listener', 'attendee');
+                attendee_element.innerHTML = (`
+                    <div class="image">
+                        <img src="${avi}">
+                    </div>
+                    <div class="info">
+                        <a class="user" href="${root}user/${name}">${name}</a>
+                        ${(auth == name) ? `<p class="note">${trans[lang].event.you}</p>` : ''}
+                    </div>
+                `);
+                going_placeholder.appendChild(attendee_element);
+            });
+
+            let going = document.createElement('section');
+            going.innerHTML = (`
+                <h2 class="attendee-header"><a href="${window.location.href}/attendance/going">${trans[lang].event.going.name.replace('{c}', counts[0].textContent)}</a></h2>
+                ${going_placeholder.outerHTML}
+                <div class="module-options">
+                    <a href="${window.location.href}/attendance/going">${trans[lang].see_more}</a>
+                </div>
+            `);
+            buttons.after(going);
+
+            lists[0].parentElement.style.setProperty('display', 'none');
+        }
+
+        page.structure.row.insertBefore(navlist, page.structure.main);
+        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+        document.body.querySelector('.header').style.setProperty('display', 'none');
     }
 })();
