@@ -1797,8 +1797,9 @@
 
     /* section */
     .col-main {
+        .event-summary-with-poster + section,
         .about-this-album:first-child,
-        div#shoutbox,
+        div#shoutbox:not(section > #shoutbox),
         .artist-overview-top-tracks,
         .album-and-lyrics-row,
         #tracklist,
@@ -6122,6 +6123,20 @@
                     background: linear-gradient(180deg, #0085B7, #01A9D8) !important;
                 }
             }
+        }
+    }
+
+
+    .event-detail-long-link {
+        display: block;
+        margin-bottom: 15px;
+    }
+    .event-metadata {
+        font-size: 11px;
+        line-height: inherit;
+
+        .event-metadata + &:before {
+            content: '|';
         }
     }
 }

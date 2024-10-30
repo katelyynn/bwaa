@@ -5489,6 +5489,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             let link = page.structure.main.querySelector('.external-link');
 
+            let details = page.structure.main.querySelector('.event-details section:last-child');
+
             let new_main_header = document.createElement('section');
             new_main_header.classList.add('profile-event-section');
             new_main_header.innerHTML = (`
@@ -5511,6 +5513,12 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             document.getElementById('event_poster').appendChild(poster);
             document.getElementById('event_poster').appendChild(poster_full);
+
+
+            let lineup = page.structure.main.querySelector('#line-up');
+            lineup.after(details);
+
+            details.insertBefore(link, details.firstElementChild);
 
 
             let buttons = document.body.querySelector('.header-metadata-item--event-attendance');
