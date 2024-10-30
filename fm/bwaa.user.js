@@ -5499,8 +5499,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                     </div>
                     <div class="location">
                         ${address.outerHTML}
-                        ${address_tel.outerHTML}
-                        ${address_web.outerHTML}
+                        ${(address_tel != null) ? address_tel.outerHTML : ''}
+                        ${(address_web != null) ? address_web.outerHTML : ''}
                     </div>
                 </div>
                 <div class="event-poster-side" id="event_poster"></div>
