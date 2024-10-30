@@ -318,7 +318,7 @@ const trans = {
             },
             varied_avatar_shapes: {
                 name: 'Allow varied avatar shapes',
-                alert: 'Due to limitations post-redesign, varied avatar shapes are only possible by requesting high-resolution avatars from Last.fm. In cases where a user’s avatar is too large, it will fail to display.'
+                alert: 'This allows avatars to be rectangles based on the original image uploaded.'
             },
             hide_extra_grid_item: {
                 name: 'Hide extra grid item on profiles',
@@ -847,8 +847,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         document.head.querySelector('link[rel="icon"]').setAttribute('href', 'https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico');
         // essentials
         load_settings();
-        append_style();
         lookup_lang();
+        append_style();
         bwaa_load_header();
         load_notifs();
 
@@ -1495,7 +1495,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let is_cute = (page.name == 'cutensilly');
 
             if (settings.varied_avatar_shapes)
-                page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/550x0/');
+                page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/arXL/');
 
             // main user header
             // this is on top of the actions, but appending is backwards
@@ -3294,7 +3294,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             // this allows shout avatars to be varied in shape
             let src = shout_avatar.getAttribute('src');
-            src = src.replace('/i/u/avatar70s/', '/i/u/550x0/');
+            src = src.replace('/i/u/avatar70s/', '/i/u/arXL/');
             shout_avatar.setAttribute('src', src);
         });
     }
@@ -3313,7 +3313,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             // this allows friend avatars to be varied in shape
             let src = friend_avatar.getAttribute('src');
-            src = src.replace('/i/u/avatar70s/', '/i/u/550x0/');
+            src = src.replace('/i/u/avatar70s/', '/i/u/arXL/');
             friend_avatar.setAttribute('src', src);
         });
     }
@@ -5475,6 +5475,41 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         if (!is_subpage) {
             page.subpage = 'overview';
+
+            let calendar = document.body.querySelector('.calendar-icon');
+
+            let date = page.structure.main.querySelector('.qa-event-date');
+            let poster = page.structure.main.querySelector('.event-poster');
+            let poster_full = page.structure.main.querySelector('.event-poster-full-width');
+
+            let address = page.structure.main.querySelector('.event-detail-address');
+            let address_tel = page.structure.main.querySelector('.event-detail-tel');
+            let address_web = page.structure.main.querySelector('.event-detail-web');
+
+            let link = page.structure.main.querySelector('.external-link');
+
+            let new_main_header = document.createElement('section');
+            new_main_header.classList.add('profile-event-section');
+            new_main_header.innerHTML = (`
+                <div class="event-info">
+                    <h1>${page.sister}</h1>
+                    <div class="date">
+                        ${calendar.outerHTML}
+                        <strong>${date.textContent}</strong>
+                    </div>
+                    <div class="location">
+                        ${address.outerHTML}
+                        ${address_tel.outerHTML}
+                        ${address_web.outerHTML}
+                    </div>
+                </div>
+                <div class="event-poster-side" id="event_poster"></div>
+            `);
+
+            page.structure.main.insertBefore(new_main_header, page.structure.main.firstChild);
+
+            document.getElementById('event_poster').appendChild(poster);
+            document.getElementById('event_poster').appendChild(poster_full);
         }
 
         page.structure.row.insertBefore(navlist, page.structure.main);
