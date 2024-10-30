@@ -1905,6 +1905,7 @@
         font-size: 18px;
         line-height: 13px;
         text-transform: unset;
+        margin: unset;
 
         .col-sidebar & {
             font-size: 14px;
@@ -6073,6 +6074,53 @@
                 height: 17px;
 
                 background-image: var(--cdn-flatness-tape);
+            }
+        }
+    }
+
+
+
+
+    .event-buttons {
+        display: flex;
+        margin-top: 12px;
+
+        button {
+            display: inline-block;
+            margin: 0 0.5em 0 0;
+            border: 1px solid #dad9d9;
+            border-color: #dad9d9 #dad9d9 #b3b3b3;
+            border-radius: 3px !important;
+            font-size: 12px !important;
+            padding: 5px 10px !important;
+            color: #333 !important;
+            text-shadow: rgba(255,255,255,0.5) 0 1px 0;
+            background: linear-gradient(180deg, #f0f0f0, #c5c5c5) !important;
+
+            text-transform: unset !important;
+            letter-spacing: unset !important;
+            min-width: unset !important;
+            min-height: unset !important;
+
+            &:before {
+                display: none;
+            }
+
+            &:hover, &:focus-visible {
+                background: linear-gradient(180deg, #f0f0f0, #b3b3b3) !important;
+            }
+
+            .attendance-control[data-ajax-form-state="attending"] &.attendance-btn--attending.attendance-btn--turn-off,
+            .attendance-control[data-ajax-form-state="maybe"] &.attendance-btn--maybe.attendance-btn--turn-off
+            {
+                color: #fff !important;
+                text-shadow: rgba(0,0,0,0.5) 0 1px 0;
+                border-color: #3F6373;
+                background: linear-gradient(180deg, #00709C, #009CC9) !important;
+
+                &:hover, &:focus-visible {
+                    background: linear-gradient(180deg, #0085B7, #01A9D8) !important;
+                }
             }
         }
     }

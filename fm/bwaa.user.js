@@ -398,7 +398,8 @@ const trans = {
         event: {
             tabs: {
                 overview: 'Event'
-            }
+            },
+            are_you_going: 'Are you going?'
         },
 
         update: {
@@ -5506,10 +5507,19 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 <div class="event-poster-side" id="event_poster"></div>
             `);
 
-            page.structure.main.insertBefore(new_main_header, page.structure.main.firstChild);
+            page.structure.main.insertBefore(new_main_header, page.structure.main.firstElementChild);
 
             document.getElementById('event_poster').appendChild(poster);
             document.getElementById('event_poster').appendChild(poster_full);
+
+
+            let buttons = document.body.querySelector('.header-metadata-item--event-attendance');
+            buttons.classList = 'event-buttons';
+            page.structure.side.insertBefore(buttons, page.structure.side.firstElementChild);
+
+            let are_you_going = document.createElement('h2');
+            are_you_going.innerHTML = (`<a href="${window.location.href}/attendance">${trans[lang].event.are_you_going}</a>`);
+            page.structure.side.insertBefore(are_you_going, buttons);
         }
 
         page.structure.row.insertBefore(navlist, page.structure.main);
