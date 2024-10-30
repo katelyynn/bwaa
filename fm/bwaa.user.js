@@ -409,6 +409,8 @@ const trans = {
             update_style: 'Update style (required too)',
             ignore: 'Ignore for 1 hour',
 
+            or: '..or alternatively',
+
             you_have: 'You have',
             latest: 'Latest is'
         },
@@ -1044,24 +1046,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 </div>
             </div>
             <div class="more-link">
-                <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js">
+                <a onclick="_start_update()">
                     ${trans[lang].update.update_now}
                 </a>
             </div>
-            ${(settings.dev ? (`
+            <p class="align-right">${trans[lang].update.or}</p>
             <div class="more-link">
-                <a href="https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css">
-                    ${trans[lang].update.update_style}
+                <a onclick="_ignore_update()">
+                    ${trans[lang].update.ignore}
                 </a>
-            </div>
-            `) : '')}
-            <div class="modal-footer">
-                <button class="btn" onclick="_ignore_update()">
-                    <strong>${trans[lang].update.ignore}</strong>
-                </button>
-                <button class="btn primary continue" onclick="_finish_update()">
-                    <strong>${trans[lang].settings.finish}</strong>
-                </button>
             </div>
         `));
     }
@@ -1074,6 +1067,56 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         api_expire.setHours(api_expire.getHours() + 1);
         localStorage.setItem('bwaa_cached_style_timeout',api_expire);
         console.info('bwaa - style is cached until', api_expire);
+    }
+
+    unsafeWindow._start_update = function() {
+        open('https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js');
+
+        kill_window('bwaa_update');
+
+        if (settings.inbuilt_style_loading) {
+            _final_update();
+        } else {
+            create_window('bwaa_update',trans[lang].update.name,(`
+                <p>${trans[lang].update.bio}</p>
+                <div class="update-row">
+                    <div class="update-entry update-you-have">
+                        <p>${trans[lang].update.you_have}</p>
+                        <div class="alert alert-danger">
+                            ${version.build}
+                        </div>
+                    </div>
+                    <div class="update-entry update-latest">
+                        <p>${trans[lang].update.latest}</p>
+                        <div class="alert alert-success">
+                            ${theme_version}
+                        </div>
+                    </div>
+                </div>
+                <div class="more-link">
+                    <a onclick="_start_css_update()">
+                        ${trans[lang].update.update_style}
+                    </a>
+                </div>
+            `));
+        }
+    }
+
+    unsafeWindow._start_css_update = function() {
+        open('https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css');
+
+        kill_window('bwaa_update');
+        _final_update();
+    }
+
+    unsafeWindow._final_update = function() {
+        create_window('bwaa_update',trans[lang].update.name,(`
+            <div class="more-link">
+                <a onclick="_finish_update()">
+                    ${trans[lang].settings.finish}
+                </a>
+            </div>
+        `));
     }
 
     unsafeWindow._finish_update = function() {

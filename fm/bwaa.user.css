@@ -1893,7 +1893,6 @@
     #subscription-corrections h4,
     .your-progress h3,
     .date-heading,
-    .modal-body .modal-title,
     h3.text-18,
     h2 {
         color: var(--header-text);
@@ -3229,6 +3228,7 @@
             background-image: var(--cdn-flatness-icons-see-more-arrow-blue-13x13-2);
             background-repeat: no-repeat;
             background-position: right top;
+            cursor: pointer;
 
             &:after,
             &:before {
@@ -5458,8 +5458,14 @@
         }
 
         .modal-title {
-            margin-bottom: 15px;
-            padding: unset !important;
+            padding: 5px 15px !important;
+            background: transparent;
+            border-bottom: 1px solid #aaa;
+            font-size: 15px;
+            line-height: inherit;
+            color: inherit;
+            letter-spacing: unset;
+            margin: -15px -15px 15px -15px;
 
             & + div {
                 margin-top: unset;
@@ -5470,6 +5476,17 @@
             display: flex;
             justify-content: end;
         }
+
+        .align-right {
+            margin-top: 15px;
+            font-size: 11px;
+            line-height: 1.3em;
+            color: var(--colour-lower);
+        }
+    }
+
+    .align-right {
+        text-align: right;
     }
 
     #id_album_artist_name,
