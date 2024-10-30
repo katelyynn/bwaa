@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1028
+// @version      2024.1030
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,8 +19,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1028',
-    sku: 'chilly'
+    build: '2024.1030',
+    sku: 'event'
 }
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
@@ -392,6 +392,12 @@ const trans = {
                     christmas: 'Christmas',
                     new_years: 'New Years'
                 }
+            }
+        },
+
+        event: {
+            tabs: {
+                overview: 'Event'
             }
         },
 
@@ -879,6 +885,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             bwaa_playlists();
             bwaa_search();
             bwaa_home();
+            bwaa_events();
 
             subscribe_to_events();
         }
@@ -937,6 +944,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                                 bwaa_playlists();
                                 bwaa_search();
                                 bwaa_home();
+                                bwaa_events();
 
                                 subscribe_to_events();
                             }
@@ -2982,6 +2990,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             return '';
         else
             return element.getAttribute('content');
+    }
+
+    function pre_fetch_background(element) {
+        let style = element.getAttribute('style');
+
+        if (style == null)
+            return '';
+        else
+            return style.replace('background-image: url(', '').replace(');', '');
     }
 
 
@@ -5367,5 +5384,58 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
     }
     function invoke_reload() {
         window.location.reload();
+    }
+
+
+
+
+    function bwaa_events() {
+        console.info('bwaa - events');
+
+        let event_header = document.body.querySelector('.header-info-primary--with-calendar');
+
+        if (event_header == null)
+            return;
+
+        if (event_header.hasAttribute('data-bwaa'))
+            return;
+        event_header.setAttribute('data-bwaa', 'true');
+
+        page.type = 'event';
+
+        let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
+
+
+        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
+
+        checkup_page_structure();
+
+        let navlist = event_header.querySelector('.navlist');
+
+        page.name = event_header.querySelector('.header-title-secondary a').textContent;
+        page.sister = event_header.querySelector('.header-title').textContent;
+        page.avatar = pre_fetch_background(document.body.querySelector('.header-background--has-image'));
+
+        patch_tab_overview_btn(navlist);
+
+        let new_header = generic_subpage_header(
+            trans[lang].artist.tabs.events,
+            'artist'
+        );
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+        }
+
+        page.structure.row.insertBefore(navlist, page.structure.main);
+        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+        event_header.style.setProperty('display', 'none');
     }
 })();
