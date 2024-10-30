@@ -5514,6 +5514,6 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         page.structure.row.insertBefore(navlist, page.structure.main);
         page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
-        event_header.style.setProperty('display', 'none');
+        document.body.querySelector('.header').style.setProperty('display', 'none');
     }
 })();
