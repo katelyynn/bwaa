@@ -3803,8 +3803,12 @@
         display: flex;
         gap: 10px;
         align-items: end;
-        margin: 0 0 15px 0;
-        order: -1;
+        margin: 18px 0 24px 0;
+
+        [data-bwaa--gallery_2010="true"] & {
+            order: -1;
+            margin: 0 0 15px 0;
+        }
     }
     .gallery-image-bookmark-button,
     .gallery-image-preferred-button,
@@ -3860,11 +3864,26 @@
                 font-size: 10px;
                 text-transform: initial;
                 padding: 0 10px;
+
+                [data-bwaa--gallery_2010="false"] & {
+                    background: linear-gradient(var(--border-2), var(--border));
+                    border-top: 1px solid var(--colour-lower);
+                    padding: 3px 10px;
+                    font-size: 12px;
+                    font-weight: normal;
+                    height: 27px;
+                    border-radius: 0 0 5px 5px;
+                    text-shadow: var(--body) 0 1px 0;
+                }
             }
 
             &:hover, &:focus-visible {
                 .vote-text {
                     background-color: var(--border);
+
+                    [data-bwaa--gallery_2010="false"] & {
+                        background: linear-gradient(var(--border-4), var(--border-3)) !important;
+                    }
                 }
             }
 
@@ -3942,6 +3961,10 @@
 
                 .vote-text {
                     background: var(--border) !important;
+
+                    [data-bwaa--gallery_2010="false"] & {
+                        background: linear-gradient(var(--border), var(--border-2)) !important;
+                    }
                 }
             }
             .gallery-image-vote-buttons[data-ajax-form-state=up-voted] &.gallery-image-vote-up-off,
@@ -3968,6 +3991,10 @@
         color: var(--colour-middle);
         margin: unset;
 
+        [data-bwaa--gallery_2010="false"] & {
+            font-size: inherit;
+        }
+
         &.gallery-image-report {
             color: var(--colour-lower);
             padding-left: calc(15px + 3px);
@@ -3980,13 +4007,16 @@
         }
     }
     .gallery-image-title {
-        /*color: var(--header-text-black);
-        font-size: 17px;
-        margin: 0.15em 0 0 0 !important;
+        color: var(--header-text-black);
+        font-size: 18px;
         font-weight: bold;
-        line-height: 1.2em;*/
-        /* relocated */
-        display: none;
+
+        [data-bwaa--gallery_2010="true"] & {
+            display: none;
+        }
+    }
+    .gallery-image-description {
+        margin-top: unset;
     }
 
 
@@ -5073,6 +5103,15 @@
         &:before {
             display: none;
         }
+    }
+
+    .new-badge {
+        padding: 0.105em 0.5em 0.25em 0.5em !important;
+        background: var(--alert);
+        color: inherit;
+        font-size: 11px;
+        line-height: 1.3em;
+        font-weight: 600;
     }
 
 
