@@ -423,7 +423,7 @@ const trans = {
             updates_available: 'There are updates available!',
             update_now: 'Update bwaa now',
             update_style: 'Update style (required too)',
-            ignore: 'Ignore for 1 hour',
+            ignore: 'Ignore temporarily',
 
             or: '..or alternatively',
 
