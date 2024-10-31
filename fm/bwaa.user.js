@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1030
+// @version      2024.1031
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1030.1',
+    build: '2024.1031',
     sku: 'event'
 }
 
@@ -414,7 +414,8 @@ const trans = {
                 name: 'Who you know:',
                 note: 'Mutual'
             },
-            you: '(you!)'
+            you: '(you!)',
+            cancelled: 'Event cancelled'
         },
 
         update: {
@@ -1778,11 +1779,15 @@ let has_prompted_for_update = false;
             if (page.subpage == 'user_obsessions_overview') {
                 bwaa_obsessions_list();
             } else if (
-                page.subpage.startsWith('user_events') ||
                 page.subpage.startsWith('user_playlists') ||
                 page.subpage == 'user_neighbours'
             ) {
                 deliver_notif('This page is currently not finished, sorry!');
+            }
+
+            if (page.subpage == 'user_events') {
+                page.structure.container.classList.add('halfpage');
+                bwaa_events_listing('profile');
             }
         }
         console.info(page);
@@ -2328,6 +2333,11 @@ let has_prompted_for_update = false;
 
             if (page.subpage.includes('tags_overview')) {
                 generic_tag_patch();
+            }
+
+            if (page.subpage == 'music_artist_events') {
+                page.structure.container.classList.add('halfpage');
+                bwaa_events_listing();
             }
         }
     }
@@ -3069,6 +3079,9 @@ let has_prompted_for_update = false;
     }
 
     function pre_fetch_background(element) {
+        if (element == null)
+            return '';
+
         // arXL loads a smaller, more efficient image than ar0 (full res)
         let style = element.getAttribute('style');
 
@@ -5524,7 +5537,12 @@ let has_prompted_for_update = false;
 
         let navlist = event_header.querySelector('.navlist');
 
-        page.name = event_header.querySelector('.header-title-secondary a').textContent;
+        try {
+            page.name = event_header.querySelector('.header-title-secondary a').textContent;
+        } catch(e) {
+            // if the artist page doesnt.. exist?
+            page.name = event_header.querySelector('.header-title-secondary span').textContent;
+        }
         page.sister = event_header.querySelector('.header-title').textContent;
         page.avatar = pre_fetch_background(document.body.querySelector('.header-background--has-image'));
 
@@ -5754,5 +5772,56 @@ let has_prompted_for_update = false;
 
         page.structure.row.insertBefore(navlist, page.structure.main);
         page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+    }
+
+
+    function bwaa_events_listing(type = 'artist') {
+        let nav = document.body.querySelector('.content-top-lower .navlist');
+        if (nav != null) {
+            let subpage_header = page.structure.main.querySelector('.profile-header-subpage-section');
+            subpage_header.after(nav);
+        }
+
+        let events = page.structure.main.querySelectorAll('.events-list-item');
+        events.forEach((event) => {
+            let date_text = event.querySelector((type == 'artist') ? '.events-list-item-date' : '.calendar-icon').getAttribute((type == 'artist') ? 'content' : 'datetime');
+            let date = moment(new Date(date_text)).format('dddd D MMMM YYYY');
+
+            let date_object = document.createElement('div');
+            date_object.classList.add('date-header');
+            date_object.textContent = date;
+            event.appendChild(date_object);
+
+            let avatar_object = document.createElement('div');
+            avatar_object.classList.add('event-img-container');
+            avatar_object.innerHTML = (`
+                <img class="event-img" src="${page.avatar}" alt="${page.name}">
+            `);
+            event.appendChild(avatar_object);
+
+            let is_cancelled = (event.querySelector('.event-list-item-cancelled') != null);
+            if (is_cancelled) {
+                avatar_object.classList.add('cancelled');
+                tippy(avatar_object, {
+                    content: trans[lang].event.cancelled
+                });
+            }
+
+            let is_going = (event.querySelector('.attendance-badge--attending') != null || event.querySelector('.users-you-know-user-image--you') != null);
+            let is_maybe = (event.querySelector('.attendance-badge--maybe') != null);
+            if (is_going || is_maybe) {
+                let badge = document.createElement('span');
+                badge.classList.add('event-badge');
+
+                if (is_going)
+                    badge.classList.add('going');
+                if (is_maybe)
+                    badge.classList.add('maybe');
+
+                let event_title = event.querySelector((type == 'artist') ? '.events-list-item-event-name' : '.events-list-item-event--title a');
+
+                event_title.insertBefore(badge, event_title.firstChild);
+            }
+        });
     }
 })();

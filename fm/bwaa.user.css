@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2024.1030
+@version        2024.1031
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2024.1030.1';
+        --version-build: '2024.1031';
     }
 
     :root {
@@ -268,6 +268,7 @@
             display: none;
         }
 
+        &.halfpage,
         .user-dashboard &,
         &.subpage {
             /*background: var(--body);*/
@@ -287,6 +288,12 @@
                 border: unset;
                 margin: unset;
                 padding: unset;
+            }
+        }
+
+        &.halfpage {
+            .col-main {
+                width: 785px;
             }
         }
     }
@@ -1858,7 +1865,8 @@
     .provider:before,
     .library-controls .secondary-nav-item-link:before,
     .profile-actions-section .options :is(button, a):before,
-    .date:before, .location:before
+    .date:before, .location:before,
+    .cancelled:before
     {
         content: '';
         position: absolute !important;
@@ -5163,7 +5171,8 @@
         padding: 0.125em 0.5em 0.25em 0.5em !important;
         background: var(--alert);
         color: inherit;
-        font-size: 11px;
+        /*font-size: 11px;*/
+        line-height: 1.3em;
         line-height: 1.3em;
         font-weight: normal;
 
@@ -5185,9 +5194,9 @@
             background: var(--alert-success);
         }
 
-        &.no-data-message {
+        /*&.no-data-message {
             font-weight: bold;
-        }
+        }*/
 
         &:before {
             display: none;
@@ -5398,6 +5407,7 @@
     .metadata-list {
         display: flex;
         gap: 10px;
+        padding: unset !important;
         margin: 15px 0 0 0 !important;
 
         .metadata-item {
@@ -6285,5 +6295,152 @@
 
     .share-desktop {
         display: none;
+    }
+
+
+
+
+    .btn-add + .navlist {
+        margin-top: 15px !important;
+    }
+
+
+    .event-section-date-heading {
+        display: none;
+    }
+
+
+    .events-list-anhv1, .events-list {
+        margin: unset;
+    }
+
+    .events-list-anhv1 .events-list-item,
+    .events-list .events-list-item {
+        position: relative !important;
+        padding: calc(39px + 0.6em) 0 1em 0 !important;
+        margin: unset !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: unset !important;
+
+        font-size: 11px !important;
+        line-height: 1.5em !important;
+
+        &:before, &:after {
+            display: none !important;
+        }
+
+        td {
+            padding: unset !important;
+            box-shadow: unset !important;
+        }
+
+        .date-header {
+            padding: 15px 0 5px 0;
+            font-size: 12px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .events-list-item-art,
+        .events-list-item-date {
+            display: none;
+        }
+
+        .event-img-container {
+            flex-shrink: 0;
+            order: -5;
+            margin-right: calc(75px - 64px);
+
+            position: relative;
+
+            img {
+                width: 64px;
+                height: 64px;
+                object-fit: cover;
+            }
+
+            &.cancelled {
+                img {
+                    opacity: 0.4;
+                }
+
+                &:before {
+                    background-image: var(--cdn-flatness-sprites-21-icons);
+                    background-position: 0 -1140px;
+                    --top: 50%;
+                    --left: 50%;
+                    --width: 13px;
+                    --height: 13px;
+                    margin-top: calc(-1 * (13px / 2)) !important;
+                    margin-left: calc(-1 * (13px / 2)) !important;
+                }
+            }
+        }
+        .events-list-item-event {
+            order: -4;
+            flex: 1;
+            padding-right: 10px !important;
+            color: var(--colour-middle);
+
+            .events-list-item-event--title,
+            .events-list-item-event-name {
+                color: var(--text-link) !important;
+                font-size: 12px !important;
+                line-height: inherit !important;
+
+                .event-badge {
+                    display: inline-flex;
+                    width: 16px;
+                    height: 10px;
+                    background-image: var(--cdn-flatness-sprites-21-icons);
+
+                    &.going {
+                        background-position: -3px -1602px;
+                    }
+                    &.maybe {
+                        background-position: -3px -1622px;
+                    }
+                }
+            }
+            .events-list-item-event--lineup,
+            .events-list-item-acts {
+                margin: unset !important;
+            }
+        }
+        .events-list-item-venue {
+            width: 230px;
+            flex-shrink: 0;
+            color: var(--colour-middle);
+            padding-right: 1em !important;
+            margin: unset !important;
+
+            .events-list-item-venue--title {
+                font-size: 12px;
+            }
+            .events-list-item-venue--address {
+                margin: unset !important;
+            }
+        }
+        .events-list-item-user-attendance,
+        .events-list-item-attendees
+        {
+            width: 160px;
+            flex-shrink: 0;
+            color: var(--colour-middle);
+            font-size: inherit !important;
+            line-height: inherit !important;
+        }
+
+        .users-you-know-user-image--you,
+        .events-list-item-user-attendance,
+        .events-list-item-status {
+            display: none;
+        }
     }
 }
