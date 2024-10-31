@@ -262,6 +262,7 @@ const trans = {
         },
         settings: {
             finish: 'Finish',
+            new: 'New',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
             title: 'Configure bwaa settings',
             tabs: {
@@ -326,6 +327,9 @@ const trans = {
             },
             shouts_2010: {
                 name: 'Prefer 2010-era shout design'
+            },
+            gallery_2010: {
+                name: 'Prefer 2010-era gallery design'
             },
             shouts_no_votes: {
                 name: 'Do not display shout votes'
@@ -643,6 +647,7 @@ let settings_defaults = {
     varied_avatar_shapes: true,
     sticky_nav: false,
     shouts_2010: false,
+    gallery_2010: false,
     shouts_no_votes: false,
     no_notifs: false,
     hide_redirect_banner: false,
@@ -683,6 +688,10 @@ let settings_store = {
         values: [true, false]
     },
     shouts_2010: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    gallery_2010: {
         type: 'toggle',
         values: [true, false]
     },
@@ -3082,6 +3091,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let new_header = document.createElement('section');
         new_header.classList.add('profile-header-subpage-section');
+        new_header.setAttribute('id', 'bwaa-subpage-header');
         new_header.innerHTML = (`
             ${(page.avatar != '') ? (`
             <div class="badge-avatar">
@@ -3480,11 +3490,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let uploaded_image_title = document.querySelector('.gallery-image-title');
 
         let artist_subpage_text = document.getElementById('artist-subpage-text');
-        artist_subpage_text.textContent = `${document.querySelector('.subpage-title').textContent.trim()}: ${uploaded_image_title.textContent}`;
+        if (settings.gallery_2010) {
+            artist_subpage_text.textContent = `${document.querySelector('.subpage-title').textContent.trim()}: ${uploaded_image_title.textContent}`;
+        } else {
+            // gallery 2012
+            gallery_sidebar.classList = 'gallery-sidebar';
+            document.getElementById('bwaa-subpage-header').classList.add('gallery-header');
 
-        /*if (gallery_sidebar.hasAttribute('data-bwaa'))
-            return;
-        gallery_sidebar.setAttribute('data-bwaa', 'true');*/
+            artist_subpage_text.textContent = document.querySelector('.subpage-title').textContent.trim();
+
+            let more_link = page.structure.main.querySelector('.more-link-fullwidth-right-flush-top');
+            more_link.after(gallery_sidebar);
+        }
 
         let gallery_image_votes = gallery_sidebar.querySelectorAll('.gallery-image-votes');
         gallery_image_votes.forEach((button) => {
@@ -4104,6 +4121,14 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         </div>
                         <div class="form-group">
                             <div class="checkbox">
+                                <label for="setting--gallery_2010">
+                                    <input id="setting--gallery_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.gallery_2010.name} <span class="new-badge">${trans[lang].settings.new}</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
                                 <label for="setting--shouts_no_votes">
                                     <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     ${trans[lang].settings.shouts_no_votes.name}
@@ -4544,9 +4569,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             if (value == '2012') {
                 // 2012
                 settings.shouts_2010 = false;
+                settings.gallery_2010 = false;
             } else if (value == '2010') {
                 // 2010
                 settings.shouts_2010 = true;
+                settings.gallery_2010 = true;
             }
         } else if (setting == 'setup_modern_visibility') {
             // show modern things
