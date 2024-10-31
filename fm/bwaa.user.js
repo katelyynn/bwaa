@@ -306,7 +306,7 @@ const trans = {
             },
             legacy_cover_art: {
                 name: 'Override album cover art for 2012-era images',
-                alert: 'All personal preference, check out {+n}Nirvana{-a}’s {+e}Nevermind{-a} or more fittingly {+k}Kanye{-a}’s {+y}Yeezus{-a} for an example.'
+                alert: 'All personal preference, check out {+n}Nirvana{-a}’s {+e}In Utero{-a} or more fittingly {+k}Kanye{-a}’s {+y}Yeezus{-a} for an example.'
             },
             hide_obsessions: {
                 name: 'Hide obsessions'
@@ -4066,7 +4066,7 @@ let has_prompted_for_update = false;
                                     ${trans[lang].settings.legacy_cover_art.name}
                                 </label>
                                 <div class="alert">
-                                    ${trans[lang].settings.legacy_cover_art.alert.replaceAll('{-a}', '</a>').replace('{+n}', `<a href="${root}music/Nirvana" target="_blank">`).replace('{+e}', `<a href="${root}music/Nirvana/Nevermind" target="_blank">`).replace('{+k}', `<a href="${root}music/Kanye+West" target="_blank">`).replace('{+y}', `<a href="${root}music/Kanye+West/Yeezus" target="_blank">`)}
+                                    ${trans[lang].settings.legacy_cover_art.alert.replaceAll('{-a}', '</a>').replace('{+n}', `<a href="${root}music/Nirvana" target="_blank">`).replace('{+e}', `<a href="${root}music/Nirvana/In+Utero" target="_blank">`).replace('{+k}', `<a href="${root}music/Kanye+West" target="_blank">`).replace('{+y}', `<a href="${root}music/Kanye+West/Yeezus" target="_blank">`)}
                                 </div>
                             </div>
                         </div>
