@@ -5593,6 +5593,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let lists = page.structure.main.querySelectorAll('.attendee-summary-users');
 
 
+            // is there even a maybe list?
             if (lists.length > 1) {
                 let maybe_placeholder = document.createElement('div');
                 maybe_placeholder.classList.add('top-listeners-small', 'attendee-list');
@@ -5628,38 +5629,41 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                 lists[1].parentElement.style.setProperty('display', 'none');
             }
 
-            let going_placeholder = document.createElement('div');
-            going_placeholder.classList.add('top-listeners-small', 'attendee-list');
-            let going_list = lists[0].querySelectorAll('.attendee-summary-user-inner-wrap');
-            going_list.forEach((attendee, index) => {
-                let avi = attendee.querySelector('img').getAttribute('src');
-                let name = attendee.querySelector('.attendee-summary-user-link').textContent.trim();
+            // is there even a going list?
+            if (lists.length > 0) {
+                let going_placeholder = document.createElement('div');
+                going_placeholder.classList.add('top-listeners-small', 'attendee-list');
+                let going_list = lists[0].querySelectorAll('.attendee-summary-user-inner-wrap');
+                going_list.forEach((attendee, index) => {
+                    let avi = attendee.querySelector('img').getAttribute('src');
+                    let name = attendee.querySelector('.attendee-summary-user-link').textContent.trim();
 
-                let attendee_element = document.createElement('div');
-                attendee_element.classList.add('listener', 'attendee');
-                attendee_element.innerHTML = (`
-                    <div class="image">
-                        <img src="${avi}">
-                    </div>
-                    <div class="info">
-                        <a class="user" href="${root}user/${name}">${name}</a>
-                        ${(auth == name) ? `<p class="note">${trans[lang].event.you}</p>` : ''}
+                    let attendee_element = document.createElement('div');
+                    attendee_element.classList.add('listener', 'attendee');
+                    attendee_element.innerHTML = (`
+                        <div class="image">
+                            <img src="${avi}">
+                        </div>
+                        <div class="info">
+                            <a class="user" href="${root}user/${name}">${name}</a>
+                            ${(auth == name) ? `<p class="note">${trans[lang].event.you}</p>` : ''}
+                        </div>
+                    `);
+                    going_placeholder.appendChild(attendee_element);
+                });
+
+                let going = document.createElement('section');
+                going.innerHTML = (`
+                    <h2 class="attendee-header"><a href="${window.location.href}/attendance/going">${trans[lang].event.going.name.replace('{c}', counts[0].textContent)}</a></h2>
+                    ${going_placeholder.outerHTML}
+                    <div class="module-options">
+                        <a href="${window.location.href}/attendance/going">${trans[lang].see_more}</a>
                     </div>
                 `);
-                going_placeholder.appendChild(attendee_element);
-            });
+                buttons.after(going);
 
-            let going = document.createElement('section');
-            going.innerHTML = (`
-                <h2 class="attendee-header"><a href="${window.location.href}/attendance/going">${trans[lang].event.going.name.replace('{c}', counts[0].textContent)}</a></h2>
-                ${going_placeholder.outerHTML}
-                <div class="module-options">
-                    <a href="${window.location.href}/attendance/going">${trans[lang].see_more}</a>
-                </div>
-            `);
-            buttons.after(going);
-
-            lists[0].parentElement.style.setProperty('display', 'none');
+                lists[0].parentElement.style.setProperty('display', 'none');
+            }
         }
 
         page.structure.row.insertBefore(navlist, page.structure.main);
