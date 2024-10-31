@@ -5509,8 +5509,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let address = page.structure.main.querySelector('.event-detail-address');
             let address_tel = page.structure.main.querySelector('.event-detail-tel');
             let address_web = page.structure.main.querySelector('.event-detail-web');
+            let show_on_map = page.structure.main.querySelector('.external-link[itemprop="hasMap"]');
 
-            let link = page.structure.main.querySelector('.external-link');
+            let link = page.structure.main.querySelector('.external-link:not([itemprop="hasMap"])');
 
             let details = page.structure.main.querySelector('.event-details section:last-child');
 
@@ -5527,6 +5528,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                         ${address.outerHTML}
                         ${(address_tel != null) ? address_tel.outerHTML : ''}
                         ${(address_web != null) ? address_web.outerHTML : ''}
+                        ${(show_on_map != null) ? show_on_map.outerHTML : ''}
                     </div>
                 </div>
                 <div class="event-poster-side" id="event_poster"></div>
@@ -5543,7 +5545,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
             let lineup = page.structure.main.querySelector('#line-up');
             lineup.after(details);
 
-            details.insertBefore(link, details.firstElementChild);
+            if (link != null)
+                details.insertBefore(link, details.firstElementChild);
 
 
             let buttons = document.body.querySelector('.header-metadata-item--event-attendance');
