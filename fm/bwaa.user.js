@@ -345,7 +345,8 @@ const trans = {
             },
             inbuilt_style_loading: {
                 name: 'Automatically load the stylesheet',
-                alert: 'Once disabled, you are in control of loading the stylesheet with browser extensions such as Stylus.'
+                alert: 'Once disabled, you are in control of loading the stylesheet with browser extensions such as Stylus.',
+                theme: 'Your theme version is set to expire at {date_fut}. It is now {date_now}.'
             },
             corrections: {
                 name: 'Media Corrections',
@@ -4321,6 +4322,9 @@ let has_prompted_for_update = false;
                                 </label>
                                 <div class="alert">
                                     ${trans[lang].settings.inbuilt_style_loading.alert}
+                                </div>
+                                <div class="alert">
+                                    ${trans[lang].settings.inbuilt_style_loading.theme.replace('{date_fut}', moment(localStorage.getItem('bwaa_cached_style_timeout')).format('HH:mm:ss')).replace('{date_now}', moment(new Date()).format('HH:mm:ss'))}
                                 </div>
                             </div>
                         </div>
