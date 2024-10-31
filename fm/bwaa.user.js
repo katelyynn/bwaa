@@ -851,6 +851,8 @@ let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
 let setup_url = 'https://www.last.fm/bwaa/setup';
 let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
+let has_prompted_for_update = false;
+
 (function() {
     'use strict';
 
@@ -944,6 +946,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
                             bwaa_footer();
 
                             load_activities();
+
+                            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
+                                // script is either out of date, or more in date (not gonna happen)
+                                console.info('bwaa - theme returned version', theme_version, 'meanwhile script is running', version.build);
+
+                                prompt_for_update();
+                                has_prompted_for_update = true;
+                            }
 
                             if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
                                 // start bwaa settings
