@@ -3091,6 +3091,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let new_header = document.createElement('section');
         new_header.classList.add('profile-header-subpage-section');
+        new_header.setAttribute('id', 'bwaa-subpage-header');
         new_header.innerHTML = (`
             ${(page.avatar != '') ? (`
             <div class="badge-avatar">
@@ -3488,12 +3489,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let uploaded_image_title = document.querySelector('.gallery-image-title');
 
+        let artist_subpage_text = document.getElementById('artist-subpage-text');
         if (settings.gallery_2010) {
-            let artist_subpage_text = document.getElementById('artist-subpage-text');
             artist_subpage_text.textContent = `${document.querySelector('.subpage-title').textContent.trim()}: ${uploaded_image_title.textContent}`;
         } else {
             // gallery 2012
             gallery_sidebar.classList = 'gallery-sidebar';
+            document.getElementById('bwaa-subpage-header').classList.add('gallery-header');
+
+            artist_subpage_text.textContent = document.querySelector('.subpage-title').textContent.trim();
 
             let more_link = page.structure.main.querySelector('.more-link-fullwidth-right-flush-top');
             more_link.after(gallery_sidebar);

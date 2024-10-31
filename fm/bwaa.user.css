@@ -4020,6 +4020,33 @@
     }
 
 
+    /* sneakily hides the vertical dotted lines */
+    .profile-header-subpage-section.gallery-header {
+        [data-bwaa--gallery_2010="false"] & {
+            margin: -15px -330px -15px 0;
+            padding: 15px 0;
+            background: var(--body);
+            z-index: 100;
+            position: relative;
+        }
+    }
+    /* span the whole screen */
+    .gallery-section {
+        [data-bwaa--gallery_2010="false"] & {
+            padding: 15px 0 !important;
+            margin: -15px calc(-15px - 330px) 0 -15px !important;
+            z-index: 100;
+            position: relative;
+
+            display: flex;
+            flex-direction: column;
+
+            .gallery-thumbnail-container {
+                order: -1;
+            }
+        }
+    }
+
     .gallery-image-container {
         background: #f5f5f5;
 
