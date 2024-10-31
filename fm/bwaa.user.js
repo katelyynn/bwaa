@@ -5522,8 +5522,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
             page.structure.main.insertBefore(new_main_header, page.structure.main.firstElementChild);
 
-            document.getElementById('event_poster').appendChild(poster);
-            document.getElementById('event_poster').appendChild(poster_full);
+            if (poster != null) {
+                document.getElementById('event_poster').appendChild(poster);
+                document.getElementById('event_poster').appendChild(poster_full);
+            }
 
 
             let lineup = page.structure.main.querySelector('#line-up');
