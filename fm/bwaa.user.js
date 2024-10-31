@@ -3078,9 +3078,11 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         let new_header = document.createElement('section');
         new_header.classList.add('profile-header-subpage-section');
         new_header.innerHTML = (`
+            ${(page.avatar != '') ? (`
             <div class="badge-avatar">
                 <img src="${page.avatar}" alt="${page.name}">
             </div>
+            `) : ''}
             <div class="badge-info">
                 ${link_field}
                 <h1 id="artist-subpage-text">${header_title}</h1>
@@ -5449,8 +5451,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
         let event_header = document.body.querySelector('.header-info-primary--with-calendar');
 
-        if (event_header == null)
+        if (event_header == null) {
+            // is this an event edit page?
+            if (document.body.classList[2].startsWith('namespace--events'))
+                bwaa_events_edit();
+
             return;
+        }
 
         if (event_header.hasAttribute('data-bwaa'))
             return;
@@ -5653,5 +5660,46 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
         page.structure.row.insertBefore(navlist, page.structure.main);
         page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
         document.body.querySelector('.header').style.setProperty('display', 'none');
+    }
+
+    function bwaa_events_edit() {
+        let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
+
+        if (adaptive_skin == null)
+            return;
+
+        if (adaptive_skin.hasAttribute('data-bwaa'))
+            return;
+        adaptive_skin.setAttribute('data-bwaa', 'true');
+
+        //
+
+        page.type = 'event';
+        page.subpage = 'edit';
+
+        page.structure.container = adaptive_skin.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+        } catch(e) {
+            console.info('bwaa - page structure - there was an issue finding elements');
+        }
+
+        checkup_page_structure();
+
+        let navlist = adaptive_skin.querySelector('.navlist');
+
+        page.name = adaptive_skin.querySelector('.content-top-back-link a').textContent;
+        page.sister = adaptive_skin.querySelector('.content-top-header').textContent;
+        page.avatar = '';
+
+        let new_header = generic_subpage_header(
+            page.sister,
+            'artist'
+        );
+
+        page.structure.row.insertBefore(navlist, page.structure.main);
+        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
     }
 })();
