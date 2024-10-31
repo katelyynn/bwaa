@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1031',
+    build: '2024.1031.1',
     sku: 'event'
 }
 
@@ -4010,6 +4010,10 @@ let has_prompted_for_update = false;
             let headers = page.structure.main.querySelectorAll('h2');
             headers.forEach((header) => {
                 page.structure.main.removeChild(header);
+            });
+            let paras = page.structure.main.querySelectorAll(':scope > p');
+            paras.forEach((para) => {
+                page.structure.main.removeChild(para);
             });
 
             display_session(0);

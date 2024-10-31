@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2024.1031';
+        --version-build: '2024.1031.1';
     }
 
     :root {
@@ -6566,5 +6566,10 @@
         &:hover {
             text-decoration: underline;
         }
+    }
+
+
+    .api-sessions {
+        display: none;
     }
 }
