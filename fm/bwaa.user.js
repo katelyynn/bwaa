@@ -1154,7 +1154,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
     function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
         let xhr = new XMLHttpRequest();
-        let url = 'https://katelyynn.github.io/bwaa/fm/bwaa.css';
+        let url = `https://katelyynn.github.io/bwaa/fm/bwaa.css?${Math.random()}`;
         xhr.open('GET',url,true);
 
         xhr.onload = function() {
