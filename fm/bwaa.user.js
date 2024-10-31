@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1031.1',
+    build: '2024.1031.2',
     sku: 'event'
 }
 
