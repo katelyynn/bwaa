@@ -3041,19 +3041,21 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
      * @returns either empty string or url content
      */
     function pre_fetch_avatar(element) {
+        // arXL loads a smaller, more efficient image than ar0 (full res)
         if (element == null)
             return '';
         else
-            return element.getAttribute('content');
+            return element.getAttribute('content').replace('/i/u/ar0/', '/i/u/arXL/');
     }
 
     function pre_fetch_background(element) {
+        // arXL loads a smaller, more efficient image than ar0 (full res)
         let style = element.getAttribute('style');
 
         if (style == null)
             return '';
         else
-            return style.replace('background-image: url(', '').replace(');', '');
+            return style.replace('background-image: url(', '').replace(');', '').replace('/i/u/ar0/', '/i/u/arXL/');
     }
 
 
