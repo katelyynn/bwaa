@@ -6443,4 +6443,128 @@
             display: none;
         }
     }
+
+
+
+
+    .session-container {
+        display: flex;
+
+        .session-nav {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+
+            .session-nav-btn {
+                width: 150px;
+                height: 67px;
+                padding: 0 10px;
+                background: linear-gradient(180deg, var(--body) 0%, var(--navlist-grad) 100%);
+                border: 1px solid var(--border);
+                color: var(--colour-middle);
+
+                &:not(:first-child) {
+                    margin: -1px 0 0 0;
+                }
+
+                &:hover,
+                &.active {
+                    color: var(--header-text);
+                    background: var(--body);
+                }
+                &.active {
+                    border-right-color: var(--body);
+                    position: relative;
+                    z-index: 10;
+
+                    /* hence the border-right is gone, we need to fill a 1px
+                    gap on the top border, no clue how old last.fm did this */
+                    &:before {
+                        content: '';
+                        display: block;
+                        width: 1px;
+                        height: 1px;
+                        background: var(--border);
+                        position: absolute;
+                        top: -1px;
+                        right: -1px;
+                    }
+                }
+
+                &[data-session="Spotify Playback"],
+                &[data-session="Spotify Scrobbling"] {
+                    height: calc(67px + 10px);
+                    padding-top: 40px;
+                    position: relative;
+
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        inset: 0;
+                        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAoCAYAAAAIeF9DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QzdDNjRDRkYwQzdGMTFFMThCRjg4MDg4Mjk4MUMxQ0YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QzdDNjREMDAwQzdGMTFFMThCRjg4MDg4Mjk4MUMxQ0YiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpDN0M2NENGRDBDN0YxMUUxOEJGODgwODgyOTgxQzFDRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpDN0M2NENGRTBDN0YxMUUxOEJGODgwODgyOTgxQzFDRiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Ph3ZcNoAAAirSURBVHja7FtNbFRV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');
+                        background-position: center 10px;
+                        background-repeat: no-repeat;
+                    }
+                }
+            }
+        }
+        .session-main {
+            flex: 1;
+
+            border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+
+            color: var(--colour-middle);
+            padding: 10px 20px;
+
+            /* the 10px margins should be 20px in the real thing,
+            but theres such less text here it should be lowered */
+            h2 {
+                margin-bottom: 10px;
+                font-weight: 150;
+                color: var(--colour-upper);
+                font-size: 18px;
+                line-height: 1.5em;
+            }
+            p {
+                margin-top: unset;
+                margin-bottom: 10px;
+                font-weight: 150;
+                font-size: 12px;
+
+                &.status {
+                    font-size: 11px;
+                }
+            }
+            h3 {
+                margin-top: unset;
+                margin-bottom: 10px;
+                font-weight: 150;
+                color: var(--colour-upper);
+                font-size: 12px;
+                line-height: inherit;
+            }
+        }
+    }
+
+    .api-session-disconnect, .api-session-connect {
+        margin: unset;
+        border-radius: 5px;
+        background: linear-gradient(180deg, #000, #424242);
+        color: #fff !important;
+        display: inline-block;
+        font-size: 12px;
+        line-height: inherit;
+        font-weight: bold;
+        text-transform: unset;
+        height: 29px;
+        margin: 2px 0 24px;
+        padding: 11px 20px;
+        text-align: center;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 }

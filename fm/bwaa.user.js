@@ -399,6 +399,10 @@ const trans = {
             }
         },
 
+        sessions: {
+            status: 'Status:'
+        },
+
         event: {
             tabs: {
                 overview: 'Event'
@@ -845,6 +849,9 @@ let page = {
         side: null
     }
 };
+
+// sessions list, only filled by applications page in settings
+let current_sessions_list = [];
 
 let bwaa_url = 'https://www.last.fm/bwaa';
 let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
@@ -3891,6 +3898,11 @@ let has_prompted_for_update = false;
         page.structure.container.setAttribute('data-bwaa', 'true');
         page.structure.container.classList.add('lastfm-settings', 'subpage');
 
+        // which subpage is it?
+        let subpage_type = document.body.classList[2].replace('namespace--', '');
+        page.subpage = subpage_type;
+        deliver_notif(`Subpage type of ${subpage_type}`, true);
+
 
         let navlist_switcher = document.createElement('nav');
         navlist_switcher.classList.add('navlist', 'secondary-nav', 'navlist--more');
@@ -3931,9 +3943,104 @@ let has_prompted_for_update = false;
             page.structure.main.appendChild(content);
         }
 
-        // update picture notice
-        let update_picture_notice = page.structure.main.querySelector('.avatar-upload-form .form-row-help-text');
-        if (update_picture_notice != null) update_picture_notice.innerHTML = trans[lang].settings.update_picture.replace('{+l}', `<a href="${root}bwaa">`).replace('{-l}', '</a>');
+        if (page.subpage == 'settings_overview') {
+            // update picture notice
+            let update_picture_notice = page.structure.main.querySelector('.avatar-upload-form .form-row-help-text');
+            if (update_picture_notice != null)
+                update_picture_notice.innerHTML = trans[lang].settings.update_picture.replace('{+l}', `<a href="${root}bwaa">`).replace('{-l}', '</a>');
+        } else if (page.subpage == 'settings_applications_overview') {
+            // applications
+            let session_container = document.createElement('section');
+            session_container.classList.add('session-container');
+
+            let session_nav = document.createElement('div');
+            session_nav.classList.add('session-nav');
+
+
+            let sessions = page.structure.main.querySelectorAll('.api-session-body');
+            current_sessions_list = [];
+
+            sessions.forEach((session, index) => {
+                let name = session.querySelector('.api-session-app-name');
+                let body = session.querySelector('.api-session-app-description');
+
+                let status = session.querySelector('.api-session-status');
+                let last_used = session.querySelector('.api-session-app-last-used');
+
+                let form = session.querySelector('form');
+
+                let this_session = {
+                    name: name.textContent,
+                    index: index,
+                    body: (body != null) ? body.textContent : '',
+                    status: (status != null) ? status.innerHTML : (last_used != null) ? last_used.innerHTML : '...',
+                    action: form
+                };
+
+
+                let button = document.createElement('button');
+                button.classList.add('session-nav-btn');
+                button.setAttribute('data-session', this_session.name);
+                button.setAttribute('data-session-index', this_session.index);
+                button.setAttribute('onclick', `_display_session(${index})`);
+                button.textContent = this_session.name;
+
+                if (this_session.name == 'Spotify Scrobbling' || this_session.name == 'Spotify Playback') {
+                    button.textContent = this_session.name.replace('Spotify ', '');
+                }
+
+                session_nav.appendChild(button);
+
+
+                current_sessions_list.push(this_session);
+            });
+
+
+            let session_main = document.createElement('div');
+            session_main.classList.add('session-main');
+            session_main.setAttribute('id', 'session-main');
+
+            session_container.appendChild(session_nav);
+            session_container.appendChild(session_main);
+
+            navlist.after(session_container);
+
+
+            // remove headers
+            let headers = page.structure.main.querySelectorAll('h2');
+            headers.forEach((header) => {
+                page.structure.main.removeChild(header);
+            });
+
+            display_session(0);
+        }
+    }
+
+
+    unsafeWindow._display_session = function(index) {
+        display_session(index);
+    }
+
+    function display_session(index) {
+        let session = current_sessions_list[index];
+        let container = document.getElementById('session-main');
+
+        let tabs = document.querySelectorAll('.session-nav-btn');
+        tabs.forEach((tab) => {
+            if (tab.getAttribute('data-session-index') != index) {
+                tab.classList.remove('active');
+            } else {
+                tab.classList.add('active');
+            }
+        });
+
+        container.innerHTML = (`
+            <h2>${session.name}</h2>
+            <p>${session.body}</p>
+            <h3>${trans[lang].sessions.status}</h3>
+            <p class="status">${session.status}</p>
+            ${session.action.outerHTML}
+        `);
     }
 
 
@@ -4653,6 +4760,13 @@ let has_prompted_for_update = false;
     function deliver_notif(content, dev_only=false, quick=true, persist=false) {
         if (dev_only && !settings.developer)
             return;
+
+        console.info('bwaa - notification sent', {
+            content: content,
+            dev_only: dev_only,
+            quick: quick,
+            persist: persist
+        });
 
         let notif = document.createElement('button');
         notif.classList.add('bwaa-notification');
