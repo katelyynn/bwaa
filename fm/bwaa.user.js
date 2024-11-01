@@ -1810,6 +1810,16 @@ let last_promo = current_promo;
                 page.structure.container.classList.add('halfpage');
                 bwaa_events_listing('profile');
             }
+
+            // reports
+            if (page.subpage == 'user-dashboard-layout--version-3') {
+                // recover nav
+                let nav = document.body.querySelector('.user-dashboard-controls');
+                if (nav != null) {
+                    let subpage_header = page.structure.main.querySelector('.profile-header-subpage-section');
+                    subpage_header.after(nav);
+                }
+            }
         }
         console.info(page);
     }
