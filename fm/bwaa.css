@@ -1,5 +1,5 @@
 :root {
-    --version-build: '2024.1101';
+    --version-build: '2024.1101.1';
 }
 
 :root {
@@ -173,6 +173,7 @@ body {
             --menu-hover: #ff8352;
         }
 
+        [data-bwaa--seasonal_accent="true"][data-bwaa--season="pre_fall"] &,
         [data-bwaa--seasonal_accent="true"][data-bwaa--season="fall"] &,
         [data-bwaa--seasonal_accent="true"][data-bwaa--season="christmas"] &,
         [data-bwaa--seasonal_accent="true"][data-bwaa--season="new_years"] & {

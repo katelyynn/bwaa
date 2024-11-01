@@ -19,8 +19,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1101',
-    sku: 'event'
+    build: '2024.1101.1',
+    sku: 'chilly'
 }
 
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
