@@ -23,8 +23,6 @@ let version = {
     sku: 'event'
 }
 
-let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
-
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
 
 // loads your selected language in last.fm
@@ -528,7 +526,7 @@ let seasonal_events = [
     {
         id: 'halloween',
         start: 'y0-09-22',
-        end: 'y0-11-01T23:59:59',
+        end: 'y0-11-01T11:59:59',
 
         snowflakes: {
             state: false
@@ -597,6 +595,17 @@ function set_season() {
             }
         }
     });
+
+    current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)) : trans[lang].settings.seasonal.marker.none} »</a>`;
+    update_promo();
+}
+
+function update_promo() {
+    if (last_promo == current_promo)
+        return;
+
+    document.getElementById('bwaa-promo').innerHTML = current_promo;
+    last_promo = current_promo;
 }
 
 function prep_snow() {
@@ -861,6 +870,9 @@ let setup_url = 'https://www.last.fm/bwaa/setup';
 let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
 
 let has_prompted_for_update = false;
+
+let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
+let last_promo = current_promo;
 
 (function() {
     'use strict';
@@ -1245,6 +1257,7 @@ let has_prompted_for_update = false;
 
         let promo = document.createElement('div');
         promo.classList.add('header-promo');
+        promo.setAttribute('id', 'bwaa-promo');
         promo.innerHTML = current_promo;
         inner.appendChild(promo);
 
