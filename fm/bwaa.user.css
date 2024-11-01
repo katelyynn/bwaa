@@ -1903,20 +1903,20 @@
 
     /* links */
 
+    .mimic-link,
     .header-follower-btn,
     a {
         color: var(--text-link);
         text-decoration: none;
+
+        &:hover {
+            color: var(--text-link);
+            text-decoration: underline;
+        }
     }
 
     a:active {
         outline: none;
-    }
-
-    .header-follower-btn:hover,
-    a:hover {
-        color: var(--text-link);
-        text-decoration: underline;
     }
 
     #subscription-corrections h4,
