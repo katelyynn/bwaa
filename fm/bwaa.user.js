@@ -907,8 +907,8 @@ let last_promo = current_promo;
 let last_season_time;
 
 
-let artist_corrections;
-let album_track_corrections;
+let artist_corrections = {};
+let album_track_corrections = {};
 
 
 (function() {
@@ -6057,7 +6057,7 @@ let album_track_corrections;
             if (lotus_artist_expire < current_time && !force) {
                 lotus_request();
             } else if (force) {
-                lotus_request();
+                lotus_request('artist', true);
             }
         }
 
@@ -6072,12 +6072,12 @@ let album_track_corrections;
             if (lotus_album_track_expire < current_time && !force) {
                 lotus_request('album_track');
             } else if (force) {
-                lotus_request('album_track');
+                lotus_request('album_track', true);
             }
         }
     }
 
-    function lotus_request(type = 'artist') {
+    function lotus_request(type = 'artist', notify = false) {
         let button = document.body.querySelector('[onclick="_lotus_check()"]');
         if (button != null)
             button.setAttribute('disabled', '');
@@ -6094,7 +6094,8 @@ let album_track_corrections;
             else
                 album_track_corrections = JSON.parse(this.response);
 
-            deliver_notif(trans[lang].lotus[type]);
+            if (notify)
+                deliver_notif(trans[lang].lotus[type]);
 
             // save to cache for next page load
             localStorage.setItem(`lotus_${type}`, this.response);
@@ -6301,14 +6302,19 @@ let album_track_corrections;
         if (!settings.lotus)
             return item;
 
-        if (album_track_corrections.hasOwnProperty(artist)) {
-            if (album_track_corrections[artist].hasOwnProperty(item)) {
-                console.info('lotus - correction handler: corrected as', album_track_corrections[artist][item]);
-                return album_track_corrections[artist][item];
+        try {
+            if (album_track_corrections.hasOwnProperty(artist)) {
+                if (album_track_corrections[artist].hasOwnProperty(item)) {
+                    console.info('lotus - correction handler: corrected as', album_track_corrections[artist][item]);
+                    return album_track_corrections[artist][item];
+                } else {
+                    return item;
+                }
             } else {
                 return item;
             }
-        } else {
+        } catch(e) {
+            console.error(e);
             return item;
         }
     }
@@ -6323,10 +6329,15 @@ let album_track_corrections;
         if (!settings.lotus)
             return artist;
 
-        if (artist_corrections.hasOwnProperty(artist)) {
-            console.info('lotus - correction handler: corrected as', artist_corrections[artist]);
-            return artist_corrections[artist];
-        } else {
+        try {
+            if (artist_corrections.hasOwnProperty(artist)) {
+                console.info('lotus - correction handler: corrected as', artist_corrections[artist]);
+                return artist_corrections[artist];
+            } else {
+                return artist;
+            }
+        } catch(e) {
+            console.error(e);
             return artist;
         }
     }
