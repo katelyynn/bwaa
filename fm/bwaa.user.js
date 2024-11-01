@@ -269,6 +269,7 @@ const trans = {
             }
         },
         settings: {
+            close: 'Close',
             finish: 'Finish',
             new: 'New',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
@@ -5638,18 +5639,18 @@ let album_track_corrections = {};
 
 
     // create a window
-    function create_window(id, title, inner_content, classname='') {
+    function create_window(id, title, inner_content, has_close = false, classname='') {
         let background = document.createElement('div');
         background.classList.add('popup_background');
         background.setAttribute('id',`bwaa--window-${id}--background`);
         background.style = 'opacity: 0.8; visibility: visible; background-color: rgb(0, 0, 0); position: fixed; inset: 0px;';
-        background.setAttribute('data-kate-processed','true');
+        background.setAttribute('data-bwaa-cycle','true');
 
         let wrapper = document.createElement('div');
         wrapper.classList.add('popup_wrapper','popup_wrapper_visible');
         wrapper.setAttribute('id',`bwaa--window-${id}--wrapper`);
         wrapper.style = 'opacity: 1; visibility: visible; position: fixed; overflow: auto; width: 100%; height: 100%; top: 0px; left: 0px; text-align: center;';
-        wrapper.setAttribute('data-kate-processed','true');
+        wrapper.setAttribute('data-bwaa-cycle','true');
 
 
         // dialog
@@ -5657,25 +5658,42 @@ let album_track_corrections = {};
         dialog.classList.add('modal-dialog');
         dialog.setAttribute('id',`bwaa--window-${id}--dialog`);
         dialog.style = 'opacity: 1; visibility: visible; pointer-events: auto; display: inline-block; outline: none; text-align: left; position: relative; vertical-align: middle;';
-        dialog.setAttribute('data-kate-processed','true');
+        dialog.setAttribute('data-bwaa-cycle','true');
 
         // content
         let content = document.createElement('div');
         content.classList.add('modal-content');
         content.setAttribute('id',`bwaa--window-${id}--content`);
-        content.setAttribute('data-kate-processed','true');
+        content.setAttribute('data-bwaa-cycle','true');
+
+        if (has_close) {
+            let actions = document.createElement('div');
+            actions.classList.add('modal-actions');
+            actions.setAttribute('id',`bwaa--window-${id}--actions`);
+            actions.setAttribute('data-bwaa-cycle','true');
+
+            actions.innerHTML = (`
+                <div class="modal-buttons">
+                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
+                        ${trans[lang].settings.close}
+                    </button>
+                </div>
+            `);
+
+            content.insertBefore(actions, content.firstElementChild);
+        }
 
         // share content
         let share = document.createElement('div');
         share.classList.add('modal-share-content');
         share.setAttribute('id',`bwaa--window-${id}--share`);
-        share.setAttribute('data-kate-processed','true');
+        share.setAttribute('data-bwaa-cycle','true');
 
         // body
         let body = document.createElement('div');
         body.classList.add('modal-body');
         body.setAttribute('id',`bwaa--window-${id}--body`);
-        body.setAttribute('data-kate-processed','true');
+        body.setAttribute('data-bwaa-cycle','true');
 
         if (classname != '')
             body.classList.add(`modal--${classname}`);
@@ -5684,20 +5702,20 @@ let album_track_corrections = {};
         let header = document.createElement('h2');
         header.classList.add('modal-title');
         header.textContent = title;
-        header.setAttribute('data-kate-processed','true');
+        header.setAttribute('data-bwaa-cycle','true');
 
         // inner content
         let inner_content_em = document.createElement('div');
         inner_content_em.classList.add('modal-inner-content');
         inner_content_em.innerHTML = inner_content;
-        inner_content_em.setAttribute('data-kate-processed','true');
+        inner_content_em.setAttribute('data-bwaa-cycle','true');
 
 
         let align = document.createElement('div');
         align.classList.add('popup_align');
         align.setAttribute('id',`bwaa--window-${id}--align`);
         align.style = 'display: inline-block; vertical-align: middle; height: 100%;';
-        align.setAttribute('data-kate-processed','true');
+        align.setAttribute('data-bwaa-cycle','true');
 
 
         body.appendChild(header);
