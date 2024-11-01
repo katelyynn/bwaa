@@ -587,7 +587,7 @@ function set_season() {
     if (!settings.seasonal)
         return;
 
-    let now = new Date('2024-12-01');
+    let now = new Date();
 
     let current_year = now.getFullYear();
 
