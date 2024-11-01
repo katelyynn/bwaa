@@ -2861,7 +2861,7 @@ let album_track_corrections = {};
             page.sister = correct_artist(track_header.querySelector('.header-new-crumb span').textContent);
             page.name = correct_item_by_artist(track_header.querySelector('.header-new-title').textContent, page.sister);
 
-            let avatar_element = document.body.querySelector('.source-album-art img');
+            let avatar_element = page.structure.row.querySelector('.source-album-art img');
             if (avatar_element != null)
                 page.avatar = avatar_element.getAttribute('src');
 
@@ -2869,14 +2869,14 @@ let album_track_corrections = {};
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
                 plays: abbr_statistic(track_metadata[1].querySelector('abbr')),
                 listeners: track_metadata[0].querySelector('abbr').getAttribute('title'),
-                primary_album: document.body.querySelector('.source-album-name a')
+                primary_album: page.structure.row.querySelector('.source-album-name a')
             }
 
             if (header_track_data.primary_album != null && settings.lotus)
                 header_track_data.primary_album.textContent = correct_item_by_artist(header_track_data.primary_album.textContent.trim(), document.body.querySelector('.source-album-artist a').textContent.trim());
 
 
-            let track_video_element = document.body.querySelector('.video-preview');
+            let track_video_element = page.structure.row.querySelector('.video-preview');
             let track_video = '';
             if (track_video_element != null)
                 track_video = track_video_element.outerHTML;
@@ -2898,9 +2898,9 @@ let album_track_corrections = {};
             tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">See more</a>`;
 
 
-            let play_on_youtube = document.body.querySelector('.play-this-track-playlink--youtube');
-            let play_on_spotify = document.body.querySelector('.play-this-track-playlink--spotify');
-            let play_on_apple_music = document.body.querySelector('.play-this-track-playlink--itunes');
+            let play_on_youtube = page.structure.row.querySelector('.play-this-track-playlink--youtube');
+            let play_on_spotify = page.structure.row.querySelector('.play-this-track-playlink--spotify');
+            let play_on_apple_music = page.structure.row.querySelector('.play-this-track-playlink--itunes');
 
             let header_actions = track_header.querySelectorAll('.header-new-actions > [data-toggle-button=""]');
 
@@ -2946,7 +2946,7 @@ let album_track_corrections = {};
                             Play on <strong>YouTube</strong>
                         </a>
                         <div class="note">
-                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--youtube + .replace-playlink').outerHTML}
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${page.structure.row.querySelector('.play-this-track-playlink--youtube + .replace-playlink').outerHTML}
                         </div>
                         `)
                         : (`
@@ -2965,7 +2965,7 @@ let album_track_corrections = {};
                             Play on <strong>Spotify</strong>
                         </a>
                         <div class="note">
-                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--spotify + .replace-playlink').outerHTML}
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${page.structure.row.querySelector('.play-this-track-playlink--spotify + .replace-playlink').outerHTML}
                         </div>
                         `)
                         : (`
@@ -2984,7 +2984,7 @@ let album_track_corrections = {};
                             Play on <strong>Apple Music</strong>
                         </a>
                         <div class="note">
-                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--itunes + .replace-playlink').outerHTML}
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${page.structure.row.querySelector('.play-this-track-playlink--itunes + .replace-playlink').outerHTML}
                         </div>
                         `)
                         : (`
@@ -3024,7 +3024,7 @@ let album_track_corrections = {};
 
 
             // similar tracks
-            let similar_tracks_container = document.body.querySelector('.track-similar-tracks');
+            let similar_tracks_container = page.structure.row.querySelector('.track-similar-tracks');
             if (similar_tracks_container != null) {
                 similar_tracks_container.classList = [];
                 similar_tracks_container.classList.add('similar-tracks-container');
