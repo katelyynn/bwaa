@@ -547,6 +547,7 @@ b, strong {
                 background: linear-gradient(180deg, var(--body) 0%, var(--navlist-grad) 100%);
                 border: 1px solid var(--border);
                 color: var(--colour-middle);
+                text-decoration: none !important;
 
                 &[disabled] {
                     pointer-events: none !important;
@@ -848,7 +849,7 @@ b, strong {
                 padding: 3px 7px 5px 5px;
                 font-size: 11px;
                 color: #eee;
-                text-decoration: none;
+                text-decoration: none !important;
                 font-weight: normal;
 
                 min-width: unset;
@@ -1096,11 +1097,11 @@ b, strong {
         padding: 0 calc(21px + 8px) 1px 3px;
         background-position: left -360px;
         background-repeat: no-repeat;
-        color: #eee;
+        color: #eee !important;
         font-size: 11px;
         line-height: 15px;
         font-weight: bold;
-        text-decoration: none;
+        text-decoration: none !important;
         text-align: right;
         cursor: pointer;
         text-shadow: #870802 0 1px 0;
@@ -1168,7 +1169,7 @@ b, strong {
                 height: 42px;
                 line-height: 20px;
                 font-weight: bold;
-                text-decoration: none;
+                text-decoration: none !important;
                 color: #fff;
                 text-shadow: #870802 0 1px 0;
                 opacity: unset !important;
@@ -3306,7 +3307,7 @@ form[action*="/playlists/create/"],
     background: transparent var(--cdn-flatness-buttons-8-grey-right) no-repeat right top !important;
     color: #fff !important;
     font-size: 11px;
-    text-decoration: none;
+    text-decoration: none !important;
     text-align: right;
     vertical-align: middle;
     cursor: pointer;
@@ -3767,6 +3768,7 @@ form[action*="/playlists/create/"],
         line-height: 22px;
         height: 22px;
         color: #ddd;
+        text-decoration: none !important;
 
         &[data-analytics-label="notifications"],
         &[data-analytics-label="inbox"],
