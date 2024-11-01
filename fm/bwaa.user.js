@@ -357,7 +357,12 @@ const trans = {
                 theme: 'Your theme version is set to expire at {date_fut}. It is now {date_now}.'
             },
             corrections: {
-                name: 'Media Corrections'
+                name: 'Media Corrections',
+                bio: 'Manage capitalisation of artist, album, and track names with community contributions.',
+                listing: {
+                    artists: 'Artists',
+                    albums_tracks: 'Albums and tracks'
+                }
             },
             artist_redirection: {
                 name: 'Artist Redirection'
@@ -4422,6 +4427,7 @@ let album_track_corrections;
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
                     <h2 class="form-header">${trans[lang].settings.corrections.name}</h2>
+                    <p>${trans[lang].settings.corrections.bio}</p>
                     <p class="alert lotus">${trans[lang].lotus.version
                     .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
                     .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</p>
@@ -4436,7 +4442,7 @@ let album_track_corrections;
                             </div>
                         </div>
                         <div class="more-link align-left space-self">
-                            <a href="https://github.com/katelyynn/lotus/issues/new" target="_blank">${trans[lang].lotus.correct}</a>
+                            <a href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${trans[lang].lotus.correct}</a>
                         </div>
                         <div class="more-link align-left space-self">
                             <a onclick="_open_lotus_modal()">${trans[lang].lotus.view}</a>
@@ -6109,12 +6115,69 @@ let album_track_corrections;
 
     unsafeWindow._open_lotus_modal = function() {
         create_window('corrections', trans[lang].settings.corrections.name, (`
-            <h3>${trans[lang].settings.corrections.listing.artists}</h3>
+            <h3 class="form-sub-header">${trans[lang].settings.corrections.listing.artists}</h3>
             <div class="corrections artist" id="corrections-artist"></div>
-            <h3>${trans[lang].settings.corrections.listing.albums_tracks}</h3>
+            <h3 class="form-sub-header">${trans[lang].settings.corrections.listing.albums_tracks}</h3>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
         `), true, 'corrections');
 
-        //prepare_corrections_page();
+        prepare_corrections_page();
+    }
+
+
+    function prepare_corrections_page() {
+        let corrections_table_artist = document.getElementById('corrections-artist');
+
+        for (let artist in artist_corrections) {
+            if (artist == 'version')
+                continue;
+
+            let correction = document.createElement('div');
+            correction.classList.add('correction-row');
+            correction.innerHTML = (`
+            <div class="primary-name pre-transition">
+                <h5>${artist}</h5>
+            </div>
+            <div class="arrow-divider"></div>
+            <div class="primary-name post-transition">
+                <h5>${artist_corrections[artist]}</h5>
+            </div>
+            `);
+
+            corrections_table_artist.appendChild(correction);
+        }
+
+        //
+
+        let corrections_table_albums_tracks = document.getElementById('corrections-albums_tracks');
+
+        for (let artist in album_track_corrections) {
+            if (artist == 'version')
+                continue;
+
+            let artist_row = document.createElement('div');
+            artist_row.classList.add('artist-row');
+            artist_row.innerHTML = (`
+                <h5>${artist}</h5>
+            `);
+
+            corrections_table_albums_tracks.appendChild(artist_row);
+
+            for (let media in album_track_corrections[artist]) {
+                let correction = document.createElement('div');
+                correction.classList.add('correction-row');
+                correction.innerHTML = (`
+                <div class="primary-name pre-transition">
+                    <h5>${media}</h5>
+                </div>
+                <div class="arrow-divider"></div>
+                <div class="primary-name post-transition">
+                    <h5>${album_track_corrections[artist][media]}</h5>
+                </div>
+                `);
+
+                corrections_table_albums_tracks.appendChild(correction);
+            }
+        }
     }
 })();
