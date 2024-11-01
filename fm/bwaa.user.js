@@ -19,8 +19,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1101.1',
-    sku: 'chilly'
+    build: '2024.1101.2',
+    sku: 'lotus'
 }
 
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
@@ -45,6 +45,16 @@ const trans = {
         leave_a_shout: 'Leave a shout',
         see_all_placeholder: 'See all {placeholder}',
         share_link: 'Share link',
+
+        lotus: {
+            artist: 'Artist corrections have been downloaded!',
+            album_track: 'Album and track corrections have been downloaded!',
+            version: 'You are running lotus version {v}.',
+            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            check: 'Check for updates',
+            correct: 'Submit name correction',
+            view: 'View current corrections'
+        },
 
         your_scrobbles: {
             name: 'Your Scrobbles',
@@ -259,6 +269,7 @@ const trans = {
             }
         },
         settings: {
+            close: 'Close',
             finish: 'Finish',
             new: 'New',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
@@ -348,8 +359,11 @@ const trans = {
             },
             corrections: {
                 name: 'Media Corrections',
-                alert: 'In-built capitalisation corrections for artists, albums, and tracks are <strong>currently not supported</strong>. Sorry for the inconvenience.',
-                submit: 'Submit a correction in bleh (temporary)'
+                bio: 'Manage capitalisation of artist, album, and track names with community contributions.',
+                listing: {
+                    artists: 'Artists',
+                    albums_tracks: 'Albums and tracks'
+                }
             },
             artist_redirection: {
                 name: 'Artist Redirection'
@@ -394,6 +408,12 @@ const trans = {
                     fall: 'Fall',
                     christmas: 'Christmas',
                     new_years: 'New Years'
+                }
+            },
+            lotus: {
+                name: 'Configure lotus',
+                toggle: {
+                    name: 'Enable correction system'
                 }
             }
         },
@@ -575,12 +595,18 @@ function set_season() {
     seasonal_events.forEach((season) => {
         if (
             now >= new Date(season.start.replace('y0', current_year)) &&
-            now <= new Date(season.end.replace('y0', current_year)) &&
-            stored_season != season
+            now <= new Date(season.end.replace('y0', current_year))
         ) {
-            stored_season = season;
             stored_season.now = now;
             stored_season.year = current_year;
+
+            if (stored_season.id == season.id)
+                return;
+            stored_season.id = season.id;
+            stored_season.start = season.start;
+            stored_season.end = season.end;
+            stored_season.snowflakes = season.snowflakes;
+
             console.info('bwaa - it is season', season.name, 'starting', season.start, 'ending', season.end, season);
 
             document.documentElement.setAttribute('data-bwaa--season', season.id);
@@ -596,12 +622,12 @@ function set_season() {
         }
     });
 
-    current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)) : trans[lang].settings.seasonal.marker.none} »</a>`;
+    current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', `<span class="season-time" id="header_season_time">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</span>`) : trans[lang].settings.seasonal.marker.none} »</a>`;
     update_promo();
 }
 
-function update_promo() {
-    if (last_promo == current_promo)
+function update_promo(force = false) {
+    if (last_promo == current_promo && !force)
         return;
 
     document.getElementById('bwaa-promo').innerHTML = current_promo;
@@ -676,7 +702,9 @@ let settings_defaults = {
 
     seasonal: true,
     seasonal_accent: true,
-    seasonal_particles: true
+    seasonal_particles: true,
+
+    lotus: true
 }
 let settings_store = {
     developer: {
@@ -755,6 +783,10 @@ let settings_store = {
         values: [true, false]
     },
     seasonal_particles: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    lotus: {
         type: 'toggle',
         values: [true, false]
     }
@@ -873,6 +905,12 @@ let has_prompted_for_update = false;
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
 let last_promo = current_promo;
+let last_season_time;
+
+
+let artist_corrections = {};
+let album_track_corrections = {};
+
 
 (function() {
     'use strict';
@@ -909,6 +947,8 @@ let last_promo = current_promo;
         load_activities();
         notify_if_new_update();
 
+        lotus();
+
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
             // start bwaa settings
             bwaa_settings();
@@ -932,6 +972,17 @@ let last_promo = current_promo;
             bwaa_search();
             bwaa_home();
             bwaa_events();
+
+            if (settings.lotus) {
+                patch_artist_grids();
+
+                correct_generic_combo_no_artist('artist-header-featured-items-item');
+                correct_generic_combo_no_artist('artist-top-albums-item');
+                correct_generic_combo('source-album-details');
+                correct_generic_combo('resource-list--release-list-item');
+
+                correct_tracks();
+            }
 
             subscribe_to_events();
         }
@@ -1000,6 +1051,17 @@ let last_promo = current_promo;
                                 bwaa_search();
                                 bwaa_home();
                                 bwaa_events();
+
+                                if (settings.lotus) {
+                                    patch_artist_grids();
+
+                                    correct_generic_combo_no_artist('artist-header-featured-items-item');
+                                    correct_generic_combo_no_artist('artist-top-albums-item');
+                                    correct_generic_combo('source-album-details');
+                                    correct_generic_combo('resource-list--release-list-item');
+
+                                    correct_tracks();
+                                }
 
                                 subscribe_to_events();
                             }
@@ -2041,7 +2103,7 @@ let last_promo = current_promo;
 
         if (!is_subpage) {
             page.subpage = 'overview';
-            page.name = artist_header.querySelector('.header-new-title').textContent;
+            page.name = correct_artist(artist_header.querySelector('.header-new-title').textContent);
             page.sister = '';
             page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
 
@@ -2329,7 +2391,7 @@ let last_promo = current_promo;
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
-            page.name = artist_header.querySelector('.header-new-title').textContent;
+            page.name = correct_artist(artist_header.querySelector('.header-new-title').textContent);
             page.sister = '';
 
             let header_artist_data = {
@@ -2488,8 +2550,8 @@ let last_promo = current_promo;
             let album_metadata = album_header.querySelectorAll('.header-metadata-tnew-display');
 
             page.avatar = fallback_cover_art;
-            page.name = album_header.querySelector('.header-new-title').textContent;
-            page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+            page.sister = correct_artist(album_header.querySelector('.header-new-crumb span').textContent);
+            page.name = correct_item_by_artist(album_header.querySelector('.header-new-title').textContent, page.sister);
 
             let avatar_element = document.body.querySelector('.album-overview-cover-art img');
             let add_artwork = '';
@@ -2687,8 +2749,8 @@ let last_promo = current_promo;
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(album_header.querySelector('.header-new-background-image'));
-            page.name = album_header.querySelector('.header-new-title').textContent;
-            page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+            page.sister = correct_artist(album_header.querySelector('.header-new-crumb span').textContent);
+            page.name = correct_item_by_artist(album_header.querySelector('.header-new-title').textContent, page.sister);
 
             let header_album_data = {
                 artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
@@ -2797,10 +2859,10 @@ let last_promo = current_promo;
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
             page.avatar = fallback_cover_art;
-            page.name = track_header.querySelector('.header-new-title').textContent;
-            page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+            page.sister = correct_artist(track_header.querySelector('.header-new-crumb span').textContent);
+            page.name = correct_item_by_artist(track_header.querySelector('.header-new-title').textContent, page.sister);
 
-            let avatar_element = document.body.querySelector('.source-album-art img');
+            let avatar_element = page.structure.row.querySelector('.source-album-art img');
             if (avatar_element != null)
                 page.avatar = avatar_element.getAttribute('src');
 
@@ -2808,11 +2870,14 @@ let last_promo = current_promo;
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
                 plays: abbr_statistic(track_metadata[1].querySelector('abbr')),
                 listeners: track_metadata[0].querySelector('abbr').getAttribute('title'),
-                primary_album: document.body.querySelector('.source-album-name a')
+                primary_album: page.structure.row.querySelector('.source-album-name a')
             }
 
+            if (header_track_data.primary_album != null && settings.lotus)
+                header_track_data.primary_album.textContent = correct_item_by_artist(header_track_data.primary_album.textContent.trim(), document.body.querySelector('.source-album-artist a').textContent.trim());
 
-            let track_video_element = document.body.querySelector('.video-preview');
+
+            let track_video_element = page.structure.row.querySelector('.video-preview');
             let track_video = '';
             if (track_video_element != null)
                 track_video = track_video_element.outerHTML;
@@ -2834,9 +2899,9 @@ let last_promo = current_promo;
             tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">See more</a>`;
 
 
-            let play_on_youtube = document.body.querySelector('.play-this-track-playlink--youtube');
-            let play_on_spotify = document.body.querySelector('.play-this-track-playlink--spotify');
-            let play_on_apple_music = document.body.querySelector('.play-this-track-playlink--itunes');
+            let play_on_youtube = page.structure.row.querySelector('.play-this-track-playlink--youtube');
+            let play_on_spotify = page.structure.row.querySelector('.play-this-track-playlink--spotify');
+            let play_on_apple_music = page.structure.row.querySelector('.play-this-track-playlink--itunes');
 
             let header_actions = track_header.querySelectorAll('.header-new-actions > [data-toggle-button=""]');
 
@@ -2882,7 +2947,7 @@ let last_promo = current_promo;
                             Play on <strong>YouTube</strong>
                         </a>
                         <div class="note">
-                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--youtube + .replace-playlink').outerHTML}
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${page.structure.row.querySelector('.play-this-track-playlink--youtube + .replace-playlink').outerHTML}
                         </div>
                         `)
                         : (`
@@ -2901,7 +2966,7 @@ let last_promo = current_promo;
                             Play on <strong>Spotify</strong>
                         </a>
                         <div class="note">
-                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--spotify + .replace-playlink').outerHTML}
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${page.structure.row.querySelector('.play-this-track-playlink--spotify + .replace-playlink').outerHTML}
                         </div>
                         `)
                         : (`
@@ -2920,7 +2985,7 @@ let last_promo = current_promo;
                             Play on <strong>Apple Music</strong>
                         </a>
                         <div class="note">
-                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${document.body.querySelector('.play-this-track-playlink--itunes + .replace-playlink').outerHTML}
+                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${page.structure.row.querySelector('.play-this-track-playlink--itunes + .replace-playlink').outerHTML}
                         </div>
                         `)
                         : (`
@@ -2960,7 +3025,7 @@ let last_promo = current_promo;
 
 
             // similar tracks
-            let similar_tracks_container = document.body.querySelector('.track-similar-tracks');
+            let similar_tracks_container = page.structure.row.querySelector('.track-similar-tracks');
             if (similar_tracks_container != null) {
                 similar_tracks_container.classList = [];
                 similar_tracks_container.classList.add('similar-tracks-container');
@@ -2974,13 +3039,20 @@ let last_promo = current_promo;
                 similar_tracks.forEach((track) => {
                     let row = document.createElement('tr');
                     row.classList.add('chartlist-row', 'chartlist-row--with-artist');
+                    row.setAttribute('data-lotus', 'true');
+
+                    let name_obj = track.querySelector('.track-similar-tracks-item-name a');
+                    let artist_obj = track.querySelector('.track-similar-tracks-item-artist a');
+
+                    let artist = correct_artist(artist_obj.textContent.trim());
+                    let name = correct_item_by_artist(name_obj.textContent.trim(), artist);
 
                     row.innerHTML = (`
                         <td class="chartlist-name">
-                            ${track.querySelector('.track-similar-tracks-item-name a').outerHTML}
+                            ${artist_obj.outerHTML}
                         </td>
                         <td class="chartlist-artist">
-                            ${track.querySelector('.track-similar-tracks-item-artist a').outerHTML}
+                            ${name_obj.outerHTML}
                         </td>
                     `);
 
@@ -3059,8 +3131,8 @@ let last_promo = current_promo;
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(track_header.querySelector('.header-new-background-image'));
-            page.name = track_header.querySelector('.header-new-title').textContent;
-            page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+            page.sister = correct_artist(track_header.querySelector('.header-new-crumb span').textContent);
+            page.name = correct_item_by_artist(track_header.querySelector('.header-new-title').textContent, page.sister);
 
             let header_track_data = {
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
@@ -4395,10 +4467,30 @@ let last_promo = current_promo;
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
                     <h2 class="form-header">${trans[lang].settings.corrections.name}</h2>
-                    <div class="alert">${trans[lang].settings.corrections.alert}</div>
-                    <div class="more-link align-left space-self">
-                        <a href="https://github.com/katelyynn/bleh/issues/new" target="_blank">${trans[lang].settings.corrections.submit}</a>
-                    </div>
+                    <p>${trans[lang].settings.corrections.bio}</p>
+                    <p class="alert lotus">${trans[lang].lotus.version
+                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
+                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</p>
+                    <fieldset>
+                        <legend>${trans[lang].settings.lotus.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--lotus">
+                                    <input id="setting--lotus" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.lotus.toggle.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${trans[lang].lotus.correct}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_open_lotus_modal()">${trans[lang].lotus.view}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_lotus_check()">${trans[lang].lotus.check}</a>
+                        </div>
+                    </fieldset>
                     <fieldset>
                         <legend>${trans[lang].settings.artist_redirection.name}</legend>
                         <div class="form-group">
@@ -4414,6 +4506,10 @@ let last_promo = current_promo;
             `);
 
             request_checkbox_update();
+            tippy(document.getElementById('lotus_hover'), {
+                content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
+                allowHTML: true
+            });
         } else if (page == 'about') {
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
@@ -5543,18 +5639,18 @@ let last_promo = current_promo;
 
 
     // create a window
-    function create_window(id, title, inner_content, classname='') {
+    function create_window(id, title, inner_content, has_close = false, classname='') {
         let background = document.createElement('div');
         background.classList.add('popup_background');
         background.setAttribute('id',`bwaa--window-${id}--background`);
         background.style = 'opacity: 0.8; visibility: visible; background-color: rgb(0, 0, 0); position: fixed; inset: 0px;';
-        background.setAttribute('data-kate-processed','true');
+        background.setAttribute('data-bwaa-cycle','true');
 
         let wrapper = document.createElement('div');
         wrapper.classList.add('popup_wrapper','popup_wrapper_visible');
         wrapper.setAttribute('id',`bwaa--window-${id}--wrapper`);
         wrapper.style = 'opacity: 1; visibility: visible; position: fixed; overflow: auto; width: 100%; height: 100%; top: 0px; left: 0px; text-align: center;';
-        wrapper.setAttribute('data-kate-processed','true');
+        wrapper.setAttribute('data-bwaa-cycle','true');
 
 
         // dialog
@@ -5562,25 +5658,42 @@ let last_promo = current_promo;
         dialog.classList.add('modal-dialog');
         dialog.setAttribute('id',`bwaa--window-${id}--dialog`);
         dialog.style = 'opacity: 1; visibility: visible; pointer-events: auto; display: inline-block; outline: none; text-align: left; position: relative; vertical-align: middle;';
-        dialog.setAttribute('data-kate-processed','true');
+        dialog.setAttribute('data-bwaa-cycle','true');
 
         // content
         let content = document.createElement('div');
         content.classList.add('modal-content');
         content.setAttribute('id',`bwaa--window-${id}--content`);
-        content.setAttribute('data-kate-processed','true');
+        content.setAttribute('data-bwaa-cycle','true');
+
+        if (has_close) {
+            let actions = document.createElement('div');
+            actions.classList.add('modal-actions');
+            actions.setAttribute('id',`bwaa--window-${id}--actions`);
+            actions.setAttribute('data-bwaa-cycle','true');
+
+            actions.innerHTML = (`
+                <div class="modal-buttons">
+                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
+                        ${trans[lang].settings.close}
+                    </button>
+                </div>
+            `);
+
+            content.insertBefore(actions, content.firstElementChild);
+        }
 
         // share content
         let share = document.createElement('div');
         share.classList.add('modal-share-content');
         share.setAttribute('id',`bwaa--window-${id}--share`);
-        share.setAttribute('data-kate-processed','true');
+        share.setAttribute('data-bwaa-cycle','true');
 
         // body
         let body = document.createElement('div');
         body.classList.add('modal-body');
         body.setAttribute('id',`bwaa--window-${id}--body`);
-        body.setAttribute('data-kate-processed','true');
+        body.setAttribute('data-bwaa-cycle','true');
 
         if (classname != '')
             body.classList.add(`modal--${classname}`);
@@ -5589,20 +5702,20 @@ let last_promo = current_promo;
         let header = document.createElement('h2');
         header.classList.add('modal-title');
         header.textContent = title;
-        header.setAttribute('data-kate-processed','true');
+        header.setAttribute('data-bwaa-cycle','true');
 
         // inner content
         let inner_content_em = document.createElement('div');
         inner_content_em.classList.add('modal-inner-content');
         inner_content_em.innerHTML = inner_content;
-        inner_content_em.setAttribute('data-kate-processed','true');
+        inner_content_em.setAttribute('data-bwaa-cycle','true');
 
 
         let align = document.createElement('div');
         align.classList.add('popup_align');
         align.setAttribute('id',`bwaa--window-${id}--align`);
         align.style = 'display: inline-block; vertical-align: middle; height: 100%;';
-        align.setAttribute('data-kate-processed','true');
+        align.setAttribute('data-bwaa-cycle','true');
 
 
         body.appendChild(header);
@@ -5966,6 +6079,348 @@ let last_promo = current_promo;
                 let event_title = event.querySelector((type == 'artist') ? '.events-list-item-event-name' : '.events-list-item-event--title a');
 
                 event_title.insertBefore(badge, event_title.firstChild);
+            }
+        });
+    }
+
+
+
+
+    // correction system
+    function lotus(force = false) {
+        let lotus_artist = localStorage.getItem('lotus_artist');
+        let lotus_artist_expire = new Date(localStorage.getItem('lotus_artist_expire'));
+
+        let lotus_album_track = localStorage.getItem('lotus_album_track');
+        let lotus_album_track_expire = new Date(localStorage.getItem('lotus_album_track_expire'));
+
+        let current_time = new Date();
+
+        if (lotus_artist == null) {
+            console.info('lotus - artist list is not cached, fetching');
+            lotus_request('artist', true);
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            artist_corrections = JSON.parse(lotus_artist);
+
+            // is it valid?
+            if (lotus_artist_expire < current_time && !force) {
+                lotus_request();
+            } else if (force) {
+                lotus_request('artist', true);
+            }
+        }
+
+        if (lotus_album_track == null) {
+            console.info('lotus - album_track list is not cached, fetching');
+            lotus_request('album_track', true);
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            album_track_corrections = JSON.parse(lotus_album_track);
+
+            // is it valid?
+            if (lotus_album_track_expire < current_time && !force) {
+                lotus_request('album_track');
+            } else if (force) {
+                lotus_request('album_track', true);
+            }
+        }
+    }
+
+    function lotus_request(type = 'artist', notify = false) {
+        let button = document.body.querySelector('[onclick="_lotus_check()"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/lotus/${type}.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            console.info('lotus -', type, 'list responded with', xhr.status);
+
+            if (type == 'artist')
+                artist_corrections = JSON.parse(this.response);
+            else
+                album_track_corrections = JSON.parse(this.response);
+
+            if (notify)
+                deliver_notif(trans[lang].lotus[type]);
+
+            // save to cache for next page load
+            localStorage.setItem(`lotus_${type}`, this.response);
+
+            // set expire date
+            let api_expire = new Date();
+            api_expire.setHours(api_expire.getHours() + 4);
+            localStorage.setItem(`lotus_${type}_expire`, api_expire);
+            console.info('lotus -', type, 'list is cached until', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+
+    unsafeWindow._lotus_check = function() {
+        lotus(true);
+    }
+
+
+
+
+    unsafeWindow._open_lotus_modal = function() {
+        create_window('corrections', trans[lang].settings.corrections.name, (`
+            <h3 class="form-sub-header">${trans[lang].settings.corrections.listing.artists}</h3>
+            <div class="corrections artist" id="corrections-artist"></div>
+            <h3 class="form-sub-header">${trans[lang].settings.corrections.listing.albums_tracks}</h3>
+            <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
+        `), true, 'corrections');
+
+        prepare_corrections_page();
+    }
+
+
+    function prepare_corrections_page() {
+        let corrections_table_artist = document.getElementById('corrections-artist');
+
+        for (let artist in artist_corrections) {
+            if (artist == 'version')
+                continue;
+
+            let correction = document.createElement('div');
+            correction.classList.add('correction-row');
+            correction.innerHTML = (`
+            <div class="primary-name pre-transition">
+                <h5>${artist}</h5>
+            </div>
+            <div class="arrow-divider"></div>
+            <div class="primary-name post-transition">
+                <h5>${artist_corrections[artist]}</h5>
+            </div>
+            `);
+
+            corrections_table_artist.appendChild(correction);
+        }
+
+        //
+
+        let corrections_table_albums_tracks = document.getElementById('corrections-albums_tracks');
+
+        for (let artist in album_track_corrections) {
+            if (artist == 'version')
+                continue;
+
+            let artist_row = document.createElement('div');
+            artist_row.classList.add('artist-row');
+            artist_row.innerHTML = (`
+                <h5>${artist}</h5>
+            `);
+
+            corrections_table_albums_tracks.appendChild(artist_row);
+
+            for (let media in album_track_corrections[artist]) {
+                let correction = document.createElement('div');
+                correction.classList.add('correction-row');
+                correction.innerHTML = (`
+                <div class="primary-name pre-transition">
+                    <h5>${media}</h5>
+                </div>
+                <div class="arrow-divider"></div>
+                <div class="primary-name post-transition">
+                    <h5>${album_track_corrections[artist][media]}</h5>
+                </div>
+                `);
+
+                corrections_table_albums_tracks.appendChild(correction);
+            }
+        }
+    }
+
+
+    // artist corrections in grid view
+    function patch_artist_grids() {
+        let artists = page.structure.row.querySelectorAll('.grid-items-item-details');
+
+        if (artists == undefined)
+            return;
+
+        artists.forEach((artist) => {
+            if (!artist.hasAttribute('data-lotus')) {
+                artist.setAttribute('data-lotus','true');
+
+                // test if this grid item is an album
+                let album_artist = artist.querySelector('.grid-items-item-aux-block');
+
+                if (album_artist != undefined) {
+                    // it is an album!
+                    let artist_name = artist.querySelector('.grid-items-item-aux-block');
+                    let corrected_artist_name = correct_artist(artist_name.textContent);
+                    artist_name.textContent = corrected_artist_name;
+                    artist_name.setAttribute('title', corrected_artist_name);
+
+                    // album name
+                    let album_name = artist.querySelector('.grid-items-item-main-text a');
+                    let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
+                    album_name.textContent = corrected_album_name;
+                    album_name.setAttribute('title', corrected_album_name);
+                } else {
+                    // not an album, must be an artist
+                    let artist_name = artist.querySelector('.grid-items-item-main-text a');
+                    let corrected_artist_name = correct_artist(artist_name.textContent);
+                    artist_name.textContent = corrected_artist_name;
+                    artist_name.setAttribute('href', `${root}music/${corrected_artist_name}`);
+                    artist_name.setAttribute('title', corrected_artist_name);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * correct capitalisation of a generic album/track name & artist combo
+     * @param {string} parent individual css selector for each item wrapper
+     * @returns if not found
+     */
+    function correct_generic_combo(parent) {
+        let albums = document.body.querySelectorAll(`.${parent}`);
+
+        if (albums == undefined)
+            return;
+
+        if (!settings.lotus)
+            return;
+
+        albums.forEach((album) => {
+            if (!album.hasAttribute('data-lotus')) {
+                album.setAttribute('data-lotus','true');
+                console.info('lotus - correcting generic combo for a child of', parent);
+
+                let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+                let artist_name = album.querySelector(`.${parent.replace('-details','')}-artist a`);
+
+                if (artist_name == undefined)
+                    return;
+
+                let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
+                let corrected_artist_name = correct_artist(artist_name.textContent);
+
+                album_name.textContent = corrected_album_name;
+                artist_name.textContent = corrected_artist_name;
+            }
+        });
+    }
+    /**
+     * correct capitalisation of a generic album/track name (no artist field!!) combo
+     * @param {string} parent individual css selector for each item wrapper
+     * @returns if not found
+     */
+    function correct_generic_combo_no_artist(parent) {
+        let albums = document.body.querySelectorAll(`.${parent}`);
+
+        if (albums == undefined)
+            return;
+
+        albums.forEach((album) => {
+            if (!album.hasAttribute('data-lotus')) {
+                album.setAttribute('data-lotus','true');
+                console.info('lotus - correcting generic combo (no artist) for a child of', parent);
+
+                let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+                let artist_name = album_name.getAttribute('href').split('/')[2].replaceAll('+',' ');
+
+                let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
+                album_name.textContent = corrected_album_name;
+            }
+        });
+    }
+
+
+    // correction handler
+    /**
+     * correct item based on artist
+     * @param {string} item either a track/album title
+     * @param {string} artist artist name (is converted to lowercase)
+     * @returns corrected title if applicable or original title
+     */
+    function correct_item_by_artist(item, artist) {
+        artist = artist.toLowerCase();
+        console.info('lotus - correction handler: correcting', item, 'by', artist);
+
+        if (!settings.lotus)
+            return item;
+
+        try {
+            if (album_track_corrections.hasOwnProperty(artist)) {
+                if (album_track_corrections[artist].hasOwnProperty(item)) {
+                    console.info('lotus - correction handler: corrected as', album_track_corrections[artist][item]);
+                    return album_track_corrections[artist][item];
+                } else {
+                    return item;
+                }
+            } else {
+                return item;
+            }
+        } catch(e) {
+            console.error(e);
+            return item;
+        }
+    }
+    /**
+     * correct artist
+     * @param {string} artist artist name (NOT converted to lowercase)
+     * @returns corrected artist if applicable or original artist
+     */
+    function correct_artist(artist) {
+        console.info('lotus - correction handler: correcting', artist);
+
+        if (!settings.lotus)
+            return artist;
+
+        try {
+            if (artist_corrections.hasOwnProperty(artist)) {
+                console.info('lotus - correction handler: corrected as', artist_corrections[artist]);
+                return artist_corrections[artist];
+            } else {
+                return artist;
+            }
+        } catch(e) {
+            console.error(e);
+            return artist;
+        }
+    }
+
+
+    function correct_tracks() {
+        let tracks = document.querySelectorAll('.chartlist-row:not(.chartlist__placeholder-row, [data-lotus])');
+
+        if (tracks == null)
+            return;
+
+        tracks.forEach((track) => {
+            track.setAttribute('data-lotus', 'true');
+
+            let track_title = track.querySelector('.chartlist-name a');
+
+            if (track_title == undefined)
+                return;
+
+            let song_artist_element = track.querySelector('.chartlist-artist a');
+            if (song_artist_element != undefined) {
+                let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
+                track_title.textContent = corrected_title;
+                track_title.setAttribute('title', corrected_title);
+
+                let corrected_artist = correct_artist(song_artist_element.textContent);
+                song_artist_element.textContent = corrected_artist;
+                song_artist_element.setAttribute('title', corrected_artist);
+            } else {
+                let track_artist = track_title.getAttribute('href').split('/')[2].replaceAll('+',' ');
+                let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
+                track_title.textContent = corrected_title;
+                track_title.setAttribute('title', corrected_title);
             }
         });
     }
