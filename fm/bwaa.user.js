@@ -2073,7 +2073,7 @@ let album_track_corrections;
 
         if (!is_subpage) {
             page.subpage = 'overview';
-            page.name = artist_header.querySelector('.header-new-title').textContent;
+            page.name = correct_artist(artist_header.querySelector('.header-new-title').textContent);
             page.sister = '';
             page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
 
@@ -2361,7 +2361,7 @@ let album_track_corrections;
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
-            page.name = artist_header.querySelector('.header-new-title').textContent;
+            page.name = correct_artist(artist_header.querySelector('.header-new-title').textContent);
             page.sister = '';
 
             let header_artist_data = {
@@ -2520,8 +2520,8 @@ let album_track_corrections;
             let album_metadata = album_header.querySelectorAll('.header-metadata-tnew-display');
 
             page.avatar = fallback_cover_art;
-            page.name = album_header.querySelector('.header-new-title').textContent;
-            page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+            page.sister = correct_artist(album_header.querySelector('.header-new-crumb span').textContent);
+            page.name = correct_item_by_artist(album_header.querySelector('.header-new-title').textContent, page.sister);
 
             let avatar_element = document.body.querySelector('.album-overview-cover-art img');
             let add_artwork = '';
@@ -2719,8 +2719,8 @@ let album_track_corrections;
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(album_header.querySelector('.header-new-background-image'));
-            page.name = album_header.querySelector('.header-new-title').textContent;
-            page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+            page.sister = correct_artist(album_header.querySelector('.header-new-crumb span').textContent);
+            page.name = correct_item_by_artist(album_header.querySelector('.header-new-title').textContent, page.sister);
 
             let header_album_data = {
                 artist_link: album_header.querySelector('.header-new-crumb').getAttribute('href'),
@@ -2829,8 +2829,8 @@ let album_track_corrections;
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
             page.avatar = fallback_cover_art;
-            page.name = track_header.querySelector('.header-new-title').textContent;
-            page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+            page.sister = correct_artist(track_header.querySelector('.header-new-crumb span').textContent);
+            page.name = correct_item_by_artist(track_header.querySelector('.header-new-title').textContent, page.sister);
 
             let avatar_element = document.body.querySelector('.source-album-art img');
             if (avatar_element != null)
@@ -3091,8 +3091,8 @@ let album_track_corrections;
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(track_header.querySelector('.header-new-background-image'));
-            page.name = track_header.querySelector('.header-new-title').textContent;
-            page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+            page.sister = correct_artist(track_header.querySelector('.header-new-crumb span').textContent);
+            page.name = correct_item_by_artist(track_header.querySelector('.header-new-title').textContent, page.sister);
 
             let header_track_data = {
                 artist_link: track_header.querySelector('.header-new-crumb').getAttribute('href'),
@@ -6178,6 +6178,149 @@ let album_track_corrections;
 
                 corrections_table_albums_tracks.appendChild(correction);
             }
+        }
+    }
+
+
+    // artist corrections in grid view
+    function patch_artist_grids(element) {
+        let artists = element.querySelectorAll('.grid-items-item-details');
+
+        if (artists == undefined)
+            return;
+
+        artists.forEach((artist) => {
+            if (!artist.hasAttribute('data-kate-processed')) {
+                artist.setAttribute('data-kate-processed','true');
+
+                // test if this grid item is an album
+                let album_artist = artist.querySelector('.grid-items-item-aux-block');
+
+                if (album_artist != undefined) {
+                    // it is an album!
+                    let artist_name = artist.querySelector('.grid-items-item-aux-block');
+                    let corrected_artist_name = correct_artist(artist_name.textContent);
+                    artist_name.textContent = corrected_artist_name;
+                    artist_name.setAttribute('title', corrected_artist_name);
+
+                    // album name
+                    let album_name = artist.querySelector('.grid-items-item-main-text a');
+                    let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
+                    album_name.textContent = corrected_album_name;
+                    album_name.setAttribute('title', corrected_album_name);
+                } else {
+                    // not an album, must be an artist
+                    let artist_name = artist.querySelector('.grid-items-item-main-text a');
+                    let corrected_artist_name = correct_artist(artist_name.textContent);
+                    artist_name.textContent = corrected_artist_name;
+                    artist_name.setAttribute('href', `${root}music/${corrected_artist_name}`);
+                    artist_name.setAttribute('title', corrected_artist_name);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * correct capitalisation of a generic album/track name & artist combo
+     * @param {string} parent individual css selector for each item wrapper
+     * @returns if not found
+     */
+    function correct_generic_combo(parent) {
+        let albums = document.body.querySelectorAll(`.${parent}`);
+
+        if (albums == undefined)
+            return;
+
+        if (!settings.lotus)
+            return;
+
+        albums.forEach((album) => {
+            if (!album.hasAttribute('data-kate-processed')) {
+                album.setAttribute('data-kate-processed','true');
+                console.info('lotus - correcting generic combo for a child of', parent);
+
+                let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+                let artist_name = album.querySelector(`.${parent.replace('-details','')}-artist a`);
+
+                if (artist_name == undefined)
+                    return;
+
+                let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
+                let corrected_artist_name = correct_artist(artist_name.textContent);
+
+                album_name.textContent = corrected_album_name;
+                artist_name.textContent = corrected_artist_name;
+            }
+        });
+    }
+    /**
+     * correct capitalisation of a generic album/track name (no artist field!!) combo
+     * @param {string} parent individual css selector for each item wrapper
+     * @returns if not found
+     */
+    function correct_generic_combo_no_artist(parent) {
+        let albums = document.body.querySelectorAll(`.${parent}`);
+
+        if (albums == undefined)
+            return;
+
+        albums.forEach((album) => {
+            if (!album.hasAttribute('data-kate-processed')) {
+                album.setAttribute('data-kate-processed','true');
+                console.info('lotus - correcting generic combo (no artist) for a child of', parent);
+
+                let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+                let artist_name = album_name.getAttribute('href').split('/')[2].replaceAll('+',' ');
+
+                let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
+                album_name.textContent = corrected_album_name;
+            }
+        });
+    }
+
+
+    // correction handler
+    /**
+     * correct item based on artist
+     * @param {string} item either a track/album title
+     * @param {string} artist artist name (is converted to lowercase)
+     * @returns corrected title if applicable or original title
+     */
+    function correct_item_by_artist(item, artist) {
+        artist = artist.toLowerCase();
+        console.info('lotus - correction handler: correcting', item, 'by', artist);
+
+        if (!settings.lotus)
+            return item;
+
+        if (album_track_corrections.hasOwnProperty(artist)) {
+            if (album_track_corrections[artist].hasOwnProperty(item)) {
+                console.info('lotus - correction handler: corrected as', album_track_corrections[artist][item]);
+                return album_track_corrections[artist][item];
+            } else {
+                return item;
+            }
+        } else {
+            return item;
+        }
+    }
+    /**
+     * correct artist
+     * @param {string} artist artist name (NOT converted to lowercase)
+     * @returns corrected artist if applicable or original artist
+     */
+    function correct_artist(artist) {
+        console.info('lotus - correction handler: correcting', artist);
+
+        if (!settings.lotus)
+            return artist;
+
+        if (artist_corrections.hasOwnProperty(artist)) {
+            console.info('lotus - correction handler: corrected as', artist_corrections[artist]);
+            return artist_corrections[artist];
+        } else {
+            return artist;
         }
     }
 })();
