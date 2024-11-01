@@ -594,12 +594,18 @@ function set_season() {
     seasonal_events.forEach((season) => {
         if (
             now >= new Date(season.start.replace('y0', current_year)) &&
-            now <= new Date(season.end.replace('y0', current_year)) &&
-            stored_season != season
+            now <= new Date(season.end.replace('y0', current_year))
         ) {
-            stored_season = season;
             stored_season.now = now;
             stored_season.year = current_year;
+
+            if (stored_season == season)
+                return;
+            stored_season.id = season.id;
+            stored_season.start = season.start;
+            stored_season.end = season.end;
+            stored_season.snowflakes = season.snowflakes;
+
             console.info('bwaa - it is season', season.name, 'starting', season.start, 'ending', season.end, season);
 
             document.documentElement.setAttribute('data-bwaa--season', season.id);
@@ -612,18 +618,11 @@ function set_season() {
                 snowflakes_count = season.snowflakes.count;
                 begin_snowflakes();
             }
-
-            current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', `<span class="season-time" id="header_season_time">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</span>`) : trans[lang].settings.seasonal.marker.none} »</a>`;
-            update_promo(true);
         }
     });
 
     current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', `<span class="season-time" id="header_season_time">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</span>`) : trans[lang].settings.seasonal.marker.none} »</a>`;
     update_promo();
-
-    let new_time = moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true);
-    if (last_season_time != new_time)
-        document.getElementById('header_season_time').textContent = new_time;
 }
 
 function update_promo(force = false) {
