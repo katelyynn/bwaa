@@ -690,7 +690,9 @@ let settings_defaults = {
 
     seasonal: true,
     seasonal_accent: true,
-    seasonal_particles: true
+    seasonal_particles: true,
+
+    lotus: true
 }
 let settings_store = {
     developer: {
@@ -769,6 +771,10 @@ let settings_store = {
         values: [true, false]
     },
     seasonal_particles: {
+        type: 'toggle',
+        values: [true, false]
+    },
+    lotus: {
         type: 'toggle',
         values: [true, false]
     }
