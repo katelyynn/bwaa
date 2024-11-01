@@ -6080,7 +6080,7 @@ let album_track_corrections = {};
 
         if (lotus_artist == null) {
             console.info('lotus - artist list is not cached, fetching');
-            lotus_request();
+            lotus_request('artist', true);
         } else {
             // we prefer to load the current cache before waiting for a new response
             artist_corrections = JSON.parse(lotus_artist);
@@ -6095,7 +6095,7 @@ let album_track_corrections = {};
 
         if (lotus_album_track == null) {
             console.info('lotus - album_track list is not cached, fetching');
-            lotus_request('album_track');
+            lotus_request('album_track', true);
         } else {
             // we prefer to load the current cache before waiting for a new response
             album_track_corrections = JSON.parse(lotus_album_track);
