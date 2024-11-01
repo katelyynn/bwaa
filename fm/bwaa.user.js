@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1031
+// @version      2024.1101
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1031.2',
+    build: '2024.1101',
     sku: 'event'
 }
 
@@ -534,7 +534,7 @@ let seasonal_events = [
     },
     {
         id: 'pre_fall',
-        start: 'y0-11-02',
+        start: 'y0-11-01T12:00:00',
         end: 'y0-11-12T23:59:59',
 
         snowflakes: {
