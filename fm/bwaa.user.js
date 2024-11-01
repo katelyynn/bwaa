@@ -972,6 +972,17 @@ let album_track_corrections = {};
             bwaa_home();
             bwaa_events();
 
+            if (settings.lotus) {
+                patch_artist_grids();
+
+                correct_generic_combo_no_artist('artist-header-featured-items-item');
+                correct_generic_combo_no_artist('artist-top-albums-item');
+                correct_generic_combo('source-album-details');
+                correct_generic_combo('resource-list--release-list-item');
+
+                correct_tracks();
+            }
+
             subscribe_to_events();
         }
 
@@ -1039,6 +1050,17 @@ let album_track_corrections = {};
                                 bwaa_search();
                                 bwaa_home();
                                 bwaa_events();
+
+                                if (settings.lotus) {
+                                    patch_artist_grids();
+
+                                    correct_generic_combo_no_artist('artist-header-featured-items-item');
+                                    correct_generic_combo_no_artist('artist-top-albums-item');
+                                    correct_generic_combo('source-album-details');
+                                    correct_generic_combo('resource-list--release-list-item');
+
+                                    correct_tracks();
+                                }
 
                                 subscribe_to_events();
                             }
@@ -2850,6 +2872,9 @@ let album_track_corrections = {};
                 primary_album: document.body.querySelector('.source-album-name a')
             }
 
+            if (header_track_data.primary_album != null && settings.lotus)
+                header_track_data.primary_album.textContent = correct_item_by_artist(header_track_data.primary_album.textContent.trim(), document.body.querySelector('.source-album-artist a').textContent.trim());
+
 
             let track_video_element = document.body.querySelector('.video-preview');
             let track_video = '';
@@ -3013,13 +3038,20 @@ let album_track_corrections = {};
                 similar_tracks.forEach((track) => {
                     let row = document.createElement('tr');
                     row.classList.add('chartlist-row', 'chartlist-row--with-artist');
+                    row.setAttribute('data-lotus', 'true');
+
+                    let name_obj = track.querySelector('.track-similar-tracks-item-name a');
+                    let artist_obj = track.querySelector('.track-similar-tracks-item-artist a');
+
+                    let artist = correct_artist(artist_obj.textContent.trim());
+                    let name = correct_item_by_artist(name_obj.textContent.trim(), artist);
 
                     row.innerHTML = (`
                         <td class="chartlist-name">
-                            ${track.querySelector('.track-similar-tracks-item-name a').outerHTML}
+                            ${artist_obj.outerHTML}
                         </td>
                         <td class="chartlist-artist">
-                            ${track.querySelector('.track-similar-tracks-item-artist a').outerHTML}
+                            ${name_obj.outerHTML}
                         </td>
                     `);
 
@@ -6191,15 +6223,15 @@ let album_track_corrections = {};
 
 
     // artist corrections in grid view
-    function patch_artist_grids(element) {
-        let artists = element.querySelectorAll('.grid-items-item-details');
+    function patch_artist_grids() {
+        let artists = page.structure.row.querySelectorAll('.grid-items-item-details');
 
         if (artists == undefined)
             return;
 
         artists.forEach((artist) => {
-            if (!artist.hasAttribute('data-kate-processed')) {
-                artist.setAttribute('data-kate-processed','true');
+            if (!artist.hasAttribute('data-lotus')) {
+                artist.setAttribute('data-lotus','true');
 
                 // test if this grid item is an album
                 let album_artist = artist.querySelector('.grid-items-item-aux-block');
@@ -6244,8 +6276,8 @@ let album_track_corrections = {};
             return;
 
         albums.forEach((album) => {
-            if (!album.hasAttribute('data-kate-processed')) {
-                album.setAttribute('data-kate-processed','true');
+            if (!album.hasAttribute('data-lotus')) {
+                album.setAttribute('data-lotus','true');
                 console.info('lotus - correcting generic combo for a child of', parent);
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
@@ -6274,8 +6306,8 @@ let album_track_corrections = {};
             return;
 
         albums.forEach((album) => {
-            if (!album.hasAttribute('data-kate-processed')) {
-                album.setAttribute('data-kate-processed','true');
+            if (!album.hasAttribute('data-lotus')) {
+                album.setAttribute('data-lotus','true');
                 console.info('lotus - correcting generic combo (no artist) for a child of', parent);
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
@@ -6340,5 +6372,38 @@ let album_track_corrections = {};
             console.error(e);
             return artist;
         }
+    }
+
+
+    function correct_tracks() {
+        let tracks = document.querySelectorAll('.chartlist-row:not(.chartlist__placeholder-row, [data-lotus])');
+
+        if (tracks == null)
+            return;
+
+        tracks.forEach((track) => {
+            track.setAttribute('data-lotus', 'true');
+
+            let track_title = track.querySelector('.chartlist-name a');
+
+            if (track_title == undefined)
+                return;
+
+            let song_artist_element = track.querySelector('.chartlist-artist a');
+            if (song_artist_element != undefined) {
+                let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
+                track_title.textContent = corrected_title;
+                track_title.setAttribute('title', corrected_title);
+
+                let corrected_artist = correct_artist(song_artist_element.textContent);
+                song_artist_element.textContent = corrected_artist;
+                song_artist_element.setAttribute('title', corrected_artist);
+            } else {
+                let track_artist = track_title.getAttribute('href').split('/')[2].replaceAll('+',' ');
+                let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
+                track_title.textContent = corrected_title;
+                track_title.setAttribute('title', corrected_title);
+            }
+        });
     }
 })();
