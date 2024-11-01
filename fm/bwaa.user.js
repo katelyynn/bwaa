@@ -46,6 +46,16 @@ const trans = {
         see_all_placeholder: 'See all {placeholder}',
         share_link: 'Share link',
 
+        lotus: {
+            artist: 'Artist corrections have been downloaded!',
+            album_track: 'Album and track corrections have been downloaded!',
+            version: 'You are running lotus version {v}.',
+            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            check: 'Check for updates',
+            correct: 'Submit name correction',
+            view: 'View current corrections'
+        },
+
         your_scrobbles: {
             name: 'Your Scrobbles',
             count_scrobbles: '{count} scrobbles'
@@ -347,9 +357,7 @@ const trans = {
                 theme: 'Your theme version is set to expire at {date_fut}. It is now {date_now}.'
             },
             corrections: {
-                name: 'Media Corrections',
-                alert: 'In-built capitalisation corrections for artists, albums, and tracks are <strong>currently not supported</strong>. Sorry for the inconvenience.',
-                submit: 'Submit a correction in bleh (temporary)'
+                name: 'Media Corrections'
             },
             artist_redirection: {
                 name: 'Artist Redirection'
@@ -394,6 +402,12 @@ const trans = {
                     fall: 'Fall',
                     christmas: 'Christmas',
                     new_years: 'New Years'
+                }
+            },
+            lotus: {
+                name: 'Configure lotus',
+                toggle: {
+                    name: 'Enable correction system'
                 }
             }
         },
@@ -874,6 +888,11 @@ let has_prompted_for_update = false;
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
 let last_promo = current_promo;
 
+
+let artist_corrections;
+let album_track_corrections;
+
+
 (function() {
     'use strict';
 
@@ -908,6 +927,8 @@ let last_promo = current_promo;
 
         load_activities();
         notify_if_new_update();
+
+        lotus();
 
         if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
             // start bwaa settings
@@ -4395,10 +4416,29 @@ let last_promo = current_promo;
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
                     <h2 class="form-header">${trans[lang].settings.corrections.name}</h2>
-                    <div class="alert">${trans[lang].settings.corrections.alert}</div>
-                    <div class="more-link align-left space-self">
-                        <a href="https://github.com/katelyynn/bleh/issues/new" target="_blank">${trans[lang].settings.corrections.submit}</a>
-                    </div>
+                    <p class="alert lotus">${trans[lang].lotus.version
+                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
+                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</p>
+                    <fieldset>
+                        <legend>${trans[lang].settings.lotus.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--lotus">
+                                    <input id="setting--lotus" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.lotus.toggle.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a href="https://github.com/katelyynn/lotus/issues/new" target="_blank">${trans[lang].lotus.correct}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_open_lotus_modal()">${trans[lang].lotus.view}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_lotus_check()">${trans[lang].lotus.check}</a>
+                        </div>
+                    </fieldset>
                     <fieldset>
                         <legend>${trans[lang].settings.artist_redirection.name}</legend>
                         <div class="form-group">
@@ -4414,6 +4454,10 @@ let last_promo = current_promo;
             `);
 
             request_checkbox_update();
+            tippy(document.getElementById('lotus_hover'), {
+                content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
+                allowHTML: true
+            });
         } else if (page == 'about') {
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
@@ -5968,5 +6012,103 @@ let last_promo = current_promo;
                 event_title.insertBefore(badge, event_title.firstChild);
             }
         });
+    }
+
+
+
+
+    // correction system
+    function lotus(force = false) {
+        let lotus_artist = localStorage.getItem('lotus_artist');
+        let lotus_artist_expire = new Date(localStorage.getItem('lotus_artist_expire'));
+
+        let lotus_album_track = localStorage.getItem('lotus_album_track');
+        let lotus_album_track_expire = new Date(localStorage.getItem('lotus_album_track_expire'));
+
+        let current_time = new Date();
+
+        if (lotus_artist == null) {
+            console.info('lotus - artist list is not cached, fetching');
+            lotus_request();
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            artist_corrections = JSON.parse(lotus_artist);
+
+            // is it valid?
+            if (lotus_artist_expire < current_time && !force) {
+                lotus_request();
+            } else if (force) {
+                lotus_request();
+            }
+        }
+
+        if (lotus_album_track == null) {
+            console.info('lotus - album_track list is not cached, fetching');
+            lotus_request('album_track');
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            album_track_corrections = JSON.parse(lotus_album_track);
+
+            // is it valid?
+            if (lotus_album_track_expire < current_time && !force) {
+                lotus_request('album_track');
+            } else if (force) {
+                lotus_request('album_track');
+            }
+        }
+    }
+
+    function lotus_request(type = 'artist') {
+        let button = document.body.querySelector('[onclick="_lotus_check()"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/lotus/${type}.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            console.info('lotus -', type, 'list responded with', xhr.status);
+
+            if (type == 'artist')
+                artist_corrections = JSON.parse(this.response);
+            else
+                album_track_corrections = JSON.parse(this.response);
+
+            deliver_notif(trans[lang].lotus[type]);
+
+            // save to cache for next page load
+            localStorage.setItem(`lotus_${type}`, this.response);
+
+            // set expire date
+            let api_expire = new Date();
+            api_expire.setHours(api_expire.getHours() + 4);
+            localStorage.setItem(`lotus_${type}_expire`, api_expire);
+            console.info('lotus -', type, 'list is cached until', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+
+    unsafeWindow._lotus_check = function() {
+        lotus(true);
+    }
+
+
+
+
+    unsafeWindow._open_lotus_modal = function() {
+        create_window('corrections', trans[lang].settings.corrections.name, (`
+            <h3>${trans[lang].settings.corrections.listing.artists}</h3>
+            <div class="corrections artist" id="corrections-artist"></div>
+            <h3>${trans[lang].settings.corrections.listing.albums_tracks}</h3>
+            <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
+        `), true, 'corrections');
+
+        //prepare_corrections_page();
     }
 })();
