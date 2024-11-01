@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2024.1101.1';
+        --version-build: '2024.1101.2';
     }
 
     :root {

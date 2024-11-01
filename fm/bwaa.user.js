@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1101.1',
+    build: '2024.1101.2',
     sku: 'lotus'
 }
 
@@ -612,15 +612,22 @@ function set_season() {
                 snowflakes_count = season.snowflakes.count;
                 begin_snowflakes();
             }
+
+            current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', `<span class="season-time" id="header_season_time">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</span>`) : trans[lang].settings.seasonal.marker.none} »</a>`;
+            update_promo(true);
         }
     });
 
-    current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)) : trans[lang].settings.seasonal.marker.none} »</a>`;
+    current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', `<span class="season-time" id="header_season_time">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</span>`) : trans[lang].settings.seasonal.marker.none} »</a>`;
     update_promo();
+
+    let new_time = moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true);
+    if (last_season_time != new_time)
+        document.getElementById('header_season_time').textContent = new_time;
 }
 
-function update_promo() {
-    if (last_promo == current_promo)
+function update_promo(force = false) {
+    if (last_promo == current_promo && !force)
         return;
 
     document.getElementById('bwaa-promo').innerHTML = current_promo;
@@ -898,6 +905,7 @@ let has_prompted_for_update = false;
 
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
 let last_promo = current_promo;
+let last_season_time;
 
 
 let artist_corrections;
