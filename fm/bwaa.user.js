@@ -587,7 +587,7 @@ function set_season() {
     if (!settings.seasonal)
         return;
 
-    let now = new Date();
+    let now = new Date('2024-12-01');
 
     let current_year = now.getFullYear();
 
@@ -599,7 +599,7 @@ function set_season() {
             stored_season.now = now;
             stored_season.year = current_year;
 
-            if (stored_season == season)
+            if (stored_season.id == season.id)
                 return;
             stored_season.id = season.id;
             stored_season.start = season.start;
