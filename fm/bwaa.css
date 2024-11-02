@@ -65,6 +65,7 @@ body {
     --border-3: #bbb;
     --border-4: #ddd;
     --border-5: #fdfdfd;
+    --border-6: #f0f0f0;
     --colour: #1b1b1b;
     --colour-upper: #333;
     --colour-middle: #666;
@@ -140,6 +141,7 @@ body {
         --border-3: #333;
         --border-4: #555;
         --border-5: #222;
+        --border-6: #202020;
         --colour: #C3CDD8;
         --colour-upper: #B2BBC4;
         --colour-middle: #888F96;
@@ -5803,7 +5805,7 @@ img {
     td {
         padding: 8px 10px;
         vertical-align: top;
-        border-top: 1px solid #F0F0F0;
+        border-top: 1px solid var(--border-5);
         box-shadow: unset;
 
         &.wiki-history-revision {
