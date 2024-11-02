@@ -6242,6 +6242,9 @@ let album_track_corrections = {};
 
     // artist corrections in grid view
     function patch_artist_grids() {
+        if (page.structure.row == null)
+            return;
+
         let artists = page.structure.row.querySelectorAll('.grid-items-item-details');
 
         if (artists == undefined)
