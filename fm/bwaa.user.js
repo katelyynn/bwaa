@@ -414,7 +414,8 @@ const trans = {
                 name: 'Configure lotus',
                 toggle: {
                     name: 'Enable correction system'
-                }
+                },
+                version: 'Your lotus version is set to expire at {date_fut}. It is now {date_now}.'
             }
         },
 
@@ -4477,7 +4478,7 @@ let album_track_corrections = {};
                             <div class="checkbox">
                                 <label for="setting--lotus">
                                     <input id="setting--lotus" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.lotus.toggle.name}
+                                    ${trans[lang].settings.lotus.toggle.name} <span class="new-badge">${trans[lang].settings.new}</span>
                                 </label>
                             </div>
                         </div>
@@ -4489,6 +4490,9 @@ let album_track_corrections = {};
                         </div>
                         <div class="more-link align-left space-self">
                             <a onclick="_lotus_check()">${trans[lang].lotus.check}</a>
+                        </div>
+                        <div class="alert hide-if-not-developer">
+                            ${trans[lang].settings.lotus.version.replace('{date_fut}', moment(localStorage.getItem('lotus_artist_expire')).format('HH:mm:ss')).replace('{date_now}', moment(new Date()).format('HH:mm:ss'))}
                         </div>
                     </fieldset>
                     <fieldset>
