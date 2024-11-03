@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2024.1101
+@version        2024.1103
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2024.1101.2';
+        --version-build: '2024.1103';
     }
 
     :root {
@@ -1956,6 +1956,7 @@
     .grid-items {
         margin-top: 15px;
     }
+    #recs-artist,
     h2:has([href^="/search/artists"]) + .grid-items,
     #line-up .grid-items,
     [data-endpoint$="/library/artists"] .grid-items,
@@ -1969,6 +1970,7 @@
         }
 
         li {
+            display: inline-block;
             width: 132px;
             height: 155px;
             margin: 0 9px 0 0;
@@ -1992,6 +1994,7 @@
                 }
 
                 &:after {
+                    content: '';
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -2014,6 +2017,10 @@
                     font-weight: bold;
                     color: var(--header-text-black);
 
+                    a {
+                        color: inherit;
+                    }
+
                     &:hover,
                     .grid-items-item:has(.link-block-cover-link:hover) & {
                         color: var(--text-link);
@@ -2035,6 +2042,7 @@
             }
         }
     }
+    #recs-album, #recs-track,
     h2:has([href^="/search/albums"]) + .grid-items,
     .obsession-object .grid-items,
     .featured-item-section .grid-items,
@@ -2140,6 +2148,8 @@
                 }
 
                 .grid-items-item-aux-text {
+                    margin: unset;
+
                     a {
                         font-size: 11px;
                         line-height: 1.25em;
@@ -6643,6 +6653,10 @@
         margin: unset;
         color: var(--colour-middle);
         font-weight: bold;
+
+        h2 + & {
+            margin-top: 15px;
+        }
     }
 
     .artist-row {
@@ -6727,5 +6741,22 @@
         &:before {
             filter: unset !important;
         }
+    }
+
+
+
+
+    .home-panel {
+        background: var(--navlist-grad);
+        margin: unset !important;
+
+        section + & {
+            margin: 15px 0 0 0 !important;
+            border: unset !important;
+        }
+    }
+
+    .recs-feed {
+        display: none;
     }
 }

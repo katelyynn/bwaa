@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1101
+// @version      2024.1103
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,8 +19,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1101.2',
-    sku: 'lotus'
+    build: '2024.1103',
+    sku: 'home'
 }
 
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
@@ -94,7 +94,11 @@ const trans = {
                 name: 'New to Your Library'
             },
             recs: {
-                name: 'Last.fm Recommendations'
+                name: 'Last.fm Recommendations',
+                artist: 'Artists',
+                album: 'Albums',
+                track: 'Tracks',
+                event: 'Events'
             }
         },
 
@@ -5617,12 +5621,100 @@ let album_track_corrections = {};
             </div>
         `);
 
-        let wip_alert = document.createElement('section');
+        /*let wip_alert = document.createElement('section');
         wip_alert.classList.add('alert-section');
         wip_alert.innerHTML = (`
             <div class="alert alert-danger">This page is a work-in-progress</div>
         `);
-        page.structure.main.insertBefore(wip_alert, page.structure.main.firstElementChild);
+        page.structure.main.insertBefore(wip_alert, page.structure.main.firstElementChild);*/
+
+        let new_library = document.createElement('section');
+        new_library.classList.add('home-panel', 'new-to-library');
+        new_library.innerHTML = (`
+            <h2 class="form-header">${trans[lang].home.library.name}</h2>
+            <div id="library-insert"></div>
+            <div class="more-link">
+                <a href="${root}user/${auth}/library">${trans[lang].see_more}</a>
+            </div>
+        `);
+
+        page.structure.main.insertBefore(new_library, page.structure.main.firstElementChild);
+
+        let recs_panel = document.createElement('section');
+        recs_panel.classList.add('home-panel', 'recs');
+        recs_panel.innerHTML = (`
+            <h2 class="form-header">${trans[lang].home.recs.name}</h2>
+            <h3 class="form-sub-header">${trans[lang].home.recs.artist}</h3>
+            <div class="grid-items" id="recs-artist"></div>
+            <h3 class="form-sub-header">${trans[lang].home.recs.album}</h3>
+            <div class="grid-items" id="recs-album"></div>
+            <h3 class="form-sub-header">${trans[lang].home.recs.track}</h3>
+            <div class="grid-items" id="recs-track"></div>
+            <h3 class="form-sub-header">${trans[lang].home.recs.event}</h3>
+            <div class="grid-items" id="recs-event"></div>
+        `);
+
+        new_library.after(recs_panel);
+
+
+        // recs
+        /*let recs = {
+            artist: [],
+            album: [],
+            track: [],
+            event: []
+        };*/
+        /*let recs = {};*/
+        let recs_objects = page.structure.main.querySelectorAll('.recs-feed-item');
+
+        recs_objects.forEach((rec) => {
+            let item = {};
+
+            item.type = rec.classList[1].replace('recs-feed-item--', '');
+            item.name = rec.querySelector('.recs-feed-title a');
+            if (item.type == 'album' || item.type == 'track')
+                item.sister = rec.querySelector('.recs-feed-description a');
+            item.avatar = rec.querySelector('.layout-image-image').getAttribute('src');
+            item.context = rec.querySelector('.context').innerHTML;
+
+
+            let rec_item = document.createElement('li');
+            rec_item.classList.add('grid-items-item', 'link-block', 'rec-item');
+            rec_item.innerHTML = (`
+                <div class="grid-items-cover-image">
+                    <div class="grid-items-cover-image-image">
+                        <img src="${item.avatar}" alt="Image for '${item.name.textContent.trim()}'" loading="lazy">
+                    </div>
+                    <div class="grid-items-item-details">
+                        <p class="grid-items-item-main-text">
+                            <a class="link-block-target" href="${item.name.getAttribute('href')}" title="${item.name.textContent.trim()}">
+                                ${item.name.textContent.trim()}
+                            </a>
+                        </p>
+                        <p class="grid-items-item-aux-text">
+                            ${(item.sister != null) ? (`<a class="grid-items-item-aux-block" href="${item.sister.getAttribute('href')}">
+                                ${item.sister.textContent.trim()}
+                            </a>`) : ''}
+                            <!--<a class="context">
+                                ${item.context}
+                            </a>-->
+                        </p>
+                    </div>
+                    <a class="link-block-cover-link" href="${item.name.getAttribute('href')}" tabindex="-1" aria-hidden="true"></a>
+                </div>
+            `);
+
+            document.getElementById(`recs-${item.type}`).appendChild(rec_item);
+
+            tippy(rec_item, {
+                content: item.context,
+                allowHTML: true,
+                interactive: true
+            });
+
+            /*recs[type].push(item);*/
+            /*recs.push(item);*/
+        });
 
 
         page.structure.row.insertBefore(navlist, page.structure.main);
