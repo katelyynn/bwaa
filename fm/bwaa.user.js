@@ -6424,6 +6424,7 @@ let album_track_corrections = {};
                 song_artist_element.textContent = corrected_artist;
                 song_artist_element.setAttribute('title', corrected_artist);
             } else {
+                // TODO: investigate track_title.getaAttribute() is null
                 let track_artist = track_title.getAttribute('href').split('/')[2].replaceAll('+',' ');
                 let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
                 track_title.textContent = corrected_title;
