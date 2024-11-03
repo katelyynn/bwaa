@@ -5634,11 +5634,38 @@ let album_track_corrections = {};
             <h2 class="form-header">${trans[lang].home.library.name}</h2>
             <div id="library-insert"></div>
             <div class="more-link">
-                <a href="${root}user/${auth}/library">${trans[lang].see_more}</a>
+                <a href="${root}user/${auth}/loved">${trans[lang].see_more}</a>
             </div>
         `);
 
         page.structure.main.insertBefore(new_library, page.structure.main.firstElementChild);
+
+
+        fetch(`${root}user/${auth}/loved`)
+        .then(function(response) {
+            console.log('returned', response, response.text);
+
+            return response.text();
+        })
+        .then(function(html) {
+            let doc = new DOMParser().parseFromString(html, 'text/html');
+            console.log('DOC', doc);
+
+            // getElementById wouldnt work?
+            let tracklist = doc.querySelector('.chartlist');
+            if (tracklist != null) {
+                let tracks_body = tracklist.querySelector('tbody');
+                let tracks = tracks_body.querySelectorAll('.chartlist-row');
+                tracks.forEach((track, index) => {
+                    if (index > 4) {
+                        tracks_body.removeChild(track);
+                    }
+                })
+
+                document.body.querySelector('[id="library-insert"]').appendChild(tracklist);
+            }
+        });
+
 
         let recs_panel = document.createElement('section');
         recs_panel.classList.add('home-panel', 'recs');

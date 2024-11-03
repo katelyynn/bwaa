@@ -6759,4 +6759,8 @@
     .recs-feed {
         display: none;
     }
+
+    #library-insert {
+        margin-top: 15px !important;
+    }
 }
