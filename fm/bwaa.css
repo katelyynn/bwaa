@@ -3739,6 +3739,8 @@ form[action*="/playlists/create/"],
         padding: 0 8px;
         padding-right: 60px;
 
+        text-decoration: none !important;
+
         &:before {
             display: none;
         }
@@ -4240,12 +4242,12 @@ nav + .section-controls {
 #ot-sdk-btn.ot-sdk-show-settings,
 .btn-secondary:not(.join-cta-button), .btn-primary {
     border: 1px solid !important;
-    border-color: #d2d1d1 #b4b3b3 #959595 #b4b3b3 !important;
+    border-color: #B7B7B7 #ABABAB #A0A0A0 #ABABAB !important;
     border-radius: 3px !important;
     background-clip: padding-box !important;
 
-    background-color: #dbdbdb !important;
-    background-image: linear-gradient(0deg, #f2f2f2, #c3c3c3) !important;
+    background: linear-gradient(var(--direction, 0deg), #F4F4F4, #DCDCDC) !important;
+    box-shadow: inset 0 1px #FFFFFF;
 
     color: #101010 !important;
     text-shadow: rgba(255,255,255,0.5) 0 1px 0 !important;
@@ -4258,8 +4260,8 @@ nav + .section-controls {
     [data-bwaa--theme="paint_it_black"] & {
         border-color: #444444 #505050 #636363 #858585 !important;
 
-        background-color: #2b2b2b !important;
-        background-image: linear-gradient(0deg, #2b2b2b, #1b1b1b) !important;
+        background: linear-gradient(var(--direction, 0deg), #2b2b2b, #1b1b1b) !important;
+        box-shadow: inset 0 1px #FFFFFF;
 
         color: var(--colour) !important;
         text-shadow: unset !important;
@@ -4274,7 +4276,7 @@ nav + .section-controls {
     text-transform: unset !important;
 
     min-width: unset !important;
-    min-height: 18px !important;
+    min-height: 21px !important;
     width: fit-content !important;
     height: fit-content !important;
 
@@ -4301,12 +4303,18 @@ nav + .section-controls {
     }
 
     &:not(:has(.btn-inner)) {
-        padding: 2px 5px !important;
+        padding: 3px 5px 2px 5px !important;
     }
 
     &:not([disabled]):hover {
-        border-color: var(--text-link) !important;
+        border-color: #CCCCCC #C4C4C4 #B7B7B7 #C4C4C4 !important;
+
+        background: linear-gradient(var(--direction, 0deg), #FEFEFE, #EAEAEA) !important;
     }
+
+    /*&:active {
+        --direction: 180deg;
+    }*/
 }
 
 
