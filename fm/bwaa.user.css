@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2024.1103
+@version        2024.1105
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2024.1103';
+        --version-build: '2024.1105';
     }
 
     :root {
@@ -3506,6 +3506,12 @@
                 background-position: -17px -400px;
             }
             &.activity--install_bwaa:before {
+                background-position: -17px -400px;
+            }
+            &.activity--update_bleh:before {
+                background-position: -17px -400px;
+            }
+            &.activity--install_bleh:before {
                 background-position: -17px -400px;
             }
             &.activity--bookmark:before {

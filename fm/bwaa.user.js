@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1103
+// @version      2024.1105
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1103',
+    build: '2024.1105',
     sku: 'home'
 }
 
@@ -491,6 +491,8 @@ const trans = {
             unlove: 'You no longer love {i}',
             install_bwaa: 'You installed bwaa',
             update_bwaa: 'You updated bwaa to {i}',
+            install_bleh: 'You installed bleh',
+            update_bleh: 'You updated bleh to {i}',
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
             wiki: 'You edited on {i}'
@@ -1764,9 +1766,11 @@ let album_track_corrections = {};
                         involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
                     else if (involved.type == 'bwaa')
                         involved_link = `${root}bwaa`;
+                    else if (involved.type == 'bleh')
+                        involved_link = `${root}bleh`;
 
                     // tooltip
-                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa') {
+                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa' && involved.type != 'bleh') {
                         tooltip_name = involved.name;
                         tooltip_sister = involved.sister;
                     }
