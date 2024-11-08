@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2024.1105
+@version        2024.1108
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2024.1105';
+        --version-build: '2024.1108';
     }
 
     :root {

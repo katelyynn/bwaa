@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1105
+// @version      2024.1108
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
 // @icon         https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico
 // @updateURL    https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js
 // @downloadURL  https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js
-// @run-at       document-body
+// @run-at       document-end
 // @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js
 // @require      https://unpkg.com/@popperjs/core@2
 // @require      https://unpkg.com/tippy.js@6
@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1105',
+    build: '2024.1108',
     sku: 'home'
 }
 
@@ -3980,6 +3980,10 @@ let album_track_corrections = {};
             content_form.setAttribute('data-bwaa-cycle-form', 'true');
         });
 
+        // new profile pages?
+        if (document.body.classList[2] == null)
+            return;
+
         if (!document.body.classList[2].startsWith('namespace--settings') && !document.body.classList[1].startsWith('namespace--settings'))
             return;
 
@@ -5893,6 +5897,10 @@ let album_track_corrections = {};
         let event_header = document.body.querySelector('.header-info-primary--with-calendar');
 
         if (event_header == null) {
+            // new profile pages?
+            if (document.body.classList[2] == null)
+                return;
+
             // is this an event edit page?
             if (document.body.classList[2].startsWith('namespace--events'))
                 bwaa_events_edit();
@@ -5922,11 +5930,15 @@ let album_track_corrections = {};
 
         let navlist = event_header.querySelector('.navlist');
 
-        try {
-            page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
-        } catch(e) {
-            // if the artist page doesnt.. exist?
-            page.name = event_header.querySelector('.header-title-secondary span').textContent;
+        if (!is_subpage) {
+            try {
+                page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
+            } catch(e) {
+                // if the artist page doesnt.. exist?
+                page.name = event_header.querySelector('.header-title-secondary span').textContent;
+            }
+        } else {
+            page.name = event_header.querySelector('.header-title-secondary a').textContent;
         }
         page.sister = event_header.querySelector('.header-title').textContent;
         page.avatar = pre_fetch_background(document.body.querySelector('.header-background--has-image'));
