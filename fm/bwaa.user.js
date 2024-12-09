@@ -56,6 +56,17 @@ const trans = {
             view: 'View current corrections'
         },
 
+        changelog: {
+            title: 'Changelog',
+            type: {
+                major: 'Major release',
+                minor: 'Minor release',
+                general: 'General improvements',
+                fix: 'Bug fix'
+            },
+            latest: 'Latest'
+        },
+
         your_scrobbles: {
             name: 'Your Scrobbles',
             count_scrobbles: '{count} scrobbles'
@@ -902,11 +913,9 @@ let page = {
 // sessions list, only filled by applications page in settings
 let current_sessions_list = [];
 
-let bwaa_url = 'https://www.last.fm/bwaa';
-let bwaa_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa$');
-
-let setup_url = 'https://www.last.fm/bwaa/setup';
-let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bwaa/setup$');
+let bwaa_url = 'https://www.last.fm{root}bwaa';
+let setup_url = 'https://www.last.fm{root}bwaa/setup';
+let changelog_url = 'https://www.last.fm{root}bwaa/changelog';
 
 let has_prompted_for_update = false;
 
@@ -956,12 +965,15 @@ let album_track_corrections = {};
 
         lotus();
 
-        if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
-            // start bwaa settings
-            bwaa_settings();
-        } else if (window.location.href == setup_url || setup_regex.test(window.location.href)) {
+        if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             // start bwaa setup
             bwaa_setup();
+        } else if (window.location.href.startsWith(changelog_url.replace('{root}', root))) {
+            // start bwaa changelog
+            bwaa_changelog();
+        } else if (window.location.href.startsWith(bwaa_url.replace('{root}', root))) {
+            // start bwaa settings
+            bwaa_settings();
         } else {
             // things that load when not in bwaa settings
             bwaa_media_items();
@@ -1035,12 +1047,15 @@ let album_track_corrections = {};
                                 has_prompted_for_update = true;
                             }
 
-                            if (window.location.href == bwaa_url || bwaa_regex.test(window.location.href)) {
-                                // start bwaa settings
-                                bwaa_settings();
-                            } else if (window.location.href == setup_url || setup_regex.test(window.location.href)) {
+                            if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
                                 // start bwaa setup
                                 bwaa_setup();
+                            } else if (window.location.href.startsWith(changelog_url.replace('{root}', root))) {
+                                // start bwaa changelog
+                                bwaa_changelog();
+                            } else if (window.location.href.startsWith(bwaa_url.replace('{root}', root))) {
+                                // start bwaa settings
+                                bwaa_settings();
                             } else {
                                 // things that load when not in bwaa settings
                                 bwaa_media_items();
@@ -4189,6 +4204,11 @@ let album_track_corrections = {};
                                     bwaa
                                 </a>
                             </li>
+                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                <a class="secondary-nav-item-link" href="${root}bwaa/changelog">
+                                    ${trans[lang].changelog.title}
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                     <div class="col-main settings-form">
@@ -4976,6 +4996,8 @@ let album_track_corrections = {};
             deliver_notif(`bwaa has updated to ${version.build}.${version.sku}!`, false, false, true);
             register_activity('update_bwaa', [{name: version.build, type: 'bwaa'}], `${root}bwaa`);
             localStorage.setItem('bwaa_last_version_used', version.build);
+
+            request_changelog();
         }
     }
 
@@ -6566,5 +6588,183 @@ let album_track_corrections = {};
                 track_title.setAttribute('title', corrected_title);
             }
         });
+    }
+
+
+
+
+    function bwaa_changelog() {
+        console.info('bwaa - loading changelog');
+        let adaptive_skin = document.querySelector('.adaptive-skin-container:not([data-bwaa="true"])');
+
+        if (adaptive_skin == null)
+            return;
+        adaptive_skin.setAttribute('data-bwaa', 'true');
+
+        page.type = 'bwaa_changelog';
+        page.avatar = my_avi;
+        page.name = auth;
+
+        adaptive_skin.innerHTML = '';
+        document.title = `${trans[lang].changelog.title} | Last.fm`;
+
+        adaptive_skin.innerHTML = (`
+            <div class="container page-content bwaa-settings lastfm-settings subpage">
+                <div class="row">
+                    <nav class="navlist secondary-nav navlist--more">
+                        <ul class="navlist-items">
+                            <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                                <a class="secondary-nav-item-link" href="${root}settings">
+                                    Last.fm
+                                </a>
+                            </li>
+                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                <a class="secondary-nav-item-link" href="${root}bwaa">
+                                    bwaa
+                                </a>
+                            </li>
+                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa/changelog">
+                                    ${trans[lang].changelog.title}
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="col-main settings-form">
+                        <section class="profile-header-subpage-section">
+                            <div class="badge-avatar">
+                                <img src="${my_avi}" alt="${auth}">
+                            </div>
+                            <div class="badge-info">
+                                <a href="${root}user/${auth}">${auth}</a>
+                                <h1>${trans[lang].changelog.title}</h1>
+                            </div>
+                        </section>
+                        <div class="changelog" id="changelog"></div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+
+        request_changelog();
+    }
+
+    unsafeWindow._query_changelog = function() {
+        let changelog = localStorage.getItem('bwaa_changelog');
+        let changelog_expire = new Date(localStorage.getItem('bwaa_changelog_expire'));
+
+        let current_time = new Date();
+
+        if (changelog == null) {
+            //log('not cached, fetching', 'changelog');
+            request_changelog();
+        } else {
+            if (changelog_expire < current_time)
+                request_changelog();
+            else
+                open_changelog(JSON.parse(changelog));
+        }
+    }
+
+    function request_changelog(open_after = true) {
+        let button = document.body.querySelector('[data-bwaa-page="changelog"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            //log(`responded with ${xhr.status}`, 'changelog');
+
+            if (xhr.status != 200) {
+                //log('request has been cancelled, will request again in 1h', 'changelog');
+                api_expire.setHours(api_expire.getHours() + 1);
+            }
+
+            // set expire date
+            let api_expire = new Date();
+
+            if (xhr.status == 200) {
+                if (open_after)
+                    open_changelog(JSON.parse(this.response));
+
+                // save to cache for next page load
+                localStorage.setItem('bwaa_changelog', this.response);
+                api_expire.setHours(api_expire.getHours() + 2);
+                //log(`cached until ${api_expire}`, 'changelog');
+            }
+
+            localStorage.setItem('bwaa_changelog_expire', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+    function open_changelog(changelog) {
+        let changelog_list = document.getElementById('changelog');
+
+        let index = 0;
+        for (let version in changelog) {
+            if (version == 'updated' || version == 'latest')
+                continue;
+
+            let version_item = document.createElement('div');
+            version_item.classList.add('changelog-version-item');
+            version_item.setAttribute('data-changelog-type', changelog[version].type);
+            version_item.setAttribute('data-changelog-latest', (index == 0) ? 'true' : 'false');
+            version_item.innerHTML = (`
+                <div class="version-item-header">
+                    <div class="changelog-badge">${trans[lang].changelog.type[changelog[version].type]}</div>
+                    <h3>${changelog[version].name}</h3>
+                </div>
+            `);
+
+            if (changelog[version].type == 'major')
+                version_item.setAttribute('id', 'latest_major_release');
+
+            let body = document.createElement('div');
+            body.classList.add('version-item-body', 'markdown-body');
+
+            let converter = new showdown.Converter({
+                emoji: true,
+                excludeTrailingPunctuationFromURLs: true,
+                ghMentions: true,
+                ghMentionsLink: `${root}user/{u}`,
+                headerLevelStart: 5,
+                noHeaderId: true,
+                openLinksInNewWindow: true,
+                requireSpaceBeforeHeadingText: true,
+                simpleLineBreaks: true,
+                simplifiedAutoLink: true,
+                strikethrough: true,
+                underline: true,
+                ghCodeBlocks: false,
+                smartIndentationFix: true
+            });
+            let parsed_text = converter.makeHtml(changelog[version].bio
+            .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;'));
+            body.innerHTML = parsed_text;
+
+            version_item.appendChild(body);
+
+            changelog_list.appendChild(version_item);
+
+            index += 1;
+        }
+    }
+
+    unsafeWindow._update_local_changelog_cache = function(json) {
+        localStorage.setItem('bwaa_changelog', JSON.stringify(json));
     }
 })();
