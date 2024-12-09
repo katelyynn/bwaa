@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1108
+// @version      2024.1209
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1108',
+    build: '2024.1209',
     sku: 'home'
 }
 
@@ -4997,7 +4997,7 @@ let album_track_corrections = {};
             register_activity('update_bwaa', [{name: version.build, type: 'bwaa'}], `${root}bwaa`);
             localStorage.setItem('bwaa_last_version_used', version.build);
 
-            request_changelog();
+            //request_changelog();
         }
     }
 

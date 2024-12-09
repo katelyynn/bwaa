@@ -1,0 +1,10 @@
+{
+    "updated": "2024-12-09",
+    "latest": "2024.1209",
+    "2024.1209": {
+        "name": "changelogz",
+        "type": "minor",
+        "force": false,
+        "bio": "working on changelogs for bwaa"
+    }
+}
