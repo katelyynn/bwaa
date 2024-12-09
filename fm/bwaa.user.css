@@ -1057,6 +1057,9 @@
                 }
             }
         }
+        .masthead-pro-wrap {
+            display: none;
+        }
 
         .masthead-logo {
             background-image: var(--cdn-flatness-header-headersprite);
