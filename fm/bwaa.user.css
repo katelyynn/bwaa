@@ -6803,6 +6803,13 @@
                 border-top: 1px solid var(--border);
                 padding-top: 5px;
             }
+
+            .version-item-body {
+                li u {
+                    text-decoration: none;
+                    font-weight: 600;
+                }
+            }
         }
     }
 
@@ -6824,10 +6831,22 @@
                 li + & {
                     margin-top: 6px;
                 }
+
+                &:before {
+                    content: '・❥・';
+                    color: var(--colour-lower);
+                }
             }
 
             ul {
+                margin-top: unset;
                 margin-left: 15px;
+
+                li:first-child {
+                    &:before {
+                        display: none;
+                    }
+                }
             }
         }
 

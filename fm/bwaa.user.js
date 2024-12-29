@@ -46,6 +46,40 @@ const trans = {
         see_all_placeholder: 'See all {placeholder}',
         share_link: 'Share link',
 
+        badges: {
+            missing: {
+                name: 'No badges'
+            },
+            'user-status-subscriber': {
+                name: 'Last.fm Pro',
+                reason: 'Active Pro subscription'
+            },
+            'label--fade': {
+                reason: 'They follow you'
+            },
+            contributor: {
+                name: 'bleh contributor',
+                reason: 'Contributed to bleh via code or translations'
+            },
+            contributor_bwaa: {
+                name: 'bwaa contributor',
+                reason: 'Contributed to bwaa via code or translations'
+            },
+            translation: {
+                reason: 'Translated for a supported language'
+            },
+            cat: {
+                name: 'it\'s a kitty!!'
+            },
+            sponsor: {
+                name: 'Sponsoring',
+                reason: 'Sponsored bleh and bwaa :3'
+            },
+            reserved: {
+                reason: 'Reserved for certain users'
+            }
+        },
+
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
@@ -54,6 +88,22 @@ const trans = {
             check: 'Check for updates',
             correct: 'Submit name correction',
             view: 'View current corrections'
+        },
+
+        sponsor: {
+            name: 'Sponsor',
+            header: 'Sponsor the development of bleh and bwaa',
+            bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
+            status: {
+                yes: 'You are a sponsor, thank you!',
+                no: 'Become a sponsor to get a custom badge',
+                badge: 'To configure your custom badge, get in touch with me.',
+                one_time: 'A custom badge is available only when selecting monthly.'
+            },
+            manage: 'Manage sponsorship',
+            check: 'Refresh badges',
+            download: 'Sponsorship and badge data downloaded!',
+            version: 'You have version {v} of the sponsorship/badge data downloaded.'
         },
 
         changelog: {
@@ -399,10 +449,10 @@ const trans = {
             support: {
                 name: 'How can I support?',
                 body: [
-                    'At the moment, the best way to support is sharing the word around to others you think may enjoy and giving the project a star.',
-                    'If you would like to donate, that will be available in the future but that is obviously not expected.'
+                    'The best way to support is via a sponsorship on GitHub. If you feel my work is worthy of such, head below.'
                 ],
-                star: 'Star the project'
+                star: 'Star the project',
+                sponsor: 'Sponsor me'
             },
             seasonal: {
                 category: 'Fun',
@@ -4278,6 +4328,9 @@ let album_track_corrections = {};
                     <h2 class="form-header">${trans[lang].settings.welcome.name}</h2>
                     <p>${trans[lang].settings.welcome.body.replace('{v}', `<strong>${version.build}.${version.sku}</strong>`)}</p>
                     <div class="more-link align-left space-self">
+                        <a href="https://github.com/sponsors/katelyynn" target="_blank">${trans[lang].settings.support.sponsor}</a>
+                    </div>
+                    <div class="more-link align-left space-self">
                         <a onclick="_request_style_reload()">${trans[lang].settings.check_for_updates}</a>
                     </div>
                     <fieldset>
@@ -4555,6 +4608,18 @@ let album_track_corrections = {};
                         ${trans[lang].settings.about.alert}
                     </div>
                     <fieldset>
+                        <legend>${trans[lang].settings.support.name}</legend>
+                        <div class="form-group">
+                            <p>${trans[lang].settings.support.body[0]}</p>
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/sponsors/katelyynn" target="_blank">${trans[lang].settings.support.sponsor}</a>
+                            </div>
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/katelyynn/bwaa" target="_blank">${trans[lang].settings.support.star}</a>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
                         <legend>${trans[lang].settings.find_a_bug.name}</legend>
                         <div class="form-group">
                             <div class="more-link align-left space-self">
@@ -4563,16 +4628,6 @@ let album_track_corrections = {};
                         </div>
                         <div class="alert">
                             ${trans[lang].settings.find_a_bug.esr}
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>${trans[lang].settings.support.name}</legend>
-                        <div class="form-group">
-                            <p>${trans[lang].settings.support.body[0]}</p>
-                            <p>${trans[lang].settings.support.body[1]}</p>
-                            <div class="more-link align-left space-self">
-                                <a href="https://github.com/katelyynn/bwaa/" target="_blank">${trans[lang].settings.support.star}</a>
-                            </div>
                         </div>
                     </fieldset>
                 </section>
