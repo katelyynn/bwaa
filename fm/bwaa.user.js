@@ -6673,7 +6673,7 @@ let album_track_corrections = {};
             button.setAttribute('disabled', '');
 
         let xhr = new XMLHttpRequest();
-        let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+        let url = `https://katelyynn.github.io/bwaa/fm/changelog/changelog.json?${Math.random()}`;
         xhr.open('GET',url,true);
 
         xhr.onload = function() {
