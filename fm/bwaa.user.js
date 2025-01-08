@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1209
+// @version      2025.0108
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,8 +19,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1209',
-    sku: 'home'
+    build: '2025.0108',
+    sku: 'mita'
 }
 
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
@@ -652,6 +652,48 @@ let seasonal_events = [
     }
 ];
 
+function log(text, system, type = 'info', append={}) {
+    let system_colour;
+
+    switch(system) {
+        case 'load':
+            system_colour = '#8CB9D9';
+            break;
+        case 'lotus':
+            system_colour = '#8CD9A6';
+            break;
+        case 'season':
+            system_colour = '#65B6D8';
+            break;
+        case 'page':
+            system_colour = '#E4B381';
+            break;
+        case 'page structure':
+            system_colour = '#D88A69';
+            break;
+        case 'style':
+            system_colour = '#C9C678';
+            break;
+        case 'profile':
+            system_colour = '#D56854';
+            break;
+        case 'settings':
+            system_colour = '#6D6977';
+            break;
+        case 'sponsor':
+            system_colour = '#CE4E88';
+            break;
+        default:
+            system_colour = '#C8DD88';
+            break;
+    }
+
+    if (Object.keys(append).length > 0)
+        console[type](`%cbwaa~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset', append);
+    else
+        console[type](`%cbwaa~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
+}
+
 function set_season() {
     if (!settings.seasonal)
         return;
@@ -717,16 +759,24 @@ function prep_snow() {
     document.documentElement.appendChild(container);
 }
 
-let cute = ['cutensilly', 'inozom'];
+let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
+let sponsor_list = null;
 
 // require page reload
 let reload_pending = false;
+
+// lookup
+let last_lookup;
+let next_lookup;
 
 tippy.setDefaultProps({
     arrow: false,
     duration: [100, 100],
     delay: [null, 50]
 });
+
+let artist_corrections = {};
+let album_track_corrections = {};
 
 moment.locale('en', {
     relativeTime: {
@@ -870,65 +920,6 @@ let legacy_cover_art = {
 }
 let fallback_cover_art = 'https://katelyynn.github.io/bwaa/fm/extra_res/empty_disc.png';
 
-let profile_badges = {
-    'cutensilly': [
-        {
-            type: 'k',
-            name: 'k'
-        },
-        {
-            type: 'a',
-            name: 'a'
-        },
-        {
-            type: 't',
-            name: 't'
-        },
-        {
-            type: 'e',
-            name: 'e'
-        },
-        {
-            type: 'queen'
-        }
-    ],
-    'Iexyy': {
-        type: 'cat'
-    },
-    'bIeak': [
-        {
-            type: 'cat'
-        },
-        {
-            type: 'glaive'
-        }
-    ],
-    'peoplepleasr': {
-        type: 'cat'
-    },
-    'twolay': {
-        type: 'cat'
-    },
-    'aoivee': {
-        type: 'cat'
-    },
-    'Serprety': {
-        type: 'cat'
-    },
-    'RazzBX': {
-        type: 'cat'
-    },
-    'ivyshandle': {
-        type: 'cat'
-    },
-    'u5c': {
-        type: 'paw'
-    },
-    'destons': {
-        type: 'colon-three'
-    }
-};
-
 // use the top-right link to determine the current user
 let auth = '';
 let auth_link = '';
@@ -946,17 +937,24 @@ let root = '';
 let recent_activity_list;
 
 // page type
+let last_page_type;
+let last_page_subpage;
 let page = {
+    initial: '',
     type: '',
     name: '',
     sister: '',
     subpage: '',
     avatar: '',
+    corrected: false,
+    token: '',
     structure: {
+        wrapper: null,
         container: null,
         row: null,
         main: null,
-        side: null
+        side: null,
+        nav: null
     }
 };
 
@@ -972,10 +970,6 @@ let has_prompted_for_update = false;
 let current_promo = `<a href="https://cutensilly.org/bwaa/fm" target="_blank">cutensilly.org/bwaa/fm: you are running bwaa version ${version.build}.${version.sku} »</a>`;
 let last_promo = current_promo;
 let last_season_time;
-
-
-let artist_corrections = {};
-let album_track_corrections = {};
 
 
 (function() {
@@ -1003,7 +997,6 @@ let album_track_corrections = {};
         // load seasonal data
         set_season();
 
-        bwaa_lastfm_settings();
         bwaa_footer();
 
         // everything past this point requires authorisation
@@ -1014,7 +1007,156 @@ let album_track_corrections = {};
         notify_if_new_update();
 
         lotus();
+        //sponsors();
 
+        try {
+            main_flow();
+
+            // last.fm is a single page application
+            const observer = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                    for (const node of mutation.addedNodes) {
+                        if (node instanceof Element) {
+                            if (node.classList[0] == 'modal-dialog') {
+                                // this is a silly hack to ensure modals get themed, as the creation of this element
+                                // causes another run of this script, giving enough time for the modal to load
+                                // this took so long
+                                fix_modal();
+                            }
+
+                            if (!node.hasAttribute('data-bwaa-cycle')) {
+                                node.setAttribute('data-bwaa-cycle', 'true');
+
+                                console.info('bwaa - bwaa\'ing');
+
+                                // essentials
+                                lookup_lang();
+                                load_settings();
+                                bwaa_load_header();
+
+                                // load seasonal data
+                                set_season();
+
+                                bwaa_lastfm_settings();
+                                bwaa_footer();
+
+                                load_activities();
+
+                                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                                if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
+                                    // script is either out of date, or more in date (not gonna happen)
+                                    console.info('bwaa - theme returned version', theme_version, 'meanwhile script is running', version.build);
+
+                                    prompt_for_update();
+                                    has_prompted_for_update = true;
+                                }
+
+                                main_flow();
+                            }
+                        }
+                    }
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        } catch(e) {
+            handle_error(e);
+        }
+    }
+
+    function handle_error(e = null) {
+        alert(e);
+        console.error(e);
+    }
+
+    function main_flow() {
+        assign_page();
+
+        if (page.type == 'user' ||
+            page.type == 'artist' ||
+            page.type == 'album' ||
+            page.type == 'track' ||
+            page.type == 'events' ||
+            page.type == 'festival' ||
+            page.type == 'tag'
+        )
+            bwaa_shouts();
+
+        if (settings.lotus) {
+            patch_artist_grids();
+
+            correct_generic_combo_no_artist('artist-header-featured-items-item');
+            correct_generic_combo_no_artist('artist-top-albums-item');
+            correct_generic_combo('source-album-details');
+            correct_generic_combo('resource-list--release-list-item');
+
+            correct_tracks();
+        }
+
+        subscribe_to_events();
+    }
+
+    function assign_page() {
+        if (!page.structure.wrapper)
+            page.structure.wrapper = document.body.querySelector('.main-content');
+
+        let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-bwaa])');
+        if (main_content) {
+            assign_page_type();
+            load_page();
+            main_content.setAttribute('data-bwaa', 'true');
+        } else {
+            assign_page_subpage();
+        }
+    }
+
+    function assign_page_type() {
+        let page_classes = document.body.classList;
+        page_classes.forEach((page_class, index) => {
+            if (page_class.startsWith('namespace')) {
+                page.initial = page_class.replace('namespace--', '');
+                let page_split = page.initial.split('_');
+
+                page.type = page_split[0];
+                if (page.type == 'music') {
+                    page.type = page_split[1];
+                }
+
+                if (page.type != last_page_type) {
+                    last_page_type = page.type;
+                    log(page.type, 'page');
+                }
+
+                console.log(page);
+
+                assign_page_subpage();
+
+                return;
+            }
+
+            if (index > 4)
+                return;
+        });
+    }
+
+    function assign_page_subpage() {
+        page.subpage = page.initial.replace(page.type, '').replace('_', '').replace('music_', '');
+
+        if (last_page_subpage != page.subpage) {
+            last_page_subpage = page.subpage;
+            log(`subpage of ${page.subpage}`, 'page');
+
+            load_settings();
+
+            if (page.structure.indicator)
+                page_indicator();
+        }
+    }
+
+    function load_page() {
         if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             // start bwaa setup
             bwaa_setup();
@@ -1028,125 +1170,26 @@ let album_track_corrections = {};
             // things that load when not in bwaa settings
             bwaa_media_items();
 
-            bwaa_profiles();
-            bwaa_artists();
-            bwaa_albums();
-            bwaa_tracks();
-            bwaa_shouts();
+            if (page.type == 'user')
+                bwaa_profiles();
+            else if (page.type == 'artist')
+                bwaa_artists();
+            else if (page.type == 'album')
+                bwaa_albums();
+            else if (page.type == 'track')
+                bwaa_tracks();
+            else if (page.type == 'events' || page.type == 'festival')
+                bwaa_events();
+            else if (page.type == 'search')
+                bwaa_search();
+            else if (page.type == 'settings')
+                bwaa_lastfm_settings();
+            else if (page.type == 'home')
+                bwaa_home();
             bwaa_gallery();
             bwaa_friends();
-            bwaa_obsessions();
-            bwaa_library();
             bwaa_playlists();
-            bwaa_search();
-            bwaa_home();
-            bwaa_events();
-
-            if (settings.lotus) {
-                patch_artist_grids();
-
-                correct_generic_combo_no_artist('artist-header-featured-items-item');
-                correct_generic_combo_no_artist('artist-top-albums-item');
-                correct_generic_combo('source-album-details');
-                correct_generic_combo('resource-list--release-list-item');
-
-                correct_tracks();
-            }
-
-            subscribe_to_events();
         }
-
-        // last.fm is a single page application, this will be on the lookout
-        // for new elements being added so they can be patched if needed
-        // wish there was a better way
-        const observer = new MutationObserver((mutations) => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (node instanceof Element) {
-                        if (node.classList[0] == 'modal-dialog') {
-                            // this is a silly hack to ensure modals get themed, as the creation of this element
-                            // causes another run of this script, giving enough time for the modal to load
-                            // this took so long
-                            fix_modal();
-                        }
-
-                        if (!node.hasAttribute('data-bwaa-cycle')) {
-                            node.setAttribute('data-bwaa-cycle', 'true');
-
-                            console.info('bwaa - bwaa\'ing');
-
-                            // essentials
-                            lookup_lang();
-                            load_settings();
-                            bwaa_load_header();
-
-                            // load seasonal data
-                            set_season();
-
-                            bwaa_lastfm_settings();
-                            bwaa_footer();
-
-                            load_activities();
-
-                            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
-                            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
-                                // script is either out of date, or more in date (not gonna happen)
-                                console.info('bwaa - theme returned version', theme_version, 'meanwhile script is running', version.build);
-
-                                prompt_for_update();
-                                has_prompted_for_update = true;
-                            }
-
-                            if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
-                                // start bwaa setup
-                                bwaa_setup();
-                            } else if (window.location.href.startsWith(changelog_url.replace('{root}', root))) {
-                                // start bwaa changelog
-                                bwaa_changelog();
-                            } else if (window.location.href.startsWith(bwaa_url.replace('{root}', root))) {
-                                // start bwaa settings
-                                bwaa_settings();
-                            } else {
-                                // things that load when not in bwaa settings
-                                bwaa_media_items();
-
-                                bwaa_profiles();
-                                bwaa_artists();
-                                bwaa_albums();
-                                bwaa_tracks();
-                                bwaa_shouts();
-                                bwaa_gallery();
-                                bwaa_friends();
-                                bwaa_obsessions();
-                                bwaa_library();
-                                bwaa_playlists();
-                                bwaa_search();
-                                bwaa_home();
-                                bwaa_events();
-
-                                if (settings.lotus) {
-                                    patch_artist_grids();
-
-                                    correct_generic_combo_no_artist('artist-header-featured-items-item');
-                                    correct_generic_combo_no_artist('artist-top-albums-item');
-                                    correct_generic_combo('source-album-details');
-                                    correct_generic_combo('resource-list--release-list-item');
-
-                                    correct_tracks();
-                                }
-
-                                subscribe_to_events();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true
-        });
     }
 
 
@@ -1517,19 +1560,8 @@ let album_track_corrections = {};
         // are we on a profile?
         let profile_header = document.body.querySelector('.header--user');
 
-        if (profile_header == undefined)
+        if (!profile_header)
             return;
-
-        if (profile_header.hasAttribute('data-bwaa'))
-            return;
-        profile_header.setAttribute('data-bwaa', 'true');
-
-        console.info('bwaa - user is on a profile');
-        page.type = 'user';
-
-        // are we on the overview page?
-        let profile_header_overview = profile_header.classList.contains('header--overview');
-        console.info('bwaa - profile overview?', profile_header_overview);
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
         try {
@@ -1557,9 +1589,8 @@ let album_track_corrections = {};
         let is_new_account = false;
 
 
-        if (profile_header_overview) {
+        if (page.subpage == 'overview') {
             // profile overview stuff
-            page.subpage = 'overview';
 
             // fetch some data from the header
             try {
@@ -1591,7 +1622,8 @@ let album_track_corrections = {};
             let user_follows_you = (profile_header.querySelector('.label.user-follow') != undefined);
 
             // custom badges
-            if (profile_badges.hasOwnProperty(page.name)) {
+            let profile_badges = null;
+            if (profile_badges && profile_badges.hasOwnProperty(page.name)) {
                 if (!Array.isArray(profile_badges[page.name])) {
                     // default
                     console.info('bwaa - profile has 1 custom badge', profile_badges[page.name]);
@@ -1660,6 +1692,9 @@ let album_track_corrections = {};
                         ${follow_button}
                         <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
                         <a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>
+                        ${(page.name == 'cutensilly') ? (`
+                        <a class="has-icon sponsor" href="https://github.com/sponsors/katelyynn" target="_blank">Sponsor me</a>
+                        `) : ''}
                     </div>
                     <div class="tasteometer ${tasteometer_lvl}" data-taste="${tasteometer_lvl.replace('tasteometer-compat-', '')}">
                         <p>Your musical compatibility with <strong>${page.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
@@ -1882,9 +1917,10 @@ let album_track_corrections = {};
         } else {
             // profile non-overview stuff
 
-            // which subpage is it?
-            page.subpage = document.body.classList[1].replace('namespace--', '');
-            deliver_notif(`Subpage type of ${page.subpage}`, true);
+            if (page.subpage == 'obsessions_obsession') {
+                bwaa_obsessions();
+                return;
+            }
 
             page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
             page.name = profile_header.querySelector('.header-title a').textContent;
@@ -1899,7 +1935,7 @@ let album_track_corrections = {};
             else
                 header_user_data.page = header_user_data.page.textContent;
 
-            if (page.subpage.startsWith('user_journal')) {
+            if (page.subpage.startsWith('journal')) {
                 journal_nav_btn.innerHTML = (`
                     <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${page.name}/journal">
                         Journal
@@ -1933,18 +1969,20 @@ let album_track_corrections = {};
 
             page.structure.container.classList.add('subpage');
 
-            if (page.subpage == 'user_obsessions_overview') {
+            if (page.subpage == 'obsessions_overview') {
                 bwaa_obsessions_list();
             } else if (
-                page.subpage.startsWith('user_playlists') ||
-                page.subpage == 'user_neighbours'
+                page.subpage.startsWith('playlists') ||
+                page.subpage == 'neighbours'
             ) {
                 deliver_notif('This page is currently not finished, sorry!');
             }
 
-            if (page.subpage == 'user_events') {
+            if (page.subpage == 'events') {
                 page.structure.container.classList.add('halfpage');
                 bwaa_events_listing('profile');
+            } else if (page.subpage.startsWith('library')) {
+                bwaa_library();
             }
 
             // reports
@@ -1957,7 +1995,6 @@ let album_track_corrections = {};
                 }
             }
         }
-        console.info(page);
     }
 
     function parse_markdown_text(text) {
