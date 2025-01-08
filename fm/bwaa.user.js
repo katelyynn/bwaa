@@ -923,6 +923,7 @@ let fallback_cover_art = 'https://katelyynn.github.io/bwaa/fm/extra_res/empty_di
 // use the top-right link to determine the current user
 let auth = '';
 let auth_link = '';
+let is_pro = false;
 
 // stores ur current authorised avatar
 let my_avi = '';
@@ -1432,6 +1433,12 @@ let last_season_time;
             join_btn.innerHTML = '<strong>Join</strong>';
         }
 
+        if (document.body.querySelector('.masthead .masthead-pro-wrap') != null) {
+            is_pro = true;
+        } else {
+            is_pro = false;
+        }
+
         let promo = document.createElement('div');
         promo.classList.add('header-promo');
         promo.setAttribute('id', 'bwaa-promo');
@@ -1930,7 +1937,7 @@ let last_season_time;
                 page: document.body.querySelector('.content-top-header')
             }
 
-            if (page.subpage.startsWith('user-dashboard-layout'))
+            if (page.subpage.startsWith('listening-report'))
                 header_user_data.page = trans[lang].profile.tabs.reports;
             else
                 header_user_data.page = header_user_data.page.textContent;
