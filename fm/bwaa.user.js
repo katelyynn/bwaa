@@ -1014,7 +1014,7 @@ let last_season_time;
         bwaa_footer();
 
         // everything past this point requires authorisation
-        if (auth == '')
+        if (auth.name == '')
             return;
 
         load_activities();
@@ -1697,7 +1697,7 @@ let last_season_time;
 
 
             // user interactions
-            if (auth != page.name) {
+            if (auth.name != page.name) {
                 let follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]').outerHTML;
 
                 let tasteometer = profile_header.querySelector('.tasteometer');
@@ -1855,7 +1855,7 @@ let last_season_time;
 
 
             // recent activity
-            if (auth != page.name)
+            if (auth.name != page.name)
                 return;
 
             let recent_activity_section = document.createElement('section');
