@@ -577,7 +577,7 @@ const trans = {
 function lookup_lang() {
     root = document.querySelector('.masthead-logo a').getAttribute('href');
     if (auth_link != null)
-        my_avi = auth_link.querySelector('img').getAttribute('src');
+        auth.avatar = auth_link.querySelector('img').getAttribute('src');
     lang = document.documentElement.getAttribute('lang');
     non_override_lang = lang;
 
@@ -930,12 +930,17 @@ let legacy_cover_art = {
 let fallback_cover_art = 'https://katelyynn.github.io/bwaa/fm/extra_res/empty_disc.png';
 
 // use the top-right link to determine the current user
-let auth = '';
+let auth = {
+    name: null,
+    pro: false,
+    avatar: null,
+    sets: {
+        hue: 255,
+        sat: 1,
+        lit: 1
+    }
+};
 let auth_link = '';
-let is_pro = false;
-
-// stores ur current authorised avatar
-let my_avi = '';
 
 // stores the current root of the page, most applicable in other languages:
 // en: /
@@ -986,10 +991,9 @@ let last_season_time;
     'use strict';
 
     auth_link = document.querySelector('a.auth-link');
-    if (auth_link != null) {
-        auth = auth_link.querySelector('img').getAttribute('alt');
-        console.info('bwaa - auth', auth);
-    }
+    if (auth_link)
+        auth.name = auth_link.querySelector('img').getAttribute('alt');
+
     bwaa();
 
     function bwaa() {
@@ -1427,7 +1431,7 @@ let last_season_time;
         if (auth_link != null) {
             // logged in
             let text = document.createElement('p');
-            text.textContent = auth;
+            text.textContent = auth.name;
             auth_link.appendChild(text);
         } else {
             // guest
@@ -1442,11 +1446,10 @@ let last_season_time;
             join_btn.innerHTML = '<strong>Join</strong>';
         }
 
-        if (document.body.querySelector('.masthead .masthead-pro-wrap') != null) {
-            is_pro = true;
-        } else {
-            is_pro = false;
-        }
+        if (document.body.querySelector('.masthead .masthead-pro-wrap'))
+            auth.pro = true;
+        else
+            auth.pro = false;
 
         let promo = document.createElement('div');
         promo.classList.add('header-promo');
@@ -1529,6 +1532,12 @@ let last_season_time;
             container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
         }
 
+        page.structure.container.setAttribute('data-assigned', 'true');
+
+        let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
+        if (other_container != null)
+            other_container.style.setProperty('display', 'none');
+
         if (page.structure.row == null || !document.body.contains(page.structure.row)) {
             console.info('bwaa - page structure checkup - page is missing a row, creating');
             page.structure.row = document.createElement('div');
@@ -1545,26 +1554,32 @@ let last_season_time;
             page.structure.row.appendChild(page.structure.main);
         }
 
+        page.structure.main.setAttribute('data-assigned', 'true');
+
+        let other_main = page.structure.row.querySelector('.col-main.hidden-xs:not([data-assigned])');
+        if (other_main != null)
+            other_main.style.setProperty('display', 'none');
+
+        console.info(page.structure.side, page.structure.side == null, typeof(page.structure.side));
+
         if (page.structure.side == null || !document.body.contains(page.structure.side)) {
-            console.info('bwaa - page structure checkup - page is missing a side');
+            console.info('bwaa - page structure checkup - page missing side');
             // check first if another sidebar exists
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-            if (page.structure != null) {
-                console.info('bwaa - page structure checkup - finished');
-                console.info(page);
-                return;
+            if (page.structure.side == null) {
+                console.info('bwaa - page structure checkup - page missing side, creating');
+
+                // otherwise, make anew
+                page.structure.side = document.createElement('div');
+                page.structure.side.classList.add('col-sidebar');
+
+                page.structure.row.appendChild(page.structure.side);
             }
-            console.info('bwaa - page structure checkup - creating new side');
-
-            // otherwise, make anew
-            page.structure.side = document.createElement('div');
-            page.structure.side.classList.add('col-sidebar');
-
-            page.structure.row.appendChild(page.structure.side);
         }
 
         console.info('bwaa - page structure checkup - finished');
+        page.raw = JSON.stringify(page.structure);
         console.info(page);
     }
 
@@ -2150,16 +2165,43 @@ let last_season_time;
 
         page.type = 'artist';
 
-        let is_subpage = artist_header.classList.contains('header-new--subpage');
+        let is_subpage = page.subpage != 'overview';
 
 
-        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
-        page.structure.row = page.structure.container.querySelector('.row');
+        // without pro theres two containers
+        if (auth.pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        } else {
+            // not pro
+
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
+                page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+            }
+        }
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            page.structure.row = page.structure.container.querySelector('.row');
+
+            if (!is_subpage)
+                page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
+            else
+                page.structure.main = page.structure.row.querySelector('.col-main');
+
+            if (auth.pro) {
+                page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            } else {
+                page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.section-with-separator--col)');
+            }
         } catch(e) {
-            console.info('bwaa - page structure - there was an issue finding elements');
+            log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
@@ -2469,10 +2511,10 @@ let last_season_time;
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
-                            <img src="${my_avi}">
+                            <img src="${auth.avatar}">
                         </div>
                         <div class="info">
-                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="user" href="${auth_link}">${auth.name}</a>
                             <a class="scrobbles" href="${scrobble_link}">${trans[lang].your_scrobbles.count_scrobbles.replace('{count}', scrobble_count)}</a>
                         </div>
                     </div>
@@ -2508,10 +2550,6 @@ let last_season_time;
             page.structure.side.insertBefore(artist_stats, page.structure.side.firstChild);
         } else {
             patch_tab_overview_btn(navlist);
-
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-            deliver_notif(`Subpage type of ${page.subpage}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
@@ -2620,16 +2658,37 @@ let last_season_time;
 
         page.type = 'album';
 
-        let is_subpage = album_header.classList.contains('header-new--subpage');
+        let is_subpage = page.subpage != 'overview';
 
 
-        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+        // without pro theres two containers
+        if (auth.pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+        } else {
+            // not pro
+
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
+                page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+            }
+        }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs)');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
+            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs, .hidden-xs, .upper-overview)');
+            if (!is_subpage)
+                page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs.masonry-right-bottom');
+            else
+                page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
         } catch(e) {
-            console.info('bwaa - page structure - there was an issue finding elements');
+            log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
@@ -2827,10 +2886,10 @@ let last_season_time;
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
-                            <img src="${my_avi}">
+                            <img src="${auth.avatar}">
                         </div>
                         <div class="info">
-                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="user" href="${auth_link}">${auth.name}</a>
                             <a class="scrobbles" href="${scrobble_link}">${scrobble_count} scrobbles</a>
                         </div>
                     </div>
@@ -2866,10 +2925,6 @@ let last_season_time;
             page.structure.side.insertBefore(album_stats, page.structure.side.firstChild);;
         } else {
             patch_tab_overview_btn(navlist);
-
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-            deliver_notif(`Subpage type of ${page.subpage}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
@@ -2928,16 +2983,41 @@ let last_season_time;
 
         page.type = 'track';
 
-        let is_subpage = track_header.classList.contains('header-new--subpage');
+        let is_subpage = page.subpage != 'overview';
 
 
-        page.structure.container = document.body.querySelector('.page-content');
+        // without pro theres two containers
+        if (auth.pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content');
+        } else {
+            // not pro
+
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
+                page.structure.container = document.body.querySelector('.page-content');
+            }
+        }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+            if (!is_subpage) {
+                page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
+
+                if (page.structure.main.classList[2])
+                    page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard:not(:first-child)');
+            } else {
+                page.structure.main = page.structure.row.querySelector('.col-main');
+            }
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
         } catch(e) {
-            console.info('bwaa - page structure - there was an issue finding elements');
+            log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
@@ -2982,7 +3062,6 @@ let last_season_time;
 
         if (!is_subpage) {
             page.subpage = 'overview';
-            page.structure.side = page.structure.row.querySelector('.col-sidebar.buffer-standard');
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
             page.avatar = fallback_cover_art;
@@ -3032,7 +3111,7 @@ let last_season_time;
 
             let header_actions = track_header.querySelectorAll('.header-new-actions > [data-toggle-button=""]');
 
-            let first_meta = page.structure.main.querySelector('.catalogue-metadata-description');
+            let first_meta = document.body.querySelector('.catalogue-metadata-description');
             console.info(first_meta, first_meta.querySelector('a'));
             let track_length = '';
             if (first_meta.querySelector('a') == null)
@@ -3208,10 +3287,10 @@ let last_season_time;
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
-                            <img src="${my_avi}">
+                            <img src="${auth.avatar}">
                         </div>
                         <div class="info">
-                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="user" href="${auth_link}">${auth.name}</a>
                             <a class="scrobbles" href="${scrobble_link}">${scrobble_count} scrobbles</a>
                         </div>
                     </div>
@@ -3248,11 +3327,6 @@ let last_season_time;
         } else {
             patch_tab_overview_btn(navlist);
 
-            // which subpage is it?
-            let subpage_type = document.body.classList[2].replace('namespace--', '');
-            page.subpage = subpage_type;
-            deliver_notif(`Subpage type of ${subpage_type}`, true);
-
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
@@ -3276,8 +3350,8 @@ let last_season_time;
             page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             track_header.style.setProperty('display', 'none');
 
-            if (subpage_type.includes('wiki')) {
-                if (subpage_type.includes('wiki_history')) {
+            if (page.subpage.includes('wiki')) {
+                if (page.subpage.includes('wiki_history')) {
                     bwaa_wiki_history();
                 } else {
                     generic_wiki_patch();
@@ -3288,7 +3362,7 @@ let last_season_time;
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
 
-            if (subpage_type.includes('tags_overview')) {
+            if (page.subpage.includes('tags_overview')) {
                 generic_tag_patch();
             }
         }
@@ -3476,11 +3550,11 @@ let last_season_time;
      * @returns retrieved wiki or cta if missing
      */
     function get_wiki() {
-        let wiki = page.structure.main.querySelector('.wiki-block.visible-lg');
+        let wiki = document.body.querySelector('.wiki-block.visible-lg');
         if (wiki == null)
-            wiki = page.structure.main.querySelector('.wiki-block-cta');
+            wiki = document.body.querySelector('.wiki-block-cta');
         if (wiki == null)
-            wiki = page.structure.main.querySelector('.coloured-cta--wiki-icon');
+            wiki = document.body.querySelector('.coloured-cta--wiki-icon');
 
         return wiki.outerHTML;
     }
@@ -4106,8 +4180,8 @@ let last_season_time;
             return;
 
         page.type = 'settings';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         page.structure.container = document.body.querySelector('.page-content');
         page.structure.row = page.structure.container.querySelector('.row');
@@ -4124,11 +4198,6 @@ let last_season_time;
             return;
         page.structure.container.setAttribute('data-bwaa', 'true');
         page.structure.container.classList.add('lastfm-settings', 'subpage');
-
-        // which subpage is it?
-        let subpage_type = document.body.classList[2].replace('namespace--', '');
-        page.subpage = subpage_type;
-        deliver_notif(`Subpage type of ${subpage_type}`, true);
 
 
         let navlist_switcher = document.createElement('nav');
@@ -4286,8 +4355,8 @@ let last_season_time;
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
         page.type = 'bwaa_settings';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         adaptive_skin.innerHTML = '';
         document.title = `${trans[lang].settings.title} | Last.fm`;
@@ -4317,10 +4386,10 @@ let last_season_time;
                     <div class="col-main settings-form">
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
-                                <img src="${my_avi}" alt="${auth}">
+                                <img src="${auth.avatar}" alt="${auth.name}">
                             </div>
                             <div class="badge-info">
-                                <a href="${root}user/${auth}">${auth}</a>
+                                <a href="${root}user/${auth.name}">${auth.name}</a>
                                 <h1>${trans[lang].settings.title}</h1>
                             </div>
                         </section>
@@ -4897,8 +4966,8 @@ let last_season_time;
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
         page.type = 'bwaa_settings';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         deliver_notif(`bwaa has installed successfully!`);
 
@@ -4925,10 +4994,10 @@ let last_season_time;
                     <div class="col-main settings-form">
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
-                                <img src="${my_avi}" alt="${auth}">
+                                <img src="${auth.avatar}" alt="${auth.name}">
                             </div>
                             <div class="badge-info">
-                                <a href="${root}user/${auth}">${auth}</a>
+                                <a href="${root}user/${auth.name}">${auth.name}</a>
                                 <h1>Setup bwaa</h1>
                             </div>
                         </section>
@@ -4976,7 +5045,7 @@ let last_season_time;
                                 <a href="${root}bwaa">Configure more of bwaa</a>
                             </div>
                             <div class="more-link align-right">
-                                <a href="${root}user/${auth}">Head to your profile</a>
+                                <a href="${root}user/${auth.name}">Head to your profile</a>
                             </div>
                             <fieldset>
                                 <legend>Support bwaa</legend>
@@ -5446,8 +5515,8 @@ let last_season_time;
         search_form.setAttribute('data-bwaa', 'true');
 
         page.type = 'search';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
         page.structure.row = page.structure.container.querySelector('.row');
@@ -5640,7 +5709,7 @@ let last_season_time;
 
 
     function subscribe_to_events() {
-        let love_track = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bwaa-subscribed])`);
+        let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bwaa-subscribed])`);
         love_track.forEach((form) => {
             form.setAttribute('data-bwaa-subscribed', 'true');
 
@@ -5680,7 +5749,7 @@ let last_season_time;
         });
 
 
-        let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth}/obsessions"]:not([data-bwaa-subscribed])`);
+        let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth.name}/obsessions"]:not([data-bwaa-subscribed])`);
         obsess.forEach((form) => {
             form.setAttribute('data-bwaa-subscribed', 'true');
 
@@ -5759,8 +5828,8 @@ let last_season_time;
         recs_feed.setAttribute('data-bwaa', 'true');
 
         page.type = 'home';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
         try {
@@ -5801,14 +5870,14 @@ let last_season_time;
             <h2 class="form-header">${trans[lang].home.library.name}</h2>
             <div id="library-insert"></div>
             <div class="more-link">
-                <a href="${root}user/${auth}/loved">${trans[lang].see_more}</a>
+                <a href="${root}user/${auth.name}/loved">${trans[lang].see_more}</a>
             </div>
         `);
 
         page.structure.main.insertBefore(new_library, page.structure.main.firstElementChild);
 
 
-        fetch(`${root}user/${auth}/loved`)
+        fetch(`${root}user/${auth.name}/loved`)
         .then(function(response) {
             console.log('returned', response, response.text);
 
@@ -6073,7 +6142,7 @@ let last_season_time;
 
         page.type = 'event';
 
-        let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
+        let is_subpage = page.subpage != 'overview';
 
 
         page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
@@ -6739,8 +6808,8 @@ let last_season_time;
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
         page.type = 'bwaa_changelog';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         adaptive_skin.innerHTML = '';
         document.title = `${trans[lang].changelog.title} | Last.fm`;
@@ -6770,10 +6839,10 @@ let last_season_time;
                     <div class="col-main settings-form">
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
-                                <img src="${my_avi}" alt="${auth}">
+                                <img src="${auth.avatar}" alt="${auth.name}">
                             </div>
                             <div class="badge-info">
-                                <a href="${root}user/${auth}">${auth}</a>
+                                <a href="${root}user/${auth.name}">${auth.name}</a>
                                 <h1>${trans[lang].changelog.title}</h1>
                             </div>
                         </section>

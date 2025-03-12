@@ -2563,6 +2563,8 @@
         }
     }
 
+    .page-content[data-assigned] > .row > .col-main:not([data-assigned]),
+    .upper-overview,
     .section-with-separator:has(.sidebar-image-list, .about-artist, .catalogue-overview-similar-artists),
     .external-links-section,
     form[action*="/playlists/create/"],
@@ -6769,6 +6771,7 @@
     .home-panel {
         background: var(--navlist-grad);
         margin: unset !important;
+        padding: 15px 15px;
 
         section + & {
             margin: 15px 0 0 0 !important;
