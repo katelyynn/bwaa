@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2025.0108
+@version        2025.0312
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2025.0108';
+        --version-build: '2025.0312';
     }
 
     :root {
@@ -3731,6 +3731,15 @@
 
         p {
             overflow: hidden !important;
+        }
+
+        img {
+            max-width: 100%;
+
+            /* bleh compatibility */
+            &[alt="banner"] {
+                display: none;
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2025.0108
+// @version      2025.0312
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,8 +19,8 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2025.0108',
-    sku: 'mita'
+    build: '2025.0312',
+    sku: 'beret'
 }
 
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
@@ -430,6 +430,14 @@ const trans = {
                     albums_tracks: 'Albums and tracks'
                 }
             },
+            account: {
+                name: 'Account Settings',
+                bio: 'To support the project and receive a custom badge you can sponsor my work <3',
+                version: 'You have version {v} of the sponsor badge data.',
+                sponsor: {
+                    name: 'Become a sponsor'
+                }
+            },
             artist_redirection: {
                 name: 'Artist Redirection'
             },
@@ -452,7 +460,8 @@ const trans = {
                     'The best way to support is via a sponsorship on GitHub. If you feel my work is worthy of such, head below.'
                 ],
                 star: 'Star the project',
-                sponsor: 'Sponsor me'
+                sponsor: 'Sponsor the project',
+                rewards: 'Receive sponsor rewards'
             },
             seasonal: {
                 category: 'Fun',
@@ -4328,6 +4337,11 @@ let last_season_time;
                                     </a>
                                 </li>
                                 <li class="navlist-item secondary-nav-item">
+                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="account" onclick="_change_settings_page('account')">
+                                        ${trans[lang].settings.tabs.account}
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item">
                                     <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="about" onclick="_change_settings_page('about')">
                                         ${trans[lang].settings.tabs.about}
                                     </a>
@@ -4676,6 +4690,30 @@ let last_season_time;
                     </fieldset>
                 </section>
             `);
+        } else if (page == 'account') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">${trans[lang].settings.account.name}</h2>
+                    <p>${trans[lang].settings.account.bio}</p>
+                    <p class="alert">${trans[lang].settings.account.version
+                    .replace('{v}', `<span class="version-link">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</p>
+                    <fieldset>
+                        <legend>${trans[lang].settings.account.sponsor.name}</legend>
+                        <div class="more-link align-left space-self">
+                            <a href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${trans[lang].settings.support.sponsor}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${trans[lang].settings.support.rewards}</a>
+                        </div>
+                    </fieldset>
+                </section>
+            `);
+
+            request_checkbox_update();
+            tippy(document.getElementById('lotus_hover'), {
+                content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
+                allowHTML: true
+            });
         }
     }
 
@@ -4764,7 +4802,7 @@ let last_season_time;
                 <div class="audioscrobbler-logo" style="background-image: url(${audioscrobbler_logo});"></div>
             </div>
             <div class="text">
-                © 2024 Last.fm Ltd. All rights reserved. | <a href="${root}legal/terms">Terms of Use</a> and <a href="${root}legal/privacy">Privacy Policy</a> | <i class="update-date">Updated 2024</i><br>Some user-contributed text on this page is available under the <a href="http://creativecommons.org/licenses/by-sa/3.0/legalcode">Creative Commons Attribution/Share-Alike License</a>.<br>Text may also be available under the <a href="https://www.last.fm/help/gfdl">GNU Free Documentation License</a>.
+                © 2025 Last.fm Ltd. All rights reserved. | <a href="${root}legal/terms">Terms of Use</a> and <a href="${root}legal/privacy">Privacy Policy</a> | <i class="update-date">Updated 2024</i><br>Some user-contributed text on this page is available under the <a href="http://creativecommons.org/licenses/by-sa/3.0/legalcode">Creative Commons Attribution/Share-Alike License</a>.<br>Text may also be available under the <a href="https://www.last.fm/help/gfdl">GNU Free Documentation License</a>.
             </div>
         `);
 
