@@ -727,6 +727,15 @@
                     background-position: 0 -1320px;
                 }
             }
+
+            .sponsor {
+                color: #F42E1A;
+
+                &:before {
+                    background-image: var(--cdn-flatness-sprites-21-icons);
+                    background-position: -4px -1700px;
+                }
+            }
         }
         .tasteometer {
             flex: 1;
