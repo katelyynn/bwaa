@@ -359,9 +359,58 @@
                 object-fit: cover;
             }
 
-            .user-type {
+            .user-types {
                 position: relative;
                 top: -7px;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                padding: 20px 15px;
+                margin: -20px -15px;
+
+                .user-type-overflow {
+                    transform: scaleY(0);
+                    transform-origin: top;
+                    height: 0;
+                    transition: height 0.2s;
+
+                    width: 0;
+                }
+
+                /*.user-type-extras {
+                    transform: scaleY(1);
+                    transform-origin: top;
+                    height: 18px;
+                    transition: height 0.2s;
+                    width: auto;
+                }*/
+
+                &:hover {
+                    flex-direction: column;
+
+                    .user-type-overflow {
+                        transform: unset;
+                        height: 18px;
+                        width: auto;
+                    }
+
+                    .user-type-extras {
+                        display: none;
+                    }
+
+                    /*.user-type-extras {
+                        transform: scaleY(0);
+                        transform-origin: top;
+                        height: 0;
+
+                        width: 0;
+                    }*/
+                }
+            }
+
+            .user-type {
                 text-align: center;
 
                 &.user-type--user {
@@ -376,16 +425,16 @@
                     text-decoration: none !important;
                     border-radius: 3px;
 
-                    .user-type--colon-three &,
-                    .user-type--paw &,
-                    .user-type--cat &,
-                    .user-type--glaive &,
-                    .user-type--subscriber & {
-                        background: var(--user-type-black) !important;
-                    }
+                    background: var(--user-type-black) !important;
+
                     .user-type--queen &,
                     .user-type--staff &, .user-type--mod & {
                         background: var(--user-type-red) !important;
+                    }
+
+                    .user-type-extras & {
+                        background: var(--border) !important;
+                        color: var(--colour) !important;
                     }
                 }
             }

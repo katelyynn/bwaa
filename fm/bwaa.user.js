@@ -50,12 +50,15 @@ const trans = {
             missing: {
                 name: 'No badges'
             },
-            'user-status-subscriber': {
-                name: 'Last.fm Pro',
+            subscriber: {
+                name: 'Subscriber',
                 reason: 'Active Pro subscription'
             },
-            'label--fade': {
-                reason: 'They follow you'
+            staff: {
+                name: 'Staff'
+            },
+            mod: {
+                name: 'Mod'
             },
             contributor: {
                 name: 'bleh contributor',
@@ -1654,30 +1657,15 @@ let last_season_time;
             let user_follows_you = (profile_header.querySelector('.label.user-follow') != undefined);
 
             // custom badges
-            let profile_badges = null;
-            if (profile_badges && profile_badges.hasOwnProperty(page.name)) {
-                if (!Array.isArray(profile_badges[page.name])) {
-                    // default
-                    console.info('bwaa - profile has 1 custom badge', profile_badges[page.name]);
-
-                    user_type = profile_badges[page.name].type;
-                } else {
-                    // multiple
-                    console.info('bwaa - profile has multiple custom badges', profile_badges[page.name]);
-
-                    user_type = profile_badges[page.name][profile_badges[page.name].length-1].type;
-                }
-            } else {
-                let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
-                let user_is_staff = (profile_header.querySelector('.user-status-staff') != undefined);
-                let user_is_mod = (profile_header.querySelector('.user-status-mod') != undefined);
-                if (user_is_staff)
-                    user_type = 'staff';
-                else if (user_is_mod)
-                    user_type = 'mod';
-                else if (user_is_subscriber)
-                    user_type = 'subscriber';
-            }
+            let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
+            let user_is_staff = (profile_header.querySelector('.user-status-staff') != undefined);
+            let user_is_mod = (profile_header.querySelector('.user-status-mod') != undefined);
+            if (user_is_staff)
+                user_type = 'staff';
+            else if (user_is_mod)
+                user_type = 'mod';
+            else if (user_is_subscriber)
+                user_type = 'subscriber';
             console.info('bwaa - user is of type', user_type);
 
             if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
@@ -1759,6 +1747,33 @@ let last_season_time;
             if (settings.varied_avatar_shapes)
                 page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/arXL/');
 
+            let badges = load_badges(page.name, user_type).toReversed();
+            let badges_html = document.createElement('div');
+
+            if (badges) {
+                badges.forEach((this_badge, index) => {
+                    let badge = document.createElement('div');
+                    badge.classList.add('user-type', `user-type--${this_badge.type}`, `user-type-for--${page.name}`);
+                    badge.innerHTML = `<a>${this_badge.name}</a>`;
+                    badges_html.appendChild(badge);
+
+                    if (badges.length > 1) {
+                        if (index == 0) {
+                            let extra = document.createElement('div');
+                            extra.classList.add('user-type', 'user-type-extras');
+                            extra.innerHTML = `<a>+${badges.length - 1}</a>`;
+
+                            badges_html.appendChild(extra);
+                        } else {
+                            badge.classList.add('user-type-overflow');
+                        }
+                    }
+
+                    if (this_badge.type == 'sponsor')
+                        badge.setAttribute('onclick', '_sponsor()');
+                });
+            }
+
             // main user header
             // this is on top of the actions, but appending is backwards
             let new_header = document.createElement('section');
@@ -1772,9 +1787,7 @@ let last_season_time;
                             <img src="${page.avatar}" alt="${page.name}">
                         </a>
                     `)}
-                    <div class="user-type user-type--${user_type}">
-                        <a>${trans[lang].profile.user_types[user_type]}</a>
-                    </div>
+                    <div class="user-types">${badges_html.innerHTML}</div>
                 </div>
 
                 <div class="badge-info">
@@ -7124,5 +7137,53 @@ let last_season_time;
                 `),
             );
         }
+    }
+
+
+    function load_badges(user, user_type = 'user', solo = false) {
+        let badges = [];
+
+        if (user_type != 'user') {
+            badges.push({
+                type: user_type
+            });
+
+            if (!sponsor_list || !sponsor_list.badges.hasOwnProperty(user))
+                return badges;
+        }
+
+        if (!sponsor_list || !sponsor_list.badges.hasOwnProperty(user))
+            return;
+
+        if (!Array.isArray(sponsor_list.badges[user])) {
+            log('1 badge found', 'sponsor', 'info', sponsor_list.badges[user]);
+            badges.push(sponsor_list.badges[user]);
+        } else {
+            log('multiple badges found', 'sponsor', 'info', sponsor_list.badges[user]);
+
+            if (solo)
+                badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
+            else
+                sponsor_list.badges[user].forEach((badge) => { badges.push(badge); });
+        }
+
+        // now we run thru to add missing metadata
+        badges.forEach((badge) => {
+            if (!badge.name)
+                badge.name = trans[lang].badges[badge.type].name;
+
+            if (badge.reason)
+                return;
+
+            if (badge.type == 'sponsor' || badge.type == 'contributor' || badge.type == 'translation')
+                badge.reason = badge.type;
+            else if (badge.type == 'cute' || badge.type == 'queen')
+                badge.reason = 'cute';
+            else
+                badge.reason = 'reserved';
+        });
+
+        log('final badge list', 'sponsor', 'info', badges);
+        return badges;
     }
 })();
