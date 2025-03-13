@@ -1753,7 +1753,7 @@ let last_season_time;
             if (badges) {
                 badges.forEach((this_badge, index) => {
                     let badge = document.createElement('div');
-                    badge.classList.add('user-type', `user-type--${this_badge.type}`, `user-type-for--${page.name}`);
+                    badge.classList.add('user-type', `user-type--${this_badge.type}`, `user-type-for--${page.name}`, `user-type-reason--${this_badge.reason}`);
                     badge.innerHTML = `<a>${this_badge.name}</a>`;
                     badges_html.appendChild(badge);
 
@@ -7145,24 +7145,20 @@ let last_season_time;
             badges.push({
                 type: user_type
             });
-
-            if (!sponsor_list || !sponsor_list.badges.hasOwnProperty(user))
-                return badges;
         }
 
-        if (!sponsor_list || !sponsor_list.badges.hasOwnProperty(user))
-            return;
+        if (sponsor_list && sponsor_list.badges.hasOwnProperty(user)) {
+            if (!Array.isArray(sponsor_list.badges[user])) {
+                log('1 badge found', 'sponsor', 'info', sponsor_list.badges[user]);
+                badges.push(sponsor_list.badges[user]);
+            } else {
+                log('multiple badges found', 'sponsor', 'info', sponsor_list.badges[user]);
 
-        if (!Array.isArray(sponsor_list.badges[user])) {
-            log('1 badge found', 'sponsor', 'info', sponsor_list.badges[user]);
-            badges.push(sponsor_list.badges[user]);
-        } else {
-            log('multiple badges found', 'sponsor', 'info', sponsor_list.badges[user]);
-
-            if (solo)
-                badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
-            else
-                sponsor_list.badges[user].forEach((badge) => { badges.push(badge); });
+                if (solo)
+                    badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
+                else
+                    sponsor_list.badges[user].forEach((badge) => { badges.push(badge); });
+            }
         }
 
         // now we run thru to add missing metadata
