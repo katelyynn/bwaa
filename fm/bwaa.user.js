@@ -3580,7 +3580,7 @@ let last_season_time;
      * @returns retrieved wiki or cta if missing
      */
     function get_wiki() {
-        let wiki = document.body.querySelector('.wiki-block.visible-lg');
+        let wiki = document.body.querySelector('.metadata-and-wiki-row .wiki-block.visible-lg');
         if (wiki == null)
             wiki = document.body.querySelector('.wiki-block-cta');
         if (wiki == null)
