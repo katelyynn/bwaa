@@ -2485,7 +2485,7 @@ let last_season_time;
             // listeners you! know
             let listeners_placeholder = document.createElement('div');
             listeners_placeholder.classList.add('top-listeners-small');
-            let listeners_you_know_list = page.structure.main.querySelectorAll('.personal-stats-listener');
+            let listeners_you_know_list = document.body.querySelectorAll('.personal-stats-listener');
             console.info(listeners_you_know_list);
             let listener_index = 0;
             listeners_you_know_list.forEach((listener) => {
@@ -2514,7 +2514,7 @@ let last_season_time;
                 listener_index += 1;
             });
 
-            let more_listeners = page.structure.main.querySelector('.personal-stats-item--listeners .header-metadata-display a');
+            let more_listeners = document.body.querySelector('.personal-stats-item--listeners .header-metadata-display a');
             if (more_listeners != null) {
                 let listeners_you_know = document.createElement('section');
                 listeners_you_know.innerHTML = (`
@@ -2527,7 +2527,7 @@ let last_season_time;
                 page.structure.side.insertBefore(listeners_you_know, page.structure.side.firstChild);
             }
 
-            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = document.body.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -2902,7 +2902,7 @@ let last_season_time;
 
 
             // sidebar
-            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = document.body.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -3303,7 +3303,7 @@ let last_season_time;
 
 
             // sidebar
-            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = document.body.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
