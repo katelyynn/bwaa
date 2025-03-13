@@ -5427,6 +5427,9 @@
 
 
 
+    .wiki-block {
+        display: block !important;
+    }
     .wiki-container {
         margin: unset;
 
