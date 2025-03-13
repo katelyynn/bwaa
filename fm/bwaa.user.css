@@ -3014,7 +3014,11 @@
         }
 
         .shout-user-avatar-link {
+            top: 0;
             left: 0;
+            width: 68px;
+            height: 100%;
+            bottom: 0;
         }
         .shout-user-avatar {
             position: static;
