@@ -461,7 +461,6 @@ const trans = {
                 ],
                 star: 'Star the project',
                 sponsor: 'Sponsor the project',
-                rewards: 'Receive sponsor rewards'
             },
             seasonal: {
                 category: 'Fun',
@@ -1021,7 +1020,7 @@ let last_season_time;
         notify_if_new_update();
 
         lotus();
-        //sponsors();
+        sponsors();
 
         try {
             main_flow();
@@ -1631,7 +1630,9 @@ let last_season_time;
                 page.avatar = '';
                 is_new_account = true;
             }
-            page.name = profile_header.querySelector('.header-title a').textContent;
+            page.name = profile_header.querySelector('.header-title a').textContent.trim();
+
+            const is_own_profile = auth.name == page.name;
 
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
             let header_user_data = {
@@ -1679,6 +1680,11 @@ let last_season_time;
             }
             console.info('bwaa - user is of type', user_type);
 
+            if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
+                page.structure.main.innerHTML = '';
+                page.structure.side.innerHTML = '';
+            }
+
 
             // when was this user last seen scrobbling?
             let recent_tracks = document.getElementById('recent-tracks-section');
@@ -1720,13 +1726,14 @@ let last_season_time;
                 profile_actions.classList.add('profile-actions-section');
                 profile_actions.innerHTML = (`
                     <div class="options">
-                        ${follow_button}
+                        ${(page.name != sponsor_list.sponsor_account) ? follow_button : ''}
                         <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
-                        <a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>
+                        ${(page.name != sponsor_list.sponsor_account) ? `<a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>` : ''}
                         ${(page.name == 'cutensilly') ? (`
                         <a class="has-icon sponsor" href="https://github.com/sponsors/katelyynn" target="_blank">Sponsor me</a>
                         `) : ''}
                     </div>
+                    ${(page.name != sponsor_list.sponsor_account) ? (`
                     <div class="tasteometer ${tasteometer_lvl}" data-taste="${tasteometer_lvl.replace('tasteometer-compat-', '')}">
                         <p>Your musical compatibility with <strong>${page.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
                         <div class="bar">
@@ -1734,6 +1741,7 @@ let last_season_time;
                         </div>
                         <p>${music_you_have_in_common}</p>
                     </div>
+                    `) : ''}
                 `);
                 page.structure.main.insertBefore(profile_actions, page.structure.main.firstChild);
 
@@ -1768,8 +1776,10 @@ let last_season_time;
                         <a>${trans[lang].profile.user_types[user_type]}</a>
                     </div>
                 </div>
+
                 <div class="badge-info">
                     <h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>
+                    ${(page.name != sponsor_list.sponsor_account) ? (`
                     <div class="user-info">
                         <div class="top">
                             <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
@@ -1797,11 +1807,18 @@ let last_season_time;
                     <div class="user-activity">
                         <a href="${header_user_data.loved_tracks.getAttribute('href')}">${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${window.location.href}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
                     </div>
+                    `) : (`
+                    <div class="alert alert-info">
+                        This is a special bwaa account used for managing sponsors.
+                    </div>
+                    `)}
                 </div>
             `);
 
-            navlist_items.appendChild(journal_nav_btn);
-            page.structure.row.insertBefore(navlist, page.structure.main);
+            if (page.name != sponsor_list.sponsor_account) {
+                navlist_items.appendChild(journal_nav_btn);
+                page.structure.row.insertBefore(navlist, page.structure.main);
+            }
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
@@ -4765,24 +4782,21 @@ let last_season_time;
                     <h2 class="form-header">${trans[lang].settings.account.name}</h2>
                     <p>${trans[lang].settings.account.bio}</p>
                     <p class="alert">${trans[lang].settings.account.version
-                    .replace('{v}', `<span class="version-link">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</p>
+                    .replace('{v}', `<span class="version-link">${sponsor_list.latest}</span>`)}</p>
                     <fieldset>
                         <legend>${trans[lang].settings.account.sponsor.name}</legend>
                         <div class="more-link align-left space-self">
-                            <a href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${trans[lang].settings.support.sponsor}</a>
+                            <a onclick="_sponsor()">${trans[lang].settings.support.sponsor}</a>
                         </div>
                         <div class="more-link align-left space-self">
-                            <a href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${trans[lang].settings.support.rewards}</a>
+                            <a onclick="_sponsor_manage()">${trans[lang].sponsor.manage}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_sponsor_check()">${trans[lang].sponsor.check}</a>
                         </div>
                     </fieldset>
                 </section>
             `);
-
-            request_checkbox_update();
-            tippy(document.getElementById('lotus_hover'), {
-                content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
-                allowHTML: true
-            });
         }
     }
 
@@ -6972,5 +6986,143 @@ let last_season_time;
 
     unsafeWindow._update_local_changelog_cache = function(json) {
         localStorage.setItem('bwaa_changelog', JSON.stringify(json));
+    }
+
+
+
+
+    function sponsors(force = false) {
+        let sponsor_data = localStorage.getItem('kat_sponsors');
+        let sponsor_expire = new Date(localStorage.getItem('kat_sponsors_expire'));
+
+        let current_time = new Date();
+
+        if (sponsor_data == null) {
+            log('not cached, fetching', 'sponsor');
+            sponsor_request(true);
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            sponsor_list = JSON.parse(sponsor_data);
+
+            // is it valid?
+            if (sponsor_expire < current_time && !force) {
+                sponsor_request();
+            } else if (force) {
+                sponsor_request(true);
+            }
+        }
+    }
+
+    function sponsor_request(notify = false) {
+        let button = document.body.querySelector('[onclick="_sponsor_check()"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            log(`list responded with ${xhr.status}`, 'sponsor');
+
+            if (xhr.status != 200) {
+                log('request has been cancelled, will request again in 1h', 'sponsor');
+                api_expire.setHours(api_expire.getHours() + 1);
+            }
+
+            // set expire date
+            let api_expire = new Date();
+
+            if (xhr.status == 200) {
+                sponsor_list = JSON.parse(this.response);
+
+                if (notify)
+                    deliver_notif(trans[lang].sponsor.download, false, true, 'sponsor');
+
+                // save to cache for next page load
+                localStorage.setItem('kat_sponsors', this.response);
+                api_expire.setHours(api_expire.getHours() + 4);
+                log(`list cached until ${api_expire}`, 'sponsor');
+            }
+
+            localStorage.setItem('kat_sponsors_expire', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+    unsafeWindow._sponsor_check = function() {
+        sponsors(true);
+    }
+
+
+    unsafeWindow._sponsor = function() {
+        sponsor();
+    }
+    function sponsor() {
+        create_window(
+            'sponsor',
+            trans[lang].sponsor.header,
+            (`
+                <div class="modal-vertical-inner support-inner">
+                    <p>${trans[lang].sponsor.bio}</p>
+                </div>
+                <div class="more-link">
+                    <a href="${sponsor_list.sponsor_link}" target="_blank">
+                        ${trans[lang].sponsor.name}
+                    </a>
+                </div>
+                <div class="more-link">
+                    <a onclick="_kill_window('sponsor')">
+                        ${trans[lang].settings.close}
+                    </a>
+                </div>
+            `)
+        );
+    }
+
+    unsafeWindow._sponsor_manage = function() {
+        sponsor_manage();
+    }
+    function sponsor_manage() {
+        if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
+            create_window(
+                'sponsor_manage',
+                trans[lang].sponsor.status.yes,
+                (`
+                    <div class="modal-vertical-inner support-inner">
+                        <p>${trans[lang].sponsor.status.one_time}</p>
+                    </div>
+                    <div class="more-link">
+                        <a onclick="_kill_window('sponsor_manage')">
+                            ${trans[lang].settings.close}
+                        </a>
+                    </div>
+                `),
+            );
+        } else {
+            create_window(
+                'sponsor_manage',
+                trans[lang].sponsor.status.yes,
+                (`
+                    <div class="modal-vertical-inner support-inner">
+                        <p>${trans[lang].sponsor.status.badge}</p>
+                    </div>
+                    <div class="more-link">
+                        <a href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                            ${trans[lang].sponsor.manage}
+                        </a>
+                    </div>
+                    <div class="more-link">
+                        <a onclick="_kill_window('sponsor_manage')">
+                            ${trans[lang].settings.close}
+                        </a>
+                    </div>
+                `),
+            );
+        }
     }
 })();
