@@ -2329,8 +2329,8 @@ let last_season_time;
 
 
             let tags_html = '';
-            let tags = page.structure.main.querySelectorAll('.tag a');
-            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
+            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
+            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -2341,14 +2341,14 @@ let last_season_time;
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(!tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
             let gallery_sidebar_photos_ems = document.body.querySelectorAll('.sidebar-image-list-item');
             let gallery_sidebar_photos = [];
             for (let i = 1; i < 5; i++) {
                 console.info('gallery', i, gallery_sidebar_photos_ems);
-                if (gallery_sidebar_photos_ems[i] != null) {
+                if (!gallery_sidebar_photos_ems[i]) {
                     gallery_sidebar_photos.push(gallery_sidebar_photos_ems[i].querySelector('a').outerHTML);
                 } else {
                     gallery_sidebar_photos.push('');
@@ -2793,8 +2793,8 @@ let last_season_time;
 
 
             let tags_html = '';
-            let tags = page.structure.main.querySelectorAll('.tag a');
-            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
+            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
+            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -3120,8 +3120,8 @@ let last_season_time;
 
 
             let tags_html = '';
-            let tags = page.structure.main.querySelectorAll('.tag a');
-            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
+            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
+            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
