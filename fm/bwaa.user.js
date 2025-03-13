@@ -1718,7 +1718,7 @@ let last_season_time;
                         <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
                         ${(page.name != sponsor_list.sponsor_account) ? `<a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>` : ''}
                         ${(page.name == 'cutensilly') ? (`
-                        <a class="has-icon sponsor" href="https://github.com/sponsors/katelyynn" target="_blank">Sponsor me</a>
+                        <a class="has-icon sponsor" onclick="_sponsor()">Sponsor me</a>
                         `) : ''}
                     </div>
                     ${(page.name != sponsor_list.sponsor_account) ? (`
