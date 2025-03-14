@@ -1351,6 +1351,10 @@
                         background-position: 0 -260px;
                         background-repeat: repeat-x;
                     }
+
+                    &:after {
+                        display: none;
+                    }
                 }
             }
         }
