@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2025.0312
+// @version      2025.0314
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,8 +19,9 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2025.0312',
-    sku: 'beret'
+    build: '2025.0314',
+    sku: 'beret',
+    year: 2025
 }
 
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
@@ -579,7 +580,7 @@ const trans = {
 function lookup_lang() {
     root = document.querySelector('.masthead-logo a').getAttribute('href');
     if (auth_link != null)
-        auth.avatar = auth_link.querySelector('img').getAttribute('src');
+        auth.avatar = auth_link.querySelector('img').getAttribute('src').replace('/avatar42s/', '/avatar170s/');
     lang = document.documentElement.getAttribute('lang');
     non_override_lang = lang;
 
@@ -1053,7 +1054,6 @@ let last_season_time;
                                 // load seasonal data
                                 set_season();
 
-                                bwaa_lastfm_settings();
                                 bwaa_footer();
 
                                 load_activities();
@@ -2047,13 +2047,21 @@ let last_season_time;
             }
 
             // reports
-            if (page.subpage == 'user-dashboard-layout--version-3') {
+            if (page.subpage.startsWith('listening-report')) {
                 // recover nav
                 let nav = document.body.querySelector('.user-dashboard-controls');
                 if (nav != null) {
                     let subpage_header = page.structure.main.querySelector('.profile-header-subpage-section');
                     subpage_header.after(nav);
                 }
+
+                /*let other_content = document.body.querySelectorAll('.page-content[style] .listening-report-row');
+                other_content.forEach((content) => {
+                    page.structure.container.appendChild(content);
+                });*/
+
+                let other_content = document.body.querySelector('.page-content[style]');
+                other_content.removeAttribute('style');
             }
         }
     }
@@ -2623,7 +2631,7 @@ let last_season_time;
                 generic_tag_patch();
             }
 
-            if (page.subpage == 'music_artist_events') {
+            if (page.subpage == 'artist_events') {
                 page.structure.container.classList.add('halfpage');
                 bwaa_events_listing();
             }
@@ -3714,7 +3722,7 @@ let last_season_time;
             return;
         }
 
-        if (page.subpage == 'music_artist_images_overview')
+        if (page.subpage == 'artist_images_overview')
             bwaa_gallery_listing();
         else
             bwaa_artworks();
@@ -4200,14 +4208,6 @@ let last_season_time;
             content_form.setAttribute('data-bwaa-cycle-form', 'true');
         });
 
-        // new profile pages?
-        if (document.body.classList[2] == null)
-            return;
-
-        if (!document.body.classList[2].startsWith('namespace--settings') && !document.body.classList[1].startsWith('namespace--settings'))
-            return;
-
-        page.type = 'settings';
         page.avatar = auth.avatar;
         page.name = auth.name;
 
@@ -4267,12 +4267,12 @@ let last_season_time;
             page.structure.main.appendChild(content);
         }
 
-        if (page.subpage == 'settings_overview') {
+        if (page.subpage == 'overview') {
             // update picture notice
             let update_picture_notice = page.structure.main.querySelector('.avatar-upload-form .form-row-help-text');
-            if (update_picture_notice != null)
+            if (update_picture_notice)
                 update_picture_notice.innerHTML = trans[lang].settings.update_picture.replace('{+l}', `<a href="${root}bwaa">`).replace('{-l}', '</a>');
-        } else if (page.subpage == 'settings_applications_overview') {
+        } else if (page.subpage == 'applications_overview') {
             // applications
             let session_container = document.createElement('section');
             session_container.classList.add('session-container');
@@ -4896,7 +4896,7 @@ let last_season_time;
                 <div class="audioscrobbler-logo" style="background-image: url(${audioscrobbler_logo});"></div>
             </div>
             <div class="text">
-                © 2025 Last.fm Ltd. All rights reserved. | <a href="${root}legal/terms">Terms of Use</a> and <a href="${root}legal/privacy">Privacy Policy</a> | <i class="update-date">Updated 2024</i><br>Some user-contributed text on this page is available under the <a href="http://creativecommons.org/licenses/by-sa/3.0/legalcode">Creative Commons Attribution/Share-Alike License</a>.<br>Text may also be available under the <a href="https://www.last.fm/help/gfdl">GNU Free Documentation License</a>.
+                © ${version.year} Last.fm Ltd. All rights reserved. | <a href="${root}legal/terms">Terms of Use</a> and <a href="${root}legal/privacy">Privacy Policy</a> | <i class="update-date">Updated ${version.year}</i><br>Some user-contributed text on this page is available under the <a href="http://creativecommons.org/licenses/by-sa/3.0/legalcode">Creative Commons Attribution/Share-Alike License</a>.<br>Text may also be available under the <a href="https://www.last.fm/help/gfdl">GNU Free Documentation License</a>.
             </div>
         `);
 
