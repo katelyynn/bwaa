@@ -5961,7 +5961,7 @@ let last_season_time;
             event: []
         };*/
         /*let recs = {};*/
-        let recs_objects = page.structure.main.querySelectorAll('.recs-feed-item');
+        let recs_objects = page.structure.main.querySelectorAll('.recs-feed-item:not(.recs-feed-item--ad)');
 
         recs_objects.forEach((rec) => {
             let item = {};
