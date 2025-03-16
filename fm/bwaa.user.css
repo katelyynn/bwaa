@@ -4547,13 +4547,18 @@
             resize: vertical;
         }
 
+        .edit-scrobble-label,
         [type="hidden"]:not([name="csrfmiddlewaretoken"]) + .form-group,
         p + fieldset,
         fieldset + fieldset,
         .form-group + fieldset,
         .form-group--submit,
         .form-group + .form-group {
-            margin-top: 6px;
+            margin-top: 6px !important;
+
+            &:first-child {
+                margin-top: unset;
+            }
         }
 
         .form-group {
@@ -4599,6 +4604,7 @@
             border: 1px solid var(--border);
         }
 
+        .edit-scrobble-label,
         legend,
         .control-label {
             font: inherit;
@@ -4637,6 +4643,24 @@
             a {
                 cursor: pointer;
                 user-select: none;
+            }
+        }
+
+        .edit-scrobble-form {
+            .form-group {
+                display: flex;
+                gap: 6px;
+
+                .original-field {
+                    input {
+                        cursor: default;
+                        opacity: 0.7;
+                    }
+                }
+
+                .form-arrow {
+                    display: none;
+                }
             }
         }
 

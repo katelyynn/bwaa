@@ -1112,6 +1112,8 @@ let last_season_time;
             correct_tracks();
         }
 
+        bwaa_forms();
+
         subscribe_to_events();
     }
 
@@ -4199,15 +4201,6 @@ let last_season_time;
     function bwaa_lastfm_settings() {
         console.info('bwaa - last.fm settings host');
 
-        let content_forms = document.querySelectorAll('.content-form:not([data-bwaa="true"])');
-        console.info('bwaa - last.fm settings host found content-forms:', content_forms);
-        content_forms.forEach((content_form) => {
-            content_form.classList.remove('content-form');
-            content_form.classList.add('settings-form');
-
-            content_form.setAttribute('data-bwaa-cycle-form', 'true');
-        });
-
         page.avatar = auth.avatar;
         page.name = auth.name;
 
@@ -4342,6 +4335,17 @@ let last_season_time;
 
             display_session(0);
         }
+    }
+
+    function bwaa_forms() {
+        let content_forms = document.querySelectorAll('.content-form:not([data-bwaa="true"])');
+        console.info('bwaa - last.fm settings host found content-forms:', content_forms);
+        content_forms.forEach((content_form) => {
+            content_form.classList.remove('content-form');
+            content_form.classList.add('settings-form');
+
+            content_form.setAttribute('data-bwaa-cycle-form', 'true');
+        });
     }
 
 
