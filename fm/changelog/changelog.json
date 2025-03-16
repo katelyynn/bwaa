@@ -1,6 +1,12 @@
 {
-    "updated": "2024-12-09",
-    "latest": "2024.1209",
+    "updated": "2025-03-16",
+    "latest": "2025.0316",
+    "2025.0316": {
+        "name": "haii!!",
+        "type": "major",
+        "force": false,
+        "bio": "the silliness has arrived!!\n\n# Changelogs\n- Changelogs are now available in bwaa, as they have been in bleh for many months. They are accessible in settings and when a new update occurs.\n\n# Page fixes\n- __All pages that previously broke or were always broken are fixed!__\n    - Sorry this took so long :3 Based on pre-existing bleh fixes from January-ish.\n\n# Sponsors\n- __Sponsors are now integrated and synced with bleh__\n    - You can sponsor my work if you feel i'm worthy <3\n\n# Auto edits\n- Auto-edit modals have been updated based on the new design.\n\n# Other\n- Fixed wikis disappearing at lower resolutions\n- Fixed underlines under nav links due to new changes\n- Replaced the weird fixes for crashing from before"
+    },
     "2024.1209": {
         "name": "changelogz",
         "type": "minor",

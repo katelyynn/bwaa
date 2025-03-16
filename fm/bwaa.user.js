@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2025.0314
+// @version      2025.0316
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,7 +19,7 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2025.0314',
+    build: '2025.0316',
     sku: 'beret',
     year: 2025
 }
@@ -4239,6 +4239,11 @@ let last_season_time;
                         bwaa
                     </a>
                 </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                    <a class="secondary-nav-item-link" href="${root}bwaa/changelog">
+                        ${trans[lang].changelog.title}
+                    </a>
+                </li>
             </ul>
         `);
         page.structure.row.insertBefore(navlist_switcher, page.structure.row.firstElementChild);
@@ -5173,7 +5178,7 @@ let last_season_time;
         let notif = document.createElement('button');
         notif.classList.add('bwaa-notification');
         notif.setAttribute('onclick', '_kill_notif(this)');
-        notif.textContent = content;
+        notif.innerHTML = content;
 
         document.getElementById('bwaa-notifs').appendChild(notif);
 
@@ -5219,7 +5224,10 @@ let last_season_time;
      * notify user if new update and stores in localStorage for next time
      * @returns if first-time installing, redirect to setup
      */
-    function notify_if_new_update() {
+    unsafeWindow._fake_update = function() {
+        notify_if_new_update(true);
+    }
+    function notify_if_new_update(force = false) {
         let last_version_used = localStorage.getItem('bwaa_last_version_used') || '';
 
         // enter first-time setup
@@ -5231,8 +5239,8 @@ let last_season_time;
         }
 
         // otherwise, it's a usual update
-        if (last_version_used != version.build) {
-            deliver_notif(`bwaa has updated to ${version.build}.${version.sku}!`, false, false, true);
+        if (last_version_used != version.build || force) {
+            deliver_notif(`bwaa has updated to ${version.build}.${version.sku}! <a href="${root}bwaa/changelog">Read the changelog</a>`, false, false, true);
             register_activity('update_bwaa', [{name: version.build, type: 'bwaa'}], `${root}bwaa`);
             localStorage.setItem('bwaa_last_version_used', version.build);
 
