@@ -2184,10 +2184,14 @@ let last_season_time;
     function patch_tab_overview_btn(navlist) {
         let tab = navlist.querySelector('.secondary-nav-item--overview a');
 
+        let type = page.type;
+        if (type == 'events' || type == 'festival')
+            type = 'event';
+
         if (page.type == 'user')
             tab.textContent = trans[lang].profile.tabs.overview;
         else
-            tab.textContent = trans[lang][page.type].tabs.overview;
+            tab.textContent = trans[lang][type].tabs.overview;
     }
 
 
@@ -6151,42 +6155,41 @@ let last_season_time;
     function bwaa_events() {
         console.info('bwaa - events');
 
-        let event_header = document.body.querySelector('.header-info-primary--with-calendar');
+        let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
 
-        if (event_header == null) {
-            // new profile pages?
-            if (document.body.classList[2] == null)
-                return;
+        // without pro theres two containers
+        if (auth.pro) {
+            // pro
 
-            // is this an event edit page?
-            if (document.body.classList[2].startsWith('namespace--events'))
-                bwaa_events_edit();
+            page.structure.container = document.body.querySelector('.page-content');
+        } else {
+            // not pro
 
-            return;
+            if (!is_subpage)
+                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+            else
+                page.structure.container = document.body.querySelector('.page-content');
         }
-
-        if (event_header.hasAttribute('data-bwaa'))
-            return;
-        event_header.setAttribute('data-bwaa', 'true');
-
-        page.type = 'event';
-
-        let is_subpage = page.subpage != 'overview';
-
-
-        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
         } catch(e) {
-            console.info('bwaa - page structure - there was an issue finding elements');
+            log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
 
+        let event_header = document.body.querySelector('.header');
+
+        if (page.subpage.startsWith('event_edit')) {
+            bwaa_events_edit();
+            return;
+        }
+
         let navlist = event_header.querySelector('.navlist');
 
+        page.sister = event_header.querySelector('.header-title').textContent.trim();
         if (!is_subpage) {
             try {
                 page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
@@ -6195,9 +6198,12 @@ let last_season_time;
                 page.name = event_header.querySelector('.header-title-secondary span').textContent;
             }
         } else {
-            page.name = event_header.querySelector('.header-title-secondary a').textContent;
+            try {
+                page.name = event_header.querySelector('.header-title-secondary a').textContent;
+            } catch(e) {
+                page.name = page.sister;
+            }
         }
-        page.sister = event_header.querySelector('.header-title').textContent;
         page.avatar = pre_fetch_background(document.body.querySelector('.header-background--has-image'));
 
         patch_tab_overview_btn(navlist);
