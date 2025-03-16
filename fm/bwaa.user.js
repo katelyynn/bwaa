@@ -47,6 +47,8 @@ const trans = {
         see_all_placeholder: 'See all {placeholder}',
         share_link: 'Share link',
 
+        deleted_user: 'Deleted user',
+
         badges: {
             missing: {
                 name: 'No badges'
@@ -6327,7 +6329,12 @@ let last_season_time;
                 let maybe_list = lists[1].querySelectorAll('.attendee-summary-user-inner-wrap');
                 maybe_list.forEach((attendee, index) => {
                     let avi = attendee.querySelector('img').getAttribute('src');
-                    let name = attendee.querySelector('.attendee-summary-user-link').textContent.trim();
+                    let name = attendee.querySelector('.attendee-summary-user-link');
+
+                    if (name)
+                        name = name.textContent.trim();
+                    else
+                        name = trans[lang].deleted_user;
 
                     let attendee_element = document.createElement('div');
                     attendee_element.classList.add('listener', 'attendee');
@@ -6363,7 +6370,12 @@ let last_season_time;
                 let going_list = lists[0].querySelectorAll('.attendee-summary-user-inner-wrap');
                 going_list.forEach((attendee, index) => {
                     let avi = attendee.querySelector('img').getAttribute('src');
-                    let name = attendee.querySelector('.attendee-summary-user-link').textContent.trim();
+                    let name = attendee.querySelector('.attendee-summary-user-link');
+
+                    if (name)
+                        name = name.textContent.trim();
+                    else
+                        name = trans[lang].deleted_user;
 
                     let attendee_element = document.createElement('div');
                     attendee_element.classList.add('listener', 'attendee');
