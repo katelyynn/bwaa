@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2024.1209
+@version        2025.0316
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2024.1209';
+        --version-build: '2025.0316';
     }
 
     :root {
@@ -65,6 +65,7 @@
         }
     }
 
+    .user-type a,
     body {
         --background: #e3e3e3;
         --navlist-grad: #ededed;
@@ -96,6 +97,10 @@
         --user-type-text-white: #fff;
         --user-type-black: #000;
         --user-type-red: #D51007;
+        --user-type-purple: #4e1896;
+        --user-type-pink: #99097a;
+
+        --user-type-sponsor: hsl(var(--hue-over), calc(var(--sat-over) * 32%), calc(clamp(min(0.5), var(--lit-over), max(1.5)) * 50%));
 
         --chartlist-odd: #ebebeb;
         --chartlist-hover: #bfdff4;
@@ -359,9 +364,58 @@
                 object-fit: cover;
             }
 
-            .user-type {
+            .user-types {
                 position: relative;
                 top: -7px;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                padding: 40px 15px 20px;
+                margin: -40px -15px -20px;
+
+                .user-type-overflow {
+                    transform: scaleY(0);
+                    transform-origin: top;
+                    height: 0;
+                    transition: height 0.2s;
+
+                    width: 0;
+                }
+
+                /*.user-type-extras {
+                    transform: scaleY(1);
+                    transform-origin: top;
+                    height: 18px;
+                    transition: height 0.2s;
+                    width: auto;
+                }*/
+
+                &:hover {
+                    flex-direction: column;
+
+                    .user-type-overflow {
+                        transform: unset;
+                        height: 18px;
+                        width: auto;
+                    }
+
+                    .user-type-extras {
+                        display: none;
+                    }
+
+                    /*.user-type-extras {
+                        transform: scaleY(0);
+                        transform-origin: top;
+                        height: 0;
+
+                        width: 0;
+                    }*/
+                }
+            }
+
+            .user-type {
                 text-align: center;
 
                 &.user-type--user {
@@ -370,22 +424,97 @@
 
                 a {
                     font-size: 11px;
-                    line-height: 13px;
+                    line-height: 17px;
                     padding: 1px 3px;
                     color: var(--user-type-text-white) !important;
                     text-decoration: none !important;
                     border-radius: 3px;
 
-                    .user-type--colon-three &,
-                    .user-type--paw &,
-                    .user-type--cat &,
-                    .user-type--glaive &,
-                    .user-type--subscriber & {
-                        background: var(--user-type-black) !important;
-                    }
+                    max-width: 130px;
+                    display: -webkit-box;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    line-clamp: 1;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+
+                    background: var(--user-type-black) !important;
+
                     .user-type--queen &,
                     .user-type--staff &, .user-type--mod & {
                         background: var(--user-type-red) !important;
+                    }
+
+                    .user-type--cute & {
+                        background: var(--user-type-purple) !important;
+                    }
+
+
+                    /* simulates bleh system */
+                    .user-type--cat &, .user-type--mask &, .user-type--paw &,
+                    .user-type--colon-three &,
+                    .user-type-reason--sponsor & {
+                        background: var(--user-type-sponsor) !important;
+                    }
+
+                    .user-type--sponsor & {
+                        background: var(--user-type-pink) !important;
+                    }
+
+                    .user-type--loader & {
+                        --hue-over: 90;
+                        --sat-over: 1.15;
+                        --lit-over: 0.8;
+                    }
+                    .user-type--cosmic & {
+                        --hue-over: 46;
+                        --sat-over: 1.2;
+                        --lit-over: 0.98;
+                    }
+                    .user-type--shell & {
+                        --hue-over: 232;
+                        --sat-over: 0.7;
+                        --lit-over: 0.8;
+                    }
+
+                    .user-type-extras & {
+                        background: var(--border) !important;
+                        color: var(--colour) !important;
+                    }
+                }
+
+                &.user-type--cat {
+                    &.user-type-for--boba2814 a {
+                        --hue-over: 206;
+                        --sat-over: 1;
+                        --lit-over: 1.1;
+                    }
+                    &.user-type-for--bIeak a {
+                        --hue-over: 0;
+                        --sat-over: 0;
+                        --lit-over: 1.5;
+
+                        color: var(--colour) !important;
+                    }
+                    &.user-type-for--iwas15with100k a {
+                        --hue-over: 333;
+                        --sat-over: 1;
+                        --lit-over: 1;
+                    }
+                    &.user-type-for--aoivee a {
+                        --hue-over: 110;
+                        --sat-over: 1;
+                        --lit-over: 1;
+                    }
+                    &.user-type-for--Serprety a {
+                        --hue-over: 255;
+                        --sat-over: 1;
+                        --lit-over: 1;
+                    }
+                    &.user-type-for--RazzBX a {
+                        --hue-over: 245;
+                        --sat-over: 1;
+                        --lit-over: 1;
                     }
                 }
             }
@@ -725,6 +854,15 @@
                 &:before {
                     background-image: var(--cdn-flatness-sprites-21-icons);
                     background-position: 0 -1320px;
+                }
+            }
+
+            .sponsor {
+                color: #F42E1A;
+
+                &:before {
+                    background-image: var(--cdn-flatness-sprites-21-icons);
+                    background-position: -4px -1700px;
                 }
             }
         }
@@ -1212,6 +1350,10 @@
                         background-image: var(--cdn-flatness-header-headersprite);
                         background-position: 0 -260px;
                         background-repeat: repeat-x;
+                    }
+
+                    &:after {
+                        display: none;
                     }
                 }
             }
@@ -2563,6 +2705,8 @@
         }
     }
 
+    .page-content[data-assigned] > .row > .col-main:not([data-assigned]),
+    .upper-overview,
     .section-with-separator:has(.sidebar-image-list, .about-artist, .catalogue-overview-similar-artists),
     .external-links-section,
     form[action*="/playlists/create/"],
@@ -2954,7 +3098,11 @@
         }
 
         .shout-user-avatar-link {
+            top: 0;
             left: 0;
+            width: 68px;
+            height: 100%;
+            bottom: 0;
         }
         .shout-user-avatar {
             position: static;
@@ -3732,6 +3880,15 @@
         p {
             overflow: hidden !important;
         }
+
+        img {
+            max-width: 100%;
+
+            /* bleh compatibility */
+            &[alt="banner"] {
+                display: none;
+            }
+        }
     }
 
 
@@ -4390,13 +4547,18 @@
             resize: vertical;
         }
 
+        .edit-scrobble-label,
         [type="hidden"]:not([name="csrfmiddlewaretoken"]) + .form-group,
         p + fieldset,
         fieldset + fieldset,
         .form-group + fieldset,
         .form-group--submit,
         .form-group + .form-group {
-            margin-top: 6px;
+            margin-top: 6px !important;
+
+            &:first-child {
+                margin-top: unset;
+            }
         }
 
         .form-group {
@@ -4442,6 +4604,7 @@
             border: 1px solid var(--border);
         }
 
+        .edit-scrobble-label,
         legend,
         .control-label {
             font: inherit;
@@ -4480,6 +4643,24 @@
             a {
                 cursor: pointer;
                 user-select: none;
+            }
+        }
+
+        .edit-scrobble-form {
+            .form-group {
+                display: flex;
+                gap: 6px;
+
+                .original-field {
+                    input {
+                        cursor: default;
+                        opacity: 0.7;
+                    }
+                }
+
+                .form-arrow {
+                    display: none;
+                }
             }
         }
 
@@ -5358,6 +5539,9 @@
 
 
 
+    .wiki-block {
+        display: block !important;
+    }
     .wiki-container {
         margin: unset;
 
@@ -6719,6 +6903,10 @@
         &:hover {
             overflow-y: auto;
         }
+
+        p {
+            max-width: 400px;
+        }
     }
 
     .modal-actions {
@@ -6732,25 +6920,30 @@
 
         .modal-buttons {
             margin: unset;
-        }
-    }
-    .modal-action-button {
-        &.modal-dismiss {
-            clip: unset !important;
-            display: flex !important;
-            visibility: visible !important;
 
-            &:before {
-                background: var(--cdn-flatness-buttons-delete);
-                background-position: center;
-                background-repeat: no-repeat;
+            .modal-action-button {
+                &.modal-dismiss {
+                    clip: unset !important;
+                    display: flex !important;
+                    visibility: visible !important;
+
+                    &:before {
+                        background: var(--cdn-flatness-buttons-delete);
+                        background-position: center;
+                        background-repeat: no-repeat;
+                    }
+                }
+
+                background: unset !important;
+                width: 16px;
+                height: 16px;
+                border-radius: unset;
+                margin: 5px !important;
+
+                &:before {
+                    filter: unset !important;
+                }
             }
-        }
-
-        margin: 5px !important;
-
-        &:before {
-            filter: unset !important;
         }
     }
 
@@ -6760,6 +6953,7 @@
     .home-panel {
         background: var(--navlist-grad);
         margin: unset !important;
+        padding: 15px 15px;
 
         section + & {
             margin: 15px 0 0 0 !important;
@@ -6803,6 +6997,13 @@
                 border-top: 1px solid var(--border);
                 padding-top: 5px;
             }
+
+            .version-item-body {
+                li u {
+                    text-decoration: none;
+                    font-weight: 600;
+                }
+            }
         }
     }
 
@@ -6824,10 +7025,22 @@
                 li + & {
                     margin-top: 6px;
                 }
+
+                &:before {
+                    content: '・❥・';
+                    color: var(--colour-lower);
+                }
             }
 
             ul {
+                margin-top: unset;
                 margin-left: 15px;
+
+                li:first-child {
+                    &:before {
+                        display: none;
+                    }
+                }
             }
         }
 

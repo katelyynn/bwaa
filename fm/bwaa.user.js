@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2024.1209
+// @version      2025.0316
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,8 +19,9 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2024.1209',
-    sku: 'home'
+    build: '2025.0316',
+    sku: 'beret',
+    year: 2025
 }
 
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
@@ -46,6 +47,43 @@ const trans = {
         see_all_placeholder: 'See all {placeholder}',
         share_link: 'Share link',
 
+        badges: {
+            missing: {
+                name: 'No badges'
+            },
+            subscriber: {
+                name: 'Subscriber',
+                reason: 'Active Pro subscription'
+            },
+            staff: {
+                name: 'Staff'
+            },
+            mod: {
+                name: 'Mod'
+            },
+            contributor: {
+                name: 'bleh contributor',
+                reason: 'Contributed to bleh via code or translations'
+            },
+            contributor_bwaa: {
+                name: 'bwaa contributor',
+                reason: 'Contributed to bwaa via code or translations'
+            },
+            translation: {
+                reason: 'Translated for a supported language'
+            },
+            cat: {
+                name: 'it\'s a kitty!!'
+            },
+            sponsor: {
+                name: 'Sponsoring',
+                reason: 'Sponsored bleh and bwaa :3'
+            },
+            reserved: {
+                reason: 'Reserved for certain users'
+            }
+        },
+
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
@@ -54,6 +92,22 @@ const trans = {
             check: 'Check for updates',
             correct: 'Submit name correction',
             view: 'View current corrections'
+        },
+
+        sponsor: {
+            name: 'Sponsor',
+            header: 'Sponsor the development of bleh and bwaa',
+            bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
+            status: {
+                yes: 'You are a sponsor, thank you!',
+                no: 'Become a sponsor to get a custom badge',
+                badge: 'To configure your custom badge, get in touch with me.',
+                one_time: 'A custom badge is available only when selecting monthly.'
+            },
+            manage: 'Manage sponsorship',
+            check: 'Refresh badges',
+            download: 'Sponsorship and badge data downloaded!',
+            version: 'You have version {v} of the sponsorship/badge data downloaded.'
         },
 
         changelog: {
@@ -380,6 +434,14 @@ const trans = {
                     albums_tracks: 'Albums and tracks'
                 }
             },
+            account: {
+                name: 'Account Settings',
+                bio: 'To support the project and receive a custom badge you can sponsor my work <3',
+                version: 'You have version {v} of the sponsor badge data.',
+                sponsor: {
+                    name: 'Become a sponsor'
+                }
+            },
             artist_redirection: {
                 name: 'Artist Redirection'
             },
@@ -399,10 +461,10 @@ const trans = {
             support: {
                 name: 'How can I support?',
                 body: [
-                    'At the moment, the best way to support is sharing the word around to others you think may enjoy and giving the project a star.',
-                    'If you would like to donate, that will be available in the future but that is obviously not expected.'
+                    'The best way to support is via a sponsorship on GitHub. If you feel my work is worthy of such, head below.'
                 ],
-                star: 'Star the project'
+                star: 'Star the project',
+                sponsor: 'Sponsor the project',
             },
             seasonal: {
                 category: 'Fun',
@@ -518,7 +580,7 @@ const trans = {
 function lookup_lang() {
     root = document.querySelector('.masthead-logo a').getAttribute('href');
     if (auth_link != null)
-        my_avi = auth_link.querySelector('img').getAttribute('src');
+        auth.avatar = auth_link.querySelector('img').getAttribute('src').replace('/avatar42s/', '/avatar170s/');
     lang = document.documentElement.getAttribute('lang');
     non_override_lang = lang;
 
@@ -602,6 +664,48 @@ let seasonal_events = [
     }
 ];
 
+function log(text, system, type = 'info', append={}) {
+    let system_colour;
+
+    switch(system) {
+        case 'load':
+            system_colour = '#8CB9D9';
+            break;
+        case 'lotus':
+            system_colour = '#8CD9A6';
+            break;
+        case 'season':
+            system_colour = '#65B6D8';
+            break;
+        case 'page':
+            system_colour = '#E4B381';
+            break;
+        case 'page structure':
+            system_colour = '#D88A69';
+            break;
+        case 'style':
+            system_colour = '#C9C678';
+            break;
+        case 'profile':
+            system_colour = '#D56854';
+            break;
+        case 'settings':
+            system_colour = '#6D6977';
+            break;
+        case 'sponsor':
+            system_colour = '#CE4E88';
+            break;
+        default:
+            system_colour = '#C8DD88';
+            break;
+    }
+
+    if (Object.keys(append).length > 0)
+        console[type](`%cbwaa~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset', append);
+    else
+        console[type](`%cbwaa~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
+}
+
 function set_season() {
     if (!settings.seasonal)
         return;
@@ -667,16 +771,24 @@ function prep_snow() {
     document.documentElement.appendChild(container);
 }
 
-let cute = ['cutensilly', 'inozom'];
+let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
+let sponsor_list = null;
 
 // require page reload
 let reload_pending = false;
+
+// lookup
+let last_lookup;
+let next_lookup;
 
 tippy.setDefaultProps({
     arrow: false,
     duration: [100, 100],
     delay: [null, 50]
 });
+
+let artist_corrections = {};
+let album_track_corrections = {};
 
 moment.locale('en', {
     relativeTime: {
@@ -820,71 +932,18 @@ let legacy_cover_art = {
 }
 let fallback_cover_art = 'https://katelyynn.github.io/bwaa/fm/extra_res/empty_disc.png';
 
-let profile_badges = {
-    'cutensilly': [
-        {
-            type: 'k',
-            name: 'k'
-        },
-        {
-            type: 'a',
-            name: 'a'
-        },
-        {
-            type: 't',
-            name: 't'
-        },
-        {
-            type: 'e',
-            name: 'e'
-        },
-        {
-            type: 'queen'
-        }
-    ],
-    'Iexyy': {
-        type: 'cat'
-    },
-    'bIeak': [
-        {
-            type: 'cat'
-        },
-        {
-            type: 'glaive'
-        }
-    ],
-    'peoplepleasr': {
-        type: 'cat'
-    },
-    'twolay': {
-        type: 'cat'
-    },
-    'aoivee': {
-        type: 'cat'
-    },
-    'Serprety': {
-        type: 'cat'
-    },
-    'RazzBX': {
-        type: 'cat'
-    },
-    'ivyshandle': {
-        type: 'cat'
-    },
-    'u5c': {
-        type: 'paw'
-    },
-    'destons': {
-        type: 'colon-three'
+// use the top-right link to determine the current user
+let auth = {
+    name: null,
+    pro: false,
+    avatar: null,
+    sets: {
+        hue: 255,
+        sat: 1,
+        lit: 1
     }
 };
-
-// use the top-right link to determine the current user
-let auth = '';
 let auth_link = '';
-
-// stores ur current authorised avatar
-let my_avi = '';
 
 // stores the current root of the page, most applicable in other languages:
 // en: /
@@ -896,17 +955,24 @@ let root = '';
 let recent_activity_list;
 
 // page type
+let last_page_type;
+let last_page_subpage;
 let page = {
+    initial: '',
     type: '',
     name: '',
     sister: '',
     subpage: '',
     avatar: '',
+    corrected: false,
+    token: '',
     structure: {
+        wrapper: null,
         container: null,
         row: null,
         main: null,
-        side: null
+        side: null,
+        nav: null
     }
 };
 
@@ -924,18 +990,13 @@ let last_promo = current_promo;
 let last_season_time;
 
 
-let artist_corrections = {};
-let album_track_corrections = {};
-
-
 (function() {
     'use strict';
 
     auth_link = document.querySelector('a.auth-link');
-    if (auth_link != null) {
-        auth = auth_link.querySelector('img').getAttribute('alt');
-        console.info('bwaa - auth', auth);
-    }
+    if (auth_link)
+        auth.name = auth_link.querySelector('img').getAttribute('alt');
+
     bwaa();
 
     function bwaa() {
@@ -953,18 +1014,167 @@ let album_track_corrections = {};
         // load seasonal data
         set_season();
 
-        bwaa_lastfm_settings();
         bwaa_footer();
 
         // everything past this point requires authorisation
-        if (auth == '')
+        if (auth.name == '')
             return;
 
         load_activities();
         notify_if_new_update();
 
         lotus();
+        sponsors();
 
+        try {
+            main_flow();
+
+            // last.fm is a single page application
+            const observer = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                    for (const node of mutation.addedNodes) {
+                        if (node instanceof Element) {
+                            if (node.classList[0] == 'modal-dialog') {
+                                // this is a silly hack to ensure modals get themed, as the creation of this element
+                                // causes another run of this script, giving enough time for the modal to load
+                                // this took so long
+                                fix_modal();
+                            }
+
+                            if (!node.hasAttribute('data-bwaa-cycle')) {
+                                node.setAttribute('data-bwaa-cycle', 'true');
+
+                                console.info('bwaa - bwaa\'ing');
+
+                                // essentials
+                                lookup_lang();
+                                load_settings();
+                                bwaa_load_header();
+
+                                // load seasonal data
+                                set_season();
+
+                                bwaa_footer();
+
+                                load_activities();
+
+                                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                                if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
+                                    // script is either out of date, or more in date (not gonna happen)
+                                    console.info('bwaa - theme returned version', theme_version, 'meanwhile script is running', version.build);
+
+                                    prompt_for_update();
+                                    has_prompted_for_update = true;
+                                }
+
+                                main_flow();
+                            }
+                        }
+                    }
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        } catch(e) {
+            handle_error(e);
+        }
+    }
+
+    function handle_error(e = null) {
+        alert(e);
+        console.error(e);
+    }
+
+    function main_flow() {
+        assign_page();
+
+        if (page.type == 'user' ||
+            page.type == 'artist' ||
+            page.type == 'album' ||
+            page.type == 'track' ||
+            page.type == 'events' ||
+            page.type == 'festival' ||
+            page.type == 'tag'
+        )
+            bwaa_shouts();
+
+        if (settings.lotus) {
+            patch_artist_grids();
+
+            correct_generic_combo_no_artist('artist-header-featured-items-item');
+            correct_generic_combo_no_artist('artist-top-albums-item');
+            correct_generic_combo('source-album-details');
+            correct_generic_combo('resource-list--release-list-item');
+
+            correct_tracks();
+        }
+
+        bwaa_forms();
+
+        subscribe_to_events();
+    }
+
+    function assign_page() {
+        if (!page.structure.wrapper)
+            page.structure.wrapper = document.body.querySelector('.main-content');
+
+        let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-bwaa])');
+        if (main_content) {
+            assign_page_type();
+            load_page();
+            main_content.setAttribute('data-bwaa', 'true');
+        } else {
+            assign_page_subpage();
+        }
+    }
+
+    function assign_page_type() {
+        let page_classes = document.body.classList;
+        page_classes.forEach((page_class, index) => {
+            if (page_class.startsWith('namespace')) {
+                page.initial = page_class.replace('namespace--', '');
+                let page_split = page.initial.split('_');
+
+                page.type = page_split[0];
+                if (page.type == 'music') {
+                    page.type = page_split[1];
+                }
+
+                if (page.type != last_page_type) {
+                    last_page_type = page.type;
+                    log(page.type, 'page');
+                }
+
+                console.log(page);
+
+                assign_page_subpage();
+
+                return;
+            }
+
+            if (index > 4)
+                return;
+        });
+    }
+
+    function assign_page_subpage() {
+        page.subpage = page.initial.replace(page.type, '').replace('_', '').replace('music_', '');
+
+        if (last_page_subpage != page.subpage) {
+            last_page_subpage = page.subpage;
+            log(`subpage of ${page.subpage}`, 'page');
+
+            load_settings();
+
+            if (page.structure.indicator)
+                page_indicator();
+        }
+    }
+
+    function load_page() {
         if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             // start bwaa setup
             bwaa_setup();
@@ -978,125 +1188,26 @@ let album_track_corrections = {};
             // things that load when not in bwaa settings
             bwaa_media_items();
 
-            bwaa_profiles();
-            bwaa_artists();
-            bwaa_albums();
-            bwaa_tracks();
-            bwaa_shouts();
+            if (page.type == 'user')
+                bwaa_profiles();
+            else if (page.type == 'artist')
+                bwaa_artists();
+            else if (page.type == 'album')
+                bwaa_albums();
+            else if (page.type == 'track')
+                bwaa_tracks();
+            else if (page.type == 'events' || page.type == 'festival')
+                bwaa_events();
+            else if (page.type == 'search')
+                bwaa_search();
+            else if (page.type == 'settings')
+                bwaa_lastfm_settings();
+            else if (page.type == 'home')
+                bwaa_home();
             bwaa_gallery();
             bwaa_friends();
-            bwaa_obsessions();
-            bwaa_library();
             bwaa_playlists();
-            bwaa_search();
-            bwaa_home();
-            bwaa_events();
-
-            if (settings.lotus) {
-                patch_artist_grids();
-
-                correct_generic_combo_no_artist('artist-header-featured-items-item');
-                correct_generic_combo_no_artist('artist-top-albums-item');
-                correct_generic_combo('source-album-details');
-                correct_generic_combo('resource-list--release-list-item');
-
-                correct_tracks();
-            }
-
-            subscribe_to_events();
         }
-
-        // last.fm is a single page application, this will be on the lookout
-        // for new elements being added so they can be patched if needed
-        // wish there was a better way
-        const observer = new MutationObserver((mutations) => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (node instanceof Element) {
-                        if (node.classList[0] == 'modal-dialog') {
-                            // this is a silly hack to ensure modals get themed, as the creation of this element
-                            // causes another run of this script, giving enough time for the modal to load
-                            // this took so long
-                            fix_modal();
-                        }
-
-                        if (!node.hasAttribute('data-bwaa-cycle')) {
-                            node.setAttribute('data-bwaa-cycle', 'true');
-
-                            console.info('bwaa - bwaa\'ing');
-
-                            // essentials
-                            lookup_lang();
-                            load_settings();
-                            bwaa_load_header();
-
-                            // load seasonal data
-                            set_season();
-
-                            bwaa_lastfm_settings();
-                            bwaa_footer();
-
-                            load_activities();
-
-                            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
-                            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
-                                // script is either out of date, or more in date (not gonna happen)
-                                console.info('bwaa - theme returned version', theme_version, 'meanwhile script is running', version.build);
-
-                                prompt_for_update();
-                                has_prompted_for_update = true;
-                            }
-
-                            if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
-                                // start bwaa setup
-                                bwaa_setup();
-                            } else if (window.location.href.startsWith(changelog_url.replace('{root}', root))) {
-                                // start bwaa changelog
-                                bwaa_changelog();
-                            } else if (window.location.href.startsWith(bwaa_url.replace('{root}', root))) {
-                                // start bwaa settings
-                                bwaa_settings();
-                            } else {
-                                // things that load when not in bwaa settings
-                                bwaa_media_items();
-
-                                bwaa_profiles();
-                                bwaa_artists();
-                                bwaa_albums();
-                                bwaa_tracks();
-                                bwaa_shouts();
-                                bwaa_gallery();
-                                bwaa_friends();
-                                bwaa_obsessions();
-                                bwaa_library();
-                                bwaa_playlists();
-                                bwaa_search();
-                                bwaa_home();
-                                bwaa_events();
-
-                                if (settings.lotus) {
-                                    patch_artist_grids();
-
-                                    correct_generic_combo_no_artist('artist-header-featured-items-item');
-                                    correct_generic_combo_no_artist('artist-top-albums-item');
-                                    correct_generic_combo('source-album-details');
-                                    correct_generic_combo('resource-list--release-list-item');
-
-                                    correct_tracks();
-                                }
-
-                                subscribe_to_events();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true
-        });
     }
 
 
@@ -1324,7 +1435,7 @@ let album_track_corrections = {};
         if (auth_link != null) {
             // logged in
             let text = document.createElement('p');
-            text.textContent = auth;
+            text.textContent = auth.name;
             auth_link.appendChild(text);
         } else {
             // guest
@@ -1338,6 +1449,11 @@ let album_track_corrections = {};
             let join_btn = site_auth_anon.querySelector('.join-cta-button');
             join_btn.innerHTML = '<strong>Join</strong>';
         }
+
+        if (document.body.querySelector('.masthead .masthead-pro-wrap'))
+            auth.pro = true;
+        else
+            auth.pro = false;
 
         let promo = document.createElement('div');
         promo.classList.add('header-promo');
@@ -1420,6 +1536,12 @@ let album_track_corrections = {};
             container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
         }
 
+        page.structure.container.setAttribute('data-assigned', 'true');
+
+        let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
+        if (other_container != null)
+            other_container.style.setProperty('display', 'none');
+
         if (page.structure.row == null || !document.body.contains(page.structure.row)) {
             console.info('bwaa - page structure checkup - page is missing a row, creating');
             page.structure.row = document.createElement('div');
@@ -1436,26 +1558,32 @@ let album_track_corrections = {};
             page.structure.row.appendChild(page.structure.main);
         }
 
+        page.structure.main.setAttribute('data-assigned', 'true');
+
+        let other_main = page.structure.row.querySelector('.col-main.hidden-xs:not([data-assigned])');
+        if (other_main != null)
+            other_main.style.setProperty('display', 'none');
+
+        console.info(page.structure.side, page.structure.side == null, typeof(page.structure.side));
+
         if (page.structure.side == null || !document.body.contains(page.structure.side)) {
-            console.info('bwaa - page structure checkup - page is missing a side');
+            console.info('bwaa - page structure checkup - page missing side');
             // check first if another sidebar exists
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-            if (page.structure != null) {
-                console.info('bwaa - page structure checkup - finished');
-                console.info(page);
-                return;
+            if (page.structure.side == null) {
+                console.info('bwaa - page structure checkup - page missing side, creating');
+
+                // otherwise, make anew
+                page.structure.side = document.createElement('div');
+                page.structure.side.classList.add('col-sidebar');
+
+                page.structure.row.appendChild(page.structure.side);
             }
-            console.info('bwaa - page structure checkup - creating new side');
-
-            // otherwise, make anew
-            page.structure.side = document.createElement('div');
-            page.structure.side.classList.add('col-sidebar');
-
-            page.structure.row.appendChild(page.structure.side);
         }
 
         console.info('bwaa - page structure checkup - finished');
+        page.raw = JSON.stringify(page.structure);
         console.info(page);
     }
 
@@ -1467,19 +1595,8 @@ let album_track_corrections = {};
         // are we on a profile?
         let profile_header = document.body.querySelector('.header--user');
 
-        if (profile_header == undefined)
+        if (!profile_header)
             return;
-
-        if (profile_header.hasAttribute('data-bwaa'))
-            return;
-        profile_header.setAttribute('data-bwaa', 'true');
-
-        console.info('bwaa - user is on a profile');
-        page.type = 'user';
-
-        // are we on the overview page?
-        let profile_header_overview = profile_header.classList.contains('header--overview');
-        console.info('bwaa - profile overview?', profile_header_overview);
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
         try {
@@ -1507,9 +1624,8 @@ let album_track_corrections = {};
         let is_new_account = false;
 
 
-        if (profile_header_overview) {
+        if (page.subpage == 'overview') {
             // profile overview stuff
-            page.subpage = 'overview';
 
             // fetch some data from the header
             try {
@@ -1519,7 +1635,9 @@ let album_track_corrections = {};
                 page.avatar = '';
                 is_new_account = true;
             }
-            page.name = profile_header.querySelector('.header-title a').textContent;
+            page.name = profile_header.querySelector('.header-title a').textContent.trim();
+
+            const is_own_profile = auth.name == page.name;
 
             let header_metadata = profile_header.querySelectorAll('.header-metadata-display p');
             let header_user_data = {
@@ -1541,30 +1659,21 @@ let album_track_corrections = {};
             let user_follows_you = (profile_header.querySelector('.label.user-follow') != undefined);
 
             // custom badges
-            if (profile_badges.hasOwnProperty(page.name)) {
-                if (!Array.isArray(profile_badges[page.name])) {
-                    // default
-                    console.info('bwaa - profile has 1 custom badge', profile_badges[page.name]);
-
-                    user_type = profile_badges[page.name].type;
-                } else {
-                    // multiple
-                    console.info('bwaa - profile has multiple custom badges', profile_badges[page.name]);
-
-                    user_type = profile_badges[page.name][profile_badges[page.name].length-1].type;
-                }
-            } else {
-                let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
-                let user_is_staff = (profile_header.querySelector('.user-status-staff') != undefined);
-                let user_is_mod = (profile_header.querySelector('.user-status-mod') != undefined);
-                if (user_is_staff)
-                    user_type = 'staff';
-                else if (user_is_mod)
-                    user_type = 'mod';
-                else if (user_is_subscriber)
-                    user_type = 'subscriber';
-            }
+            let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
+            let user_is_staff = (profile_header.querySelector('.user-status-staff') != undefined);
+            let user_is_mod = (profile_header.querySelector('.user-status-mod') != undefined);
+            if (user_is_staff)
+                user_type = 'staff';
+            else if (user_is_mod)
+                user_type = 'mod';
+            else if (user_is_subscriber)
+                user_type = 'subscriber';
             console.info('bwaa - user is of type', user_type);
+
+            if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
+                page.structure.main.innerHTML = '';
+                page.structure.side.innerHTML = '';
+            }
 
 
             // when was this user last seen scrobbling?
@@ -1584,7 +1693,7 @@ let album_track_corrections = {};
 
 
             // user interactions
-            if (auth != page.name) {
+            if (auth.name != page.name) {
                 let follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]').outerHTML;
 
                 let tasteometer = profile_header.querySelector('.tasteometer');
@@ -1607,10 +1716,14 @@ let album_track_corrections = {};
                 profile_actions.classList.add('profile-actions-section');
                 profile_actions.innerHTML = (`
                     <div class="options">
-                        ${follow_button}
+                        ${(page.name != sponsor_list.sponsor_account) ? follow_button : ''}
                         <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
-                        <a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>
+                        ${(page.name != sponsor_list.sponsor_account) ? `<a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>` : ''}
+                        ${(page.name == 'cutensilly') ? (`
+                        <a class="has-icon sponsor" onclick="_sponsor()">Sponsor me</a>
+                        `) : ''}
                     </div>
+                    ${(page.name != sponsor_list.sponsor_account) ? (`
                     <div class="tasteometer ${tasteometer_lvl}" data-taste="${tasteometer_lvl.replace('tasteometer-compat-', '')}">
                         <p>Your musical compatibility with <strong>${page.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
                         <div class="bar">
@@ -1618,6 +1731,7 @@ let album_track_corrections = {};
                         </div>
                         <p>${music_you_have_in_common}</p>
                     </div>
+                    `) : ''}
                 `);
                 page.structure.main.insertBefore(profile_actions, page.structure.main.firstChild);
 
@@ -1635,6 +1749,33 @@ let album_track_corrections = {};
             if (settings.varied_avatar_shapes)
                 page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/arXL/');
 
+            let badges = load_badges(page.name, user_type).toReversed();
+            let badges_html = document.createElement('div');
+
+            if (badges) {
+                badges.forEach((this_badge, index) => {
+                    let badge = document.createElement('div');
+                    badge.classList.add('user-type', `user-type--${this_badge.type}`, `user-type-for--${page.name}`, `user-type-reason--${this_badge.reason}`);
+                    badge.innerHTML = `<a>${this_badge.name}</a>`;
+                    badges_html.appendChild(badge);
+
+                    if (badges.length > 1) {
+                        if (index == 0) {
+                            let extra = document.createElement('div');
+                            extra.classList.add('user-type', 'user-type-extras');
+                            extra.innerHTML = `<a>+${badges.length - 1}</a>`;
+
+                            badges_html.appendChild(extra);
+                        } else {
+                            badge.classList.add('user-type-overflow');
+                        }
+                    }
+
+                    if (this_badge.type == 'sponsor')
+                        badge.setAttribute('onclick', '_sponsor()');
+                });
+            }
+
             // main user header
             // this is on top of the actions, but appending is backwards
             let new_header = document.createElement('section');
@@ -1648,12 +1789,12 @@ let album_track_corrections = {};
                             <img src="${page.avatar}" alt="${page.name}">
                         </a>
                     `)}
-                    <div class="user-type user-type--${user_type}">
-                        <a>${trans[lang].profile.user_types[user_type]}</a>
-                    </div>
+                    <div class="user-types">${badges_html.innerHTML}</div>
                 </div>
+
                 <div class="badge-info">
                     <h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>
+                    ${(page.name != sponsor_list.sponsor_account) ? (`
                     <div class="user-info">
                         <div class="top">
                             <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
@@ -1681,11 +1822,18 @@ let album_track_corrections = {};
                     <div class="user-activity">
                         <a href="${header_user_data.loved_tracks.getAttribute('href')}">${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${window.location.href}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
                     </div>
+                    `) : (`
+                    <div class="alert alert-info">
+                        This is a special bwaa account used for managing sponsors.
+                    </div>
+                    `)}
                 </div>
             `);
 
-            navlist_items.appendChild(journal_nav_btn);
-            page.structure.row.insertBefore(navlist, page.structure.main);
+            if (page.name != sponsor_list.sponsor_account) {
+                navlist_items.appendChild(journal_nav_btn);
+                page.structure.row.insertBefore(navlist, page.structure.main);
+            }
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
@@ -1739,7 +1887,7 @@ let album_track_corrections = {};
 
 
             // recent activity
-            if (auth != page.name)
+            if (auth.name != page.name)
                 return;
 
             let recent_activity_section = document.createElement('section');
@@ -1832,9 +1980,10 @@ let album_track_corrections = {};
         } else {
             // profile non-overview stuff
 
-            // which subpage is it?
-            page.subpage = document.body.classList[1].replace('namespace--', '');
-            deliver_notif(`Subpage type of ${page.subpage}`, true);
+            if (page.subpage == 'obsessions_obsession') {
+                bwaa_obsessions();
+                return;
+            }
 
             page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
             page.name = profile_header.querySelector('.header-title a').textContent;
@@ -1844,12 +1993,12 @@ let album_track_corrections = {};
                 page: document.body.querySelector('.content-top-header')
             }
 
-            if (page.subpage.startsWith('user-dashboard-layout'))
+            if (page.subpage.startsWith('listening-report'))
                 header_user_data.page = trans[lang].profile.tabs.reports;
             else
                 header_user_data.page = header_user_data.page.textContent;
 
-            if (page.subpage.startsWith('user_journal')) {
+            if (page.subpage.startsWith('journal')) {
                 journal_nav_btn.innerHTML = (`
                     <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${page.name}/journal">
                         Journal
@@ -1883,31 +2032,40 @@ let album_track_corrections = {};
 
             page.structure.container.classList.add('subpage');
 
-            if (page.subpage == 'user_obsessions_overview') {
+            if (page.subpage == 'obsessions_overview') {
                 bwaa_obsessions_list();
             } else if (
-                page.subpage.startsWith('user_playlists') ||
-                page.subpage == 'user_neighbours'
+                page.subpage.startsWith('playlists') ||
+                page.subpage == 'neighbours'
             ) {
                 deliver_notif('This page is currently not finished, sorry!');
             }
 
-            if (page.subpage == 'user_events') {
+            if (page.subpage == 'events') {
                 page.structure.container.classList.add('halfpage');
                 bwaa_events_listing('profile');
+            } else if (page.subpage.startsWith('library')) {
+                bwaa_library();
             }
 
             // reports
-            if (page.subpage == 'user-dashboard-layout--version-3') {
+            if (page.subpage.startsWith('listening-report')) {
                 // recover nav
                 let nav = document.body.querySelector('.user-dashboard-controls');
                 if (nav != null) {
                     let subpage_header = page.structure.main.querySelector('.profile-header-subpage-section');
                     subpage_header.after(nav);
                 }
+
+                /*let other_content = document.body.querySelectorAll('.page-content[style] .listening-report-row');
+                other_content.forEach((content) => {
+                    page.structure.container.appendChild(content);
+                });*/
+
+                let other_content = document.body.querySelector('.page-content[style]');
+                other_content.removeAttribute('style');
             }
         }
-        console.info(page);
     }
 
     function parse_markdown_text(text) {
@@ -2026,10 +2184,14 @@ let album_track_corrections = {};
     function patch_tab_overview_btn(navlist) {
         let tab = navlist.querySelector('.secondary-nav-item--overview a');
 
+        let type = page.type;
+        if (type == 'events' || type == 'festival')
+            type = 'event';
+
         if (page.type == 'user')
             tab.textContent = trans[lang].profile.tabs.overview;
         else
-            tab.textContent = trans[lang][page.type].tabs.overview;
+            tab.textContent = trans[lang][type].tabs.overview;
     }
 
 
@@ -2047,16 +2209,43 @@ let album_track_corrections = {};
 
         page.type = 'artist';
 
-        let is_subpage = artist_header.classList.contains('header-new--subpage');
+        let is_subpage = page.subpage != 'overview';
 
 
-        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
-        page.structure.row = page.structure.container.querySelector('.row');
+        // without pro theres two containers
+        if (auth.pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        } else {
+            // not pro
+
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
+                page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+            }
+        }
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            page.structure.row = page.structure.container.querySelector('.row');
+
+            if (!is_subpage)
+                page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
+            else
+                page.structure.main = page.structure.row.querySelector('.col-main');
+
+            if (auth.pro) {
+                page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            } else {
+                page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.section-with-separator--col)');
+            }
         } catch(e) {
-            console.info('bwaa - page structure - there was an issue finding elements');
+            log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
@@ -2154,8 +2343,8 @@ let album_track_corrections = {};
 
 
             let tags_html = '';
-            let tags = page.structure.main.querySelectorAll('.tag a');
-            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
+            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
+            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -2166,14 +2355,14 @@ let album_track_corrections = {};
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(!tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
             let gallery_sidebar_photos_ems = document.body.querySelectorAll('.sidebar-image-list-item');
             let gallery_sidebar_photos = [];
             for (let i = 1; i < 5; i++) {
                 console.info('gallery', i, gallery_sidebar_photos_ems);
-                if (gallery_sidebar_photos_ems[i] != null) {
+                if (!gallery_sidebar_photos_ems[i]) {
                     gallery_sidebar_photos.push(gallery_sidebar_photos_ems[i].querySelector('a').outerHTML);
                 } else {
                     gallery_sidebar_photos.push('');
@@ -2310,7 +2499,7 @@ let album_track_corrections = {};
             // listeners you! know
             let listeners_placeholder = document.createElement('div');
             listeners_placeholder.classList.add('top-listeners-small');
-            let listeners_you_know_list = page.structure.main.querySelectorAll('.personal-stats-listener');
+            let listeners_you_know_list = document.body.querySelectorAll('.personal-stats-listener');
             console.info(listeners_you_know_list);
             let listener_index = 0;
             listeners_you_know_list.forEach((listener) => {
@@ -2339,7 +2528,7 @@ let album_track_corrections = {};
                 listener_index += 1;
             });
 
-            let more_listeners = page.structure.main.querySelector('.personal-stats-item--listeners .header-metadata-display a');
+            let more_listeners = document.body.querySelector('.personal-stats-item--listeners .header-metadata-display a');
             if (more_listeners != null) {
                 let listeners_you_know = document.createElement('section');
                 listeners_you_know.innerHTML = (`
@@ -2352,7 +2541,7 @@ let album_track_corrections = {};
                 page.structure.side.insertBefore(listeners_you_know, page.structure.side.firstChild);
             }
 
-            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = document.body.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -2366,10 +2555,10 @@ let album_track_corrections = {};
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
-                            <img src="${my_avi}">
+                            <img src="${auth.avatar}">
                         </div>
                         <div class="info">
-                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="user" href="${auth_link}">${auth.name}</a>
                             <a class="scrobbles" href="${scrobble_link}">${trans[lang].your_scrobbles.count_scrobbles.replace('{count}', scrobble_count)}</a>
                         </div>
                     </div>
@@ -2405,10 +2594,6 @@ let album_track_corrections = {};
             page.structure.side.insertBefore(artist_stats, page.structure.side.firstChild);
         } else {
             patch_tab_overview_btn(navlist);
-
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-            deliver_notif(`Subpage type of ${page.subpage}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
@@ -2452,7 +2637,7 @@ let album_track_corrections = {};
                 generic_tag_patch();
             }
 
-            if (page.subpage == 'music_artist_events') {
+            if (page.subpage == 'artist_events') {
                 page.structure.container.classList.add('halfpage');
                 bwaa_events_listing();
             }
@@ -2517,16 +2702,37 @@ let album_track_corrections = {};
 
         page.type = 'album';
 
-        let is_subpage = album_header.classList.contains('header-new--subpage');
+        let is_subpage = page.subpage != 'overview';
 
 
-        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+        // without pro theres two containers
+        if (auth.pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+        } else {
+            // not pro
+
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
+                page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+            }
+        }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs)');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
+            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs, .hidden-xs, .upper-overview)');
+            if (!is_subpage)
+                page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs.masonry-right-bottom');
+            else
+                page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
         } catch(e) {
-            console.info('bwaa - page structure - there was an issue finding elements');
+            log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
@@ -2601,8 +2807,8 @@ let album_track_corrections = {};
 
 
             let tags_html = '';
-            let tags = page.structure.main.querySelectorAll('.tag a');
-            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
+            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
+            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -2710,7 +2916,7 @@ let album_track_corrections = {};
 
 
             // sidebar
-            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = document.body.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -2724,10 +2930,10 @@ let album_track_corrections = {};
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
-                            <img src="${my_avi}">
+                            <img src="${auth.avatar}">
                         </div>
                         <div class="info">
-                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="user" href="${auth_link}">${auth.name}</a>
                             <a class="scrobbles" href="${scrobble_link}">${scrobble_count} scrobbles</a>
                         </div>
                     </div>
@@ -2763,10 +2969,6 @@ let album_track_corrections = {};
             page.structure.side.insertBefore(album_stats, page.structure.side.firstChild);;
         } else {
             patch_tab_overview_btn(navlist);
-
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-            deliver_notif(`Subpage type of ${page.subpage}`, true);
 
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
@@ -2825,16 +3027,41 @@ let album_track_corrections = {};
 
         page.type = 'track';
 
-        let is_subpage = track_header.classList.contains('header-new--subpage');
+        let is_subpage = page.subpage != 'overview';
 
 
-        page.structure.container = document.body.querySelector('.page-content');
+        // without pro theres two containers
+        if (auth.pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content');
+        } else {
+            // not pro
+
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
+                page.structure.container = document.body.querySelector('.page-content');
+            }
+        }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+            if (!is_subpage) {
+                page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
+
+                if (page.structure.main.classList[2])
+                    page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard:not(:first-child)');
+            } else {
+                page.structure.main = page.structure.row.querySelector('.col-main');
+            }
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
         } catch(e) {
-            console.info('bwaa - page structure - there was an issue finding elements');
+            log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
@@ -2879,7 +3106,6 @@ let album_track_corrections = {};
 
         if (!is_subpage) {
             page.subpage = 'overview';
-            page.structure.side = page.structure.row.querySelector('.col-sidebar.buffer-standard');
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
             page.avatar = fallback_cover_art;
@@ -2908,8 +3134,8 @@ let album_track_corrections = {};
 
 
             let tags_html = '';
-            let tags = page.structure.main.querySelectorAll('.tag a');
-            let tags_see_more = page.structure.main.querySelector('.tags-view-all');
+            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
+            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
 
             let index = 1;
             tags.forEach((tag) => {
@@ -2929,7 +3155,7 @@ let album_track_corrections = {};
 
             let header_actions = track_header.querySelectorAll('.header-new-actions > [data-toggle-button=""]');
 
-            let first_meta = page.structure.main.querySelector('.catalogue-metadata-description');
+            let first_meta = document.body.querySelector('.catalogue-metadata-description');
             console.info(first_meta, first_meta.querySelector('a'));
             let track_length = '';
             if (first_meta.querySelector('a') == null)
@@ -3091,7 +3317,7 @@ let album_track_corrections = {};
 
 
             // sidebar
-            let scrobble_count_element = page.structure.main.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
+            let scrobble_count_element = document.body.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
             if (scrobble_count_element != undefined) {
@@ -3105,10 +3331,10 @@ let album_track_corrections = {};
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
-                            <img src="${my_avi}">
+                            <img src="${auth.avatar}">
                         </div>
                         <div class="info">
-                            <a class="user" href="${auth_link}">${auth}</a>
+                            <a class="user" href="${auth_link}">${auth.name}</a>
                             <a class="scrobbles" href="${scrobble_link}">${scrobble_count} scrobbles</a>
                         </div>
                     </div>
@@ -3145,11 +3371,6 @@ let album_track_corrections = {};
         } else {
             patch_tab_overview_btn(navlist);
 
-            // which subpage is it?
-            let subpage_type = document.body.classList[2].replace('namespace--', '');
-            page.subpage = subpage_type;
-            deliver_notif(`Subpage type of ${subpage_type}`, true);
-
             let subpage_title = document.body.querySelector('.subpage-title');
             if (subpage_title == undefined)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
@@ -3173,8 +3394,8 @@ let album_track_corrections = {};
             page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
             track_header.style.setProperty('display', 'none');
 
-            if (subpage_type.includes('wiki')) {
-                if (subpage_type.includes('wiki_history')) {
+            if (page.subpage.includes('wiki')) {
+                if (page.subpage.includes('wiki_history')) {
                     bwaa_wiki_history();
                 } else {
                     generic_wiki_patch();
@@ -3185,7 +3406,7 @@ let album_track_corrections = {};
 
             document.body.querySelector('.container.page-content').classList.add('subpage');
 
-            if (subpage_type.includes('tags_overview')) {
+            if (page.subpage.includes('tags_overview')) {
                 generic_tag_patch();
             }
         }
@@ -3373,11 +3594,9 @@ let album_track_corrections = {};
      * @returns retrieved wiki or cta if missing
      */
     function get_wiki() {
-        let wiki = page.structure.main.querySelector('.wiki-block.visible-lg');
-        if (wiki == null)
-            wiki = page.structure.main.querySelector('.wiki-block-cta');
-        if (wiki == null)
-            wiki = page.structure.main.querySelector('.coloured-cta--wiki-icon');
+        let        wiki = document.body.querySelector('.metadata-and-wiki-row .wiki-block.visible-lg');
+        if (!wiki) wiki = document.body.querySelector('.wiki-block-cta');
+        if (!wiki) wiki = document.body.querySelector('.coloured-cta--wiki-icon');
 
         return wiki.outerHTML;
     }
@@ -3509,7 +3728,7 @@ let album_track_corrections = {};
             return;
         }
 
-        if (page.subpage == 'music_artist_images_overview')
+        if (page.subpage == 'artist_images_overview')
             bwaa_gallery_listing();
         else
             bwaa_artworks();
@@ -3986,25 +4205,8 @@ let album_track_corrections = {};
     function bwaa_lastfm_settings() {
         console.info('bwaa - last.fm settings host');
 
-        let content_forms = document.querySelectorAll('.content-form:not([data-bwaa="true"])');
-        console.info('bwaa - last.fm settings host found content-forms:', content_forms);
-        content_forms.forEach((content_form) => {
-            content_form.classList.remove('content-form');
-            content_form.classList.add('settings-form');
-
-            content_form.setAttribute('data-bwaa-cycle-form', 'true');
-        });
-
-        // new profile pages?
-        if (document.body.classList[2] == null)
-            return;
-
-        if (!document.body.classList[2].startsWith('namespace--settings') && !document.body.classList[1].startsWith('namespace--settings'))
-            return;
-
-        page.type = 'settings';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         page.structure.container = document.body.querySelector('.page-content');
         page.structure.row = page.structure.container.querySelector('.row');
@@ -4022,11 +4224,6 @@ let album_track_corrections = {};
         page.structure.container.setAttribute('data-bwaa', 'true');
         page.structure.container.classList.add('lastfm-settings', 'subpage');
 
-        // which subpage is it?
-        let subpage_type = document.body.classList[2].replace('namespace--', '');
-        page.subpage = subpage_type;
-        deliver_notif(`Subpage type of ${subpage_type}`, true);
-
 
         let navlist_switcher = document.createElement('nav');
         navlist_switcher.classList.add('navlist', 'secondary-nav', 'navlist--more');
@@ -4040,6 +4237,11 @@ let album_track_corrections = {};
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
                     <a class="secondary-nav-item-link" href="${root}bwaa">
                         bwaa
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                    <a class="secondary-nav-item-link" href="${root}bwaa/changelog">
+                        ${trans[lang].changelog.title}
                     </a>
                 </li>
             </ul>
@@ -4067,12 +4269,12 @@ let album_track_corrections = {};
             page.structure.main.appendChild(content);
         }
 
-        if (page.subpage == 'settings_overview') {
+        if (page.subpage == 'overview') {
             // update picture notice
             let update_picture_notice = page.structure.main.querySelector('.avatar-upload-form .form-row-help-text');
-            if (update_picture_notice != null)
+            if (update_picture_notice)
                 update_picture_notice.innerHTML = trans[lang].settings.update_picture.replace('{+l}', `<a href="${root}bwaa">`).replace('{-l}', '</a>');
-        } else if (page.subpage == 'settings_applications_overview') {
+        } else if (page.subpage == 'applications_overview') {
             // applications
             let session_container = document.createElement('section');
             session_container.classList.add('session-container');
@@ -4144,6 +4346,17 @@ let album_track_corrections = {};
         }
     }
 
+    function bwaa_forms() {
+        let content_forms = document.querySelectorAll('.content-form:not([data-bwaa="true"])');
+        console.info('bwaa - last.fm settings host found content-forms:', content_forms);
+        content_forms.forEach((content_form) => {
+            content_form.classList.remove('content-form');
+            content_form.classList.add('settings-form');
+
+            content_form.setAttribute('data-bwaa-cycle-form', 'true');
+        });
+    }
+
 
     unsafeWindow._display_session = function(index) {
         display_session(index);
@@ -4183,8 +4396,8 @@ let album_track_corrections = {};
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
         page.type = 'bwaa_settings';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         adaptive_skin.innerHTML = '';
         document.title = `${trans[lang].settings.title} | Last.fm`;
@@ -4214,10 +4427,10 @@ let album_track_corrections = {};
                     <div class="col-main settings-form">
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
-                                <img src="${my_avi}" alt="${auth}">
+                                <img src="${auth.avatar}" alt="${auth.name}">
                             </div>
                             <div class="badge-info">
-                                <a href="${root}user/${auth}">${auth}</a>
+                                <a href="${root}user/${auth.name}">${auth.name}</a>
                                 <h1>${trans[lang].settings.title}</h1>
                             </div>
                         </section>
@@ -4231,6 +4444,11 @@ let album_track_corrections = {};
                                 <li class="navlist-item secondary-nav-item">
                                     <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="corrections" onclick="_change_settings_page('corrections')">
                                         ${trans[lang].settings.tabs.corrections}
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item">
+                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="account" onclick="_change_settings_page('account')">
+                                        ${trans[lang].settings.tabs.account}
                                     </a>
                                 </li>
                                 <li class="navlist-item secondary-nav-item">
@@ -4277,6 +4495,9 @@ let album_track_corrections = {};
                 <section id="welcome" class="form-section settings-form">
                     <h2 class="form-header">${trans[lang].settings.welcome.name}</h2>
                     <p>${trans[lang].settings.welcome.body.replace('{v}', `<strong>${version.build}.${version.sku}</strong>`)}</p>
+                    <div class="more-link align-left space-self">
+                        <a href="https://github.com/sponsors/katelyynn" target="_blank">${trans[lang].settings.support.sponsor}</a>
+                    </div>
                     <div class="more-link align-left space-self">
                         <a onclick="_request_style_reload()">${trans[lang].settings.check_for_updates}</a>
                     </div>
@@ -4555,6 +4776,18 @@ let album_track_corrections = {};
                         ${trans[lang].settings.about.alert}
                     </div>
                     <fieldset>
+                        <legend>${trans[lang].settings.support.name}</legend>
+                        <div class="form-group">
+                            <p>${trans[lang].settings.support.body[0]}</p>
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/sponsors/katelyynn" target="_blank">${trans[lang].settings.support.sponsor}</a>
+                            </div>
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/katelyynn/bwaa" target="_blank">${trans[lang].settings.support.star}</a>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
                         <legend>${trans[lang].settings.find_a_bug.name}</legend>
                         <div class="form-group">
                             <div class="more-link align-left space-self">
@@ -4565,14 +4798,25 @@ let album_track_corrections = {};
                             ${trans[lang].settings.find_a_bug.esr}
                         </div>
                     </fieldset>
+                </section>
+            `);
+        } else if (page == 'account') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">${trans[lang].settings.account.name}</h2>
+                    <p>${trans[lang].settings.account.bio}</p>
+                    <p class="alert">${trans[lang].settings.account.version
+                    .replace('{v}', `<span class="version-link">${sponsor_list.latest}</span>`)}</p>
                     <fieldset>
-                        <legend>${trans[lang].settings.support.name}</legend>
-                        <div class="form-group">
-                            <p>${trans[lang].settings.support.body[0]}</p>
-                            <p>${trans[lang].settings.support.body[1]}</p>
-                            <div class="more-link align-left space-self">
-                                <a href="https://github.com/katelyynn/bwaa/" target="_blank">${trans[lang].settings.support.star}</a>
-                            </div>
+                        <legend>${trans[lang].settings.account.sponsor.name}</legend>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_sponsor()">${trans[lang].settings.support.sponsor}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_sponsor_manage()">${trans[lang].sponsor.manage}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_sponsor_check()">${trans[lang].sponsor.check}</a>
                         </div>
                     </fieldset>
                 </section>
@@ -4665,7 +4909,7 @@ let album_track_corrections = {};
                 <div class="audioscrobbler-logo" style="background-image: url(${audioscrobbler_logo});"></div>
             </div>
             <div class="text">
-                © 2024 Last.fm Ltd. All rights reserved. | <a href="${root}legal/terms">Terms of Use</a> and <a href="${root}legal/privacy">Privacy Policy</a> | <i class="update-date">Updated 2024</i><br>Some user-contributed text on this page is available under the <a href="http://creativecommons.org/licenses/by-sa/3.0/legalcode">Creative Commons Attribution/Share-Alike License</a>.<br>Text may also be available under the <a href="https://www.last.fm/help/gfdl">GNU Free Documentation License</a>.
+                © ${version.year} Last.fm Ltd. All rights reserved. | <a href="${root}legal/terms">Terms of Use</a> and <a href="${root}legal/privacy">Privacy Policy</a> | <i class="update-date">Updated ${version.year}</i><br>Some user-contributed text on this page is available under the <a href="http://creativecommons.org/licenses/by-sa/3.0/legalcode">Creative Commons Attribution/Share-Alike License</a>.<br>Text may also be available under the <a href="https://www.last.fm/help/gfdl">GNU Free Documentation License</a>.
             </div>
         `);
 
@@ -4760,8 +5004,8 @@ let album_track_corrections = {};
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
         page.type = 'bwaa_settings';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         deliver_notif(`bwaa has installed successfully!`);
 
@@ -4788,10 +5032,10 @@ let album_track_corrections = {};
                     <div class="col-main settings-form">
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
-                                <img src="${my_avi}" alt="${auth}">
+                                <img src="${auth.avatar}" alt="${auth.name}">
                             </div>
                             <div class="badge-info">
-                                <a href="${root}user/${auth}">${auth}</a>
+                                <a href="${root}user/${auth.name}">${auth.name}</a>
                                 <h1>Setup bwaa</h1>
                             </div>
                         </section>
@@ -4839,7 +5083,7 @@ let album_track_corrections = {};
                                 <a href="${root}bwaa">Configure more of bwaa</a>
                             </div>
                             <div class="more-link align-right">
-                                <a href="${root}user/${auth}">Head to your profile</a>
+                                <a href="${root}user/${auth.name}">Head to your profile</a>
                             </div>
                             <fieldset>
                                 <legend>Support bwaa</legend>
@@ -4934,7 +5178,7 @@ let album_track_corrections = {};
         let notif = document.createElement('button');
         notif.classList.add('bwaa-notification');
         notif.setAttribute('onclick', '_kill_notif(this)');
-        notif.textContent = content;
+        notif.innerHTML = content;
 
         document.getElementById('bwaa-notifs').appendChild(notif);
 
@@ -4980,7 +5224,10 @@ let album_track_corrections = {};
      * notify user if new update and stores in localStorage for next time
      * @returns if first-time installing, redirect to setup
      */
-    function notify_if_new_update() {
+    unsafeWindow._fake_update = function() {
+        notify_if_new_update(true);
+    }
+    function notify_if_new_update(force = false) {
         let last_version_used = localStorage.getItem('bwaa_last_version_used') || '';
 
         // enter first-time setup
@@ -4992,8 +5239,8 @@ let album_track_corrections = {};
         }
 
         // otherwise, it's a usual update
-        if (last_version_used != version.build) {
-            deliver_notif(`bwaa has updated to ${version.build}.${version.sku}!`, false, false, true);
+        if (last_version_used != version.build || force) {
+            deliver_notif(`bwaa has updated to ${version.build}.${version.sku}! <a href="${root}bwaa/changelog">Read the changelog</a>`, false, false, true);
             register_activity('update_bwaa', [{name: version.build, type: 'bwaa'}], `${root}bwaa`);
             localStorage.setItem('bwaa_last_version_used', version.build);
 
@@ -5309,8 +5556,8 @@ let album_track_corrections = {};
         search_form.setAttribute('data-bwaa', 'true');
 
         page.type = 'search';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
         page.structure.row = page.structure.container.querySelector('.row');
@@ -5503,7 +5750,7 @@ let album_track_corrections = {};
 
 
     function subscribe_to_events() {
-        let love_track = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bwaa-subscribed])`);
+        let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bwaa-subscribed])`);
         love_track.forEach((form) => {
             form.setAttribute('data-bwaa-subscribed', 'true');
 
@@ -5543,7 +5790,7 @@ let album_track_corrections = {};
         });
 
 
-        let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth}/obsessions"]:not([data-bwaa-subscribed])`);
+        let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth.name}/obsessions"]:not([data-bwaa-subscribed])`);
         obsess.forEach((form) => {
             form.setAttribute('data-bwaa-subscribed', 'true');
 
@@ -5622,8 +5869,8 @@ let album_track_corrections = {};
         recs_feed.setAttribute('data-bwaa', 'true');
 
         page.type = 'home';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
         try {
@@ -5664,14 +5911,14 @@ let album_track_corrections = {};
             <h2 class="form-header">${trans[lang].home.library.name}</h2>
             <div id="library-insert"></div>
             <div class="more-link">
-                <a href="${root}user/${auth}/loved">${trans[lang].see_more}</a>
+                <a href="${root}user/${auth.name}/loved">${trans[lang].see_more}</a>
             </div>
         `);
 
         page.structure.main.insertBefore(new_library, page.structure.main.firstElementChild);
 
 
-        fetch(`${root}user/${auth}/loved`)
+        fetch(`${root}user/${auth.name}/loved`)
         .then(function(response) {
             console.log('returned', response, response.text);
 
@@ -5722,7 +5969,7 @@ let album_track_corrections = {};
             event: []
         };*/
         /*let recs = {};*/
-        let recs_objects = page.structure.main.querySelectorAll('.recs-feed-item');
+        let recs_objects = page.structure.main.querySelectorAll('.recs-feed-item:not(.recs-feed-item--ad)');
 
         recs_objects.forEach((rec) => {
             let item = {};
@@ -5916,42 +6163,41 @@ let album_track_corrections = {};
     function bwaa_events() {
         console.info('bwaa - events');
 
-        let event_header = document.body.querySelector('.header-info-primary--with-calendar');
+        let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
 
-        if (event_header == null) {
-            // new profile pages?
-            if (document.body.classList[2] == null)
-                return;
+        // without pro theres two containers
+        if (auth.pro) {
+            // pro
 
-            // is this an event edit page?
-            if (document.body.classList[2].startsWith('namespace--events'))
-                bwaa_events_edit();
+            page.structure.container = document.body.querySelector('.page-content');
+        } else {
+            // not pro
 
-            return;
+            if (!is_subpage)
+                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+            else
+                page.structure.container = document.body.querySelector('.page-content');
         }
-
-        if (event_header.hasAttribute('data-bwaa'))
-            return;
-        event_header.setAttribute('data-bwaa', 'true');
-
-        page.type = 'event';
-
-        let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
-
-
-        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
         } catch(e) {
-            console.info('bwaa - page structure - there was an issue finding elements');
+            log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
 
+        let event_header = document.body.querySelector('.header');
+
+        if (page.subpage.startsWith('event_edit')) {
+            bwaa_events_edit();
+            return;
+        }
+
         let navlist = event_header.querySelector('.navlist');
 
+        page.sister = event_header.querySelector('.header-title').textContent.trim();
         if (!is_subpage) {
             try {
                 page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
@@ -5960,9 +6206,12 @@ let album_track_corrections = {};
                 page.name = event_header.querySelector('.header-title-secondary span').textContent;
             }
         } else {
-            page.name = event_header.querySelector('.header-title-secondary a').textContent;
+            try {
+                page.name = event_header.querySelector('.header-title-secondary a').textContent;
+            } catch(e) {
+                page.name = page.sister;
+            }
         }
-        page.sister = event_header.querySelector('.header-title').textContent;
         page.avatar = pre_fetch_background(document.body.querySelector('.header-background--has-image'));
 
         patch_tab_overview_btn(navlist);
@@ -6602,8 +6851,8 @@ let album_track_corrections = {};
         adaptive_skin.setAttribute('data-bwaa', 'true');
 
         page.type = 'bwaa_changelog';
-        page.avatar = my_avi;
-        page.name = auth;
+        page.avatar = auth.avatar;
+        page.name = auth.name;
 
         adaptive_skin.innerHTML = '';
         document.title = `${trans[lang].changelog.title} | Last.fm`;
@@ -6633,10 +6882,10 @@ let album_track_corrections = {};
                     <div class="col-main settings-form">
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
-                                <img src="${my_avi}" alt="${auth}">
+                                <img src="${auth.avatar}" alt="${auth.name}">
                             </div>
                             <div class="badge-info">
-                                <a href="${root}user/${auth}">${auth}</a>
+                                <a href="${root}user/${auth.name}">${auth.name}</a>
                                 <h1>${trans[lang].changelog.title}</h1>
                             </div>
                         </section>
@@ -6673,7 +6922,7 @@ let album_track_corrections = {};
             button.setAttribute('disabled', '');
 
         let xhr = new XMLHttpRequest();
-        let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+        let url = `https://katelyynn.github.io/bwaa/fm/changelog/changelog.json?${Math.random()}`;
         xhr.open('GET',url,true);
 
         xhr.onload = function() {
@@ -6766,5 +7015,187 @@ let album_track_corrections = {};
 
     unsafeWindow._update_local_changelog_cache = function(json) {
         localStorage.setItem('bwaa_changelog', JSON.stringify(json));
+    }
+
+
+
+
+    function sponsors(force = false) {
+        let sponsor_data = localStorage.getItem('kat_sponsors');
+        let sponsor_expire = new Date(localStorage.getItem('kat_sponsors_expire'));
+
+        let current_time = new Date();
+
+        if (sponsor_data == null) {
+            log('not cached, fetching', 'sponsor');
+            sponsor_request(true);
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            sponsor_list = JSON.parse(sponsor_data);
+
+            // is it valid?
+            if (sponsor_expire < current_time && !force) {
+                sponsor_request();
+            } else if (force) {
+                sponsor_request(true);
+            }
+        }
+    }
+
+    function sponsor_request(notify = false) {
+        let button = document.body.querySelector('[onclick="_sponsor_check()"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            log(`list responded with ${xhr.status}`, 'sponsor');
+
+            if (xhr.status != 200) {
+                log('request has been cancelled, will request again in 1h', 'sponsor');
+                api_expire.setHours(api_expire.getHours() + 1);
+            }
+
+            // set expire date
+            let api_expire = new Date();
+
+            if (xhr.status == 200) {
+                sponsor_list = JSON.parse(this.response);
+
+                if (notify)
+                    deliver_notif(trans[lang].sponsor.download, false, true, 'sponsor');
+
+                // save to cache for next page load
+                localStorage.setItem('kat_sponsors', this.response);
+                api_expire.setHours(api_expire.getHours() + 4);
+                log(`list cached until ${api_expire}`, 'sponsor');
+            }
+
+            localStorage.setItem('kat_sponsors_expire', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+    unsafeWindow._sponsor_check = function() {
+        sponsors(true);
+    }
+
+
+    unsafeWindow._sponsor = function() {
+        sponsor();
+    }
+    function sponsor() {
+        create_window(
+            'sponsor',
+            trans[lang].sponsor.header,
+            (`
+                <div class="modal-vertical-inner support-inner">
+                    <p>${trans[lang].sponsor.bio}</p>
+                </div>
+                <div class="more-link">
+                    <a href="${sponsor_list.sponsor_link}" target="_blank">
+                        ${trans[lang].sponsor.name}
+                    </a>
+                </div>
+                <div class="more-link">
+                    <a onclick="_kill_window('sponsor')">
+                        ${trans[lang].settings.close}
+                    </a>
+                </div>
+            `)
+        );
+    }
+
+    unsafeWindow._sponsor_manage = function() {
+        sponsor_manage();
+    }
+    function sponsor_manage() {
+        if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
+            create_window(
+                'sponsor_manage',
+                trans[lang].sponsor.status.yes,
+                (`
+                    <div class="modal-vertical-inner support-inner">
+                        <p>${trans[lang].sponsor.status.one_time}</p>
+                    </div>
+                    <div class="more-link">
+                        <a onclick="_kill_window('sponsor_manage')">
+                            ${trans[lang].settings.close}
+                        </a>
+                    </div>
+                `),
+            );
+        } else {
+            create_window(
+                'sponsor_manage',
+                trans[lang].sponsor.status.yes,
+                (`
+                    <div class="modal-vertical-inner support-inner">
+                        <p>${trans[lang].sponsor.status.badge}</p>
+                    </div>
+                    <div class="more-link">
+                        <a href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                            ${trans[lang].sponsor.manage}
+                        </a>
+                    </div>
+                    <div class="more-link">
+                        <a onclick="_kill_window('sponsor_manage')">
+                            ${trans[lang].settings.close}
+                        </a>
+                    </div>
+                `),
+            );
+        }
+    }
+
+
+    function load_badges(user, user_type = 'user', solo = false) {
+        let badges = [];
+
+        if (user_type != 'user') {
+            badges.push({
+                type: user_type
+            });
+        }
+
+        if (sponsor_list && sponsor_list.badges.hasOwnProperty(user)) {
+            if (!Array.isArray(sponsor_list.badges[user])) {
+                log('1 badge found', 'sponsor', 'info', sponsor_list.badges[user]);
+                badges.push(sponsor_list.badges[user]);
+            } else {
+                log('multiple badges found', 'sponsor', 'info', sponsor_list.badges[user]);
+
+                if (solo)
+                    badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
+                else
+                    sponsor_list.badges[user].forEach((badge) => { badges.push(badge); });
+            }
+        }
+
+        // now we run thru to add missing metadata
+        badges.forEach((badge) => {
+            if (!badge.name)
+                badge.name = trans[lang].badges[badge.type].name;
+
+            if (badge.reason)
+                return;
+
+            if (badge.type == 'sponsor' || badge.type == 'contributor' || badge.type == 'translation')
+                badge.reason = badge.type;
+            else if (badge.type == 'cute' || badge.type == 'queen')
+                badge.reason = 'cute';
+            else
+                badge.reason = 'reserved';
+        });
+
+        log('final badge list', 'sponsor', 'info', badges);
+        return badges;
     }
 })();
