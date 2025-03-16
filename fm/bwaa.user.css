@@ -6920,25 +6920,30 @@
 
         .modal-buttons {
             margin: unset;
-        }
-    }
-    .modal-action-button {
-        &.modal-dismiss {
-            clip: unset !important;
-            display: flex !important;
-            visibility: visible !important;
 
-            &:before {
-                background: var(--cdn-flatness-buttons-delete);
-                background-position: center;
-                background-repeat: no-repeat;
+            .modal-action-button {
+                &.modal-dismiss {
+                    clip: unset !important;
+                    display: flex !important;
+                    visibility: visible !important;
+
+                    &:before {
+                        background: var(--cdn-flatness-buttons-delete);
+                        background-position: center;
+                        background-repeat: no-repeat;
+                    }
+                }
+
+                background: unset !important;
+                width: 16px;
+                height: 16px;
+                border-radius: unset;
+                margin: 5px !important;
+
+                &:before {
+                    filter: unset !important;
+                }
             }
-        }
-
-        margin: 5px !important;
-
-        &:before {
-            filter: unset !important;
         }
     }
 
