@@ -2637,7 +2637,7 @@ let last_season_time;
                 generic_tag_patch();
             }
 
-            if (page.subpage == 'artist_events') {
+            if (page.subpage == 'events') {
                 page.structure.container.classList.add('halfpage');
                 bwaa_events_listing();
             }
@@ -3728,7 +3728,7 @@ let last_season_time;
             return;
         }
 
-        if (page.subpage == 'artist_images_overview')
+        if (page.subpage == 'images_overview')
             bwaa_gallery_listing();
         else
             bwaa_artworks();
