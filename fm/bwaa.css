@@ -831,6 +831,7 @@ b, strong {
             line-height: 12px !important;
             text-transform: initial !important;
             font-weight: normal !important;
+            cursor: pointer;
         }
 
         .leave-a-shout {
