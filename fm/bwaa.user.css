@@ -4375,14 +4375,18 @@
 
 
 
+    .avatar {
+        overflow: hidden;
+    }
     .avatar-status-dot {
-        top: 1px !important;
-        left: 1px !important;
+        top: 0 !important;
+        left: 0 !important;
         border-radius: unset;
         width: var(--size, 6px) !important;
         height: var(--size, 6px) !important;
-        border: 1px solid var(--body);
-        outline: 1px solid var(--border);
+        box-shadow: inset -1px -1px 0 0 var(--body) !important;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
         box-shadow: unset;
 
         .shout-user-avatar & {
