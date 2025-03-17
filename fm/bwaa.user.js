@@ -6906,7 +6906,9 @@ let last_season_time;
                                 <h1>${trans[lang].changelog.title}</h1>
                             </div>
                         </section>
-                        <div class="changelog" id="changelog"></div>
+                        <div class="changelog" id="changelog">
+                            <p class="subtext">loading...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -6974,6 +6976,7 @@ let last_season_time;
 
     function open_changelog(changelog) {
         let changelog_list = document.getElementById('changelog');
+        changelog_list.innerHTML = '';
 
         let index = 0;
         for (let version in changelog) {
@@ -6987,7 +6990,10 @@ let last_season_time;
             version_item.innerHTML = (`
                 <div class="version-item-header">
                     <div class="changelog-badge">${trans[lang].changelog.type[changelog[version].type]}</div>
-                    <h3>${changelog[version].name}</h3>
+                    <h3>
+                        ${changelog[version].name}
+                        <p class="subtext">${version}</p>
+                    </h3>
                 </div>
             `);
 

@@ -6986,12 +6986,26 @@
                     margin: unset;
                     font-size: 14px;
                     line-height: 1.5em;
+
+                    display: flex;
+                    gap: 6px;
                 }
 
                 .changelog-badge {
                     padding: 0.125em 0.5em 0.25em 0.5em;
                     background: var(--alert);
                     width: fit-content;
+                    font-size: 11px;
+                }
+
+                .subtext {
+                    font-weight: normal;
+                }
+            }
+
+            &[data-changelog-type="major"] {
+                .changelog-badge {
+                    background: var(--alert-success);
                 }
             }
 
