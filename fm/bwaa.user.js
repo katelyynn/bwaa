@@ -557,20 +557,20 @@ const trans = {
             notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
-            shout: 'You left a shout for {i}',
-            image_upload: 'You uploaded an image for {i}',
-            image_star: 'You starred an image for {i}',
-            obsess: 'You’re obsessed with {i}',
-            unobsess: 'You’re no longer obsessed with {i}',
-            love: 'You love {i}',
-            unlove: 'You no longer love {i}',
-            install_bwaa: 'You installed bwaa',
-            update_bwaa: 'You updated bwaa to {i}',
-            install_bleh: 'You installed bleh',
-            update_bleh: 'You updated bleh to {i}',
-            bookmark: 'You bookmarked {i}',
-            unbookmark: 'You removed {i}’s bookmark',
-            wiki: 'You edited on {i}'
+            shout: 'You left {i} a shout.',
+            image_upload: 'You uploaded {i} an image.',
+            image_star: 'You starred a {i} image.',
+            obsess: 'You’re obsessed with {i}.',
+            unobsess: 'You’re not obsessed with {i}.',
+            love: 'You love {i}.',
+            unlove: 'You no longer love {i}.',
+            install_bwaa: 'You installed bwaa.',
+            update_bwaa: 'You updated bwaa to {i}.',
+            install_bleh: 'You installed bleh.',
+            update_bleh: 'You updated bleh to {i}.',
+            bookmark: 'You bookmarked {i}.',
+            unbookmark: 'You removed {i}’s bookmark.',
+            wiki: 'You edited the {i} wiki.'
         }
     }
 }

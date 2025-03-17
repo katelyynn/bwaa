@@ -3696,18 +3696,10 @@
 
         &:not(:has(a:hover)):hover .title {
             text-decoration: underline;
-
-            a {
-                color: inherit !important;
-            }
         }
 
         .title {
             font-weight: bold;
-
-            a {
-                color: inherit;
-            }
         }
         .date {
             color: var(--colour-middle);
