@@ -2360,14 +2360,16 @@ let last_season_time;
             tags_html = `${tags_html} <a class="see-more-tags" href="${(!tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
-            let gallery_sidebar_photos_ems = document.body.querySelectorAll('.sidebar-image-list-item');
+            let gallery_sidebar_photos_ems = document.body.querySelectorAll('.col-sidebar .sidebar-image-list-item');
             let gallery_sidebar_photos = [];
-            for (let i = 1; i < 5; i++) {
-                console.info('gallery', i, gallery_sidebar_photos_ems);
-                if (!gallery_sidebar_photos_ems[i]) {
-                    gallery_sidebar_photos.push(gallery_sidebar_photos_ems[i].querySelector('a').outerHTML);
-                } else {
-                    gallery_sidebar_photos.push('');
+            if (gallery_sidebar_photos_ems.length > 0) {
+                for (let i = 1; i < 5; i++) {
+                    console.info('gallery', i, gallery_sidebar_photos_ems);
+                    if (gallery_sidebar_photos_ems[i]) {
+                        gallery_sidebar_photos.push(gallery_sidebar_photos_ems[i].querySelector('a').outerHTML);
+                    } else {
+                        gallery_sidebar_photos.push('');
+                    }
                 }
             }
 
