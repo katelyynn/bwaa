@@ -1903,7 +1903,7 @@ let last_season_time;
             let recent_activity_list_r = recent_activity_list;
             recent_activity_list_r.reverse();
 
-            recent_activity_list_r.forEach((activity) => {
+            recent_activity_list_r.forEach((activity, index) => {
                 // type: string,
                 // involved: [{name: string, type: user | artist | album | track}, sister?: string],
                 // context: string,
@@ -1912,6 +1912,9 @@ let last_season_time;
                 let activity_item = document.createElement('a');
                 activity_item.classList.add('activity-item', 'journal-like', `activity--${activity.type}`);
                 activity_item.setAttribute('href', activity.context);
+
+                if (index == (recent_activity_list_r.length - 1))
+                    activity_item.classList.add('last');
 
                 let involved_text = '';
 

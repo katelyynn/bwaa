@@ -3593,6 +3593,10 @@
         border-bottom: 1px solid var(--border);
         position: relative;
 
+        &.last {
+            border-bottom: unset;
+        }
+
         &:before {
             --top: 5px;
             --width: 20px;
@@ -3691,7 +3695,7 @@
         text-decoration: none !important;
 
         h2 + & {
-            margin-top: 15px;
+            margin-top: 8px;
         }
 
         &:not(:has(a:hover)):hover .title {
