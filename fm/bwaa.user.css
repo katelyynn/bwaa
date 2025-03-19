@@ -2012,8 +2012,6 @@
         }
     }
     #tracklist {
-        margin-top: unset !important;
-
         .col-main.buffer-standard:has(&) {
             margin-top: unset !important;
         }
@@ -5176,9 +5174,6 @@
         }
     }
 
-    .artist-overview-top-tracks {
-        margin-top: unset !important;
-    }
     .library-sort,
     .library-overview-header,
     .shoutbox-controls,
@@ -5543,6 +5538,10 @@
 
     .wiki-block {
         display: block !important;
+
+        div {
+            line-height: inherit;
+        }
     }
     .wiki-container {
         margin: unset;

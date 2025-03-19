@@ -932,7 +932,7 @@ let legacy_cover_art = {
     '617da94739994953c9dead5f00a6972c.jpg': '5af9deac5bd2ec3da52a36d7b6c4b850.jpg', // YEEZUS
     '57c1731b0f18c6f288e30a6c3ad42eb6.jpg': 'ab7f5ca02b45ea96ee7bbf33d4502ab0.jpg' // YANDHI - i cant upload a better one :(
 }
-let fallback_cover_art = 'https://katelyynn.github.io/bwaa/fm/extra_res/empty_disc.png';
+let fallback_cover_art = '';
 
 // use the top-right link to determine the current user
 let auth = {
