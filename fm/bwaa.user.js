@@ -2205,13 +2205,6 @@ let last_season_time;
     function bwaa_artists() {
         let artist_header = document.body.querySelector('.header-new--artist');
 
-        if (artist_header == undefined)
-            return;
-
-        if (artist_header.hasAttribute('data-bwaa'))
-            return;
-        artist_header.setAttribute('data-bwaa', 'true');
-
         page.type = 'artist';
 
         let is_subpage = page.subpage != 'overview';
@@ -2320,7 +2313,6 @@ let last_season_time;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
             page.name = correct_artist(artist_header.querySelector('.header-new-title').textContent);
             page.sister = '';
             page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
@@ -2603,7 +2595,7 @@ let last_season_time;
             patch_tab_overview_btn(navlist);
 
             let subpage_title = document.body.querySelector('.subpage-title');
-            if (subpage_title == undefined)
+            if (!subpage_title)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
@@ -2699,15 +2691,6 @@ let last_season_time;
 
     function bwaa_albums() {
         let album_header = document.body.querySelector('.header-new--album');
-
-        if (album_header == undefined)
-            return;
-
-        if (album_header.hasAttribute('data-bwaa'))
-            return;
-        album_header.setAttribute('data-bwaa', 'true');
-
-        page.type = 'album';
 
         let is_subpage = page.subpage != 'overview';
 
@@ -2949,7 +2932,7 @@ let last_season_time;
             page.structure.side.insertBefore(your_scrobbles, page.structure.side.firstChild);
 
             let listener_trend = document.body.querySelector('.listener-trend');
-            if (listener_trend == null)
+            if (!listener_trend)
                 return;
             listener_trend = listener_trend.outerHTML;
 
@@ -2978,7 +2961,7 @@ let last_season_time;
             patch_tab_overview_btn(navlist);
 
             let subpage_title = document.body.querySelector('.subpage-title');
-            if (subpage_title == undefined)
+            if (!subpage_title)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(album_header.querySelector('.header-new-background-image'));
@@ -3024,15 +3007,6 @@ let last_season_time;
 
     function bwaa_tracks() {
         let track_header = document.body.querySelector('.header-new--track');
-
-        if (track_header == undefined)
-            return;
-
-        if (track_header.hasAttribute('data-bwaa'))
-            return;
-        track_header.setAttribute('data-bwaa', 'true');
-
-        page.type = 'track';
 
         let is_subpage = page.subpage != 'overview';
 
@@ -3112,7 +3086,6 @@ let last_season_time;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
 
             page.avatar = fallback_cover_art;
@@ -3120,7 +3093,7 @@ let last_season_time;
             page.name = correct_item_by_artist(track_header.querySelector('.header-new-title').textContent, page.sister);
 
             let avatar_element = page.structure.row.querySelector('.source-album-art img');
-            if (avatar_element != null)
+            if (avatar_element)
                 page.avatar = avatar_element.getAttribute('src');
 
             let header_track_data = {
@@ -3130,13 +3103,13 @@ let last_season_time;
                 primary_album: page.structure.row.querySelector('.source-album-name a')
             }
 
-            if (header_track_data.primary_album != null && settings.lotus)
+            if (header_track_data.primary_album && settings.lotus)
                 header_track_data.primary_album.textContent = correct_item_by_artist(header_track_data.primary_album.textContent.trim(), document.body.querySelector('.source-album-artist a').textContent.trim());
 
 
             let track_video_element = page.structure.row.querySelector('.video-preview');
             let track_video = '';
-            if (track_video_element != null)
+            if (track_video_element)
                 track_video = track_video_element.outerHTML;
 
 
@@ -3165,7 +3138,7 @@ let last_season_time;
             let first_meta = document.body.querySelector('.catalogue-metadata-description');
             console.info(first_meta, first_meta.querySelector('a'));
             let track_length = '';
-            if (first_meta.querySelector('a') == null)
+            if (!first_meta.querySelector('a'))
                 track_length = ` (${first_meta.textContent.trim()})`;
 
             let new_header = document.createElement('section');
@@ -3193,8 +3166,8 @@ let last_season_time;
                     ${trans[lang].shouts_link.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
                 </div>
                 <div class="share-bar">
-                        <strong>${trans[lang].track.share}</strong>
-                        <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
+                    <strong>${trans[lang].track.share}</strong>
+                    <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
                 </div>
                 <div class="playback">
                     <div class="playback-item">
@@ -3283,7 +3256,7 @@ let last_season_time;
 
             // similar tracks
             let similar_tracks_container = page.structure.row.querySelector('.track-similar-tracks');
-            if (similar_tracks_container != null) {
+            if (similar_tracks_container) {
                 similar_tracks_container.classList = [];
                 similar_tracks_container.classList.add('similar-tracks-container');
 
@@ -3327,7 +3300,7 @@ let last_season_time;
             let scrobble_count_element = document.body.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
-            if (scrobble_count_element != undefined) {
+            if (scrobble_count_element) {
                 scrobble_count = scrobble_count_element.textContent;
                 scrobble_link = scrobble_count_element.getAttribute('href');
             }
@@ -3350,7 +3323,7 @@ let last_season_time;
             page.structure.side.insertBefore(your_scrobbles, page.structure.side.firstChild);
 
             let listener_trend = document.body.querySelector('.listener-trend');
-            if (listener_trend == null)
+            if (!listener_trend)
                 return;
             listener_trend = listener_trend.outerHTML;
 
@@ -3379,7 +3352,7 @@ let last_season_time;
             patch_tab_overview_btn(navlist);
 
             let subpage_title = document.body.querySelector('.subpage-title');
-            if (subpage_title == undefined)
+            if (subpage_title)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(track_header.querySelector('.header-new-background-image'));
@@ -3427,20 +3400,20 @@ let last_season_time;
      */
     function pre_fetch_avatar(element) {
         // arXL loads a smaller, more efficient image than ar0 (full res)
-        if (element == null)
+        if (!element)
             return '';
         else
             return element.getAttribute('content').replace('/i/u/ar0/', '/i/u/arXL/');
     }
 
     function pre_fetch_background(element) {
-        if (element == null)
+        if (!element)
             return '';
 
         // arXL loads a smaller, more efficient image than ar0 (full res)
         let style = element.getAttribute('style');
 
-        if (style == null)
+        if (!style)
             return '';
         else
             return style.replace('background-image: url(', '').replace(');', '').replace('/i/u/ar0/', '/i/u/arXL/');
@@ -3501,7 +3474,7 @@ let last_season_time;
         let factbox = page.structure.main.querySelector('.factbox');
 
         page.structure.side.innerHTML = '';
-        if (factbox == null) {
+        if (!factbox) {
             factbox = document.createElement('div');
             factbox.classList.add('factbox');
             factbox.innerHTML = (`
@@ -3515,7 +3488,7 @@ let last_season_time;
         factbox.insertBefore(factbox_header, factbox.firstElementChild);
 
         let wiki_author_element = page.structure.main.querySelector('.wiki-author');
-        if (wiki_author_element == null)
+        if (!wiki_author_element)
             return;
 
         // ensures splitting still works fine, refer to below
@@ -3540,7 +3513,7 @@ let last_season_time;
         // sorry for anyone who has to read this
         factbox_version.innerHTML = (`
             <div class="factbox-version">
-                ${trans[lang].wiki.version.replace('{version_edited_by}', `<span class="version">${wiki_version}</span>`)} ${(wiki_author != null) ? wiki_author.outerHTML : trans[lang].wiki.deleted_user}. ${(wiki_history_link != null) ? `<a href="${wiki_history_link.getAttribute('href')}">${trans[lang].wiki.history}</a>, or ${trans[lang].wiki.discuss.replace('{start}', `<a href="${wiki_discuss_link.getAttribute('href')}">`).replace('{end}', '</a>')}` : ''}
+                ${trans[lang].wiki.version.replace('{version_edited_by}', `<span class="version">${wiki_version}</span>`)} ${(wiki_author) ? wiki_author.outerHTML : trans[lang].wiki.deleted_user}. ${(wiki_history_link != null) ? `<a href="${wiki_history_link.getAttribute('href')}">${trans[lang].wiki.history}</a>, or ${trans[lang].wiki.discuss.replace('{start}', `<a href="${wiki_discuss_link.getAttribute('href')}">`).replace('{end}', '</a>')}` : ''}
             </div>
             <div class="factbox-author">
                 ${trans[lang].wiki.last_edited.replace('{date}', wiki_date)}
@@ -3551,7 +3524,7 @@ let last_season_time;
 
         // wiki edit
         let wiki_edit_link = page.structure.main.querySelector('.qa-wiki-edit');
-        if (wiki_edit_link != null) {
+        if (wiki_edit_link) {
             let wiki_edit_more_link = document.createElement('div');
             wiki_edit_more_link.classList.add('more-link', 'align-right');
             wiki_edit_more_link.innerHTML = (`
