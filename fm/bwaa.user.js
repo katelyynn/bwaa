@@ -5553,16 +5553,8 @@ let last_season_time;
 
 
     function bwaa_search() {
-        let search_form = document.body.querySelector('.search-form:not(.library-search)');
+        let search_form = document.body.querySelector('.search-form');
 
-        if (search_form == null)
-            return;
-
-        if (search_form.hasAttribute('data-bwaa'))
-            return;
-        search_form.setAttribute('data-bwaa', 'true');
-
-        page.type = 'search';
         page.avatar = auth.avatar;
         page.name = auth.name;
 
@@ -5869,11 +5861,7 @@ let last_season_time;
 
 
     function bwaa_home() {
-        let recs_feed = document.body.querySelector('.recs-feed:not([data-bwaa])');
-
-        if (recs_feed == null)
-            return;
-        recs_feed.setAttribute('data-bwaa', 'true');
+        let recs_feed = document.body.querySelector('.recs-feed');
 
         page.type = 'home';
         page.avatar = auth.avatar;
@@ -6682,9 +6670,9 @@ let last_season_time;
                 artist.setAttribute('data-lotus','true');
 
                 // test if this grid item is an album
-                let album_artist = artist.querySelector('.grid-items-item-aux-block');
+                let buylinks = artist.querySelector('.lazy-buylinks');
 
-                if (album_artist != undefined) {
+                if (buylinks) {
                     // it is an album!
                     let artist_name = artist.querySelector('.grid-items-item-aux-block');
                     let corrected_artist_name = correct_artist(artist_name.textContent);
@@ -6701,7 +6689,6 @@ let last_season_time;
                     let artist_name = artist.querySelector('.grid-items-item-main-text a');
                     let corrected_artist_name = correct_artist(artist_name.textContent);
                     artist_name.textContent = corrected_artist_name;
-                    artist_name.setAttribute('href', `${root}music/${corrected_artist_name}`);
                     artist_name.setAttribute('title', corrected_artist_name);
                 }
             }
