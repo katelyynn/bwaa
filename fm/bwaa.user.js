@@ -2465,7 +2465,7 @@ let last_season_time;
 
                 let avi = listener.querySelector('img').getAttribute('src');
                 let name = listener.querySelector('.listeners-section-item-name a').textContent;
-                let link = listener.querySelector('.listeners-section-track a').getAttribute('href');
+                let link = listener.querySelector('.listeners-section-track a');
 
                 console.info(name);
 
@@ -2477,7 +2477,7 @@ let last_season_time;
                     </div>
                     <div class="info">
                         <a class="user" href="${auth_link.getAttribute('href').replace(auth, name)}">${name}</a>
-                        <a class="scrobbles" href="${link}">${trans[lang].artist.top_listeners.subtext}</a>
+                        <a class="scrobbles" href="${(link) ? link.getAttribute('href') : ''}">${trans[lang].artist.top_listeners.subtext}</a>
                     </div>
                 `);
                 top_global_listeners_placeholder.appendChild(listener_element);
@@ -3461,9 +3461,45 @@ let last_season_time;
 
 
     function sanitise(text) {
-        return text
+        return encodeURI(text
         .replaceAll(' ', '+')
-        .replaceAll('?', '%3F');
+        .replaceAll('/', '%2F'));
+    }
+    function sanitise_text(text) {
+        return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+    function desanitise(text) {
+        return decodeURI(text
+        .replaceAll('+', ' ')
+        .replaceAll('%2F', '/'));
+    }
+
+
+    function return_artist_from_track(url, is_album) {
+        let split = url.split('/');
+        let length = (split.length - 1);
+
+        // lets treat unicode properly
+        if (is_album)
+            return desanitise(split[length - 1]);
+        else
+            return desanitise(split[length - 2]);
+    }
+
+    function return_artist_from_generic(url) {
+        let split = url.split('/');
+        let length = (split.length - 1);
+
+        // lets treat unicode properly
+        if (split[length - 1] != '_')
+            return decodeURI(desanitise(split[length - 1]));
+        else
+            return decodeURI(desanitise(split[length - 2]));
     }
 
 
@@ -6715,16 +6751,17 @@ let last_season_time;
     function correct_generic_combo_no_artist(parent) {
         let albums = document.body.querySelectorAll(`.${parent}`);
 
-        if (albums == null)
+        if (!albums)
             return;
 
         albums.forEach((album) => {
             if (!album.hasAttribute('data-kate-processed')) {
                 album.setAttribute('data-kate-processed','true');
+                console.log(album);
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
 
-                if (album_name == null)
+                if (!album_name)
                     return;
 
                 let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
