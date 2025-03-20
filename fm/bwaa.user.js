@@ -3429,7 +3429,8 @@ let last_season_time;
      */
     function generic_subpage_header(header_title, link_type='user', direct_link='') {
         // determines top text link
-        let link_field = `<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
+        //let link_field = `<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
+        let link_field = `<a href="${root}">Home</a>`;
 
         // not a user
         if (link_type == 'artist')
@@ -4446,7 +4447,7 @@ let last_season_time;
                                 <img src="${auth.avatar}" alt="${auth.name}">
                             </div>
                             <div class="badge-info">
-                                <a href="${root}user/${auth.name}">${auth.name}</a>
+                                <a href="${root}">Home</a>
                                 <h1>${trans[lang].settings.title}</h1>
                             </div>
                         </section>
@@ -6911,7 +6912,7 @@ let last_season_time;
                                 <img src="${auth.avatar}" alt="${auth.name}">
                             </div>
                             <div class="badge-info">
-                                <a href="${root}user/${auth.name}">${auth.name}</a>
+                                <a href="${root}">Home</a>
                                 <h1>${trans[lang].changelog.title}</h1>
                             </div>
                         </section>
