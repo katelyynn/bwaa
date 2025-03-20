@@ -2935,8 +2935,7 @@ let last_season_time;
             } catch(e) {
                 console.info('bwaa - no tracklist, will append elsewhere');
 
-                let masonry_left = document.querySelector('.masonry-left-bottom');
-                masonry_left.insertBefore(about_this_album, masonry_left.firstElementChild);
+                new_header.after(about_this_album);
             }
 
 
