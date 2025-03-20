@@ -6020,7 +6020,7 @@ let last_season_time;
             item.name = rec.querySelector('.recs-feed-title a');
             if (item.type == 'album' || item.type == 'track')
                 item.sister = rec.querySelector('.recs-feed-description a');
-            item.avatar = rec.querySelector('.layout-image-image').getAttribute('src');
+            item.avatar = rec.querySelector('.layout-image-image').getAttribute('src').replace('/avatar70s/', '/avatar300s/');
             item.context = rec.querySelector('.context').innerHTML;
 
 
