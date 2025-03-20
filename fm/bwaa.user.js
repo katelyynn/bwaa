@@ -6648,7 +6648,7 @@ let last_season_time;
                 if (buylinks) {
                     log('found album', 'lotus', 'info', {element: artist});
 
-                    let artist_name = artist.querySelector('.grid-items-item-aux-block');
+                    let artist_name = artist.querySelector('.grid-items-item-aux-text a');
                     let corrected_artist_name = correct_artist(artist_name.textContent);
                     artist_name.textContent = corrected_artist_name;
                     artist_name.setAttribute('title', corrected_artist_name);
