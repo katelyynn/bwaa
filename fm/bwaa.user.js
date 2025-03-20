@@ -3505,7 +3505,7 @@ let last_season_time;
 
         // wiki discussion pages no longer exist, direct user to shoutbox
         // by grabbing the tab's link
-        let wiki_discuss_link = document.querySelector('.secondary-nav-item--shoutbox a');
+        let wiki_discuss_link = page.structure.wrapper.querySelector('.secondary-nav-item--shoutbox a');
 
         // compile all that information into one
         let factbox_version = document.createElement('div');
@@ -4233,7 +4233,7 @@ let last_season_time;
         let content_top = adaptive_skin.querySelector('.content-top');
 
         let navlist = content_top.querySelector('.navlist');
-        if (navlist != null) page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild);
+        if (navlist) page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild);
 
         adaptive_skin.removeChild(content_top);
 
