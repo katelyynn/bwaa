@@ -746,7 +746,7 @@ function set_season() {
         }
     });
 
-    current_promo = `bwaa version ${version.build}.${version.sku}. <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', `<span class="season-time" id="header_season_time">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</span>`) : trans[lang].settings.seasonal.marker.none} »</a>`;
+    current_promo = `<a href="${root}bwaa/changelog">bwaa version ${version.build}.${version.sku}.</a> <a href="${root}bwaa">${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', `<span class="season-time" id="header_season_time">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</span>`) : trans[lang].settings.seasonal.marker.none} »</a>`;
     update_promo();
 }
 
@@ -754,13 +754,13 @@ function update_promo(force = false) {
     if (last_promo == current_promo && !force)
         return;
 
-    document.getElementById('bwaa-promo').innerHTML = current_promo;
+    page.structure.promo.innerHTML = current_promo;
     last_promo = current_promo;
 }
 
 function prep_snow() {
     let prev_container = document.getElementById('snowflakes');
-    if (prev_container != null)
+    if (prev_container)
         return;
 
     let container = document.createElement('div');
@@ -1434,7 +1434,7 @@ let last_season_time;
             return;
         inner.setAttribute('data-bwaa', 'true');
 
-        if (auth_link != null) {
+        if (auth_link) {
             // logged in
             let text = document.createElement('p');
             text.textContent = auth.name;
@@ -1452,6 +1452,43 @@ let last_season_time;
             join_btn.innerHTML = '<strong>Join</strong>';
         }
 
+
+        // navigation
+        let links = inner.querySelector('.navlist-items');
+        links.innerHTML = (`
+            <li class="masthead-nav-item">
+                <a href="${root}music" class="masthead-nav-control">
+                    Music
+                </a>
+            </li>
+            <li class="masthead-nav-item">
+                <a href="${root}radio" class="masthead-nav-control">
+                    Radio
+                </a>
+            </li>
+            <li class="masthead-nav-item">
+                <a href="${root}events" class="masthead-nav-control">
+                    Events
+                </a>
+            </li>
+            <li class="masthead-nav-item">
+                <a href="${root}charts" class="masthead-nav-control">
+                    Charts
+                </a>
+            </li>
+            <li class="masthead-nav-item">
+                <a href="https://support.last.fm" target="_blank" class="masthead-nav-control">
+                    Community
+                </a>
+            </li>
+            <li class="masthead-nav-item">
+                <a onclick="_sponsor()" class="masthead-nav-control">
+                    Sponsor
+                </a>
+            </li>
+        `);
+
+
         if (document.body.querySelector('.masthead .masthead-pro-wrap'))
             auth.pro = true;
         else
@@ -1459,7 +1496,7 @@ let last_season_time;
 
         let promo = document.createElement('div');
         promo.classList.add('header-promo');
-        promo.setAttribute('id', 'bwaa-promo');
+        page.structure.promo = promo;
         promo.innerHTML = current_promo;
         inner.appendChild(promo);
 

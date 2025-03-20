@@ -1332,6 +1332,7 @@
                     color: #fff;
                     text-shadow: #870802 0 1px 0;
                     opacity: unset !important;
+                    cursor: pointer;
 
                     [data-bwaa--seasonal_accent="true"][data-bwaa--season="fall"] &,
                     [data-bwaa--seasonal_accent="true"][data-bwaa--season="christmas"] &,
