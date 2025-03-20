@@ -147,21 +147,21 @@
         }
 
         [data-bwaa--theme="paint_it_black"] & {
-            --background: #000000;
+            --background: #121212;
             --navlist-grad: #222;
             --navlist-border: #e7e7e7;
-            --body: #0a0a0a;
-            --border: #363636;
+            --body: #191919;
+            --border: #535252;
             --border-2: #222;
             --border-3: #333;
             --border-4: #555;
             --border-5: #222;
             --border-6: #202020;
-            --colour: #C3CDD8;
+            --colour: #d0dae4;
             --colour-upper: #B2BBC4;
             --colour-middle: #888F96;
             --colour-lower: #7A848E;
-            --text-link: #75a2d6;
+            --text-link: #77b5e7;
             --header-text-black: #fff;
             --header-text: #ec6f68;
 
@@ -171,8 +171,8 @@
             --user-type-banner: #24353f;
 
             --chartlist-odd: #111;
-            --chartlist-hover: #101d24;
-            --chartlist-highlight: #31251a;
+            --chartlist-hover: #26363f;
+            --chartlist-highlight: #4e4135;
 
             --alert: #182838;
             --alert-danger: #381818;
