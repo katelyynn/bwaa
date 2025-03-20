@@ -6630,12 +6630,12 @@ let last_season_time;
 
     // artist corrections in grid view
     function patch_artist_grids() {
-        if (page.structure.row == null)
+        if (!page.structure.row)
             return;
 
-        let artists = page.structure.row.querySelectorAll('.grid-items-item-details');
+        let artists = page.structure.row.querySelectorAll('.grid-items-item');
 
-        if (artists == undefined)
+        if (!artists)
             return;
 
         artists.forEach((artist) => {
@@ -6646,7 +6646,8 @@ let last_season_time;
                 let buylinks = artist.querySelector('.lazy-buylinks');
 
                 if (buylinks) {
-                    // it is an album!
+                    log('found album', 'lotus', 'info', {element: artist});
+
                     let artist_name = artist.querySelector('.grid-items-item-aux-block');
                     let corrected_artist_name = correct_artist(artist_name.textContent);
                     artist_name.textContent = corrected_artist_name;
@@ -6658,7 +6659,8 @@ let last_season_time;
                     album_name.textContent = corrected_album_name;
                     album_name.setAttribute('title', corrected_album_name);
                 } else {
-                    // not an album, must be an artist
+                    log('found artist', 'lotus', 'info', {element: artist});
+
                     let artist_name = artist.querySelector('.grid-items-item-main-text a');
                     let corrected_artist_name = correct_artist(artist_name.textContent);
                     artist_name.textContent = corrected_artist_name;
@@ -6684,11 +6686,14 @@ let last_season_time;
             return;
 
         albums.forEach((album) => {
-            if (!album.hasAttribute('data-lotus')) {
-                album.setAttribute('data-lotus','true');
-                console.info('lotus - correcting generic combo for a child of', parent);
+            if (!album.hasAttribute('data-kate-processed')) {
+                album.setAttribute('data-kate-processed','true');
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+
+                if (album_name == null)
+                    return;
+
                 let artist_name = album.querySelector(`.${parent.replace('-details','')}-artist a`);
 
                 if (artist_name == undefined)
@@ -6710,16 +6715,19 @@ let last_season_time;
     function correct_generic_combo_no_artist(parent) {
         let albums = document.body.querySelectorAll(`.${parent}`);
 
-        if (albums == undefined)
+        if (albums == null)
             return;
 
         albums.forEach((album) => {
-            if (!album.hasAttribute('data-lotus')) {
-                album.setAttribute('data-lotus','true');
-                console.info('lotus - correcting generic combo (no artist) for a child of', parent);
+            if (!album.hasAttribute('data-kate-processed')) {
+                album.setAttribute('data-kate-processed','true');
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
-                let artist_name = album_name.getAttribute('href').split('/')[2].replaceAll('+',' ');
+
+                if (album_name == null)
+                    return;
+
+                let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
 
                 let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
                 album_name.textContent = corrected_album_name;
@@ -6736,16 +6744,14 @@ let last_season_time;
      * @returns corrected title if applicable or original title
      */
     function correct_item_by_artist(item, artist) {
-        artist = artist.toLowerCase();
-        console.info('lotus - correction handler: correcting', item, 'by', artist);
-
         if (!settings.lotus)
             return item;
+        artist = artist.toLowerCase();
 
         try {
             if (album_track_corrections.hasOwnProperty(artist)) {
                 if (album_track_corrections[artist].hasOwnProperty(item)) {
-                    console.info('lotus - correction handler: corrected as', album_track_corrections[artist][item]);
+                    log(`corrected ${item} by ${artist} as ${album_track_corrections[artist][item]}`, 'lotus');
                     return album_track_corrections[artist][item];
                 } else {
                     return item;
@@ -6754,6 +6760,7 @@ let last_season_time;
                 return item;
             }
         } catch(e) {
+            log(`correcting ${item} by ${artist}`, 'lotus');
             console.error(e);
             return item;
         }
@@ -6763,20 +6770,25 @@ let last_season_time;
      * @param {string} artist artist name (NOT converted to lowercase)
      * @returns corrected artist if applicable or original artist
      */
-    function correct_artist(artist) {
-        console.info('lotus - correction handler: correcting', artist);
-
+    function correct_artist(artist, broadcast = false) {
         if (!settings.lotus)
             return artist;
 
         try {
             if (artist_corrections.hasOwnProperty(artist)) {
-                console.info('lotus - correction handler: corrected as', artist_corrections[artist]);
+                log(`corrected ${artist} as ${artist_corrections[artist]}`, 'lotus');
+                if (broadcast)
+                    page.corrected = true;
+
                 return artist_corrections[artist];
             } else {
+                if (broadcast)
+                    page.corrected = false;
+
                 return artist;
             }
         } catch(e) {
+            log(`correcting ${artist}`, 'lotus');
             console.error(e);
             return artist;
         }
