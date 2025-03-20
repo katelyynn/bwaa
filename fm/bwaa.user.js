@@ -1784,6 +1784,7 @@ let last_season_time;
             }
 
             let is_cute = (page.name == 'cutensilly');
+            is_cute = false;
 
             if (settings.varied_avatar_shapes)
                 page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/arXL/');
