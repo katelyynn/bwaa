@@ -3352,7 +3352,7 @@ let last_season_time;
             patch_tab_overview_btn(navlist);
 
             let subpage_title = document.body.querySelector('.subpage-title');
-            if (subpage_title)
+            if (!subpage_title)
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(track_header.querySelector('.header-new-background-image'));
