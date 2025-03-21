@@ -1513,23 +1513,20 @@ let last_season_time;
 
         let site_auth = inner.querySelector('.site-auth');
 
-        let notif_btn_txt = document.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent.trim();
-        let notif_badge = document.querySelector('[data-analytics-label="notifications"] .notification-count-badge');
+        let notif_btn_txt = inner.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent.trim();
+        let notif_badge = inner.querySelector('[data-analytics-label="notifications"] .notification-count-badge');
 
-        if (settings.no_notifs)
-            notif_badge = null;
+        let inbox_btn_txt = inner.querySelector('[data-analytics-label="inbox"] .auth-dropdown-item-left').textContent.trim();
+        let inbox_badge = inner.querySelector('[data-analytics-label="inbox"] .notification-count-badge');
 
-        let inbox_btn_txt = document.querySelector('[data-analytics-label="inbox"] .auth-dropdown-item-left').textContent.trim();
-        let inbox_badge = document.querySelector('[data-analytics-label="inbox"] .notification-count-badge');
-
-        let logout_btn = document.querySelector('[data-require="components/logout-form"]');
+        let logout_btn = inner.querySelector('[data-require="components/logout-form"]');
         let logout_btn_anchor = logout_btn.querySelector('a');
         logout_btn_anchor.classList.remove('auth-dropdown-menu-item', 'js-logout-button', 'mimic-link', 'masthead-nav-control');
 
         let user_companion_nav = document.createElement('div');
         user_companion_nav.classList.add('user-companion-nav');
         user_companion_nav.innerHTML = (`
-            <a href="${root}inbox/notifications">${notif_btn_txt}${(notif_badge != null ? ` (${notif_badge.textContent.trim()})` : '')}</a> | <a href="${root}inbox">${inbox_btn_txt}${(inbox_badge != null ? ` (${inbox_badge.textContent.trim()})` : '')}</a> | ${logout_btn.outerHTML}
+            ${(!settings.no_notifs) ? `<a href="${root}inbox/notifications">${notif_btn_txt}${(notif_badge) ? ` (${notif_badge.textContent.trim()})` : ''}</a> | ` : ''}<a href="${root}inbox">${inbox_btn_txt}${(inbox_badge != null ? ` (${inbox_badge.textContent.trim()})` : '')}</a> | ${logout_btn.outerHTML}
         `);
         site_auth.appendChild(user_companion_nav);
     }
