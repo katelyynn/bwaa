@@ -99,7 +99,7 @@ const trans = {
         sponsor: {
             name: 'Sponsor',
             header: 'Sponsor the development of bleh and bwaa',
-            bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
+            bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bwaa will forever be open-source and free.',
             status: {
                 yes: 'You are a sponsor, thank you!',
                 no: 'Become a sponsor to get a custom badge',
