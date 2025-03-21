@@ -366,7 +366,7 @@ const trans = {
             not_implemented: '(not yet implemented)',
             welcome: {
                 name: 'Welcome to bwaa!',
-                body: 'You currently have version {v} of bwaa installed. Think you’re behind?'
+                body: 'You currently have version {v} of bwaa installed. {a}Think you’re behind? (check for updates){/a}'
             },
             navigation: {
                 name: 'Navigation'
@@ -4522,12 +4522,15 @@ let last_season_time;
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
                     <h2 class="form-header">${trans[lang].settings.welcome.name}</h2>
-                    <p>${trans[lang].settings.welcome.body.replace('{v}', `<strong>${version.build}.${version.sku}</strong>`)}</p>
-                    <div class="more-link align-left space-self">
-                        <a href="https://github.com/sponsors/katelyynn" target="_blank">${trans[lang].settings.support.sponsor}</a>
-                    </div>
-                    <div class="more-link align-left space-self">
-                        <a onclick="_request_style_reload()">${trans[lang].settings.check_for_updates}</a>
+                    <p>${trans[lang].settings.welcome.body
+                    .replace('{v}', `<strong>${version.build}.${version.sku}</strong>`)
+                    .replace('{a}', '<a onclick="_request_style_reload()">')
+                    .replace('{/a}', '</a>')
+                    }</p>
+                    <div class="profile-actions-section standalone">
+                        <div class="options">
+                            <a class="has-icon sponsor" onclick="_sponsor()">Sponsor me</a>
+                        </div>
                     </div>
                     <fieldset>
                         <legend>${trans[lang].settings.seasonal.category}</legend>
@@ -4561,6 +4564,23 @@ let last_season_time;
                     </fieldset>
                     <fieldset>
                         <legend>${trans[lang].settings.accuracy.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_2010">
+                                    <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.shouts_2010.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--gallery_2010">
+                                    <input id="setting--gallery_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.gallery_2010.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
                         <h3 class="control-label">${trans[lang].settings.accuracy.visibility}</h3>
                         <div class="form-group">
                             <div class="checkbox">
@@ -4583,6 +4603,22 @@ let last_season_time;
                                 <label for="setting--hide_listening_reports">
                                     <input id="setting--hide_listening_reports" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     ${trans[lang].settings.hide_listening_reports.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_no_votes">
+                                    <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.shouts_no_votes.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--no_notifs">
+                                    <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.no_notifs.name}
                                 </label>
                             </div>
                         </div>
@@ -4609,40 +4645,6 @@ let last_season_time;
                                 <div class="alert">
                                     ${trans[lang].settings.hide_extra_grid_item.alert}
                                 </div>
-                            </div>
-                        </div>
-                        <div class="sep"></div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--shouts_2010">
-                                    <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.shouts_2010.name}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--gallery_2010">
-                                    <input id="setting--gallery_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.gallery_2010.name} <span class="new-badge">${trans[lang].settings.new}</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--shouts_no_votes">
-                                    <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.shouts_no_votes.name}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="sep"></div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--no_notifs">
-                                    <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.no_notifs.name}
-                                </label>
                             </div>
                         </div>
                     </fieldset>

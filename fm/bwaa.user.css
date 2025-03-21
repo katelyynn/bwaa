@@ -804,6 +804,11 @@
         display: flex;
         gap: 15px;
 
+        &.standalone {
+            border: unset;
+            padding: 5px 0 10px !important;
+        }
+
         .options {
             width: 130px;
             font-size: 11px;
