@@ -2069,6 +2069,7 @@
     a {
         color: var(--text-link);
         text-decoration: none;
+        cursor: pointer;
 
         &:hover {
             color: var(--text-link);
