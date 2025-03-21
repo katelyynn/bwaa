@@ -2057,12 +2057,12 @@ let last_season_time;
             }
 
             let library_controls = document.body.querySelector('.library-controls');
-            if (library_controls != undefined) {
+            if (library_controls)
                 page.structure.main.insertBefore(library_controls, page.structure.main.firstChild);
-            }
 
             let new_header = generic_subpage_header(
-                header_user_data.page
+                header_user_data.page,
+                'user'
             );
 
             navlist_items.appendChild(journal_nav_btn);
@@ -3461,11 +3461,11 @@ let last_season_time;
     /**
      * subpage header creator for profiles, artists, albums, and tracks
      * @param {string} header_title main header text
-     * @param {string} link_type type of header, controls how top link is created (defaults to user)
+     * @param {string} link_type type of header, controls how top link is created (defaults to home)
      * @param {string} direct_link supply a direct url to use if link_type is 'direct'
      * @returns subpage header
      */
-    function generic_subpage_header(header_title, link_type='user', direct_link='') {
+    function generic_subpage_header(header_title, link_type='home', direct_link='') {
         // determines top text link
         //let link_field = `<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
         let link_field = `<a href="${root}">Home</a>`;
@@ -3477,6 +3477,8 @@ let last_season_time;
             link_field = `<a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${page.name}</a>`;
         else if (link_type == 'track')
             link_field = `<a href="${root}music/${sanitise(page.sister)}/_/${sanitise(page.name)}">${page.name}</a>`;
+        else if (link_type == 'user')
+            link_field = `<a href="${root}user/${page.name}">${page.name}</a>`;
         else if (link_type == 'direct')
             link_field = `<a href="${direct_link}">${page.name}</a>`;
 
