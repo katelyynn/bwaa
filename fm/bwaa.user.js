@@ -1030,6 +1030,7 @@ let last_season_time;
 
         try {
             main_flow();
+            bwaa_forms();
 
             // last.fm is a single page application
             const observer = new MutationObserver((mutations) => {
@@ -1042,6 +1043,8 @@ let last_season_time;
                                 // this took so long
                                 fix_modal();
                             }
+
+                            bwaa_forms();
 
                             if (!node.hasAttribute('data-bwaa-cycle')) {
                                 node.setAttribute('data-bwaa-cycle', 'true');
@@ -1113,8 +1116,6 @@ let last_season_time;
 
             correct_tracks();
         }
-
-        bwaa_forms();
 
         subscribe_to_events();
     }
@@ -6736,6 +6737,9 @@ let last_season_time;
                     log('found artist', 'lotus', 'info', {element: artist});
 
                     let artist_name = artist.querySelector('.grid-items-item-main-text a');
+                    if (!artist_name)
+                        return;
+
                     let corrected_artist_name = correct_artist(artist_name.textContent);
                     artist_name.textContent = corrected_artist_name;
                     artist_name.setAttribute('title', corrected_artist_name);
