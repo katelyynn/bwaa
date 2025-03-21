@@ -384,10 +384,6 @@ const trans = {
             sticky_nav: {
                 name: 'Make the navigation bar persistent on scroll'
             },
-            legacy_cover_art: {
-                name: 'Override album cover art for 2012-era images',
-                alert: 'All personal preference, check out {+n}Nirvana{-a}’s {+e}In Utero{-a} or more fittingly {+k}Kanye{-a}’s {+y}Yeezus{-a} for an example.'
-            },
             hide_obsessions: {
                 name: 'Hide obsessions'
             },
@@ -824,7 +820,6 @@ let settings_defaults = {
     shouts_no_votes: false,
     no_notifs: false,
     hide_redirect_banner: false,
-    legacy_cover_art: true,
     hide_extra_grid_item: true,
     julie: false,
 
@@ -882,10 +877,6 @@ let settings_store = {
         type: 'toggle',
         values: [true, false]
     },
-    legacy_cover_art: {
-        type: 'toggle',
-        values: [true, false]
-    },
     hide_extra_grid_item: {
         type: 'toggle',
         values: [true, false]
@@ -922,15 +913,6 @@ let settings_store = {
         type: 'toggle',
         values: [true, false]
     }
-}
-let legacy_cover_art = {
-    // NIRVANA
-    '570021b68d3d9d2db08bc99a473303b0.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND
-    '3324e5982f0d81338d2749d5161eb2a8.jpg': 'de8d87469f794622a0687feb36e13c07.jpg', // NEVERMIND (REMASTERED)
-    'b897255bf422baa93a42536af293f9f8.jpg': 'acbf048199bb4cf18ed93d3065a25be9.jpg', // IN UTERO
-    // KANYE WEST
-    '617da94739994953c9dead5f00a6972c.jpg': '5af9deac5bd2ec3da52a36d7b6c4b850.jpg', // YEEZUS
-    '57c1731b0f18c6f288e30a6c3ad42eb6.jpg': 'ab7f5ca02b45ea96ee7bbf33d4502ab0.jpg' // YANDHI - i cant upload a better one :(
 }
 let fallback_cover_art = '';
 
@@ -2826,14 +2808,6 @@ let last_season_time;
                 add_artwork: add_artwork
             }
 
-            if (settings.legacy_cover_art) {
-                let url_split = page.avatar.split('/');
-
-                if (legacy_cover_art.hasOwnProperty(url_split[6])) {
-                    page.avatar = page.avatar.replace(url_split[6], legacy_cover_art[url_split[6]]);
-                }
-            }
-
 
             let tags_html = '';
             let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
@@ -4590,18 +4564,6 @@ let last_season_time;
                     </fieldset>
                     <fieldset>
                         <legend>${trans[lang].settings.accuracy.name}</legend>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--legacy_cover_art">
-                                    <input id="setting--legacy_cover_art" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.legacy_cover_art.name}
-                                </label>
-                                <div class="alert">
-                                    ${trans[lang].settings.legacy_cover_art.alert.replaceAll('{-a}', '</a>').replace('{+n}', `<a href="${root}music/Nirvana" target="_blank">`).replace('{+e}', `<a href="${root}music/Nirvana/In+Utero" target="_blank">`).replace('{+k}', `<a href="${root}music/Kanye+West" target="_blank">`).replace('{+y}', `<a href="${root}music/Kanye+West/Yeezus" target="_blank">`)}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="sep"></div>
                         <h3 class="control-label">${trans[lang].settings.accuracy.visibility}</h3>
                         <div class="form-group">
                             <div class="checkbox">
@@ -5159,7 +5121,6 @@ let last_season_time;
 
             // global
             settings.varied_avatar_shapes = true;
-            settings.legacy_cover_art = true;
 
             if (value == '2012') {
                 // 2012
@@ -5308,23 +5269,13 @@ let last_season_time;
 
 
 
-    /**
-     * if legacy_cover_art is enabled, cover arts will be ran thru and replaced if contained in 'legacy_cover_art' array, along with replacing fallback artwork
-     */
     function bwaa_media_items() {
-        if (!settings.legacy_cover_art)
-            return;
-
         let media_items = document.querySelectorAll('.media-item img:not([data-bwaa])');
         media_items.forEach((media_item) => {
             media_item.setAttribute('data-bwaa', 'true');
 
             let url = media_item.getAttribute('src');
             let url_split = url.split('/');
-
-            if (legacy_cover_art.hasOwnProperty(url_split[6])) {
-                media_item.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
-            }
 
             // or maybe it's blank?
             if (
@@ -5342,10 +5293,6 @@ let last_season_time;
             let url = chartlist_image.getAttribute('src');
             let url_split = url.split('/');
 
-            if (legacy_cover_art.hasOwnProperty(url_split[6])) {
-                chartlist_image.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
-            }
-
             // or maybe it's blank?
             if (
                 url_split[6] == '4128a6eb29f94943c9d206c08e625904.jpg' || // track
@@ -5361,10 +5308,6 @@ let last_season_time;
 
             let url = grid_image.getAttribute('src');
             let url_split = url.split('/');
-
-            if (legacy_cover_art.hasOwnProperty(url_split[6])) {
-                grid_image.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
-            }
 
             // or maybe it's blank?
             if (
@@ -5382,10 +5325,6 @@ let last_season_time;
             let url = cover_art.getAttribute('src');
             let url_split = url.split('/');
 
-            if (legacy_cover_art.hasOwnProperty(url_split[6])) {
-                cover_art.setAttribute('src', url.replace(url_split[6], legacy_cover_art[url_split[6]]));
-            }
-
             // or maybe it's blank?
             if (
                 url_split[6] == '4128a6eb29f94943c9d206c08e625904.jpg' || // track
@@ -5398,10 +5337,6 @@ let last_season_time;
 
     function request_media_item_check(url) {
         let url_split = url.split('/');
-
-        if (legacy_cover_art.hasOwnProperty(url_split[6])) {
-            return url.replace(url_split[6], legacy_cover_art[url_split[6]]);
-        }
 
         // or maybe it's blank?
         if (
