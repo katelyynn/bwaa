@@ -3976,6 +3976,7 @@
                 display: none !important;
             }
 
+            &:active,
             &:hover {
                 background: #750500;
                 color: #fff;

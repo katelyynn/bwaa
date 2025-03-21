@@ -1418,10 +1418,70 @@ let last_season_time;
         inner.setAttribute('data-bwaa', 'true');
 
         if (auth_link) {
+            let site_auth = inner.querySelector('.site-auth');
+
             // logged in
             let text = document.createElement('p');
             text.textContent = auth.name;
             auth_link.appendChild(text);
+
+
+            let notif_btn_txt = inner.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent.trim();
+            let notif_badge = inner.querySelector('[data-analytics-label="notifications"] .notification-count-badge');
+
+            let inbox_btn_txt = inner.querySelector('[data-analytics-label="inbox"] .auth-dropdown-item-left').textContent.trim();
+            let inbox_badge = inner.querySelector('[data-analytics-label="inbox"] .notification-count-badge');
+
+            let logout_btn = inner.querySelector('[data-require="components/logout-form"]');
+            let logout_btn_anchor = logout_btn.querySelector('a');
+            logout_btn_anchor.classList.remove('auth-dropdown-menu-item', 'js-logout-button', 'mimic-link', 'masthead-nav-control');
+
+            let user_companion_nav = document.createElement('div');
+            user_companion_nav.classList.add('user-companion-nav');
+            user_companion_nav.innerHTML = (`
+                ${(!settings.no_notifs) ? `<a href="${root}inbox/notifications">${notif_btn_txt}${(notif_badge) ? ` (${notif_badge.textContent.trim()})` : ''}</a> | ` : ''}<a href="${root}inbox">${inbox_btn_txt}${(inbox_badge != null ? ` (${inbox_badge.textContent.trim()})` : '')}</a> | ${logout_btn.outerHTML}
+            `);
+            site_auth.appendChild(user_companion_nav);
+
+
+            let menu = site_auth.querySelector('.auth-dropdown-menu');
+            menu.innerHTML = (`
+                <li>
+                    <a href="${root}" class="auth-dropdown-menu-item">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="${root}user/${auth.name}" class="auth-dropdown-menu-item">
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="${root}music" class="auth-dropdown-menu-item">
+                        Recommended
+                    </a>
+                </li>
+                <li>
+                    <a href="${root}user/${auth.name}/library" class="auth-dropdown-menu-item">
+                        Library
+                    </a>
+                </li>
+                <li>
+                    <a href="${root}user/${auth.name}/events" class="auth-dropdown-menu-item">
+                        Events
+                    </a>
+                </li>
+                <li>
+                    <a href="${root}settings" class="auth-dropdown-menu-item">
+                        Settings
+                    </a>
+                </li>
+                <li>
+                    <a href="${root}bwaa" class="auth-dropdown-menu-item">
+                        bwaa
+                    </a>
+                </li>
+            `);
         } else {
             // guest
 
@@ -1505,30 +1565,6 @@ let last_season_time;
             <span class="language-wrapper" id="language-wrapper" data-dialog-open="false"><a onclick="_open_language_menu()" name="${non_override_lang}">${selected_language}</a>${language_menu.outerHTML}</span> | <a onclick="toggle_theme()" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</a> | <a href="${root}help">Help</a>
         `);
         inner.appendChild(search_companion_nav);
-
-
-        if (auth_link == null)
-            return;
-
-
-        let site_auth = inner.querySelector('.site-auth');
-
-        let notif_btn_txt = inner.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent.trim();
-        let notif_badge = inner.querySelector('[data-analytics-label="notifications"] .notification-count-badge');
-
-        let inbox_btn_txt = inner.querySelector('[data-analytics-label="inbox"] .auth-dropdown-item-left').textContent.trim();
-        let inbox_badge = inner.querySelector('[data-analytics-label="inbox"] .notification-count-badge');
-
-        let logout_btn = inner.querySelector('[data-require="components/logout-form"]');
-        let logout_btn_anchor = logout_btn.querySelector('a');
-        logout_btn_anchor.classList.remove('auth-dropdown-menu-item', 'js-logout-button', 'mimic-link', 'masthead-nav-control');
-
-        let user_companion_nav = document.createElement('div');
-        user_companion_nav.classList.add('user-companion-nav');
-        user_companion_nav.innerHTML = (`
-            ${(!settings.no_notifs) ? `<a href="${root}inbox/notifications">${notif_btn_txt}${(notif_badge) ? ` (${notif_badge.textContent.trim()})` : ''}</a> | ` : ''}<a href="${root}inbox">${inbox_btn_txt}${(inbox_badge != null ? ` (${inbox_badge.textContent.trim()})` : '')}</a> | ${logout_btn.outerHTML}
-        `);
-        site_auth.appendChild(user_companion_nav);
     }
 
     unsafeWindow._open_language_menu = function() {
