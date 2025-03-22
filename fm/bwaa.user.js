@@ -5728,14 +5728,32 @@ let last_season_time;
         register_activity(type, involved, context, date);
     }
     function register_activity(type, involved, context, date=new Date()) {
+        // TODO: fix as this doesnt seem to be working
+        let length = recent_activity_list.length;
+        if (length > 0) {
+            length -= 1;
+
+            let latest = recent_activity_list[length];
+            if (latest.type == type && latest.involved == involved && latest.context == context) {
+                log('denied as latest is identical', 'activity', 'info', {
+                    type: type,
+                    involved: involved,
+                    context: context,
+                    date: date
+                });
+                latest.date = date;
+
+                return;
+            }
+        }
+
         recent_activity_list.push({
             type: type,
             involved: involved,
             context: context,
             date: date
         });
-
-        console.info('bwaa - registered new activity', {
+        log('registered', 'activity', 'info', {
             type: type,
             involved: involved,
             context: context,
@@ -5745,7 +5763,7 @@ let last_season_time;
         // check if over 10
         check_activities_length();
 
-        console.info('bwaa - saved recent activities', recent_activity_list);
+        log('saved', 'activity', 'info', {list: recent_activity_list});
         localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
     }
 
