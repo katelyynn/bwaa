@@ -147,10 +147,10 @@
         }
 
         [data-bwaa--theme="paint_it_black"] & {
-            --background: #121212;
+            --background: #0f0f0f;
             --navlist-grad: #222;
             --navlist-border: #e7e7e7;
-            --body: #191919;
+            --body: #1b1b1b;
             --border: #535252;
             --border-2: #222;
             --border-3: #333;
