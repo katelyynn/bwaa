@@ -158,7 +158,7 @@
             --border-5: #222;
             --border-6: #202020;
             --colour: #d0dae4;
-            --colour-upper: #B2BBC4;
+            --colour-upper: #f0f0f0;
             --colour-middle: #888F96;
             --colour-lower: #7A848E;
             --text-link: #77b5e7;
@@ -5065,14 +5065,10 @@
         }
 
         .obsession-quote {
-            font-family: Times New Roman, serif;
-            font-size: 60px;
-            line-height: 40px;
-            font-weight: 400;
-            transform: scaleX(0.7) skewX(-5deg);
-            transform-origin: left;
-            position: relative;
-            z-index: 10;
+            font-weight: 150;
+            color: var(--colour-upper);
+            font-size: 18px;
+            line-height: 1.5em;
         }
         .obsession-details-date-short {
             display: flex;

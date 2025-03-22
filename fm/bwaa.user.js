@@ -1644,6 +1644,11 @@ let last_season_time;
     function bwaa_profiles() {
         console.info('bwaa - profiles');
 
+        if (page.subpage == 'obsessions_obsession') {
+            bwaa_obsessions();
+            return;
+        }
+
         // are we on a profile?
         let profile_header = document.body.querySelector('.header--user');
 
@@ -2037,11 +2042,6 @@ let last_season_time;
             });
         } else {
             // profile non-overview stuff
-
-            if (page.subpage == 'obsessions_obsession') {
-                bwaa_obsessions();
-                return;
-            }
 
             page.avatar = profile_header.querySelector('.avatar img').getAttribute('src');
             page.name = profile_header.querySelector('.header-title a').textContent;
@@ -4103,16 +4103,6 @@ let last_season_time;
         console.info('bwaa - obsessions');
         let obsession_container = document.body.querySelector('.obsession-container');
 
-        if (obsession_container == null)
-            return;
-
-        if (obsession_container.hasAttribute('data-bwaa'))
-            return;
-
-        obsession_container.setAttribute('data-bwaa', 'true');
-
-        page.type = 'obsession';
-
         page.structure.container = obsession_container.querySelector('.page-content');
         page.structure.row = page.structure.container.querySelector('.row');
         try {
@@ -4131,7 +4121,8 @@ let last_season_time;
         page.name = obsession_wrap.querySelector('.obsession-details-intro a').textContent;
 
         let new_header = generic_subpage_header(
-            trans[lang].obsession.name
+            trans[lang].obsession.name,
+            'user'
         );
 
 
