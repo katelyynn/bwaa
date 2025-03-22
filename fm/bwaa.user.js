@@ -1004,7 +1004,6 @@ let last_season_time;
         if (auth.name == '')
             return;
 
-        load_activities();
         notify_if_new_update();
 
         lotus();
@@ -1042,8 +1041,6 @@ let last_season_time;
                                 set_season();
 
                                 bwaa_footer();
-
-                                load_activities();
 
                                 theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
                                 if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
@@ -1951,6 +1948,8 @@ let last_season_time;
             recent_activity_section.innerHTML = (`
                 <h2>${trans[lang].activities.name} <i class="subtext"><a id="what-are-activities">(?)</a></i></h2>
             `);
+
+            load_activities();
 
             // we want to show in date order from latest to oldest down
             // but .reverse() is destructive, so we copy first
@@ -5728,6 +5727,9 @@ let last_season_time;
         register_activity(type, involved, context, date);
     }
     function register_activity(type, involved, context, date=new Date()) {
+        recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+        log('loaded', 'activity', 'info', recent_activity_list);
+
         // TODO: fix as this doesnt seem to be working
         let length = recent_activity_list.length;
         if (length > 0) {
@@ -5753,7 +5755,7 @@ let last_season_time;
             context: context,
             date: date
         });
-        log('registered', 'activity', 'info', {
+        log('registered new', 'activity', 'info', {
             type: type,
             involved: involved,
             context: context,
