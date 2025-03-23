@@ -49,6 +49,8 @@ const trans = {
 
         deleted_user: 'Deleted user',
 
+        settings: 'Settings',
+
         badges: {
             missing: {
                 name: 'No badges'
@@ -243,7 +245,8 @@ const trans = {
                 loved_tracks: '{count} Loved Tracks',
                 artists: '{count} Artists',
                 shouts: 'Shouts'
-            }
+            },
+            recent: 'Recently Listened Tracks'
         },
         artist: {
             tabs: {
@@ -1736,11 +1739,14 @@ let last_season_time;
             // when was this user last seen scrobbling?
             let recent_tracks = document.getElementById('recent-tracks-section');
             let last_seen = '';
-            if (recent_tracks != undefined) {
+            if (recent_tracks) {
+                let header = recent_tracks.querySelector('h2 a');
+                header.textContent = trans[lang].profile.recent;
+
                 let latest_chartlist_timestamp = document.body.querySelector('.chartlist-timestamp');
                 let scrobbling_now = latest_chartlist_timestamp.querySelector('.chartlist-now-scrobbling');
 
-                if (scrobbling_now == undefined)
+                if (!scrobbling_now)
                     last_seen = latest_chartlist_timestamp.querySelector('span').textContent;
                 else
                     last_seen = trans[lang].profile.last_seen.active_now;
