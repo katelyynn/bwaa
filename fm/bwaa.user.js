@@ -1719,9 +1719,9 @@ let last_season_time;
             let user_follows_you = (profile_header.querySelector('.label.user-follow') != undefined);
 
             // custom badges
-            let user_is_subscriber = (profile_header.querySelector('.user-status-subscriber') != undefined);
-            let user_is_staff = (profile_header.querySelector('.user-status-staff') != undefined);
-            let user_is_mod = (profile_header.querySelector('.user-status-mod') != undefined);
+            let user_is_subscriber = profile_header.querySelector('.user-status-subscriber');
+            let user_is_staff = profile_header.querySelector('.user-status-staff');
+            let user_is_mod = profile_header.querySelector('.user-status-mod');
             if (user_is_staff)
                 user_type = 'staff';
             else if (user_is_mod)
