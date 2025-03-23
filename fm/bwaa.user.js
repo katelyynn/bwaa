@@ -6865,20 +6865,16 @@ let last_season_time;
 
     function correct_tracks() {
         let tracks = document.querySelectorAll('.chartlist-row:not(.chartlist__placeholder-row, [data-lotus])');
-
-        if (tracks == null)
-            return;
+        if (!tracks) return;
 
         tracks.forEach((track) => {
             track.setAttribute('data-lotus', 'true');
 
-            let track_title = track.querySelector('.chartlist-name a');
-
-            if (track_title == undefined)
-                return;
+            let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
+            if (!track_title) return;
 
             let song_artist_element = track.querySelector('.chartlist-artist a');
-            if (song_artist_element != undefined) {
+            if (song_artist_element) {
                 let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
                 track_title.textContent = corrected_title;
                 track_title.setAttribute('title', corrected_title);
@@ -6887,7 +6883,6 @@ let last_season_time;
                 song_artist_element.textContent = corrected_artist;
                 song_artist_element.setAttribute('title', corrected_artist);
             } else {
-                // TODO: investigate track_title.getaAttribute() is null
                 let track_artist = track_title.getAttribute('href').split('/')[2].replaceAll('+',' ');
                 let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
                 track_title.textContent = corrected_title;
