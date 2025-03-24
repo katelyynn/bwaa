@@ -1702,12 +1702,7 @@
                     display: none;
                 }
 
-                &:not(.chartlist--candy-bar &) {
-                    .chartlist-artist {
-                        display: none;
-                    }
-                }
-                .chartlist--candy-bar & {
+                &.chartlist-row--with-artist {
                     .chartlist-name {
                         padding-left: unset;
                     }
