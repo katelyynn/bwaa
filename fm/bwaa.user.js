@@ -793,19 +793,7 @@ let album_track_corrections = {};
 moment.locale('en', {
     relativeTime: {
         future: 'in %s',
-        past: '%s ago',
-        s:  'now',
-        ss: '%ss',
-        m:  '1m',
-        mm: '%dm',
-        h:  '1h',
-        hh: '%dh',
-        d:  '1d',
-        dd: '%dd',
-        M:  '1mo',
-        MM: '%dmo',
-        y:  '1yr',
-        yy: '%dyr'
+        past: '%s ago'
     }
 });
 
