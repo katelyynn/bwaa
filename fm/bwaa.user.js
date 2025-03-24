@@ -1179,6 +1179,15 @@ let last_season_time;
             bwaa_gallery();
             bwaa_friends();
             bwaa_playlists();
+
+            if (
+                page.type == 'user' ||
+                page.type == 'artist' ||
+                page.type == 'album' ||
+                page.type == 'track'
+            ) {
+                bwaa_see_more();
+            }
         }
     }
 
@@ -7241,5 +7250,16 @@ let last_season_time;
 
         log('final badge list', 'sponsor', 'info', badges);
         return badges;
+    }
+
+
+
+
+    function bwaa_see_more() {
+        let more_links = page.structure.container.querySelectorAll(':is(.more-link a, .more-link-fullwidth-right a, .more-link-with-action a:last-child)');
+        more_links.forEach((link) => {
+            link.setAttribute('title', link.textContent.trim());
+            link.textContent = trans[lang].see_more;
+        });
     }
 })();
