@@ -3147,6 +3147,22 @@
             }
         }
     }
+
+    .shout-more-replies-after, .shout-more-replies-before {
+        margin-top: unset;
+        margin-bottom: 10px;
+
+        padding: unset;
+
+        &:before {
+            display: none;
+        }
+    }
+    .shout-list-item .shout-list-item,
+    .shout-more-replies-after, .shout-more-replies-before {
+        margin-left: 80px;
+    }
+
     .shouting-unavailable {
         padding: unset;
         margin-top: 15px;
