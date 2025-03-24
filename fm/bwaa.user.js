@@ -49,8 +49,6 @@ const trans = {
 
         deleted_user: 'Deleted user',
 
-        settings: 'Settings',
-
         badges: {
             missing: {
                 name: 'No badges'
@@ -343,6 +341,7 @@ const trans = {
             }
         },
         settings: {
+            name: 'Settings',
             close: 'Close',
             finish: 'Finish',
             new: 'New',
@@ -1748,6 +1747,15 @@ let last_season_time;
                     last_seen = trans[lang].profile.last_seen.active_now;
             } else {
                 last_seen = trans[lang].profile.last_seen.private;
+            }
+
+
+            // settings
+            if (is_own_profile) {
+                let setting_buttons = page.structure.main.querySelectorAll('.section-settings-toggle');
+                setting_buttons.forEach((button) => {
+                    button.textContent = trans[lang].settings.name;
+                });
             }
 
 

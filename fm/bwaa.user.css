@@ -2030,6 +2030,7 @@
     }
 
     /* icons */
+    .section-settings-toggle:before,
     .involved--album:before, .involved--track:before, .involved--artist:before,
     .gallery-image-report:before,
     .date-range-picker-button:before,
@@ -5288,27 +5289,24 @@
     }
 
     .section-settings-toggle {
-        background: transparent var(--cdn-flatness-buttons-6-small-multi) no-repeat right top;
-        width: 26px;
-        height: 15px;
-        font-size: 9px;
+        width: fit-content;
+        height: fit-content;
+        font-size: 11px;
+        line-height: 16px;
 
-        [data-bwaa--theme="paint_it_black"] & {
-            filter: brightness(70%) contrast(170%);
-            border-top-left-radius: 4px;
-        }
+        padding-left: calc(10px + 4px);
 
         opacity: unset !important;
         margin: unset;
         top: 15px;
         right: 15px;
 
-        &:before {
-            display: none;
-        }
+        color: var(--colour-middle-2) !important;
 
-        &:hover {
-            background-position: right bottom;
+        &:before {
+            background-image: var(--cdn-flatness-sprites-21-icons);
+            background-position: 0 -500px;
+            --top: 3px;
         }
     }
     .share-button-profile {
