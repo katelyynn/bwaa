@@ -1853,7 +1853,7 @@
                         background-color: unset !important;
                         background-image: var(--cdn-flatness-sprites-21-icons);
                         box-shadow: unset;
-                        background-position: 0 -1038px;
+                        background-position: -2px -1700px;
                         background-size: unset !important;
                         margin: unset;
                         width: 16px;
@@ -1861,15 +1861,13 @@
                         transition: unset;
                         top: 0;
                         left: 0;
-                    }
 
-                    [data-bwaa--theme="paint_it_black"] &:before {
-                        filter: brightness(45%) contrast(180%);
+                        filter: saturate(0);
                     }
 
                     &:hover:before,
                     [data-toggle-button-current-state="loved"] &:before {
-                        background-position: 0 -1018px;
+                        background-position: -2px -1700px;
                         filter: none;
                     }
                 }
