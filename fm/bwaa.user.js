@@ -546,9 +546,8 @@ const trans = {
         },
         obsession: {
             name: 'Music Obsession',
-            view_more: 'View more obsessions',
-            previous: 'Previous »',
-            forward: '« Forward'
+            previous: 'Older »',
+            forward: '« Newer'
         },
         activities: {
             name: 'Recent Activity',
@@ -2860,7 +2859,7 @@ let last_season_time;
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">See more</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
             let new_header = document.createElement('section');
@@ -3176,7 +3175,7 @@ let last_season_time;
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">See more</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
             let play_on_youtube = page.structure.row.querySelector('.play-this-track-playlink--youtube');
@@ -4250,7 +4249,7 @@ let last_season_time;
         let view_more_obsessions = document.createElement('div');
         view_more_obsessions.classList.add('more-link');
         view_more_obsessions.innerHTML = (`
-            <a href="${root}user/${page.name}/obsessions">${trans[lang].obsession.view_more}</a>
+            <a href="${root}user/${page.name}/obsessions">${trans[lang].see_more}</a>
         `);
 
         page.structure.main.appendChild(view_more_obsessions);

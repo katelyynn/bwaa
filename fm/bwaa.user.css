@@ -701,11 +701,7 @@
 
                     &[disabled] {
                         pointer-events: none !important;
-                        filter: brightness(90%);
-
-                        [data-bwaa--theme="paint_it_black"] & {
-                            filter: brightness(50%);
-                        }
+                        opacity: 0.5 !important;
                     }
 
                     &:after {
