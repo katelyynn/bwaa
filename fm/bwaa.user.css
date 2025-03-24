@@ -1702,6 +1702,12 @@
                     display: none;
                 }
 
+                &:not(.chartlist-row--with-artist) {
+                    .chartlist-artist {
+                        display: none;
+                    }
+                }
+
                 &.chartlist-row--with-artist {
                     .chartlist-name {
                         padding-left: unset;
