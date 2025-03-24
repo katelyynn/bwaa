@@ -566,8 +566,8 @@ const trans = {
             update_bwaa: 'You updated bwaa to {i}.',
             install_bleh: 'You installed bleh.',
             update_bleh: 'You updated bleh to {i}.',
-            bookmark: 'You bookmarked {i}.',
-            unbookmark: 'You removed {i}’s bookmark.',
+            bookmark: 'You added {i} to your Library.',
+            unbookmark: 'You removed {i} from your Library.',
             wiki: 'You edited the {i} wiki.'
         }
     }
@@ -1960,9 +1960,8 @@ let last_season_time;
                 // context: string,
                 // date: string
 
-                let activity_item = document.createElement('a');
+                let activity_item = document.createElement('li');
                 activity_item.classList.add('activity-item', 'journal-like', `activity--${activity.type}`);
-                activity_item.setAttribute('href', activity.context);
 
                 if (index == (recent_activity_list_r.length - 1))
                     activity_item.classList.add('last');
