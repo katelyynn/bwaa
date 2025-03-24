@@ -80,6 +80,7 @@
         --colour: #1b1b1b;
         --colour-upper: #333;
         --colour-middle: #666;
+        --colour-middle-2: #696969;
         --colour-lower: #999;
         --text-link: #0187c5;
         --header-text-black: #000;
@@ -160,6 +161,7 @@
             --colour: #d0dae4;
             --colour-upper: #f0f0f0;
             --colour-middle: #888F96;
+            --colour-middle-2: var(--colour-middle);
             --colour-lower: #7A848E;
             --text-link: #77b5e7;
             --header-text-black: #fff;
@@ -1752,7 +1754,7 @@
 
             .chartlist-index {
                 width: 30px;
-                color: #696969;
+                color: var(--colour-middle-2);
                 text-align: right;
                 line-height: 16px;
 
@@ -1893,7 +1895,7 @@
             .chartlist-duration {
                 order: 7;
                 width: 56px !important;
-                color: #696969;
+                color: var(--colour-middle-2);
                 line-height: 16px;
                 text-align: left;
             }
@@ -1903,7 +1905,7 @@
 
                 .chartlist-count-bar {
                     width: unset;
-                    color: #696969;
+                    color: var(--colour-middle-2);
                     line-height: 16px;
 
                     .chartlist-count-bar-link {
@@ -2315,7 +2317,7 @@
 
                         & + a {
                             margin: 3px 0 0 0;
-                            color: #696969;
+                            color: var(--colour-middle-2);
                             font-size: 10px;
                         }
                     }
@@ -2485,13 +2487,13 @@
 
                 .resource-list--release-list-item-listeners {
                     margin: 3px 0 0 0 !important;
-                    color: #696969;
+                    color: var(--colour-middle-2);
                     font-size: 10px;
                 }
                 .resource-list--release-list-item-aux-text {
                     margin: 5px 0 0 0 !important;
                     font-size: 10px;
-                    color: #696969;
+                    color: var(--colour-middle-2);
                 }
             }
         }
@@ -6050,7 +6052,7 @@
             }
 
             &.wiki-history-action {
-                color: #696969;
+                color: var(--colour-middle-2);
 
                 /* todo: revisit */
                 &:before {
@@ -6059,7 +6061,7 @@
             }
 
             &.wiki-history-summary {
-                color: #696969;
+                color: var(--colour-middle-2);
                 font-size: 90%;
 
                 .link-block-cover-link {
@@ -6115,7 +6117,7 @@
                 .wiki-history-date {
                     font: inherit;
                     font-size: 85%;
-                    color: #696969;
+                    color: var(--colour-middle-2);
                 }
             }
         }
