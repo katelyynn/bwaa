@@ -236,7 +236,7 @@
     /* page */
 
     .main-content {
-        padding-top: 88px !important;
+        padding-top: calc(70px + 8px) !important;
 
         [data-bwaa--sticky_nav="true"] & {
             padding-top: unset !important;
@@ -1984,7 +1984,6 @@
         .about-this-album:first-child,
         div#shoutbox:not(section > #shoutbox),
         .artist-overview-top-tracks,
-        .album-and-lyrics-row,
         #tracklist,
         .profile-mobile-featured-track + section,
         section + p,
@@ -2102,7 +2101,11 @@
         &.tiny {
             font-size: 13px;
             line-height: 18px;
-            margin-bottom: -3px;
+            margin-bottom: 12px;
+
+            &.below {
+                margin-bottom: -3px;
+            }
         }
 
         a {
@@ -2503,6 +2506,7 @@
     /* track featured on album */
     .album-and-lyrics-row {
         display: flex;
+        margin: 0 0 3px 0;
     }
     .source-album-column,
     .secondary-album-column {
@@ -2842,6 +2846,11 @@
                 align-items: end;
                 gap: 4px;
                 flex: 1;
+            }
+
+            .small {
+                font-size: 11px;
+                line-height: 1.363636em;
             }
         }
         .track-image-side {
@@ -5476,6 +5485,18 @@
             display: none;
         }
     }
+    .message-box {
+        border: 1px solid #d1e7ff;
+        font-size: 11px;
+        line-height: 1.363636em;
+        color: #666;
+        padding: 0.5em 0.7em;
+        margin: 20px 0;
+
+        &:is(section > :last-child) {
+            margin-bottom: -25px;
+        }
+    }
 
     .new-badge {
         padding: 0.105em 0.5em 0.25em 0.5em !important;
@@ -7104,6 +7125,50 @@
         img {
             width: 100%;
             margin-bottom: 15px;
+        }
+    }
+
+
+
+
+    .similar-music {
+        h2 {
+            margin-bottom: 17px;
+        }
+    }
+
+    .station-button-large {
+        display: block;
+        position: relative;
+        height: 50px;
+        line-height: 1.181818em;
+        font-size: 11px;
+        cursor: pointer;
+        overflow: hidden;
+        background: url('data:image/png;base64,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') left top no-repeat;
+        color: #ccc;
+
+        padding: 8px 0 8px 39px;
+        margin: 0 0 25px 0;
+
+        strong {
+            font-size: 12px;
+            line-height: 1.166667em;
+            color: #fff;
+        }
+        p {
+            margin: 4px 0 0 0;
+            white-space: nowrap;
+        }
+
+        &:hover {
+            background-position: left -50px;
+            color: #ccc;
+            text-decoration: none;
+
+            strong {
+                text-decoration: underline;
+            }
         }
     }
 }

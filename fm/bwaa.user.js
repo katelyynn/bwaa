@@ -944,7 +944,8 @@ let page = {
         main: null,
         side: null,
         nav: null
-    }
+    },
+    state: {}
 };
 
 // sessions list, only filled by applications page in settings
@@ -3192,6 +3193,9 @@ let last_season_time;
             if (!first_meta.querySelector('a'))
                 track_length = ` (${first_meta.textContent.trim()})`;
 
+            page.state.play_spotify = (!play_on_spotify.classList.contains('play-this-track-playlink--disabled')) && play_on_spotify.getAttribute('href');
+            page.state.play_apple_music = (!play_on_apple_music.classList.contains('play-this-track-playlink--disabled')) && play_on_apple_music.getAttribute('href');
+
             let new_header = document.createElement('section');
             new_header.classList.add('profile-track-section');
             new_header.innerHTML = (`
@@ -3203,7 +3207,7 @@ let last_season_time;
                     </div>
                     <div class="track-info">
                         <h1>${page.name} by <a href="${header_track_data.artist_link}">${page.sister}</a>${track_length}</h1>
-                        <p>On ${(header_track_data.primary_album != null) ? header_track_data.primary_album.outerHTML : 'no albums'} <strong><a href="${window.location.href}/+albums">see all</a></strong></p>
+                        <p class="small">On ${(header_track_data.primary_album != null) ? header_track_data.primary_album.outerHTML : 'no albums'} <strong><a href="${window.location.href}/+albums">see all</a></strong></p>
                         <div class="actions">
                             ${header_actions[0].outerHTML}
                             ${header_actions[1].outerHTML}
@@ -3241,9 +3245,9 @@ let last_season_time;
                         `)}
                     </div>
                     <div class="playback-item">
-                        ${(!play_on_spotify.classList.contains('play-this-track-playlink--disabled'))
+                        ${(page.state.play_spotify)
                         ? (`
-                        <a class="provider provider--spotify" href="${play_on_spotify.getAttribute('href')}" target="_blank">
+                        <a class="provider provider--spotify" href="${page.state.play_spotify}" target="_blank">
                             Play on <strong>Spotify</strong>
                         </a>
                         <div class="note">
@@ -3251,7 +3255,7 @@ let last_season_time;
                         </div>
                         `)
                         : (`
-                        <a class="provider provider--spotify" href="${play_on_spotify.getAttribute('href')}" data-open-modal="${play_on_spotify.getAttribute('data-open-modal')}">
+                        <a class="provider provider--spotify" href="${page.state.play_spotify}" data-open-modal="${play_on_spotify.getAttribute('data-open-modal')}">
                             Add a <strong>Spotify</strong> link
                         </a>
                         <div class="note">
@@ -3260,9 +3264,9 @@ let last_season_time;
                         `)}
                     </div>
                     <div class="playback-item">
-                        ${(!play_on_apple_music.classList.contains('play-this-track-playlink--disabled'))
+                        ${(page.state.play_apple_music)
                         ? (`
-                        <a class="provider provider--apple-music" href="${play_on_apple_music.getAttribute('href')}" target="_blank">
+                        <a class="provider provider--apple-music" href="${page.state.play_apple_music}" target="_blank">
                             Play on <strong>Apple Music</strong>
                         </a>
                         <div class="note">
@@ -3270,7 +3274,7 @@ let last_season_time;
                         </div>
                         `)
                         : (`
-                        <a class="provider provider--apple-music" href="${play_on_apple_music.getAttribute('href')}" data-open-modal="${play_on_apple_music.getAttribute('data-open-modal')}">
+                        <a class="provider provider--apple-music" href="${page.state.play_apple_music}" data-open-modal="${play_on_apple_music.getAttribute('data-open-modal')}">
                             Add an <strong>Apple Music</strong> link
                         </a>
                         <div class="note">
@@ -3301,15 +3305,50 @@ let last_season_time;
 
 
             // about this track
-            let about_this_track = document.createElement('section');
-            about_this_track.classList.add('about-this-track');
-            about_this_track.innerHTML = (`
-                <h2><a href="${window.location.href}/+wiki">About this track</a></h2>
-                <div class="wiki">
-                    ${get_wiki()}
-                </div>
-            `);
-            new_header.after(about_this_track);
+            let wiki = get_wiki();
+            let about_this_track;
+            if (page.state.wiki) {
+                about_this_track = document.createElement('section');
+                about_this_track.classList.add('about-this-track');
+                about_this_track.innerHTML = (`
+                    <h2><a href="${window.location.href}/+wiki">About This Track</a></h2>
+                    <div class="wiki">
+                        ${wiki}
+                    </div>
+                `);
+                new_header.after(about_this_track);
+            }
+
+
+            let similar_music = document.createElement('section');
+            similar_music.classList.add('similar-music');
+            similar_music.innerHTML = '<h2>Similar Music</h2>';
+
+            if (page.state.play_spotify) {
+                let play_button = document.createElement('a');
+                play_button.classList.add('station-button', 'station-button-large');
+                play_button.setAttribute('href', page.state.play_spotify);
+
+                play_button.innerHTML = (`
+                    <strong>Play ${page.name} Radio</strong>
+                    <p>With: ${page.sister}</p>
+                `);
+
+                similar_music.appendChild(play_button);
+            }
+
+            if (page.state.wiki)
+                about_this_track.after(similar_music);
+            else
+                new_header.after(similar_music);
+
+
+            // album and lyrics
+            let album_and_lyrics = page.structure.row.querySelector('.album-and-lyrics-row');
+            let header = album_and_lyrics.querySelector('h3');
+            header.classList = 'tiny';
+            header.textContent = 'Albums featuring this track';
+            similar_music.appendChild(album_and_lyrics);
 
 
             // similar tracks
@@ -3317,8 +3356,10 @@ let last_season_time;
             if (similar_tracks_container) {
                 let section = similar_tracks_container.parentElement;
                 let header = section.querySelector('h3');
-                header.classList = 'tiny';
+                header.classList = 'tiny below';
                 header.textContent = 'People who listen to this also like';
+
+                similar_music.appendChild(section);
 
                 similar_tracks_container.classList = [];
                 similar_tracks_container.classList.add('similar-tracks-container');
@@ -3356,6 +3397,20 @@ let last_season_time;
 
                 similar_tracks_container.innerHTML = '';
                 similar_tracks_container.appendChild(chartlist);
+            }
+
+
+            // no wiki
+            if (!page.state.wiki) {
+                let no_wiki = document.createElement('div');
+                no_wiki.classList.add('message-box');
+                no_wiki.innerHTML = (`
+                    <strong>Know something about this track?</strong>
+                    <br>
+                    Help build Last.fm by <a href="${window.location.href}/+wiki/edit">adding it to the wiki for this track</a>.
+                `);
+
+                similar_music.appendChild(no_wiki);
             }
 
 
@@ -3676,9 +3731,19 @@ let last_season_time;
      * @returns retrieved wiki or cta if missing
      */
     function get_wiki() {
-        let        wiki = document.body.querySelector('.metadata-and-wiki-row .wiki-block.visible-lg');
-        if (!wiki) wiki = document.body.querySelector('.wiki-block-cta');
-        if (!wiki) wiki = document.body.querySelector('.coloured-cta--wiki-icon');
+        page.state.wiki = true;
+
+        let wiki = document.body.querySelector('.metadata-and-wiki-row .wiki-block.visible-lg');
+
+        if (!wiki) {
+            wiki = document.body.querySelector('.wiki-block-cta');
+            page.state.wiki = false;
+        }
+
+        if (!wiki) {
+            wiki = document.body.querySelector('.coloured-cta--wiki-icon');
+            page.state.wiki = false;
+        }
 
         return wiki.outerHTML;
     }
