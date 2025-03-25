@@ -2412,7 +2412,7 @@ let last_season_time;
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(!tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
             let gallery_sidebar_photos_ems = document.body.querySelectorAll('.col-sidebar .sidebar-image-list-item');
@@ -2861,7 +2861,7 @@ let last_season_time;
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
             let new_header = document.createElement('section');
@@ -3177,7 +3177,7 @@ let last_season_time;
                 index += 1;
             });
 
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more != null) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
 
 
             let play_on_youtube = page.structure.row.querySelector('.play-this-track-playlink--youtube');
@@ -3315,6 +3315,11 @@ let last_season_time;
             // similar tracks
             let similar_tracks_container = page.structure.row.querySelector('.track-similar-tracks');
             if (similar_tracks_container) {
+                let section = similar_tracks_container.parentElement;
+                let header = section.querySelector('h3');
+                header.classList = 'tiny';
+                header.textContent = 'People who listen to this also like';
+
                 similar_tracks_container.classList = [];
                 similar_tracks_container.classList.add('similar-tracks-container');
 

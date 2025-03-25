@@ -2084,7 +2084,7 @@
     #subscription-corrections h4,
     .your-progress h3,
     .date-heading,
-    h3.text-18,
+    h3.text-18, h3.tiny, h3.small,
     h2 {
         color: var(--header-text);
         font-family: inherit;
@@ -2097,6 +2097,12 @@
         .col-sidebar & {
             font-size: 14px;
             line-height: 18px;
+        }
+
+        &.tiny {
+            font-size: 13px;
+            line-height: 18px;
+            margin-bottom: -3px;
         }
 
         a {
@@ -2526,6 +2532,7 @@
             padding: 0 15px 0 85px !important;
             min-height: 70px;
             overflow: hidden;
+            align-items: unset;
 
             .source-album-art {
                 position: absolute;
