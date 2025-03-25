@@ -49,6 +49,8 @@ const trans = {
 
         deleted_user: 'Deleted user',
 
+        listens: 'Listens',
+
         badges: {
             missing: {
                 name: 'No badges'
@@ -124,7 +126,6 @@ const trans = {
         },
 
         your_scrobbles: {
-            name: 'Your Scrobbles',
             count_scrobbles: '{count} scrobbles'
         },
 
@@ -2609,7 +2610,7 @@ let last_season_time;
 
             let your_scrobbles = document.createElement('section');
             your_scrobbles.innerHTML = (`
-                <h2>${trans[lang].your_scrobbles.name}</h2>
+                <h2>${trans[lang].listens}</h2>
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
@@ -2966,7 +2967,7 @@ let last_season_time;
 
             let your_scrobbles = document.createElement('section');
             your_scrobbles.innerHTML = (`
-                <h2>Your Scrobbles</h2>
+                <h2>${trans[lang].listens}</h2>
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
@@ -3357,7 +3358,7 @@ let last_season_time;
 
             let your_scrobbles = document.createElement('section');
             your_scrobbles.innerHTML = (`
-                <h2>Your Scrobbles</h2>
+                <h2>${trans[lang].listens}</h2>
                 <div class="listeners-container">
                     <div class="listener">
                         <div class="image">
