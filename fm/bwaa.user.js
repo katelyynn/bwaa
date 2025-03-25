@@ -152,7 +152,7 @@ const trans = {
         },
 
         home: {
-            name: 'haiii {user}',
+            name: 'Hi {user}',
             your_profile: 'Your profile',
             settings: 'Settings',
             inbox: 'Inbox',
@@ -5928,7 +5928,7 @@ let last_season_time;
                 <img src="${page.avatar}" alt="${page.name}">
             </div>
             <div class="badge-info">
-                <h1>${trans[lang].home.name.replace('{user}', `<a href="${root}user/${page.name}">${page.name}</a>`)}</h1>
+                <h1><a href="${root}user/${page.name}">${trans[lang].home.name.replace('{user}', page.name)}</a></h1>
                 <p class="links"><a href="${root}user/${page.name}">${trans[lang].home.your_profile}</a> | <a href="${root}settings">${trans[lang].home.settings}</a> | <a href="${root}inbox">${trans[lang].home.inbox}</a></p>
             </div>
         `);
