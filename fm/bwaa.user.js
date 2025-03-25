@@ -3159,9 +3159,9 @@ let last_season_time;
 
 
             let track_video_element = page.structure.row.querySelector('.video-preview');
-            let track_video = '';
+            let track_video;
             if (track_video_element)
-                track_video = track_video_element.outerHTML;
+                track_video = track_video_element.querySelector('.image-overlay-playlink-link').getAttribute('href').replace('https://www.youtube.com/watch?v=', '');
 
 
             let tags_html = '';
@@ -3279,10 +3279,13 @@ let last_season_time;
                         `)}
                     </div>
                 </div>
-                ${(track_video != ''
-                    ? `<div class="playback-video">${track_video}</div>`
+                ${(track_video)
+                    ? `
+                    <div class="playback-video">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/${track_video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>`
                     : ''
-                )}
+                }
             `);
 
             page.structure.row.insertBefore(navlist, page.structure.main);
