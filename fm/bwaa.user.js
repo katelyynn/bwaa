@@ -355,12 +355,9 @@ const trans = {
                 about: 'About'
             },
             themes: {
-                simply_red: {
-                    name: 'Simply Red'
-                },
-                paint_it_black: {
-                    name: 'Paint It Black'
-                }
+                simply_red: 'Simply Red',
+                paint_it_black: 'Paint It Black',
+                tooltip: 'Switch Colour Style'
             },
             update_picture: 'Uploaded images may be displayed either in full-resolution (varied sizes) or square cropped from the top. You can adjust this in the dedicated {+l}bwaa settings{-l}.',
             check_for_updates: 'Check for updates',
@@ -1557,7 +1554,7 @@ let last_season_time;
         let search_companion_nav = document.createElement('div');
         search_companion_nav.classList.add('search-companion-nav');
         search_companion_nav.innerHTML = (`
-            <span class="language-wrapper" id="language-wrapper" data-dialog-open="false"><a onclick="_open_language_menu()" name="${non_override_lang}">${selected_language}</a>${language_menu.outerHTML}</span> | <a onclick="toggle_theme()" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</a> | <a href="${root}help">Help</a>
+            <span class="language-wrapper" id="language-wrapper" data-dialog-open="false"><a onclick="_open_language_menu()" name="${non_override_lang}">${selected_language}</a>${language_menu.outerHTML}</span> | <a onclick="toggle_theme()" id="theme-value" title="${trans[lang].settings.themes.tooltip}">${trans[lang].settings.themes[settings.theme]}</a> | <a href="${root}help">Help</a>
         `);
         inner.appendChild(search_companion_nav);
     }
@@ -4063,7 +4060,7 @@ let last_season_time;
         else if (current_theme == 'simply_red')
             current_theme = 'paint_it_black';
 
-        document.getElementById('theme-value').textContent = trans[lang].settings.themes[current_theme].name;
+        document.getElementById('theme-value').textContent = trans[lang].settings.themes[current_theme];
 
         // save value
         settings.theme = current_theme;
