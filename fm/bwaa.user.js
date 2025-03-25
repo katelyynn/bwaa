@@ -3247,7 +3247,7 @@ let last_season_time;
                             Play on <strong>Spotify</strong>
                         </a>
                         <div class="note">
-                            Yes, it <a>scrobbles!</a> <a>Learn more</a> or ${page.structure.row.querySelector('.play-this-track-playlink--spotify + .replace-playlink').outerHTML}
+                            Yes, it <a>scrobbles!</a> <a href="https://web.archive.org/web/20120702185253/http://www.spotify.com/uk/blog/archives/2008/12/18/spotify-scrobbles/" target="_blank">Learn more</a> or ${page.structure.row.querySelector('.play-this-track-playlink--spotify + .replace-playlink').outerHTML}
                         </div>
                         `)
                         : (`
@@ -3255,7 +3255,7 @@ let last_season_time;
                             Add a <strong>Spotify</strong> link
                         </a>
                         <div class="note">
-                            Yes, it <a>scrobbles!</a> <a>Learn more</a>
+                            Yes, it <a>scrobbles!</a> <a href="https://web.archive.org/web/20120702185253/http://www.spotify.com/uk/blog/archives/2008/12/18/spotify-scrobbles/" target="_blank">Learn more</a>
                         </div>
                         `)}
                     </div>
