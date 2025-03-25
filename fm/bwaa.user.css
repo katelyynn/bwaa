@@ -2943,6 +2943,7 @@
 
         .playback-video {
             margin-top: 25px;
+            margin-bottom: 0.5em;
 
             iframe {
                 width: 100%;

@@ -3282,8 +3282,12 @@ let last_season_time;
                 ${(track_video)
                     ? `
                     <div class="playback-video">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/${track_video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>`
+                        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${track_video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="more-link-fullwidth-right">
+                        <a class="ignore-see-more" href="https://youtube.com/watch?v=${track_video}" target="_blank">About this video</a>
+                    </div>
+                    `
                     : ''
                 }
             `);
@@ -7265,7 +7269,7 @@ let last_season_time;
 
 
     function bwaa_see_more() {
-        let more_links = page.structure.container.querySelectorAll(':is(.more-link a, .more-link-fullwidth-right a, .more-link-with-action a:last-child)');
+        let more_links = page.structure.container.querySelectorAll(':is(.more-link a, .more-link-fullwidth-right a, .more-link-with-action a:last-child):not(.ignore-see-more)');
         more_links.forEach((link) => {
             link.setAttribute('title', link.textContent.trim());
             link.textContent = trans[lang].see_more;
