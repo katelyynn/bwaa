@@ -2400,7 +2400,7 @@ let last_season_time;
 
 
             let tags_html = '';
-            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
+            let tags = document.body.querySelectorAll('.section-with-separator .catalogue-tags .tag a');
             let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
 
             let index = 1;
