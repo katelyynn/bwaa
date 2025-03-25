@@ -1648,6 +1648,7 @@
             }
 
             .chartlist-more {
+                display: block !important; /* remove layout shifting */
                 width: 34px;
                 padding: 3px 5px 0 3px;
 
@@ -5493,7 +5494,7 @@
         padding: 0.5em 0.7em;
         margin: 20px 0;
 
-        &:is(section > :last-child) {
+        &:is(section > :last-child, .wiki > &) {
             margin-bottom: -25px;
         }
     }

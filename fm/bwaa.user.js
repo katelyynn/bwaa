@@ -1080,9 +1080,8 @@ let last_season_time;
             correct_generic_combo_no_artist('artist-top-albums-item');
             correct_generic_combo('source-album-details');
             correct_generic_combo('resource-list--release-list-item');
-
-            correct_tracks();
         }
+        correct_tracks();
 
         subscribe_to_events();
     }
@@ -2925,10 +2924,12 @@ let last_season_time;
                 }
             });
 
+            let wiki = get_wiki();
+
             let about_this_album = document.createElement('section');
             about_this_album.classList.add('about-this-album');
             about_this_album.innerHTML = (`
-                <h2><a href="${window.location.href}/+wiki">About this album</a></h2>
+                <h2><a href="${window.location.href}/+wiki">About This Album</a></h2>
                 <div class="label-container">
                     <div class="image">
                         <img src="https://lastfm.freetls.fastly.net/i/u/avatar300s/2a96cbd8b46e442fc41c2b86b821562f.jpg">
@@ -2943,7 +2944,13 @@ let last_season_time;
                     </div>
                 </div>
                 <div class="wiki">
-                    ${get_wiki()}
+                    ${(page.state.wiki) ? wiki : (`
+                    <div class="message-box">
+                        <strong>Know something about this album?</strong>
+                        <br>
+                        Help build Last.fm by <a href="${window.location.href}/+wiki/edit">adding it to the wiki for this album</a>.
+                    </div>
+                    `)}
                 </div>
             `);
             try {
@@ -6945,8 +6952,18 @@ let last_season_time;
         let tracks = document.querySelectorAll('.chartlist-row:not(.chartlist__placeholder-row, [data-lotus])');
         if (!tracks) return;
 
-        tracks.forEach((track) => {
+        let lotus = settings.lotus;
+
+        tracks.forEach((track, index) => {
             track.setAttribute('data-lotus', 'true');
+
+            if (index == 0 && track.classList.contains('chartlist-row--now-scrobbling')) {
+                let time = track.querySelector('.chartlist-now-scrobbling');
+                time.textContent = 'Listening now';
+            }
+
+            if (!lotus)
+                return;
 
             let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
             if (!track_title) return;
