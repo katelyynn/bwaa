@@ -833,7 +833,9 @@ let settings_defaults = {
 
     lotus: true,
 
-    flags: {}
+    flags: {},
+
+    tab_style: 2012
 }
 let settings_store = {
     developer: {
@@ -914,6 +916,9 @@ let settings_store = {
     lotus: {
         type: 'toggle',
         values: [true, false]
+    },
+    tab_style: {
+        type: 'radio'
     }
 }
 let fallback_cover_art = '';
@@ -4923,17 +4928,6 @@ let last_season_time;
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>${trans[lang].settings.navigation.name}</legend>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--sticky_nav">
-                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.sticky_nav.name}
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
                         <legend>${trans[lang].settings.extra.name}</legend>
                         <div class="form-group">
                             <div class="checkbox">
@@ -5005,6 +4999,43 @@ let last_season_time;
                         <a onclick="_register_activity('shout', [{name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}], '${root}user/LAST.HQ')">Register a new shout activity</a>
                     </div>
                     -->
+                </section>
+            `);
+
+            request_checkbox_update();
+        } else if (page == 'navigation') {
+            injector.innerHTML = (`
+                <section id="navigation" class="form-section settings-form">
+                    <h2 class="form-header">Navigation</h2>
+                    <p>Choose the navigation style that suits you best.</p>
+                    <fieldset>
+                        <legend>Tab style</legend>
+                        <div class="form-group">
+                            <div class="radio-box">
+                                <label for="setting--tab_style--2012">
+                                    <input id="setting--tab_style--2012" type="radio" value="2012" name="tab_style" onchange="_notify_radio_change(this)">
+                                    2012 and before
+                                </label>
+                            </div>
+                            <div class="radio-box">
+                                <label for="setting--tab_style--2013">
+                                    <input id="setting--tab_style--2013" type="radio" value="2013" name="tab_style" onchange="_notify_radio_change(this)">
+                                    2013 <i class="subtext">(WIP)</i>
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Page header</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--sticky_nav">
+                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.sticky_nav.name}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
                 </section>
             `);
 
@@ -5528,7 +5559,7 @@ let last_season_time;
     function checkbox_update(setting, value, modify=true) {
         if (settings_store[setting].type == 'toggle') {
             let checkbox = document.getElementById(`setting--${setting}`);
-            if (checkbox == null)
+            if (!checkbox)
                 return;
 
             if (modify) {
@@ -5551,6 +5582,22 @@ let last_season_time;
                 else
                     checkbox.checked = false;
             }
+        } else if (settings_store[setting].type == 'radio') {
+            let radios = document.querySelectorAll(`[name="${setting}"]`);
+            if (!radios)
+                return;
+
+            radios.forEach((radio) => {
+                let this_value = radio.getAttribute('value');
+
+                if (!modify) {
+                    console.info('bwaa - setting', setting, 'is being loaded as', value);
+                    if (value == this_value)
+                        radio.checked = true;
+                    else
+                        radio.checked = false;
+                }
+            });
         }
 
         // save to settings
@@ -5791,6 +5838,15 @@ let last_season_time;
     }
 
     function radio_update(setting, value) {
+        if (settings_store[setting] && settings_store[setting].type == 'radio') {
+            settings[setting] = value;
+
+            // save to settings
+            localStorage.setItem('bwaa', JSON.stringify(settings));
+
+            return;
+        }
+
         if (setting == 'setup_choose_era') {
             // choose your era preset
 
