@@ -649,12 +649,6 @@
             -webkit-box-orient: vertical;
         }
 
-        & + .library-controls {
-            margin: 0 0 15px 0;
-            display: flex;
-            float: unset;
-        }
-
         & + h2 {
             display: none;
         }
@@ -667,6 +661,11 @@
                 margin: 0 0 0.15em 0 !important;
             }
         }
+    }
+    .library-controls {
+        margin: 0 0 15px 0;
+        display: flex;
+        float: unset;
     }
 
     .header-new {
