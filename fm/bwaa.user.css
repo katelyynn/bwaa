@@ -83,6 +83,7 @@
         --border-4: #ddd;
         --border-5: #fdfdfd;
         --border-6: #f0f0f0;
+        --border-7: #c3c1c1;
         --colour: #1b1b1b;
         --colour-upper: #333;
         --colour-middle: #666;
@@ -166,6 +167,7 @@
             --border-4: #555;
             --border-5: #222;
             --border-6: #202020;
+            --border-7: var(--border);
             --colour: #d0dae4;
             --colour-upper: #f0f0f0;
             --colour-middle: #888F96;
@@ -291,9 +293,26 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            left: 630px;
+            left: calc(var(--page) - 300px - 32px);
             display: block;
-            border-right: 1px dotted var(--border);
+            border-right: 1px dotted var(--border-7);
+        }
+        &[data-tab-style="2013"] {
+            &:after {
+                top: 67px;
+            }
+
+            &:not([data-page-type="user"]) {
+                &:after {
+                    display: none;
+                }
+            }
+
+            left: 0;
+
+            .row > .navlist {
+                display: none;
+            }
         }
 
         &.page-content {
@@ -577,6 +596,10 @@
                 font-size: 11px;
                 line-height: 1.181818em;
 
+                &[data-tab-style="2013"] {
+                    margin-top: unset;
+                }
+
                 .top {
                     display: block;
                 }
@@ -703,10 +726,11 @@
 
                     display: flex;
 
-                    & > a {
+                    .crumb {
                         display: inline-block;
                         /*width: 50%;*/
                         flex: 1;
+                        color: var(--text-link);
                     }
 
                     .navlist-items {
@@ -737,6 +761,24 @@
                             }
                         }
                     }
+                }
+            }
+
+            &.user-page {
+                padding: 18px 15px;
+                border-bottom: 1px dotted var(--border);
+
+                .top-crumb {
+                    align-items: center;
+                    padding: unset;
+
+                    h1 {
+                        margin: unset !important;
+                        padding: unset;
+                        flex: 1;
+                    }
+
+                    border: none;
                 }
             }
         }
@@ -1045,13 +1087,17 @@
 
         .masthead-inner-wrap {
             float: unset !important;
-            width: calc(var(--page) + 140px);
+            width: 1102px;
             position: relative;
             padding: unset !important;
             max-width: unset !important;
             height: 68px !important;
             margin-top: -2px;
             align-items: unset !important;
+
+            [data-bwaa--tab_style="2013"] & {
+                width: calc(var(--page) + 15px + 14px);
+            }
 
             .header-promo {
                 position: absolute;

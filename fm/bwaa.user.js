@@ -1606,6 +1606,9 @@ let last_season_time;
         }
 
         page.structure.container.setAttribute('data-assigned', 'true');
+        page.structure.container.setAttribute('data-page-type', page.type);
+        page.structure.container.setAttribute('data-page-subpage', page.subpage);
+        page.structure.container.setAttribute('data-tab-style', settings.tab_style);
 
         let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
         if (other_container != null)
@@ -1881,9 +1884,9 @@ let last_season_time;
                 </div>
 
                 <div class="badge-info">
-                    <h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>
+                    ${(settings.tab_style == 2012) ? `<h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>` : ''}
                     ${(page.name != sponsor_list.sponsor_account) ? (`
-                    <div class="user-info">
+                    <div class="user-info" data-tab-style=${settings.tab_style}>
                         <div class="top">
                             <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
                         </div>
@@ -1924,6 +1927,16 @@ let last_season_time;
             }
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
+
+            if (settings.tab_style == 2013) {
+                let new_header = generic_subpage_header(
+                    header_user_data.page,
+                    'user',
+                    '',
+                    ''
+                );
+                page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
+            }
 
             // user type
             if (is_cute) {
@@ -2861,7 +2874,7 @@ let last_season_time;
 
             let avatar_element = document.body.querySelector('.album-overview-cover-art img');
             let add_artwork = '';
-            if (avatar_element != undefined) {
+            if (avatar_element) {
                 page.avatar = avatar_element.getAttribute('src');
                 add_artwork = document.body.querySelector('.album-overview-cover-art a').getAttribute('href');
             }
@@ -2871,6 +2884,22 @@ let last_season_time;
                 plays: abbr_statistic(album_metadata[1].querySelector('abbr')),
                 listeners: album_metadata[0].querySelector('abbr').getAttribute('title'),
                 add_artwork: add_artwork
+            }
+
+            if (settings.tab_style == 2013) {
+                let image = page.structure.main.querySelector('.gallery-preview-image--0 img');
+                if (image)
+                    image = image.getAttribute('src');
+                else
+                    image = '';
+
+                let new_header = generic_subpage_header(
+                    header_album_data.page,
+                    'album',
+                    '',
+                    image
+                );
+                page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
             }
 
 
@@ -3587,9 +3616,10 @@ let last_season_time;
      * @param {string} header_title main header text
      * @param {string} link_type type of header, controls how top link is created (defaults to home)
      * @param {string} direct_link supply a direct url to use if link_type is 'direct'
+     * @param {string} avatar image
      * @returns subpage header
      */
-    function generic_subpage_header(header_title, link_type='home', direct_link='') {
+    function generic_subpage_header(header_title, link_type='home', direct_link='', avatar=page.avatar) {
         // determines top text link
         //let link_field = `<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
         let link_field = `<a href="${root}">Home</a>`;
@@ -3598,13 +3628,18 @@ let last_season_time;
         if (link_type == 'artist')
             link_field = `<a href="${root}music/${sanitise(page.name)}">${page.name}</a>`;
         else if (link_type == 'album')
-            link_field = `<a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${page.name}</a>`;
+            link_field = `<a href="${root}music/${sanitise(page.sister)}">${page.sister}</a> » <a href="${root}music/${sanitise(page.sister)}/+albums">Albums</a> » <a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${page.name}</a>`;
         else if (link_type == 'track')
-            link_field = `<a href="${root}music/${sanitise(page.sister)}/_/${sanitise(page.name)}">${page.name}</a>`;
+            link_field = `<a href="${root}music/${sanitise(page.sister)}">${page.sister}</a> » <a href="${root}music/${sanitise(page.sister)}/+tracks">Tracks</a> » <a href="${root}music/${sanitise(page.sister)}/_/${sanitise(page.name)}">${page.name}</a>`;
         else if (link_type == 'user')
             link_field = `<a href="${root}user/${page.name}">${page.name}</a>`;
         else if (link_type == 'direct')
             link_field = `<a href="${direct_link}">${page.name}</a>`;
+
+        if (settings.tab_style == 2013 && page.subpage == 'overview' && (page.type == 'album' || page.type == 'artist')) {
+            link_field = `<a href="${root}music/${sanitise(page.sister)}">${page.sister}</a>`;
+            header_title = page.name;
+        }
 
         let new_header = document.createElement('section');
         new_header.classList.add('profile-header-subpage-section');
@@ -3612,31 +3647,43 @@ let last_season_time;
 
         if (settings.tab_style == 2012) {
             new_header.innerHTML = (`
-                ${(page.avatar != '') ? (`
+                ${(avatar != '') ? (`
                 <div class="badge-avatar">
-                    <img src="${page.avatar}" alt="${page.name}">
+                    <img src="${avatar}" alt="${page.name}">
                 </div>
                 `) : ''}
                 <div class="badge-info">
-                    ${link_field}
+                    <div class="crumb">${link_field}</div>
                     <h1 id="artist-subpage-text">${header_title}</h1>
                 </div>
             `);
         } else {
-            new_header.innerHTML = (`
-                ${(page.avatar != '') ? (`
-                <div class="badge-avatar">
-                    <img src="${page.avatar}" alt="${page.name}">
-                </div>
-                `) : ''}
-                <div class="badge-info">
-                    <div class="top-crumb">
-                        ${link_field}
-                        ${page.structure.nav.innerHTML}
+            if (page.type == 'user' && page.subpage == 'overview') {
+                new_header.classList.add('user-page');
+                new_header.innerHTML = (`
+                    <div class="badge-info">
+                        <div class="top-crumb">
+                            <h1 id="artist-subpage-text">${page.name}</h1>
+                            ${page.structure.nav.innerHTML}
+                        </div>
                     </div>
-                    <h1 id="artist-subpage-text">${header_title}</h1>
-                </div>
-            `);
+                `);
+            } else {
+                new_header.innerHTML = (`
+                    ${(avatar != '') ? (`
+                    <div class="badge-avatar">
+                        <img src="${avatar}" alt="${page.name}">
+                    </div>
+                    `) : ''}
+                    <div class="badge-info">
+                        <div class="top-crumb">
+                            <div class="crumb">${link_field}</div>
+                            ${page.structure.nav.innerHTML}
+                        </div>
+                        <h1 id="artist-subpage-text">${header_title}</h1>
+                    </div>
+                `);
+            }
         }
 
         return new_header;
