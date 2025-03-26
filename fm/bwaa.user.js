@@ -4665,8 +4665,38 @@ let last_season_time;
 
         if (ff('claire')) {
             adaptive_skin.innerHTML = (`
-                <div class="container page-content bwaa-settings lastfm-settings subpage">
+                <div class="container page-content bwaa-settings lastfm-settings subpage" data-tab-style="${settings.tab_style}">
                     <div class="row">
+                        ${(settings.tab_style == 2013) ? (`
+                        <section class="profile-header-subpage-section">
+                            <div class="badge-avatar">
+                                <img src="${auth.avatar}" alt="${auth.name}">
+                            </div>
+                            <div class="badge-info">
+                                <div class="top-crumb">
+                                    <div class="crumb"><a href="${root}">Home</a></div>
+                                    <ul class="navlist-items dont-hide">
+                                        <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                                            <a class="secondary-nav-item-link" href="${root}settings">
+                                                Last.fm
+                                            </a>
+                                        </li>
+                                        <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                            <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa">
+                                                bwaa
+                                            </a>
+                                        </li>
+                                        <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                            <a class="secondary-nav-item-link" href="${root}bwaa/changelog">
+                                                ${trans[lang].changelog.title}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h1>${trans[lang].settings.title}</h1>
+                            </div>
+                        </section>
+                        `) : (`
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
                                 <img src="${auth.avatar}" alt="${auth.name}">
@@ -4695,6 +4725,7 @@ let last_season_time;
                                 </li>
                             </ul>
                         </nav>
+                        `)}
                         <div class="col-main settings-form">
                             <nav class="navlist secondary-nav navlist--more">
                                 <ul class="navlist-items">
