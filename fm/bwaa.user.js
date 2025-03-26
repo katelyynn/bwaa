@@ -414,12 +414,6 @@ const trans = {
                 name: 'Hide extra grid item on profiles',
                 alert: 'If your top artists/albums display is set to ‘default’, an extra grid item will display otherwise.'
             },
-            shouts_2010: {
-                name: 'Prefer 2010-era shout design'
-            },
-            gallery_2010: {
-                name: 'Prefer 2010-era gallery design'
-            },
             shouts_no_votes: {
                 name: 'Do not display shout votes'
             },
@@ -815,8 +809,6 @@ let settings_defaults = {
     test: false,
     varied_avatar_shapes: true,
     sticky_nav: false,
-    shouts_2010: false,
-    gallery_2010: false,
     shouts_no_votes: false,
     no_notifs: false,
     hide_redirect_banner: false,
@@ -835,7 +827,8 @@ let settings_defaults = {
 
     flags: {},
 
-    tab_style: 2012
+    tab_style: 2012,
+    page_style: 2012
 }
 let settings_store = {
     developer: {
@@ -858,14 +851,6 @@ let settings_store = {
         values: [true, false]
     },
     sticky_nav: {
-        type: 'toggle',
-        values: [true, false]
-    },
-    shouts_2010: {
-        type: 'toggle',
-        values: [true, false]
-    },
-    gallery_2010: {
         type: 'toggle',
         values: [true, false]
     },
@@ -918,6 +903,9 @@ let settings_store = {
         values: [true, false]
     },
     tab_style: {
+        type: 'radio'
+    },
+    page_style: {
         type: 'radio'
     }
 }
@@ -3917,7 +3905,7 @@ let last_season_time;
             if (shout_name == null)
                 return;
 
-            if (settings.shouts_2010)
+            if (settings.page_style < 2011)
                 shout_name.innerHTML = trans[lang].shouts.user_wrote.replace('{user}', shout_name.innerHTML);
 
             let shout_body = shout.querySelector('.shout-body p');
@@ -3935,7 +3923,7 @@ let last_season_time;
                 });
             }
 
-            if (settings.shouts_2010)
+            if (settings.page_style < 2011)
                 shout_actions.innerHTML = `<a href="${root}user/${shout_name.textContent}">${trans[lang].shouts.view_profile}</a> | ${shout_actions.innerHTML}`;
         });
 
@@ -4021,8 +4009,7 @@ let last_season_time;
             </ul>
         `);
 
-        let subpage_section = page.structure.main.querySelector('.profile-header-subpage-section');
-        subpage_section.after(tabs);
+        page.structure.main.insertBefore(tabs, page.structure.main.firstElementChild);
 
 
         //
@@ -4032,7 +4019,7 @@ let last_season_time;
         gallery_saved_page.classList.add('col-main', 'gallery-saved-page');
 
         let new_header = generic_subpage_header(
-            page.structure.main.querySelector('#artist-subpage-text').textContent,
+            page.structure.row.querySelector('#artist-subpage-text').textContent,
             'artist'
         );
         gallery_saved_page.appendChild(new_header);
@@ -4116,7 +4103,7 @@ let last_season_time;
         let uploaded_image_title = document.querySelector('.gallery-image-title');
 
         let artist_subpage_text = document.getElementById('artist-subpage-text');
-        if (settings.gallery_2010) {
+        if (settings.page_style < 2012) {
             artist_subpage_text.textContent = `${document.querySelector('.subpage-title').textContent.trim()}: ${uploaded_image_title.textContent}`;
         } else {
             // gallery 2012
@@ -4735,8 +4722,8 @@ let last_season_time;
                                         </a>
                                     </li>
                                     <li class="navlist-item secondary-nav-item">
-                                        <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="navigation" onclick="_change_settings_page('navigation')">
-                                            Navigation
+                                        <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="interface" onclick="_change_settings_page('interface')">
+                                            Interface
                                         </a>
                                     </li>
                                     <li class="navlist-item secondary-nav-item">
@@ -4944,23 +4931,6 @@ let last_season_time;
                     </fieldset>
                     <fieldset>
                         <legend>${trans[lang].settings.accuracy.name}</legend>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--shouts_2010">
-                                    <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.shouts_2010.name}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--gallery_2010">
-                                    <input id="setting--gallery_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.gallery_2010.name}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="sep"></div>
                         <h3 class="control-label">${trans[lang].settings.accuracy.visibility}</h3>
                         <div class="form-group">
                             <div class="checkbox">
@@ -5104,10 +5074,11 @@ let last_season_time;
             `);
 
             request_checkbox_update();
-        } else if (page == 'navigation') {
+        } else if (page == 'interface') {
             injector.innerHTML = (`
                 <section id="navigation" class="form-section settings-form">
-                    <h2 class="form-header">Navigation</h2>
+                    <h2 class="form-header">Interface</h2>
+                    <h2 class="tiny">Navigation</h2>
                     <p>Choose the navigation style that suits you best.</p>
                     <fieldset>
                         <legend>Tab style</legend>
@@ -5133,6 +5104,37 @@ let last_season_time;
                                 <label for="setting--sticky_nav">
                                     <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
                                     ${trans[lang].settings.sticky_nav.name}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <h2 class="tiny">Pages</h2>
+                    <p>Choose the page layout and style that suits you best.</p>
+                    <fieldset>
+                        <legend>Page style</legend>
+                        <div class="form-group">
+                            <div class="radio-box">
+                                <label for="setting--page_style--2010">
+                                    <input id="setting--page_style--2010" type="radio" value="2010" name="page_style" onchange="_notify_radio_change(this)">
+                                    2010 <i class="subtext">(WIP)</i>
+                                </label>
+                            </div>
+                            <div class="radio-box">
+                                <label for="setting--page_style--2011">
+                                    <input id="setting--page_style--2011" type="radio" value="2011" name="page_style" onchange="_notify_radio_change(this)">
+                                    2011 <i class="subtext">(WIP)</i>
+                                </label>
+                            </div>
+                            <div class="radio-box">
+                                <label for="setting--page_style--2012">
+                                    <input id="setting--page_style--2012" type="radio" value="2012" name="page_style" onchange="_notify_radio_change(this)">
+                                    2012
+                                </label>
+                            </div>
+                            <div class="radio-box">
+                                <label for="setting--page_style--2013">
+                                    <input id="setting--page_style--2013" type="radio" value="2013" name="page_style" onchange="_notify_radio_change(this)">
+                                    2013 <i class="subtext">(WIP)</i>
                                 </label>
                             </div>
                         </div>
@@ -5953,16 +5955,6 @@ let last_season_time;
 
             // global
             settings.varied_avatar_shapes = true;
-
-            if (value == '2012') {
-                // 2012
-                settings.shouts_2010 = false;
-                settings.gallery_2010 = false;
-            } else if (value == '2010') {
-                // 2010
-                settings.shouts_2010 = true;
-                settings.gallery_2010 = true;
-            }
         } else if (setting == 'setup_modern_visibility') {
             // show modern things
 
@@ -7728,34 +7720,65 @@ let last_season_time;
         adaptive_skin.innerHTML = (`
             <div class="container page-content bwaa-settings lastfm-settings subpage">
                 <div class="row">
-                    <section class="profile-header-subpage-section">
-                        <div class="badge-avatar">
-                            <img src="${auth.avatar}" alt="${auth.name}">
-                        </div>
-                        <div class="badge-info">
-                            <a href="${root}">Home</a>
-                            <h1>${trans[lang].changelog.title}</h1>
-                        </div>
-                    </section>
-                    <nav class="navlist secondary-nav navlist--more">
-                        <ul class="navlist-items">
-                            <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
-                                <a class="secondary-nav-item-link" href="${root}settings">
-                                    Last.fm
-                                </a>
-                            </li>
-                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
-                                <a class="secondary-nav-item-link" href="${root}bwaa">
-                                    bwaa
-                                </a>
-                            </li>
-                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
-                                <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa/changelog">
-                                    ${trans[lang].changelog.title}
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    ${(settings.tab_style == 2013) ? (`
+                        <section class="profile-header-subpage-section">
+                            <div class="badge-avatar">
+                                <img src="${auth.avatar}" alt="${auth.name}">
+                            </div>
+                            <div class="badge-info">
+                                <div class="top-crumb">
+                                    <div class="crumb"><a href="${root}">Home</a></div>
+                                    <ul class="navlist-items dont-hide">
+                                        <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                                            <a class="secondary-nav-item-link" href="${root}settings">
+                                                Last.fm
+                                            </a>
+                                        </li>
+                                        <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                            <a class="secondary-nav-item-link" href="${root}bwaa">
+                                                bwaa
+                                            </a>
+                                        </li>
+                                        <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                            <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa/changelog">
+                                                ${trans[lang].changelog.title}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h1>${trans[lang].changelog.title}</h1>
+                            </div>
+                        </section>
+                        `) : (`
+                        <section class="profile-header-subpage-section">
+                            <div class="badge-avatar">
+                                <img src="${auth.avatar}" alt="${auth.name}">
+                            </div>
+                            <div class="badge-info">
+                                <a href="${root}">Home</a>
+                                <h1>${trans[lang].changelog.title}</h1>
+                            </div>
+                        </section>
+                        <nav class="navlist secondary-nav navlist--more">
+                            <ul class="navlist-items">
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                                    <a class="secondary-nav-item-link" href="${root}settings">
+                                        Last.fm
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                    <a class="secondary-nav-item-link" href="${root}bwaa">
+                                        bwaa
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa/changelog">
+                                        ${trans[lang].changelog.title}
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        `)}
                     <div class="col-main settings-form">
                         <div class="changelog" id="changelog">
                             <p class="subtext">loading...</p>
