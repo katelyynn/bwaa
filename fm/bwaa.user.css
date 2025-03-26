@@ -63,6 +63,12 @@
         &[data-bwaa--theme="paint_it_black"] {
             --snow: snow;
         }
+
+        --page: 962px;
+
+        &[data-bwaa--tab_style="2013"] {
+            --page: 980px;
+        }
     }
 
     .user-type a,
@@ -263,8 +269,8 @@
     .container {
         width: 100%;
         left: 55px; /* this aligns it 1:1 with 2012 last.fm, weird */
-        min-width: 962px;
-        max-width: 962px;
+        min-width: var(--page);
+        max-width: var(--page);
         padding: 0 !important;
         /*background: var(--cdn-flatness-grids-fiflufi-right) right top repeat-y var(--body);*/
         background: var(--body) !important;
@@ -661,6 +667,79 @@
                 margin: 0 0 0.15em 0 !important;
             }
         }
+
+        [data-bwaa--tab_style="2013"] & {
+            padding-top: 18px;
+            padding-bottom: 3px;
+            gap: 20px;
+
+            .badge-avatar {
+                flex-shrink: 0;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    padding: unset;
+                    border: none;
+                    border-radius: 2px;
+                }
+            }
+
+            h1 {
+                font-size: 20px;
+                line-height: 30px;
+                padding-top: 3px;
+            }
+
+            .badge-info {
+                flex: 1;
+
+                .top-crumb {
+                    border-bottom: 1px solid var(--border);
+                    padding-bottom: 5px;
+                    font-size: 13px;
+                    line-height: 18px;
+                    font-weight: normal;
+
+                    display: flex;
+
+                    & > a {
+                        display: inline-block;
+                        /*width: 50%;*/
+                        flex: 1;
+                    }
+
+                    .navlist-items {
+                        margin: unset;
+
+                        display: flex;
+                        gap: calc(1em + 3px);
+
+                        font-size: 12px;
+                        line-height: 1.5;
+
+                        li {
+                            margin: unset;
+
+                            &:first-child {
+                                display: none;
+                            }
+
+                            a {
+                                padding: unset;
+                                margin: unset;
+                                font: inherit;
+                                color: var(--text-link);
+
+                                &:after {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     .library-controls {
         margin: 0 0 15px 0;
@@ -966,7 +1045,7 @@
 
         .masthead-inner-wrap {
             float: unset !important;
-            width: 1102px;
+            width: calc(var(--page) + 140px);
             position: relative;
             padding: unset !important;
             max-width: unset !important;

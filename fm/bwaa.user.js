@@ -1684,6 +1684,7 @@ let last_season_time;
         checkup_page_structure();
 
         let navlist = profile_header.querySelector('.navlist');
+        page.structure.nav = navlist;
         patch_tab_overview_btn(navlist);
 
         let report_tab = navlist.querySelector('.secondary-nav-item--listening-report a');
@@ -2392,6 +2393,7 @@ let last_season_time;
                 </ul>
             `);
         }
+        page.structure.nav = navlist;
 
         if (!is_subpage) {
             page.name = sanitise_text(correct_artist(artist_header.querySelector('.header-new-title').textContent));
@@ -2847,6 +2849,7 @@ let last_season_time;
                 </ul>
             `);
         }
+        page.structure.nav = navlist;
 
         if (!is_subpage) {
             page.subpage = 'overview';
@@ -3168,6 +3171,7 @@ let last_season_time;
                 </ul>
             `);
         }
+        page.structure.nav = navlist;
 
         if (!is_subpage) {
             let track_metadata = track_header.querySelectorAll('.header-metadata-tnew-display');
@@ -3605,17 +3609,35 @@ let last_season_time;
         let new_header = document.createElement('section');
         new_header.classList.add('profile-header-subpage-section');
         new_header.setAttribute('id', 'bwaa-subpage-header');
-        new_header.innerHTML = (`
-            ${(page.avatar != '') ? (`
-            <div class="badge-avatar">
-                <img src="${page.avatar}" alt="${page.name}">
-            </div>
-            `) : ''}
-            <div class="badge-info">
-                ${link_field}
-                <h1 id="artist-subpage-text">${header_title}</h1>
-            </div>
-        `);
+
+        if (settings.tab_style == 2012) {
+            new_header.innerHTML = (`
+                ${(page.avatar != '') ? (`
+                <div class="badge-avatar">
+                    <img src="${page.avatar}" alt="${page.name}">
+                </div>
+                `) : ''}
+                <div class="badge-info">
+                    ${link_field}
+                    <h1 id="artist-subpage-text">${header_title}</h1>
+                </div>
+            `);
+        } else {
+            new_header.innerHTML = (`
+                ${(page.avatar != '') ? (`
+                <div class="badge-avatar">
+                    <img src="${page.avatar}" alt="${page.name}">
+                </div>
+                `) : ''}
+                <div class="badge-info">
+                    <div class="top-crumb">
+                        ${link_field}
+                        ${page.structure.nav.innerHTML}
+                    </div>
+                    <h1 id="artist-subpage-text">${header_title}</h1>
+                </div>
+            `);
+        }
 
         return new_header;
     }
@@ -4445,6 +4467,7 @@ let last_season_time;
 
         let navlist = content_top.querySelector('.navlist');
         if (navlist) page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild);
+        page.structure.nav = navlist;
 
         adaptive_skin.removeChild(content_top);
 
@@ -6204,6 +6227,7 @@ let last_season_time;
                 </li>
             </ul>
         `);
+        page.structure.nav = navlist;
 
 
         // grab the playlist name field h1
@@ -6288,6 +6312,7 @@ let last_season_time;
         let content_top = document.body.querySelector('.content-top');
 
         let navlist = content_top.querySelector('.navlist');
+        page.structure.nav = navlist;
         let page_title = content_top.querySelector('.content-top-header').textContent;
 
         let new_header = generic_subpage_header(
@@ -6616,6 +6641,7 @@ let last_season_time;
         checkup_page_structure();
 
         let navlist = document.body.querySelector('.content-top .navlist');
+        page.structure.nav = navlist;
 
         // we're gonna make the subpage header ourselves, it needs to be reversed
         let new_header = document.createElement('section');
@@ -6928,6 +6954,7 @@ let last_season_time;
         }
 
         let navlist = event_header.querySelector('.navlist');
+        page.structure.nav = navlist;
 
         page.sister = event_header.querySelector('.header-title').textContent.trim();
         if (!is_subpage) {
@@ -7167,6 +7194,7 @@ let last_season_time;
         checkup_page_structure();
 
         let navlist = adaptive_skin.querySelector('.navlist');
+        page.structure.nav = navlist;
 
         let back_link = adaptive_skin.querySelector('.content-top-back-link a');
 
