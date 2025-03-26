@@ -626,7 +626,7 @@
         display: flex;
         gap: 10px;
         margin-top: unset;
-        margin-bottom: 15px;
+        padding: 15px 15px 0 15px;
 
         .badge-avatar img {
             width: 38px;
@@ -1990,6 +1990,11 @@
 
     /* section */
     .col-main {
+        /* shouts on subpages */
+        & > section:first-child {
+            margin-top: unset;
+        }
+
         .event-summary-with-poster + section,
         .about-this-album:first-child,
         div#shoutbox:not(section > #shoutbox),
@@ -4272,16 +4277,6 @@
     }
 
 
-    /* sneakily hides the vertical dotted lines */
-    .profile-header-subpage-section.gallery-header {
-        [data-bwaa--gallery_2010="false"] & {
-            margin: -15px -330px -15px 0;
-            padding: 15px 0;
-            background: var(--body);
-            z-index: 100;
-            position: relative;
-        }
-    }
     /* span the whole screen */
     .gallery-section {
         [data-bwaa--gallery_2010="false"] & {
@@ -4771,6 +4766,9 @@
     .top-listeners {
         grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
         gap: 0;
+        margin: unset;
+    }
+    .user-list {
         margin: unset;
     }
     .top-listeners-item-wrap,

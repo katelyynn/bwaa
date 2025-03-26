@@ -2092,7 +2092,7 @@ let last_season_time;
             } catch(e) {
                 page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild)
             }
-            page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
+            page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
             page.structure.container.classList.add('subpage');
@@ -2476,7 +2476,7 @@ let last_season_time;
             `);
 
             page.structure.row.insertBefore(navlist, page.structure.main);
-            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             artist_header.style.setProperty('display', 'none');
 
             prep_bookmark_btn();
@@ -2675,7 +2675,7 @@ let last_season_time;
             );
 
             page.structure.row.insertBefore(navlist, page.structure.main);
-            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+            page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
             artist_header.style.setProperty('display', 'none');
 
             if (page.subpage.includes('wiki')) {
@@ -2896,7 +2896,7 @@ let last_season_time;
             `);
 
             page.structure.row.insertBefore(navlist, page.structure.main);
-            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             album_header.style.setProperty('display', 'none');
 
             prep_bookmark_btn();
@@ -3043,7 +3043,7 @@ let last_season_time;
             );
 
             page.structure.row.insertBefore(navlist, page.structure.main);
-            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+            page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
             album_header.style.setProperty('display', 'none');
 
             if (page.subpage.includes('wiki')) {
@@ -3314,7 +3314,7 @@ let last_season_time;
             `);
 
             page.structure.row.insertBefore(navlist, page.structure.main);
-            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+            page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             track_header.style.setProperty('display', 'none');
 
             prep_bookmark_btn();
@@ -3508,7 +3508,7 @@ let last_season_time;
             );
 
             page.structure.row.insertBefore(navlist, page.structure.main);
-            page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+            page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
             track_header.style.setProperty('display', 'none');
 
             if (page.subpage.includes('wiki')) {
@@ -3772,7 +3772,7 @@ let last_season_time;
      * converts tag page on artists/albums/tracks into a tag cloud
      */
     function generic_tag_patch() {
-        let tag_section_container = page.structure.main.querySelector('.profile-header-subpage-section + section');
+        let tag_section_container = page.structure.main.querySelector('section');
 
         // similar albums?
         let similar_albums = page.structure.main.querySelector('.similar-albums-body');
@@ -4417,7 +4417,7 @@ let last_season_time;
         let new_header = generic_subpage_header(
             'Your Account Settings'
         );
-        page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
+        page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
 
         // subscription page
         if (document.body.classList[1].startsWith('namespace--settings')) {
@@ -5645,7 +5645,7 @@ let last_season_time;
         let adaptive_skin = document.querySelector('.adaptive-skin-container');
 
         page.structure.row.insertBefore(navlist, page.structure.main);
-        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+        page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
         adaptive_skin.removeChild(playlist_header);
     }
 
@@ -5692,7 +5692,7 @@ let last_season_time;
         );
 
         page.structure.row.insertBefore(navlist, page.structure.main);
-        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+        page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
     }
 
 
@@ -6151,7 +6151,7 @@ let last_season_time;
 
 
         page.structure.row.insertBefore(navlist, page.structure.main);
-        page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
+        page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
     }
 
 
@@ -6533,7 +6533,7 @@ let last_season_time;
         }
 
         page.structure.row.insertBefore(navlist, page.structure.main);
-        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+        page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
         document.body.querySelector('.header').style.setProperty('display', 'none');
     }
 
@@ -6578,7 +6578,7 @@ let last_season_time;
         );
 
         page.structure.row.insertBefore(navlist, page.structure.main);
-        page.structure.main.insertBefore(new_header, page.structure.main.firstChild);
+        page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
     }
 
 
