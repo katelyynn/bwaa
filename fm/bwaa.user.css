@@ -649,7 +649,7 @@
             -webkit-box-orient: vertical;
         }
 
-        & + h2 {
+        & + .navlist + .col-main > h2 {
             display: none;
         }
 
