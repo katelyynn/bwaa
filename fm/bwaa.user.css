@@ -747,6 +747,7 @@
                             background: var(--border);
                             position: absolute;
                             top: -1px;
+                            left: unset;
                             right: -1px;
                         }
                     }
