@@ -742,12 +742,14 @@
                         font-size: 12px;
                         line-height: 1.5;
 
-                        li {
-                            margin: unset;
-
-                            &:first-child {
+                        &:not(.dont-hide) {
+                            li:first-child {
                                 display: none;
                             }
+                        }
+
+                        li {
+                            margin: unset;
 
                             a {
                                 padding: unset;

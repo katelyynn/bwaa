@@ -4488,7 +4488,7 @@ let last_season_time;
         let navlist_switcher = document.createElement('nav');
         navlist_switcher.classList.add('navlist', 'secondary-nav', 'navlist--more');
         navlist_switcher.innerHTML = (`
-            <ul class="navlist-items">
+            <ul class="navlist-items dont-hide">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
                     <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}settings">
                         Last.fm
@@ -4514,7 +4514,7 @@ let last_season_time;
 
         let navlist = content_top.querySelector('.navlist');
         if (navlist) page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild);
-        page.structure.nav = navlist;
+        page.structure.nav = navlist_switcher;
 
         adaptive_skin.removeChild(content_top);
 
