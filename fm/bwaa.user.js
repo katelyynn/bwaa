@@ -4562,6 +4562,15 @@ let last_season_time;
         adaptive_skin.innerHTML = (`
             <div class="container page-content bwaa-settings lastfm-settings subpage">
                 <div class="row">
+                    <section class="profile-header-subpage-section">
+                        <div class="badge-avatar">
+                            <img src="${auth.avatar}" alt="${auth.name}">
+                        </div>
+                        <div class="badge-info">
+                            <a href="${root}">Home</a>
+                            <h1>${trans[lang].settings.title}</h1>
+                        </div>
+                    </section>
                     <nav class="navlist secondary-nav navlist--more">
                         <ul class="navlist-items">
                             <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
@@ -4582,15 +4591,6 @@ let last_season_time;
                         </ul>
                     </nav>
                     <div class="col-main settings-form">
-                        <section class="profile-header-subpage-section">
-                            <div class="badge-avatar">
-                                <img src="${auth.avatar}" alt="${auth.name}">
-                            </div>
-                            <div class="badge-info">
-                                <a href="${root}">Home</a>
-                                <h1>${trans[lang].settings.title}</h1>
-                            </div>
-                        </section>
                         <nav class="navlist secondary-nav navlist--more">
                             <ul class="navlist-items">
                                 <li class="navlist-item secondary-nav-item">
@@ -7019,6 +7019,15 @@ let last_season_time;
         adaptive_skin.innerHTML = (`
             <div class="container page-content bwaa-settings lastfm-settings subpage">
                 <div class="row">
+                    <section class="profile-header-subpage-section">
+                        <div class="badge-avatar">
+                            <img src="${auth.avatar}" alt="${auth.name}">
+                        </div>
+                        <div class="badge-info">
+                            <a href="${root}">Home</a>
+                            <h1>${trans[lang].changelog.title}</h1>
+                        </div>
+                    </section>
                     <nav class="navlist secondary-nav navlist--more">
                         <ul class="navlist-items">
                             <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
@@ -7039,15 +7048,6 @@ let last_season_time;
                         </ul>
                     </nav>
                     <div class="col-main settings-form">
-                        <section class="profile-header-subpage-section">
-                            <div class="badge-avatar">
-                                <img src="${auth.avatar}" alt="${auth.name}">
-                            </div>
-                            <div class="badge-info">
-                                <a href="${root}">Home</a>
-                                <h1>${trans[lang].changelog.title}</h1>
-                            </div>
-                        </section>
                         <div class="changelog" id="changelog">
                             <p class="subtext">loading...</p>
                         </div>
