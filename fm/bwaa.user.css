@@ -113,6 +113,8 @@
 
         accent-color: var(--text-link);
 
+        --message-border: #d1e7ff;
+
         --spinner: url('https://katelyynn.github.io/bwaa/fm/res/spinner_big.gif');
 
         [data-bwaa--seasonal_accent="true"][data-bwaa--season="halloween"] & {
@@ -181,6 +183,8 @@
             --alert-success: #183825;
 
             color-scheme: dark;
+
+            --message-border: #324657;
 
             --spinner: url('https://katelyynn.github.io/bwaa/fm/res/spinner_big_222222_on_transparent.gif');
 
@@ -1592,6 +1596,7 @@
                 .chartlist-image {
                     width: 64px;
                     height: 64px;
+                    margin-right: unset;
                 }
 
                 .chartlist-more {
@@ -1606,6 +1611,10 @@
                             top: 1px;
                         }
                     }
+                }
+
+                .chartlist-play {
+                    display: none;
                 }
             }
 
@@ -2607,6 +2616,7 @@
         display: flex;
         gap: 15px;
         margin: unset;
+        padding-bottom: 15px;
 
         .artist-info {
             display: flex;
@@ -2739,6 +2749,7 @@
         display: flex;
         gap: 15px;
         margin: unset;
+        padding-bottom: 15px;
 
         .album-info {
             display: flex;
@@ -2821,6 +2832,7 @@
         display: flex;
         flex-direction: column;
         margin: unset;
+        padding-bottom: 15px;
 
         .header {
             display: flex;
@@ -5485,12 +5497,16 @@
         &:before {
             display: none;
         }
+
+        &.correction-alert {
+            font-size: 11px;
+        }
     }
     .message-box {
-        border: 1px solid #d1e7ff;
+        border: 1px solid var(--message-border);
         font-size: 11px;
         line-height: 1.363636em;
-        color: #666;
+        color: var(--colour-middle);
         padding: 0.5em 0.7em;
         margin: 20px 0;
 

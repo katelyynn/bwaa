@@ -2373,7 +2373,7 @@ let last_season_time;
         }
 
         if (!is_subpage) {
-            page.name = correct_artist(artist_header.querySelector('.header-new-title').textContent);
+            page.name = sanitise_text(correct_artist(artist_header.querySelector('.header-new-title').textContent));
             page.sister = '';
             page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
 
@@ -2651,6 +2651,8 @@ let last_season_time;
                 </div>
             `);
             page.structure.side.insertBefore(artist_stats, page.structure.side.firstChild);
+
+            suggest_correction('artist');
         } else {
             patch_tab_overview_btn(navlist);
 
@@ -2659,7 +2661,7 @@ let last_season_time;
                 subpage_title = page.structure.main.querySelector(':scope > h2');
 
             page.avatar = pre_fetch_avatar(artist_header.querySelector('.header-new-background-image'));
-            page.name = correct_artist(artist_header.querySelector('.header-new-title').textContent);
+            page.name = sanitise_text(correct_artist(artist_header.querySelector('.header-new-title').textContent));
             page.sister = '';
 
             let header_artist_data = {
@@ -3015,7 +3017,9 @@ let last_season_time;
                     </div>
                 </div>
             `);
-            page.structure.side.insertBefore(album_stats, page.structure.side.firstChild);;
+            page.structure.side.insertBefore(album_stats, page.structure.side.firstChild);
+
+            suggest_correction('album');
         } else {
             patch_tab_overview_btn(navlist);
 
@@ -3299,7 +3303,13 @@ let last_season_time;
                         <a class="ignore-see-more" href="https://youtube.com/watch?v=${track_video}" target="_blank">About this video</a>
                     </div>
                     `
-                    : ''
+                    : (`
+                    <div class="message-box">
+                        <strong>Know about a video for this track?</strong>
+                        <br>
+                        Help build Last.fm by <a href="${play_on_youtube.getAttribute('href')}" data-open-modal="${play_on_youtube.getAttribute('data-open-modal')}">adding it</a>.
+                    </div>
+                    `)
                 }
             `);
 
@@ -3473,6 +3483,8 @@ let last_season_time;
                 </div>
             `);
             page.structure.side.insertBefore(track_stats, page.structure.side.firstChild);
+
+            suggest_correction('track');
         } else {
             patch_tab_overview_btn(navlist);
 
@@ -7361,5 +7373,18 @@ let last_season_time;
             link.setAttribute('title', link.textContent.trim());
             link.textContent = trans[lang].see_more;
         });
+    }
+
+
+
+
+    function suggest_correction(type) {
+        let correction = document.createElement('div');
+        correction.classList.add('alert', 'correction-alert');
+        correction.innerHTML = (`
+            Is this ${type} name wrong or misspelt? <a href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">Suggest a correction</a>.
+        `);
+
+        page.structure.side.appendChild(correction);
     }
 })();
