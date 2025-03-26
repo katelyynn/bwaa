@@ -21,7 +21,20 @@ console.info('bwaa - beginning to load');
 let version = {
     build: '2025.0316',
     sku: 'beret',
-    year: 2025
+    year: 2025,
+    flags: {
+        claire: {
+            default: false,
+            name: 'Reveals work-in-progress design updates for settings interfaces',
+            date: '2025-03-26',
+            notice: 'will be released when ready >.<'
+        },
+        nav_2013: {
+            default: false,
+            name: 'Allows user to pick 2013 navigation',
+            date: '2025-03-26'
+        }
+    }
 }
 
 let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
@@ -818,7 +831,9 @@ let settings_defaults = {
     seasonal_accent: true,
     seasonal_particles: true,
 
-    lotus: true
+    lotus: true,
+
+    flags: {}
 }
 let settings_store = {
     developer: {
@@ -1083,6 +1098,8 @@ let last_season_time;
         }
         correct_tracks();
 
+        bwaa_gallery();
+
         subscribe_to_events();
     }
 
@@ -1173,7 +1190,6 @@ let last_season_time;
                 bwaa_lastfm_settings();
             else if (page.type == 'home')
                 bwaa_home();
-            bwaa_gallery();
             bwaa_friends();
             bwaa_playlists();
 
@@ -4194,6 +4210,19 @@ let last_season_time;
 
         // save to settings
         localStorage.setItem('bwaa', JSON.stringify(settings));
+
+        load_skus();
+    }
+
+    function load_skus() {
+        for (let flag in version.flags) {
+            let current_state = version.flags[flag].default;
+
+            if (settings.flags[flag])
+                current_state = settings.flags[flag];
+
+            document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
+        }
     }
 
 
@@ -4559,67 +4588,155 @@ let last_season_time;
         adaptive_skin.innerHTML = '';
         document.title = `${trans[lang].settings.title} | Last.fm`;
 
-        adaptive_skin.innerHTML = (`
-            <div class="container page-content bwaa-settings lastfm-settings subpage">
-                <div class="row">
-                    <section class="profile-header-subpage-section">
-                        <div class="badge-avatar">
-                            <img src="${auth.avatar}" alt="${auth.name}">
-                        </div>
-                        <div class="badge-info">
-                            <a href="${root}">Home</a>
-                            <h1>${trans[lang].settings.title}</h1>
-                        </div>
-                    </section>
-                    <nav class="navlist secondary-nav navlist--more">
-                        <ul class="navlist-items">
-                            <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
-                                <a class="secondary-nav-item-link" href="${root}settings">
-                                    Last.fm
-                                </a>
-                            </li>
-                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
-                                <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa">
-                                    bwaa
-                                </a>
-                            </li>
-                            <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
-                                <a class="secondary-nav-item-link" href="${root}bwaa/changelog">
-                                    ${trans[lang].changelog.title}
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <div class="col-main settings-form">
+        if (ff('claire')) {
+            adaptive_skin.innerHTML = (`
+                <div class="container page-content bwaa-settings lastfm-settings subpage">
+                    <div class="row">
+                        <section class="profile-header-subpage-section">
+                            <div class="badge-avatar">
+                                <img src="${auth.avatar}" alt="${auth.name}">
+                            </div>
+                            <div class="badge-info">
+                                <a href="${root}">Home</a>
+                                <h1>${trans[lang].settings.title}</h1>
+                            </div>
+                        </section>
                         <nav class="navlist secondary-nav navlist--more">
                             <ul class="navlist-items">
-                                <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_settings_page('home')">
-                                        ${trans[lang].settings.tabs.home}
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                                    <a class="secondary-nav-item-link" href="${root}settings">
+                                        Last.fm
                                     </a>
                                 </li>
-                                <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="corrections" onclick="_change_settings_page('corrections')">
-                                        ${trans[lang].settings.tabs.corrections}
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa">
+                                        bwaa
                                     </a>
                                 </li>
-                                <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="account" onclick="_change_settings_page('account')">
-                                        ${trans[lang].settings.tabs.account}
-                                    </a>
-                                </li>
-                                <li class="navlist-item secondary-nav-item">
-                                    <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="about" onclick="_change_settings_page('about')">
-                                        ${trans[lang].settings.tabs.about}
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                    <a class="secondary-nav-item-link" href="${root}bwaa/changelog">
+                                        ${trans[lang].changelog.title}
                                     </a>
                                 </li>
                             </ul>
                         </nav>
-                        <div id="bleh-settings-inject"></div>
+                        <div class="col-main settings-form">
+                            <nav class="navlist secondary-nav navlist--more">
+                                <ul class="navlist-items">
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_settings_page('home')">
+                                            ${trans[lang].settings.tabs.home}
+                                        </a>
+                                    </li>
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="navigation" onclick="_change_settings_page('navigation')">
+                                            Navigation
+                                        </a>
+                                    </li>
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="corrections" onclick="_change_settings_page('corrections')">
+                                            ${trans[lang].settings.tabs.corrections}
+                                        </a>
+                                    </li>
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="account" onclick="_change_settings_page('account')">
+                                            ${trans[lang].settings.tabs.account}
+                                        </a>
+                                    </li>
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="seasonal" onclick="_change_settings_page('seasonal')">
+                                            Seasonal
+                                        </a>
+                                    </li>
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="about" onclick="_change_settings_page('about')">
+                                            ${trans[lang].settings.tabs.about}
+                                        </a>
+                                    </li>
+                                    ${(settings.developer) ? (`
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="beret" onclick="_change_settings_page('beret')">
+                                            Developer
+                                        </a>
+                                    </li>
+                                    `) : ''}
+                                </ul>
+                            </nav>
+                            <div id="bleh-settings-inject"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `);
+            `);
+        } else {
+            adaptive_skin.innerHTML = (`
+                <div class="container page-content bwaa-settings lastfm-settings subpage">
+                    <div class="row">
+                        <section class="profile-header-subpage-section">
+                            <div class="badge-avatar">
+                                <img src="${auth.avatar}" alt="${auth.name}">
+                            </div>
+                            <div class="badge-info">
+                                <a href="${root}">Home</a>
+                                <h1>${trans[lang].settings.title}</h1>
+                            </div>
+                        </section>
+                        <nav class="navlist secondary-nav navlist--more">
+                            <ul class="navlist-items">
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
+                                    <a class="secondary-nav-item-link" href="${root}settings">
+                                        Last.fm
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}bwaa">
+                                        bwaa
+                                    </a>
+                                </li>
+                                <li class="navlist-item secondary-nav-item secondary-nav-item--bwaa-settings">
+                                    <a class="secondary-nav-item-link" href="${root}bwaa/changelog">
+                                        ${trans[lang].changelog.title}
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div class="col-main settings-form">
+                            <nav class="navlist secondary-nav navlist--more">
+                                <ul class="navlist-items">
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link secondary-nav-item-link--active bwaa-settings-tab" data-bwaa-tab="home" onclick="_change_settings_page('home')">
+                                            ${trans[lang].settings.tabs.home}
+                                        </a>
+                                    </li>
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="corrections" onclick="_change_settings_page('corrections')">
+                                            ${trans[lang].settings.tabs.corrections}
+                                        </a>
+                                    </li>
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="account" onclick="_change_settings_page('account')">
+                                            ${trans[lang].settings.tabs.account}
+                                        </a>
+                                    </li>
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="about" onclick="_change_settings_page('about')">
+                                            ${trans[lang].settings.tabs.about}
+                                        </a>
+                                    </li>
+                                    ${(settings.developer) ? (`
+                                    <li class="navlist-item secondary-nav-item">
+                                        <a class="secondary-nav-item-link bwaa-settings-tab" data-bwaa-tab="beret" onclick="_change_settings_page('beret')">
+                                            Developer
+                                        </a>
+                                    </li>
+                                    `) : ''}
+                                </ul>
+                            </nav>
+                            <div id="bleh-settings-inject"></div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
 
 
         change_settings_page('home');
@@ -4638,7 +4755,10 @@ let last_season_time;
             }
         });
 
-        render_settings_page(page, document.getElementById('bleh-settings-inject'));
+        if (ff('claire'))
+            render_settings_page(page, document.getElementById('bleh-settings-inject'));
+        else
+            render_settings_page_legacy(page, document.getElementById('bleh-settings-inject'));
     }
 
     /**
@@ -4647,6 +4767,434 @@ let last_season_time;
      * @param {element} injector element to create html inside of
      */
     function render_settings_page(page, injector) {
+        if (page == 'home') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">${trans[lang].settings.welcome.name}</h2>
+                    <p>${trans[lang].settings.welcome.body
+                    .replace('{v}', `<strong>${version.build}.${version.sku}</strong>`)
+                    .replace('{a}', '<a onclick="_request_style_reload()">')
+                    .replace('{/a}', '</a>')
+                    }</p>
+                    <div class="profile-actions-section standalone">
+                        <div class="options">
+                            <a class="has-icon sponsor" onclick="_sponsor()">Sponsor me</a>
+                        </div>
+                    </div>
+                    <h2 class="tiny">Quick controls</h2>
+                    <fieldset>
+                        <legend>What era suits you best?</legend>
+                        <div class="form-group">
+                            <div class="radio-box">
+                                <label for="setting--setup_choose_era--2010">
+                                    <input id="setting--setup_choose_era--2010" type="radio" value="2010" name="setup_choose_era" onchange="_notify_radio_change(this)">
+                                    2010-2011 <i class="subtext">(WIP)</i>
+                                </label>
+                            </div>
+                            <div class="radio-box">
+                                <label for="setting--setup_choose_era--2012">
+                                    <input id="setting--setup_choose_era--2012" type="radio" value="2012" name="setup_choose_era" onchange="_notify_radio_change(this)">
+                                    2012 <i class="subtext">(default, most optimised)</i>
+                                </label>
+                            </div>
+                            <div class="radio-box">
+                                <label for="setting--setup_choose_era--2013">
+                                    <input id="setting--setup_choose_era--2013" type="radio" value="2013" name="setup_choose_era" onchange="_notify_radio_change(this)">
+                                    2013 <i class="subtext">(WIP)</i>
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <h2 class="tiny">Customise further</h2>
+                    <fieldset>
+                        <legend>${trans[lang].settings.seasonal.category}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal">
+                                    <input id="setting--seasonal" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.name}
+                                </label>
+                                <div class="alert">
+                                    ${trans[lang].settings.seasonal.alert} ${(stored_season.id != 'none') ? trans[lang].settings.seasonal.marker.name.replace('{season}', trans[lang].settings.seasonal.listing[stored_season.id]).replace('{end}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)) : (settings.seasonal) ? trans[lang].settings.seasonal.marker.none : trans[lang].settings.seasonal.marker.disabled}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal_accent">
+                                    <input id="setting--seasonal_accent" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.accent}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--seasonal_particles">
+                                    <input id="setting--seasonal_particles" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.seasonal.particles}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.accuracy.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_2010">
+                                    <input id="setting--shouts_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.shouts_2010.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--gallery_2010">
+                                    <input id="setting--gallery_2010" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.gallery_2010.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <h3 class="control-label">${trans[lang].settings.accuracy.visibility}</h3>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_obsessions">
+                                    <input id="setting--hide_obsessions" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.hide_obsessions.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_your_progress">
+                                    <input id="setting--hide_your_progress" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.hide_your_progress.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_listening_reports">
+                                    <input id="setting--hide_listening_reports" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.hide_listening_reports.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--shouts_no_votes">
+                                    <input id="setting--shouts_no_votes" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.shouts_no_votes.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--no_notifs">
+                                    <input id="setting--no_notifs" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.no_notifs.name}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.social.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--varied_avatar_shapes">
+                                    <input id="setting--varied_avatar_shapes" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.varied_avatar_shapes.name}
+                                </label>
+                                <div class="alert">
+                                    ${trans[lang].settings.varied_avatar_shapes.alert}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_extra_grid_item">
+                                    <input id="setting--hide_extra_grid_item" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.hide_extra_grid_item.name}
+                                </label>
+                                <div class="alert">
+                                    ${trans[lang].settings.hide_extra_grid_item.alert}
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.navigation.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--sticky_nav">
+                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.sticky_nav.name}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.extra.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--julie">
+                                    <input id="setting--julie" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.julie.name}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${version.build}.${version.sku}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--developer">
+                                    <input id="setting--developer" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.developer.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sep hide-if-not-developer"></div>
+                        <div class="form-group hide-if-not-developer">
+                            <div class="checkbox">
+                                <label for="setting--inbuilt_style_loading">
+                                    <input id="setting--inbuilt_style_loading" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.inbuilt_style_loading.name}
+                                </label>
+                                <div class="alert">
+                                    ${trans[lang].settings.inbuilt_style_loading.alert}
+                                </div>
+                                <div class="alert">
+                                    ${trans[lang].settings.inbuilt_style_loading.theme.replace('{date_fut}', moment(localStorage.getItem('bwaa_cached_style_timeout')).format('HH:mm:ss')).replace('{date_now}', moment(new Date()).format('HH:mm:ss'))}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="more-link align-left space-self hide-if-not-developer">
+                            <a onclick="_request_style_reload()">${trans[lang].settings.request_style_reload.replace('{+i}', '<i class="subtext">').replace('{-i}', '</i>')}</a>
+                        </div>
+                    </fieldset>
+                    <!--
+                    <div class="more-link align-right">
+                        <a onclick="_deliver_notif('This is a quick test notification with text!')">Create a notification</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_deliver_notif('This is a long-lasting test notification filled with lots of text bla b la bla lbaslba b;;af;asdasdjk', false, false)">Create a long-lasting notification</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_deliver_notif('This is a notification only visible with developer mode enabled', true)">Create a developer-only notification</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a href="${root}bwaa/setup">Enter first-time setup</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('test', ['cutensilly'])">Register a new test activity</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('shout', [{name: 'LAST.HQ', type: 'user'}], '${root}user/LAST.HQ')">Register a new shout activity</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('image_upload', [{name: 'Sabrina Carpenter', type: 'artist'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new image upload activity</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('shout', [{name: 'Short n\\' Sweet', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new shout (album) activity</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('obsess', [{name: 'Taste', type: 'album', sister: 'Sabrina Carpenter'}], '${root}music/Sabrina+Carpenter/+images/blaflasf')">Register a new obsession activity</a>
+                    </div>
+                    <div class="more-link align-right">
+                        <a onclick="_register_activity('shout', [{name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}, {name: 'cutensilly', type: 'user'}], '${root}user/LAST.HQ')">Register a new shout activity</a>
+                    </div>
+                    -->
+                </section>
+            `);
+
+            request_checkbox_update();
+        } else if (page == 'corrections') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">${trans[lang].settings.corrections.name}</h2>
+                    <p>${trans[lang].settings.corrections.bio}</p>
+                    <p class="alert lotus">${trans[lang].lotus.version
+                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
+                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</p>
+                    <fieldset>
+                        <legend>${trans[lang].settings.lotus.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--lotus">
+                                    <input id="setting--lotus" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.lotus.toggle.name} <span class="new-badge">${trans[lang].settings.new}</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${trans[lang].lotus.correct}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_open_lotus_modal()">${trans[lang].lotus.view}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_lotus_check()">${trans[lang].lotus.check}</a>
+                        </div>
+                        <div class="alert hide-if-not-developer">
+                            ${trans[lang].settings.lotus.version.replace('{date_fut}', moment(localStorage.getItem('lotus_artist_expire')).format('HH:mm:ss')).replace('{date_now}', moment(new Date()).format('HH:mm:ss'))}
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.artist_redirection.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_redirect_banner">
+                                    <input id="setting--hide_redirect_banner" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.hide_redirect_banner.name}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </section>
+            `);
+
+            request_checkbox_update();
+            tippy(document.getElementById('lotus_hover'), {
+                content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
+                allowHTML: true
+            });
+        } else if (page == 'about') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">${trans[lang].settings.about.name}</h2>
+                    <p>${trans[lang].settings.about.body.replace('{cute}', `<a href="${root}user/cutensilly">cutensilly</a>`).replace('{+i}', '<i class="subtext">').replace('{-i}', '</i>')}</p>
+                    <div class="alert alert-danger">
+                        ${trans[lang].settings.about.alert}
+                    </div>
+                    <fieldset>
+                        <legend>${trans[lang].settings.support.name}</legend>
+                        <div class="form-group">
+                            <p>${trans[lang].settings.support.body[0]}</p>
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/sponsors/katelyynn" target="_blank">${trans[lang].settings.support.sponsor}</a>
+                            </div>
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/katelyynn/bwaa" target="_blank">${trans[lang].settings.support.star}</a>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.find_a_bug.name}</legend>
+                        <div class="form-group">
+                            <div class="more-link align-left space-self">
+                                <a href="https://github.com/katelyynn/bwaa/issues/" target="_blank">${trans[lang].settings.find_a_bug.submit}</a>
+                            </div>
+                        </div>
+                        <div class="alert">
+                            ${trans[lang].settings.find_a_bug.esr}
+                        </div>
+                    </fieldset>
+                </section>
+            `);
+        } else if (page == 'account') {
+            injector.innerHTML = (`
+                <section id="welcome" class="form-section settings-form">
+                    <h2 class="form-header">${trans[lang].settings.account.name}</h2>
+                    <p>${trans[lang].settings.account.bio}</p>
+                    <p class="alert">${trans[lang].settings.account.version
+                    .replace('{v}', `<span class="version-link">${sponsor_list.latest}</span>`)}</p>
+                    <fieldset>
+                        <legend>${trans[lang].settings.account.sponsor.name}</legend>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_sponsor()">${trans[lang].settings.support.sponsor}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_sponsor_manage()">${trans[lang].sponsor.manage}</a>
+                        </div>
+                        <div class="more-link align-left space-self">
+                            <a onclick="_sponsor_check()">${trans[lang].sponsor.check}</a>
+                        </div>
+                    </fieldset>
+                </section>
+            `);
+        } else if (page == 'beret') {
+            injector.innerHTML = (`
+                <section id="flags" class="form-section settings-form">
+                    <fieldset>
+                        <legend>Feature flags</legend>
+                    </fieldset>
+                </section>
+            `);
+
+            let fieldset = injector.querySelector('fieldset');
+            for (let flag in version.flags) {
+                let current_state = version.flags[flag].default;
+
+                if (settings.flags[flag])
+                    current_state = settings.flags[flag];
+
+                let group = document.createElement('div');
+                group.classList.add('form-group');
+                group.innerHTML = (`
+                    <div class="checkbox">
+                        <label for="flag-${flag}">
+                            <input id="flag-${flag}" type="checkbox" onchange="_update_flag_toggle(${flag}, this)" ${(ff(flag)) ? 'checked' : ''}>
+                            ${version.flags[flag].name}
+                            <i class="subtext">${version.flags[flag].date}</i>
+                            <div class="alert">${version.flags[flag].default}</div>
+                        </label>
+                        ${(version.flags[flag].notice) ? `<div class="alert">${version.flags[flag].notice}</div>` : ''}
+                    </div>
+                `);
+
+                fieldset.appendChild(group);
+            }
+        }
+    }
+
+    unsafeWindow._beret = function() {
+        settings.flags.claire = true;
+
+        // save to settings
+        localStorage.setItem('bwaa', JSON.stringify(settings));
+    }
+
+    unsafeWindow._update_flag_toggle = function(flag, checkbox) {
+        update_flag_toggle(flag, checkbox);
+    }
+    function update_flag_toggle(flag, checkbox) {
+        let current_state = version.flags[flag].default;
+        if (settings.flags[flag]) current_state = settings.flags[flag];
+
+        if (current_state == true) {
+            checkbox.checked = false;
+            settings.flags[flag] = false;
+            document.documentElement.setAttribute(`data-ff--${flag}`, false);
+        } else {
+            checkbox.checked = true;
+            settings.flags[flag] = true;
+            document.documentElement.setAttribute(`data-ff--${flag}`, true);
+        }
+
+        // save to settings
+        localStorage.setItem('bwaa', JSON.stringify(settings));
+    }
+
+    function ff(flag) {
+        log(`parsing ${flag}`, 'flag', 'log', {
+            setting: settings.flags[flag],
+            sku: version.flags[flag]
+        });
+
+        if (settings.flags[flag] != null)
+            return settings.flags[flag];
+
+        if (version.flags[flag] != null)
+            return version.flags[flag].default;
+    }
+
+    /**
+     * render a bwaa settings page
+     * @param {string} page page id (eg. home)
+     * @param {element} injector element to create html inside of
+     */
+    function render_settings_page_legacy(page, injector) {
         if (page == 'home') {
             injector.innerHTML = (`
                 <section id="welcome" class="form-section settings-form">
@@ -4998,11 +5546,10 @@ let last_season_time;
                 document.documentElement.setAttribute(`data-bwaa--${setting}`, `${settings[setting]}`);
             } else {
                 console.info('bwaa - setting', setting, 'is being loaded as', value);
-                if (value == settings_store[setting].values[0]) {
+                if (value == settings_store[setting].values[0])
                     checkbox.checked = true;
-                } else {
+                else
                     checkbox.checked = false;
-                }
             }
         }
 
@@ -5162,6 +5709,15 @@ let last_season_time;
         adaptive_skin.innerHTML = (`
             <div class="container page-content bwaa-settings lastfm-settings subpage">
                 <div class="row">
+                    <section class="profile-header-subpage-section">
+                        <div class="badge-avatar">
+                            <img src="${auth.avatar}" alt="${auth.name}">
+                        </div>
+                        <div class="badge-info">
+                            <a href="${root}user/${auth.name}">${auth.name}</a>
+                            <h1>Setup bwaa</h1>
+                        </div>
+                    </section>
                     <nav class="navlist secondary-nav navlist--more">
                         <ul class="navlist-items">
                             <li class="navlist-item secondary-nav-item secondary-nav-item--lastfm-settings">
@@ -5177,15 +5733,6 @@ let last_season_time;
                         </ul>
                     </nav>
                     <div class="col-main settings-form">
-                        <section class="profile-header-subpage-section">
-                            <div class="badge-avatar">
-                                <img src="${auth.avatar}" alt="${auth.name}">
-                            </div>
-                            <div class="badge-info">
-                                <a href="${root}user/${auth.name}">${auth.name}</a>
-                                <h1>Setup bwaa</h1>
-                            </div>
-                        </section>
                         <section id="welcome" class="form-section settings-form">
                             <h2 class="form-header">Thank you for installing!</h2>
                             <p>bwaa is an extension for Last.fm by <a href="${root}user/cutensilly">cutensilly</a> with the aim to bring back the 2012 look of Last.fm. Since it’s you’re first time installing, here’s a quick setup to get you going. You can configure bwaa at anytime by visiting <a href="${root}bwaa">Settings</a> :3</p>

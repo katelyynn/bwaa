@@ -4355,6 +4355,12 @@
         }
     }
 
+    .col-sidebar.gallery-sidebar {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
     .gallery-image-container {
         background: #f5f5f5;
 
@@ -4596,6 +4602,9 @@
             &:first-child {
                 margin-top: unset;
             }
+        }
+        fieldset + h2 {
+            margin-top: 12px;
         }
 
         .form-group {
