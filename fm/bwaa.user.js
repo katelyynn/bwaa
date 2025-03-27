@@ -189,15 +189,21 @@ const trans = {
                 reports: 'Charts',
 
                 // copy 1:1 from last.fm's interface
-                library: 'Library',
-                playlists: 'Playlists',
+                library: {
+                    name: 'Library',
+                    scrobbles: 'Scrobbles',
+                    artists: 'Artists',
+                    albums: 'Albums',
+                    tracks: 'Tracks',
+                    loved: 'Loved',
+                    tags: 'Tags',
+                    playlists: 'Playlists'
+                },
                 following: 'Following',
                 followers: 'Followers',
-                loved: 'Loved Tracks',
                 obsessions: 'Obsessions',
                 events: 'Events',
                 neighbours: 'Neighbours',
-                tags: 'Tags',
                 shoutbox: 'Shouts',
                 journal: 'Journal'
             },
@@ -1682,6 +1688,19 @@ let last_season_time;
         let journal_nav_btn = document.createElement('li');
         journal_nav_btn.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--journal');
 
+        journal_nav_btn.innerHTML = (`
+            <a class="secondary-nav-item-link ${(page.subpage.startsWith('journal')) ? 'secondary-nav-item-link--active' : ''}" href="${root}user/${page.name}/journal">
+                Journal
+            </a>
+        `);
+
+        let loved_nav_btn = navlist_items.querySelector('.secondary-nav-item--loved');
+        navlist_items.removeChild(loved_nav_btn);
+        let tags_nav_btn = navlist_items.querySelector('.secondary-nav-item--tags');
+        navlist_items.removeChild(tags_nav_btn);
+        let playlists_nav_btn = navlist_items.querySelector('.secondary-nav-item--playlists');
+        navlist_items.removeChild(playlists_nav_btn);
+
 
         let is_new_account = false;
 
@@ -2063,28 +2082,20 @@ let last_season_time;
                 page: document.body.querySelector('.content-top-header')
             }
 
-            if (page.subpage.startsWith('listening-report'))
-                header_user_data.page = trans[lang].profile.tabs.reports;
-            else
-                header_user_data.page = header_user_data.page.textContent;
-
-            if (page.subpage.startsWith('journal')) {
-                journal_nav_btn.innerHTML = (`
-                    <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${root}user/${page.name}/journal">
-                        Journal
-                    </a>
-                `);
-            } else {
-                journal_nav_btn.innerHTML = (`
-                    <a class="secondary-nav-item-link" href="${root}user/${page.name}/journal">
-                        Journal
-                    </a>
-                `);
-            }
+            header_user_data.page = (page.subpage.startsWith('listening-report')) ? trans[lang].profile.tabs.reports : header_user_data.page.textContent;
 
             let library_controls = document.body.querySelector('.library-controls');
             if (library_controls)
                 page.structure.main.insertBefore(library_controls, page.structure.main.firstChild);
+
+            if (page.subpage == 'loved' || page.subpage.startsWith('tags') || page.subpage.startsWith('playlists')) {
+                let library_nav_btn = navlist_items.querySelector('.secondary-nav-item--library a');
+                library_nav_btn.classList.add('secondary-nav-item-link--active');
+
+                bwaa_library_fake(header_user_data.page);
+
+                header_user_data.page = trans[lang].profile.tabs.library.name;
+            }
 
             let new_header = generic_subpage_header(
                 header_user_data.page,
@@ -6064,6 +6075,55 @@ let last_season_time;
     }
 
 
+    function bwaa_library_fake(metadata) {
+        let library_controls = document.createElement('div');
+        library_controls.classList.add('library-controls');
+        library_controls.innerHTML = (`
+            <nav class="navlist secondary-nav navlist--more" data-require="components/collapsing-nav-v2">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link" href="${root}user/${page.name}/library">
+                            ${trans[lang].profile.tabs.library.scrobbles}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--artists">
+                        <a class="secondary-nav-item-link" href="${root}user/${page.name}/library/artists">
+                            ${trans[lang].profile.tabs.library.artists}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
+                        <a class="secondary-nav-item-link" href="${root}user/${page.name}/library/albums">
+                            ${trans[lang].profile.tabs.library.albums}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
+                        <a class="secondary-nav-item-link" href="${root}user/${page.name}/library/tracks">
+                            ${trans[lang].profile.tabs.library.tracks}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--loved">
+                        <a class="secondary-nav-item-link ${(page.subpage == 'loved') ? 'secondary-nav-item-link--active' : ''}" href="${root}user/${page.name}/library/loved">
+                            ${trans[lang].profile.tabs.library.loved}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link ${(page.subpage.startsWith('tags')) ? 'secondary-nav-item-link--active' : ''}" href="${root}user/${page.name}/tags">
+                            ${trans[lang].profile.tabs.library.tags}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--playlists">
+                        <a class="secondary-nav-item-link ${(page.subpage.startsWith('playlists')) ? 'secondary-nav-item-link--active' : ''}" href="${root}user/${page.name}/library/playlists">
+                            ${trans[lang].profile.tabs.library.playlists}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        `);
+
+        page.structure.main.insertBefore(library_controls, page.structure.main.firstElementChild);
+    }
+
+
 
 
     /**
@@ -6472,7 +6532,7 @@ let last_season_time;
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--library">
                     <a class="secondary-nav-item-link" href="${base_link}/library">
-                        ${trans[lang].profile.tabs.library}
+                        ${trans[lang].profile.tabs.library.name}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--playlists">
@@ -6490,11 +6550,6 @@ let last_season_time;
                         ${trans[lang].profile.tabs.followers}
                     </a>
                 </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--loved">
-                    <a class="secondary-nav-item-link" href="${base_link}/loved">
-                        ${trans[lang].profile.tabs.loved}
-                    </a>
-                </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--obsessions">
                     <a class="secondary-nav-item-link" href="${base_link}/obsessions">
                         ${trans[lang].profile.tabs.obsessions}
@@ -6508,11 +6563,6 @@ let last_season_time;
                 <li class="navlist-item secondary-nav-item secondary-nav-item--neighbours">
                     <a class="secondary-nav-item-link" href="${base_link}/neighbours">
                         ${trans[lang].profile.tabs.neighbours}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
-                    <a class="secondary-nav-item-link" href="${base_link}/tags">
-                        ${trans[lang].profile.tabs.tags}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
