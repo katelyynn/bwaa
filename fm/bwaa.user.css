@@ -319,10 +319,38 @@
 
                 .col-main {
                     padding-right: unset;
+
+                    section {
+                        margin: unset !important;
+                        padding: 18px 0 !important;
+                        border: unset !important;
+
+                        &:first-child {
+                            padding: unset !important;
+                        }
+                    }
                 }
 
                 .col-main, .col-sidebar {
                     font: inherit;
+                }
+
+                h3.text-18,
+                h2 {
+                    font-size: 16px !important;
+                    line-height: 1.5em !important;
+                }
+
+                #top-tracks, #top-albums {
+                    width: calc(var(--page) - (15px * 2));
+                }
+
+                #top-tracks {
+                    tbody {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 3px;
+                    }
                 }
             }
 
@@ -336,6 +364,17 @@
 
             .row > .navlist {
                 display: none;
+            }
+
+            .lower-row {
+                background: var(--border-2);
+                padding: 18px 0;
+
+                #shoutbox {
+                    border: unset !important;
+                    margin: unset !important;
+                    padding: unset !important;
+                }
             }
         }
 
@@ -1909,6 +1948,27 @@
                     height: 22px;
                     line-height: 16px;
                     padding: 3px 5px;
+                }
+
+                [data-page-style="2013"] & {
+                    td {
+                        font-size: 13px;
+                        line-height: 18px;
+                        height: 24px;
+
+                        &.chartlist-bar {
+                            width: 300px !important;
+
+                            .chartlist-count-bar {
+                                line-height: inherit;
+                                height: 24px;
+
+                                .chartlist-count-bar-value {
+                                    height: 24px;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             .chartlist-name {
@@ -7543,6 +7603,8 @@
             margin-top: 18px;
 
             .stat {
+                flex: 1;
+
                 strong {
                     font-size: 22px;
                 }

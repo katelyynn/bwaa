@@ -2546,6 +2546,43 @@ let last_season_time;
 
             // sidebar
 
+            let new_row;
+            let new_main;
+            let new_side;
+            if (settings.page_style == 2013) {
+                new_row = document.createElement('div');
+                new_row.classList.add('row', 'lower-row');
+
+                page.structure.container.appendChild(new_row);
+
+                new_main = document.createElement('div');
+                new_main.classList.add('col-main');
+                new_main.setAttribute('data-assigned', 'true');
+
+                new_row.appendChild(new_main);
+
+                new_side = document.createElement('div');
+                new_side.classList.add('col-sidebar');
+
+                new_row.appendChild(new_side);
+
+                page.structure.main_alt = page.structure.main;
+
+                page.structure.main = new_main;
+                page.structure.side = new_side;
+
+                let events = page.structure.container.querySelector('[data-lazy-filter-options="events-select"]');
+                if (events) {
+                    let parent = events.parentElement;
+                    page.structure.side.appendChild(parent);
+                }
+
+                let shouts = page.structure.container.querySelector('#shoutbox');
+                if (shouts) {
+                    page.structure.main.appendChild(shouts);
+                }
+            }
+
 
             // links
             let links = document.body.querySelectorAll('.external-links-section .resource-external-link');
@@ -2694,26 +2731,49 @@ let last_season_time;
             listener_trend = listener_trend.outerHTML;
 
             let artist_stats = document.createElement('section');
-            artist_stats.innerHTML = (`
-                <h2>${trans[lang].trend.artist}</h2>
-                <div class="stats-container">
-                    <div class="scrobbles-and-listeners">
-                        <div class="scrobbles">
-                            <h1>${header_artist_data.plays}</h1>
-                            <p>${trans[lang].trend.scrobbles}</p>
+            if (settings.page_style < 2013) {
+                artist_stats.innerHTML = (`
+                    <h2>${trans[lang].trend.artist}</h2>
+                    <div class="stats-container">
+                        <div class="scrobbles-and-listeners">
+                            <div class="scrobbles">
+                                <h1>${header_artist_data.plays}</h1>
+                                <p>${trans[lang].trend.scrobbles}</p>
+                            </div>
+                            <div class="listeners">
+                                <h1>${header_artist_data.listeners}</h1>
+                                <p>${trans[lang].trend.listeners}</p>
+                            </div>
                         </div>
-                        <div class="listeners">
-                            <h1>${header_artist_data.listeners}</h1>
-                            <p>${trans[lang].trend.listeners}</p>
+                        <div class="recent-listening-trend">
+                            <p>${trans[lang].trend.name}</p>
+                            ${listener_trend}
                         </div>
                     </div>
-                    <div class="recent-listening-trend">
-                        <p>${trans[lang].trend.name}</p>
-                        ${listener_trend}
+                `);
+                page.structure.side.insertBefore(artist_stats, page.structure.side.firstChild);
+            } else {
+                artist_stats.innerHTML = (`
+                    <h2>Listening Trend</h2>
+                    <div class="stats-container-2013">
+                        <div class="scrobbles-and-listeners">
+                            <div class="scrobbles">
+                                <h1>${header_artist_data.plays}</h1>
+                                <p>scrobbles all time</p>
+                            </div>
+                            <div class="listeners">
+                                <h1>${header_artist_data.listeners}</h1>
+                                <p>listeners all time</p>
+                            </div>
+                        </div>
+                        <div class="recent-listening-trend">
+                            <p>Recent listeners trend:</p>
+                            ${listener_trend}
+                        </div>
                     </div>
-                </div>
-            `);
-            page.structure.side.insertBefore(artist_stats, page.structure.side.firstChild);
+                `);
+                page.structure.main_alt.appendChild(artist_stats);
+            }
 
             suggest_correction('artist');
         } else {
