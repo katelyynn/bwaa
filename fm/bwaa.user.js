@@ -5086,13 +5086,19 @@ let last_season_time;
                             <div class="radio-box">
                                 <label for="setting--tab_style--2012">
                                     <input id="setting--tab_style--2012" type="radio" value="2012" name="tab_style" onchange="_notify_radio_change(this)">
-                                    2012 and before
+                                    2012 and before <i class="subtext">(default)</i>
+                                    <div class="alert">
+                                        Tabs are located on the left while page content is kept the same.
+                                    </div>
                                 </label>
                             </div>
                             <div class="radio-box">
                                 <label for="setting--tab_style--2013">
                                     <input id="setting--tab_style--2013" type="radio" value="2013" name="tab_style" onchange="_notify_radio_change(this)">
                                     2013 <i class="subtext">(WIP)</i>
+                                    <div class="alert">
+                                        Tabs are integrated with the current page title and font sizes are larger.
+                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -5128,13 +5134,19 @@ let last_season_time;
                             <div class="radio-box">
                                 <label for="setting--page_style--2012">
                                     <input id="setting--page_style--2012" type="radio" value="2012" name="page_style" onchange="_notify_radio_change(this)">
-                                    2012
+                                    2012 <i class="subtext">(default)</i>
+                                    <div class="alert">
+                                        The final iteration of the design from the years prior.
+                                    </div>
                                 </label>
                             </div>
                             <div class="radio-box">
                                 <label for="setting--page_style--2013">
                                     <input id="setting--page_style--2013" type="radio" value="2013" name="page_style" onchange="_notify_radio_change(this)">
                                     2013 <i class="subtext">(WIP)</i>
+                                    <div class="alert">
+                                        A major redesign which looks very distinct compared to previous years. Generally larger text sizes and images, while being less cute as a result.
+                                    </div>
                                 </label>
                             </div>
                         </div>
