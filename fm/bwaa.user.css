@@ -317,9 +317,13 @@
                     display: none;
                 }
 
-                .col-main {
-                    padding-right: unset;
+                &[data-page-subpage="overview"] {
+                    .col-main {
+                        padding-right: unset;
+                    }
+                }
 
+                .col-main {
                     section {
                         margin: unset !important;
                         padding: 18px 0 !important;
