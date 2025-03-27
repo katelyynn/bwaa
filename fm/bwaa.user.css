@@ -66,7 +66,7 @@
 
         --page: 962px;
 
-        &[data-bwaa--tab_style="2013"] {
+        &[data-bwaa--page_style="2013"] {
             --page: 980px;
         }
     }
@@ -306,7 +306,7 @@
             display: block;
             border-right: 1px dotted var(--border-7);
         }
-        &[data-tab-style="2013"] {
+        &[data-page-style="2013"] {
             &:after {
                 top: 67px;
             }
@@ -606,7 +606,7 @@
                 font-size: 11px;
                 line-height: 1.181818em;
 
-                &[data-tab-style="2013"] {
+                &[data-page-style="2013"] {
                     margin-top: unset;
                 }
 
@@ -701,7 +701,7 @@
             }
         }
 
-        [data-bwaa--tab_style="2013"] & {
+        [data-bwaa--page_style="2013"] & {
             padding-top: 18px;
             padding-bottom: 3px;
             gap: 20px;
@@ -1107,7 +1107,7 @@
             margin-top: -2px;
             align-items: unset !important;
 
-            [data-bwaa--tab_style="2013"] & {
+            [data-bwaa--page_style="2013"] & {
                 width: calc(var(--page) + 15px + 14px);
             }
 

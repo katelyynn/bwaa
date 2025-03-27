@@ -827,7 +827,6 @@ let settings_defaults = {
 
     flags: {},
 
-    tab_style: 2012,
     page_style: 2012
 }
 let settings_store = {
@@ -901,9 +900,6 @@ let settings_store = {
     lotus: {
         type: 'toggle',
         values: [true, false]
-    },
-    tab_style: {
-        type: 'radio'
     },
     page_style: {
         type: 'radio'
@@ -1596,7 +1592,7 @@ let last_season_time;
         page.structure.container.setAttribute('data-assigned', 'true');
         page.structure.container.setAttribute('data-page-type', page.type);
         page.structure.container.setAttribute('data-page-subpage', page.subpage);
-        page.structure.container.setAttribute('data-tab-style', settings.tab_style);
+        page.structure.container.setAttribute('data-page-style', settings.page_style);
 
         let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
         if (other_container != null)
@@ -1872,9 +1868,9 @@ let last_season_time;
                 </div>
 
                 <div class="badge-info">
-                    ${(settings.tab_style == 2012) ? `<h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>` : ''}
+                    ${(settings.page_style < 2013) ? `<h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>` : ''}
                     ${(page.name != sponsor_list.sponsor_account) ? (`
-                    <div class="user-info" data-tab-style=${settings.tab_style}>
+                    <div class="user-info" data-page-style=${settings.page_style}>
                         <div class="top">
                             <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
                         </div>
@@ -1916,7 +1912,7 @@ let last_season_time;
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
-            if (settings.tab_style == 2013) {
+            if (settings.page_style == 2013) {
                 let new_header = generic_subpage_header(
                     header_user_data.page,
                     'user',
@@ -2860,7 +2856,7 @@ let last_season_time;
                 add_artwork: add_artwork
             }
 
-            if (settings.tab_style == 2013) {
+            if (settings.page_style == 2013) {
                 let image = page.structure.main.querySelector('.gallery-preview-image--0 img');
                 if (image)
                     image = image.getAttribute('src');
@@ -3610,7 +3606,7 @@ let last_season_time;
         else if (link_type == 'direct')
             link_field = `<a href="${direct_link}">${page.name}</a>`;
 
-        if (settings.tab_style == 2013 && page.subpage == 'overview' && (page.type == 'album' || page.type == 'artist')) {
+        if (settings.page_style == 2013 && page.subpage == 'overview' && (page.type == 'album' || page.type == 'artist')) {
             link_field = `<a href="${root}music/${sanitise(page.sister)}">${page.sister}</a>`;
             header_title = page.name;
         }
@@ -3619,7 +3615,7 @@ let last_season_time;
         new_header.classList.add('profile-header-subpage-section');
         new_header.setAttribute('id', 'bwaa-subpage-header');
 
-        if (settings.tab_style == 2012) {
+        if (settings.page_style == 2012) {
             new_header.innerHTML = (`
                 ${(avatar != '') ? (`
                 <div class="badge-avatar">
@@ -3632,7 +3628,7 @@ let last_season_time;
                 </div>
             `);
         } else {
-            if (page.type == 'user' && page.subpage == 'overview') {
+            if ((page.type == 'user' || page.type == 'artist') && page.subpage == 'overview') {
                 new_header.classList.add('user-page');
                 new_header.innerHTML = (`
                     <div class="badge-info">
@@ -4638,9 +4634,9 @@ let last_season_time;
 
         if (ff('claire')) {
             adaptive_skin.innerHTML = (`
-                <div class="container page-content bwaa-settings lastfm-settings subpage" data-tab-style="${settings.tab_style}">
+                <div class="container page-content bwaa-settings lastfm-settings subpage" data-page-style="${settings.page_style}">
                     <div class="row">
-                        ${(settings.tab_style == 2013) ? (`
+                        ${(settings.page_style == 2013) ? (`
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
                                 <img src="${auth.avatar}" alt="${auth.name}">
@@ -4960,31 +4956,6 @@ let last_season_time;
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>${trans[lang].settings.social.name}</legend>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--varied_avatar_shapes">
-                                    <input id="setting--varied_avatar_shapes" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.varied_avatar_shapes.name}
-                                </label>
-                                <div class="alert">
-                                    ${trans[lang].settings.varied_avatar_shapes.alert}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--hide_extra_grid_item">
-                                    <input id="setting--hide_extra_grid_item" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.hide_extra_grid_item.name}
-                                </label>
-                                <div class="alert">
-                                    ${trans[lang].settings.hide_extra_grid_item.alert}
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
                         <legend>${trans[lang].settings.extra.name}</legend>
                         <div class="form-group">
                             <div class="checkbox">
@@ -5064,42 +5035,6 @@ let last_season_time;
             injector.innerHTML = (`
                 <section id="navigation" class="form-section settings-form">
                     <h2 class="form-header">Interface</h2>
-                    <h2 class="tiny">Navigation</h2>
-                    <p>Choose the navigation style that suits you best.</p>
-                    <fieldset>
-                        <legend>Tab style</legend>
-                        <div class="form-group">
-                            <div class="radio-box">
-                                <label for="setting--tab_style--2012">
-                                    <input id="setting--tab_style--2012" type="radio" value="2012" name="tab_style" onchange="_notify_radio_change(this)">
-                                    2012 and before <i class="subtext">(default)</i>
-                                    <div class="alert">
-                                        Tabs are located on the left while page content is kept the same.
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="radio-box">
-                                <label for="setting--tab_style--2013">
-                                    <input id="setting--tab_style--2013" type="radio" value="2013" name="tab_style" onchange="_notify_radio_change(this)">
-                                    2013 <i class="subtext">(WIP)</i>
-                                    <div class="alert">
-                                        Tabs are integrated with the current page title and font sizes are larger.
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Page header</legend>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="setting--sticky_nav">
-                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
-                                    ${trans[lang].settings.sticky_nav.name}
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
                     <h2 class="tiny">Pages</h2>
                     <p>Choose the page layout and style that suits you best.</p>
                     <fieldset>
@@ -5133,6 +5068,44 @@ let last_season_time;
                                     <div class="alert">
                                         A major redesign which looks very distinct compared to previous years. Generally larger text sizes and images, while being less cute as a result.
                                     </div>
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>${trans[lang].settings.social.name}</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--varied_avatar_shapes">
+                                    <input id="setting--varied_avatar_shapes" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.varied_avatar_shapes.name}
+                                </label>
+                                <div class="alert">
+                                    ${trans[lang].settings.varied_avatar_shapes.alert}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--hide_extra_grid_item">
+                                    <input id="setting--hide_extra_grid_item" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.hide_extra_grid_item.name}
+                                </label>
+                                <div class="alert">
+                                    ${trans[lang].settings.hide_extra_grid_item.alert}
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <h2 class="tiny">Navigation</h2>
+                    <p>Choose the navigation style that suits you best.</p>
+                    <fieldset>
+                        <legend>Page header</legend>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="setting--sticky_nav">
+                                    <input id="setting--sticky_nav" type="checkbox" onchange="_notify_checkbox_change(this)">
+                                    ${trans[lang].settings.sticky_nav.name}
                                 </label>
                             </div>
                         </div>
@@ -7716,9 +7689,9 @@ let last_season_time;
         document.title = `${trans[lang].changelog.title} | Last.fm`;
 
         adaptive_skin.innerHTML = (`
-            <div class="container page-content bwaa-settings lastfm-settings subpage">
+            <div class="container page-content bwaa-settings lastfm-settings subpage" data-page-style="${settings.page_style}">
                 <div class="row">
-                    ${(settings.tab_style == 2013) ? (`
+                    ${(settings.page_style == 2013) ? (`
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
                                 <img src="${auth.avatar}" alt="${auth.name}">
