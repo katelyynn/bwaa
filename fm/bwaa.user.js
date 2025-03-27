@@ -3008,32 +3008,107 @@ let last_season_time;
 
             let new_header = document.createElement('section');
             new_header.classList.add('profile-album-section');
-            new_header.innerHTML = (`
-                <div class="album-info">
-                    <h1>${page.name} by <a href="${header_album_data.artist_link}">${page.sister}</a></h1>
-                    <div class="stats">
-                        ${header_album_data.plays} plays (${header_album_data.listeners} listeners)
+            new_header.setAttribute('data-page-style', settings.page_style);
+
+            if (settings.page_style < 2013) {
+                new_header.innerHTML = (`
+                    <div class="album-info">
+                        <h1>${page.name} by <a href="${header_album_data.artist_link}">${page.sister}</a></h1>
+                        <div class="stats">
+                            ${header_album_data.plays} plays (${header_album_data.listeners} listeners)
+                        </div>
+                        <div class="actions">
+                            ${album_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
+                        </div>
+                        <div class="tags">
+                            ${trans[lang].popular_tags.replace('{list}', tags_html)}
+                        </div>
+                        <div class="shouts">
+                            ${trans[lang].shouts_link.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
+                        </div>
+                        <div class="share-bar">
+                            <strong>${trans[lang].album.share}</strong>
+                            <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
+                        </div>
                     </div>
-                    <div class="actions">
-                        ${album_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
+                    <div class="album-image-side">
+                        <a class="image" href="${header_album_data.add_artwork}">
+                            <img src="${page.avatar}">
+                        </a>
                     </div>
-                    <div class="tags">
-                        ${trans[lang].popular_tags.replace('{list}', tags_html)}
+                `);
+            } else {
+                let release_year = 0;
+                let release_date = 'never :(';
+                let track_count = 'No tracks';
+                let album_length = '0:00'
+
+                let meta = page.structure.container.querySelectorAll('.hidden-xs.metadata-column .catalogue-metadata-description');
+                meta.forEach((meta_item, index) => {
+                    console.info(meta_item);
+                    let meta_text = meta_item.textContent;
+
+                    if (index == 0) {
+                        // track count & length
+                        let split = meta_text.split(',');
+
+                        track_count = split[0];
+                        if (split.length > 1)
+                            album_length = split[1].trim();
+                    } else {
+                        // release date
+                        release_date = meta_text;
+                        release_year = new Date(release_date).getFullYear();
+                    }
+                });
+
+                new_header.innerHTML = (`
+                    <div class="album-image-2013">
+                        <a class="image" href="${header_album_data.add_artwork}">
+                            <img src="${page.avatar}">
+                        </a>
                     </div>
-                    <div class="shouts">
-                        ${trans[lang].shouts_link.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
+                    <div class="album-info-2013">
+                        <div class="stat">
+                            <strong>Label</strong>
+                            <p>None</p>
+                        </div>
+                        <div class="stat">
+                            <strong>Release date</strong>
+                            <p>${release_date}</p>
+                        </div>
+                        <div class="stat">
+                            <strong>Running length</strong>
+                            <p>${track_count}</p>
+                        </div>
+                        <div class="stat">
+                            <strong>Running time</strong>
+                            <p>${album_length}</p>
+                        </div>
+                        ${tags_html}
                     </div>
-                    <div class="share-bar">
-                        <strong>${trans[lang].album.share}</strong>
-                        <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
+                `);
+
+                let interactions = document.createElement('div');
+                interactions.classList.add('profile-artist-interactions');
+
+                interactions.innerHTML = (`
+                    ${album_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
+                    <div class="stats-2013">
+                        <div class="stat">
+                            <strong>${header_album_data.plays}</strong>
+                            <p>scrobbles</p>
+                        </div>
+                        <div class="stat">
+                            <strong>${header_album_data.listeners}</strong>
+                            <p>listeners</p>
+                        </div>
                     </div>
-                </div>
-                <div class="album-image-side">
-                    <a class="image" href="${header_album_data.add_artwork}">
-                        <img src="${page.avatar}">
-                    </a>
-                </div>
-            `);
+                `);
+
+                page.structure.side.insertBefore(interactions, page.structure.side.firstElementChild);
+            }
+
 
             page.structure.row.insertBefore(navlist, page.structure.main);
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
@@ -3048,7 +3123,7 @@ let last_season_time;
             let track_count = 'No tracks';
             let album_length = '0:00'
 
-            let meta = page.structure.main.querySelectorAll('.metadata-column .catalogue-metadata-description');
+            let meta = page.structure.container.querySelectorAll('.metadata-column .catalogue-metadata-description');
             meta.forEach((meta_item, index) => {
                 let meta_text = meta_item.textContent;
 
@@ -3072,6 +3147,7 @@ let last_season_time;
             about_this_album.classList.add('about-this-album');
             about_this_album.innerHTML = (`
                 <h2><a href="${window.location.href}/+wiki">About this album</a></h2>
+                ${(settings.page_style < 2013) ? (`
                 <div class="label-container">
                     <div class="image">
                         <img src="https://lastfm.freetls.fastly.net/i/u/avatar300s/2a96cbd8b46e442fc41c2b86b821562f.jpg">
@@ -3094,6 +3170,15 @@ let last_season_time;
                     </div>
                     `)}
                 </div>
+                `) : (`
+                <div class="wiki">
+                    ${(page.state.wiki) ? wiki : (`
+                    <div class="message-box-2013">
+                        We don’t have a description for this album yet, <a href="${window.location.href}/+wiki/edit">care to help</a>?
+                    </div>
+                    `)}
+                </div>
+                `)}
             `);
             try {
                 document.getElementById('tracklist').after(about_this_album);
@@ -3107,6 +3192,39 @@ let last_season_time;
 
 
             // sidebar
+
+            let new_row;
+            let new_main;
+            let new_side;
+            if (settings.page_style == 2013) {
+                new_row = document.createElement('div');
+                new_row.classList.add('row', 'lower-row');
+
+                page.structure.container.appendChild(new_row);
+
+                new_main = document.createElement('div');
+                new_main.classList.add('col-main');
+                new_main.setAttribute('data-assigned', 'true');
+
+                new_row.appendChild(new_main);
+
+                new_side = document.createElement('div');
+                new_side.classList.add('col-sidebar');
+
+                new_row.appendChild(new_side);
+
+                page.structure.main_alt = page.structure.main;
+
+                page.structure.main = new_main;
+                page.structure.side = new_side;
+
+                let shouts = page.structure.container.querySelector('#shoutbox');
+                if (shouts) {
+                    page.structure.main.appendChild(shouts);
+                }
+            }
+
+
             let scrobble_count_element = document.body.querySelector('.personal-stats-item--scrobbles .header-metadata-display a');
             let scrobble_count = 0;
             let scrobble_link = '';
@@ -3138,26 +3256,49 @@ let last_season_time;
             listener_trend = listener_trend.outerHTML;
 
             let album_stats = document.createElement('section');
-            album_stats.innerHTML = (`
-                <h2>Album Stats</h2>
-                <div class="stats-container">
-                    <div class="scrobbles-and-listeners">
-                        <div class="scrobbles">
-                            <h1>${header_album_data.plays}</h1>
-                            <p>Scrobbles</p>
+            if (settings.page_style < 2013) {
+                album_stats.innerHTML = (`
+                    <h2>${trans[lang].trend.album}</h2>
+                    <div class="stats-container">
+                        <div class="scrobbles-and-listeners">
+                            <div class="scrobbles">
+                                <h1>${header_album_data.plays}</h1>
+                                <p>${trans[lang].trend.scrobbles}</p>
+                            </div>
+                            <div class="listeners">
+                                <h1>${header_album_data.listeners}</h1>
+                                <p>${trans[lang].trend.listeners}</p>
+                            </div>
                         </div>
-                        <div class="listeners">
-                            <h1>${header_album_data.listeners}</h1>
-                            <p>Listeners</p>
+                        <div class="recent-listening-trend">
+                            <p>${trans[lang].trend.name}</p>
+                            ${listener_trend}
                         </div>
                     </div>
-                    <div class="recent-listening-trend">
-                        <p>Recent Listening Trend</p>
-                        ${listener_trend}
+                `);
+                page.structure.side.insertBefore(album_stats, page.structure.side.firstChild);
+            } else {
+                album_stats.innerHTML = (`
+                    <h2>Listening Trend</h2>
+                    <div class="stats-container-2013">
+                        <div class="scrobbles-and-listeners">
+                            <div class="scrobbles">
+                                <h1>${header_album_data.plays}</h1>
+                                <p>scrobbles all time</p>
+                            </div>
+                            <div class="listeners">
+                                <h1>${header_album_data.listeners}</h1>
+                                <p>listeners all time</p>
+                            </div>
+                        </div>
+                        <div class="recent-listening-trend">
+                            <p>Recent listeners trend:</p>
+                            ${listener_trend}
+                        </div>
                     </div>
-                </div>
-            `);
-            page.structure.side.insertBefore(album_stats, page.structure.side.firstChild);
+                `);
+                page.structure.main_alt.appendChild(album_stats);
+            }
 
             suggest_correction('album');
         } else {

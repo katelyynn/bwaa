@@ -349,6 +349,7 @@
                     width: calc(var(--page) - (15px * 2));
                 }
 
+                #tracklist,
                 #top-tracks {
                     tbody {
                         display: flex;
@@ -358,7 +359,7 @@
                 }
             }
 
-            &[data-page-type="artist"][data-page-subpage="overview"] {
+            &:is([data-page-type="artist"], [data-page-type="album"])[data-page-subpage="overview"] {
                 .col-main, .col-sidebar {
                     padding-top: unset;
                 }
@@ -1697,6 +1698,16 @@
                             font-size: 11px;
                             line-height: 16px;
                             font-weight: normal;
+
+                            [data-page-style="2013"][data-page-type="album"] & {
+                                display: flex;
+                                width: fit-content;
+                                padding: 3px 5px;
+                                color: var(--colour-middle);
+                                font-size: inherit;
+                                line-height: 18px;
+                                font-weight: normal;
+                            }
                         }
 
                         &:nth-child(8) {
@@ -1734,6 +1745,16 @@
                             font-size: 11px;
                             line-height: 16px;
                             font-weight: normal;
+
+                            [data-page-style="2013"][data-page-type="album"] & {
+                                display: flex;
+                                width: fit-content;
+                                padding: 3px 5px;
+                                color: var(--colour-middle);
+                                font-size: inherit;
+                                line-height: 18px;
+                                font-weight: normal;
+                            }
                         }
 
                         &:nth-child(4) {
@@ -1742,9 +1763,17 @@
                         }
                         &:nth-child(8) {
                             width: 56px;
+
+                            [data-page-style="2013"][data-page-type="album"] & {
+                                width: 56px;
+                            }
                         }
                         &:nth-child(9) {
                             width: 80px;
+
+                            [data-page-style="2013"][data-page-type="album"] & {
+                                width: 78px;
+                            }
                         }
                     }
                 }
@@ -1761,6 +1790,16 @@
                             font-size: 11px;
                             line-height: 16px;
                             font-weight: normal;
+
+                            [data-page-style="2013"][data-page-type="album"] & {
+                                display: flex;
+                                width: fit-content;
+                                padding: 3px 5px;
+                                color: var(--colour-middle);
+                                font-size: inherit;
+                                line-height: 18px;
+                                font-weight: normal;
+                            }
                         }
 
                         &:nth-child(3) {
@@ -1972,6 +2011,14 @@
                                 }
                             }
                         }
+                    }
+                }
+
+                [data-page-style="2013"][data-page-type="album"] & {
+                    td {
+                        font-size: 13px;
+                        line-height: 18px;
+                        height: 24px;
                     }
                 }
             }
@@ -3119,6 +3166,40 @@
                 }
             }
         }
+
+        &[data-page-style="2013"] {
+            display: flex;
+            gap: 20px;
+
+            .album-image-2013 {
+                width: 380px;
+
+                .image {
+                    width: 380px;
+                    height: 380px;
+                    border-radius: 2px;
+                    overflow: hidden;
+
+                    img {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .album-info-2013 {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                .stat {
+                    strong {
+                        color: var(--colour-middle);
+                        font-size: 12px;
+                        font-weight: normal;
+                    }
+                }
+            }
+        }
     }
 
     .profile-track-section {
@@ -3470,6 +3551,18 @@
                 opacity: 0.2;
             }
         }
+
+        [data-page-style="2013"] & {
+            .shout-user-avatar-link {
+                width: 64px;
+            }
+            .shout-user-avatar img {
+                width: 64px;
+                border: unset;
+                padding: unset;
+                border-radius: 2px;
+            }
+        }
     }
 
     .shout-more-replies-after, .shout-more-replies-before {
@@ -3523,6 +3616,15 @@
 
             &:after {
                 display: none;
+            }
+        }
+
+        [data-page-style="2013"] & {
+            .shout-user-avatar img {
+                width: 64px;
+                border: unset;
+                padding: unset;
+                border-radius: 2px;
             }
         }
     }
