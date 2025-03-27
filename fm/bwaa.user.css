@@ -520,7 +520,8 @@
                     }
 
                     .user-type-extras & {
-                        background: var(--border) !important;
+                        box-shadow: inset 0 0 0 1px var(--border);
+                        background: var(--body) !important;
                         color: var(--colour) !important;
                     }
                 }
