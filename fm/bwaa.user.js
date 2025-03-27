@@ -2006,9 +2006,6 @@ let last_season_time;
 
                 let involved_text = '';
 
-                let tooltip_name;
-                let tooltip_sister;
-
                 activity.involved.forEach((involved) => {
                     let involved_link;
 
@@ -2025,16 +2022,10 @@ let last_season_time;
                     else if (involved.type == 'bleh')
                         involved_link = `${root}bleh`;
 
-                    // tooltip
-                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa' && involved.type != 'bleh') {
-                        tooltip_name = involved.name;
-                        tooltip_sister = involved.sister;
-                    }
-
                     if (involved_text != '')
-                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                        involved_text = `${involved_text}, ${(involved.sister != '') ? `<a href="${root}music/${sanitise(involved.sister)}">${involved.sister}</a> - ` : ''}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
                     else
-                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                        involved_text = `${involved_text}${(involved.sister != '') ? `<a href="${root}music/${sanitise(involved.sister)}">${involved.sister}</a> - ` : ''}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
                 });
 
                 let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
@@ -2045,11 +2036,6 @@ let last_season_time;
                 `);
 
                 recent_activity_section.appendChild(activity_item);
-
-                if (tooltip_name != undefined)
-                    tippy(activity_item.querySelector('.title a'), {
-                        content: `${tooltip_sister} - ${tooltip_name}`
-                    });
             });
 
             if (!settings.no_notifs) {
