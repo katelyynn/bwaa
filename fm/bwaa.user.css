@@ -317,6 +317,16 @@
                     display: none;
                 }
 
+                .col-main {
+                    padding-right: unset;
+                }
+
+                .col-main, .col-sidebar {
+                    font: inherit;
+                }
+            }
+
+            &[data-page-type="artist"][data-page-subpage="overview"] {
                 .col-main, .col-sidebar {
                     padding-top: unset;
                 }
@@ -326,10 +336,6 @@
 
             .row > .navlist {
                 display: none;
-            }
-
-            .col-main {
-                padding-right: unset;
             }
         }
 
@@ -391,10 +397,6 @@
         margin-top: unset !important;
         font-size: 11px;
         line-height: 1.181818em;
-
-        [data-page-style="2013"] & {
-            font: inherit;
-        }
     }
 
     .row._buffer > .col-sm-4.col-sm-push-4, /* otherwise 1px offset on obsessions page top */
@@ -2920,7 +2922,20 @@
                 height: 300px;
 
                 .hero {
-                    width: 454px;
+                    flex: 1;
+                    border-radius: 2px;
+                    overflow: hidden;
+
+                    a {
+                        width: 100%;
+                        height: 100%;
+
+                        img {
+                            width: 100%;
+                            position: relative;
+                            top: -20%;
+                        }
+                    }
                 }
 
                 .side {
@@ -2928,19 +2943,20 @@
                     display: flex;
                     flex-direction: column;
                     gap: 6px;
-                }
+                    flex-shrink: 0;
 
-                .image-list-item {
-                    height: 100%;
-                    border-radius: 2px;
-                    overflow: hidden;
+                    .image-list-item {
+                        height: 100%;
+                        border-radius: 2px;
+                        overflow: hidden;
 
-                    img {
-                        object-fit: cover;
-                    }
+                        img {
+                            object-fit: cover;
+                        }
 
-                    &:after {
-                        display: none;
+                        &:after {
+                            display: none;
+                        }
                     }
                 }
             }

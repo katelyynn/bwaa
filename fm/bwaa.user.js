@@ -2499,11 +2499,13 @@ let last_season_time;
                 new_header.innerHTML = (`
                     <div class="artist-images-2013">
                         <div class="hero">
-                            ${gallery_sidebar_photos[0]}
+                            <a href="${window.location.href}/+images">
+                                <img src="${page.avatar}">
+                            </a>
                         </div>
                         <div class="side">
+                            ${gallery_sidebar_photos[0]}
                             ${gallery_sidebar_photos[1]}
-                            ${gallery_sidebar_photos[2]}
                         </div>
                     </div>
                     <div class="tags-2013">
