@@ -234,6 +234,7 @@
 
         [data-bwaa--page_style="2013"] & {
             font-size: 13px;
+            line-height: 18px;
             cursor: default !important;
 
             a {
@@ -315,6 +316,10 @@
                 &:after {
                     display: none;
                 }
+
+                .col-main, .col-sidebar {
+                    padding-top: unset;
+                }
             }
 
             left: 0;
@@ -322,6 +327,15 @@
             .row > .navlist {
                 display: none;
             }
+
+            .col-main {
+                padding-right: unset;
+            }
+        }
+
+        .col-sidebar {
+            display: flex;
+            flex-direction: column;
         }
 
         &.page-content {
@@ -377,6 +391,10 @@
         margin-top: unset !important;
         font-size: 11px;
         line-height: 1.181818em;
+
+        [data-page-style="2013"] & {
+            font: inherit;
+        }
     }
 
     .row._buffer > .col-sm-4.col-sm-push-4, /* otherwise 1px offset on obsessions page top */
@@ -770,6 +788,11 @@
                                 &:after {
                                     display: none;
                                 }
+
+                                &.secondary-nav-item-link--active {
+                                    color: var(--header-text-black);
+                                    font-weight: bold;
+                                }
                             }
                         }
                     }
@@ -791,6 +814,10 @@
                     }
 
                     border: none;
+                }
+
+                &[data-page-type="artist"] {
+                    border: unset;
                 }
             }
         }
@@ -2882,6 +2909,42 @@
                 }
             }
         }
+
+        &[data-page-style="2013"] {
+            flex-direction: column;
+            padding: unset;
+
+            .artist-images-2013 {
+                display: flex;
+                gap: 6px;
+                height: 300px;
+
+                .hero {
+                    width: 454px;
+                }
+
+                .side {
+                    width: 160px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                }
+
+                .image-list-item {
+                    height: 100%;
+                    border-radius: 2px;
+                    overflow: hidden;
+
+                    img {
+                        object-fit: cover;
+                    }
+
+                    &:after {
+                        display: none;
+                    }
+                }
+            }
+        }
     }
 
     .page-content[data-assigned] > .row > .col-main:not([data-assigned]),
@@ -2893,7 +2956,7 @@
     .metadata-and-wiki-row + .row,
     .metadata-and-wiki-row, .metadata-and-wiki-row--artist + .section-with-separator,
     .masonry-right.col-sidebar {
-        display: none;
+        display: none !important;
     }
     .profile-album-section {
         display: flex;
@@ -7425,6 +7488,51 @@
 
             strong {
                 text-decoration: underline;
+            }
+        }
+    }
+
+
+
+
+    .profile-artist-interactions {
+        order: -1;
+
+        .header-new-bookmark-button {
+            background: #333333 !important;
+            color: #fff !important;
+            text-shadow: unset !important;
+            padding: 11px 15px 11px 40px !important;
+            border-radius: 2px !important;
+            height: unset;
+            font: inherit;
+            width: 100%;
+            text-align: left;
+
+            &:hover, &:active {
+                background: #222222 !important;
+            }
+
+            strong {
+                height: unset;
+                padding: unset;
+                background: unset;
+                font: inherit;
+            }
+        }
+
+        .stats-2013 {
+            display: flex;
+            gap: 20px;
+            margin-top: 18px;
+
+            .stat {
+                strong {
+                    font-size: 22px;
+                }
+                p {
+                    color: var(--colour-middle);
+                }
             }
         }
     }

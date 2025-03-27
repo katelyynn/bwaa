@@ -2391,6 +2391,14 @@ let last_season_time;
                 listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
             }
 
+            if (settings.page_style == 2013) {
+                let new_header = generic_subpage_header(
+                    header_artist_data.page,
+                    'artist'
+                );
+                page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
+            }
+
 
             let origin = '';
             let origin_elements = page.structure.main.querySelectorAll('.metadata-column .catalogue-metadata-description');
@@ -2425,8 +2433,12 @@ let last_season_time;
             let gallery_sidebar_photos = [];
             if (gallery_sidebar_photos_ems.length > 0) {
                 for (let i = 1; i < 5; i++) {
-                    console.info('gallery', i, gallery_sidebar_photos_ems);
                     if (gallery_sidebar_photos_ems[i]) {
+                        if (i == 1 && settings.page_style == 2013) {
+                            let image = gallery_sidebar_photos_ems[i].querySelector('img');
+                            image.setAttribute('src', image.getAttribute('src').replace('/avatar170s/', '/avatar300s/'));
+                        }
+
                         gallery_sidebar_photos.push(gallery_sidebar_photos_ems[i].querySelector('a').outerHTML);
                     } else {
                         gallery_sidebar_photos.push('');
@@ -2437,49 +2449,92 @@ let last_season_time;
 
             let new_header = document.createElement('section');
             new_header.classList.add('profile-artist-section');
-            new_header.innerHTML = (`
-                <div class="artist-info">
-                    <h1>${page.name}</h1>
-                    <div class="stats">
-                        ${header_artist_data.plays} plays (${header_artist_data.listeners} listeners)
+            new_header.setAttribute('data-page-style', settings.page_style);
+
+            if (settings.page_style < 2013) {
+                new_header.innerHTML = (`
+                    <div class="artist-info">
+                        <h1>${page.name}</h1>
+                        <div class="stats">
+                            ${header_artist_data.plays} plays (${header_artist_data.listeners} listeners)
+                        </div>
+                        <div class="actions">
+                            ${artist_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
+                        </div>
+                        ${origin}
+                        <div class="wiki">
+                            ${get_wiki()}
+                        </div>
+                        <div class="tags">
+                            ${trans[lang].popular_tags.replace('{list}', tags_html)}
+                        </div>
+                        <div class="shouts">
+                            ${trans[lang].shouts_link.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
+                        </div>
+                        <div class="share-bar">
+                            <strong>${trans[lang].artist.share}</strong>
+                            <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
+                        </div>
                     </div>
-                    <div class="actions">
-                        ${artist_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
+                    <div class="artist-image-side">
+                        <div class="images">
+                            <div class="top">
+                                <a href="${window.location.href}/+images">
+                                    <img src="${page.avatar}">
+                                </a>
+                            </div>
+                            <div class="bottom">
+                                ${gallery_sidebar_photos[0]}
+                                ${gallery_sidebar_photos[1]}
+                                ${gallery_sidebar_photos[2]}
+                                ${gallery_sidebar_photos[3]}
+                            </div>
+                        </div>
+                        <div class="option">
+                            <a href="${window.location.href}/+images">${trans[lang].see_all_placeholder.replace('{placeholder}', header_artist_data.photos)}</a>
+                        </div>
+                    </div>
+                `);
+            } else {
+                new_header.innerHTML = (`
+                    <div class="artist-images-2013">
+                        <div class="hero">
+                            ${gallery_sidebar_photos[0]}
+                        </div>
+                        <div class="side">
+                            ${gallery_sidebar_photos[1]}
+                            ${gallery_sidebar_photos[2]}
+                        </div>
+                    </div>
+                    <div class="tags-2013">
+                        ${tags_html}
                     </div>
                     ${origin}
                     <div class="wiki">
                         ${get_wiki()}
                     </div>
-                    <div class="tags">
-                        ${trans[lang].popular_tags.replace('{list}', tags_html)}
-                    </div>
-                    <div class="shouts">
-                        ${trans[lang].shouts_link.replace('{link}', `<a href="${window.location.href}/+shoutbox">Leave a shout</a>`)}
-                    </div>
-                    <div class="share-bar">
-                        <strong>${trans[lang].artist.share}</strong>
-                        <a class="btn-primary" href="${window.location.href}">${trans[lang].share_link}</a>
-                    </div>
-                </div>
-                <div class="artist-image-side">
-                    <div class="images">
-                        <div class="top">
-                            <a href="${window.location.href}/+images">
-                                <img src="${page.avatar}">
-                            </a>
+                `);
+
+                let interactions = document.createElement('div');
+                interactions.classList.add('profile-artist-interactions');
+
+                interactions.innerHTML = (`
+                    ${artist_header.querySelector('.header-new-actions > [data-toggle-button=""]').outerHTML}
+                    <div class="stats-2013">
+                        <div class="stat">
+                            <strong>${header_artist_data.plays}</strong>
+                            <p>scrobbles</p>
                         </div>
-                        <div class="bottom">
-                            ${gallery_sidebar_photos[0]}
-                            ${gallery_sidebar_photos[1]}
-                            ${gallery_sidebar_photos[2]}
-                            ${gallery_sidebar_photos[3]}
+                        <div class="stat">
+                            <strong>${header_artist_data.listeners}</strong>
+                            <p>listeners</p>
                         </div>
                     </div>
-                    <div class="option">
-                        <a href="${window.location.href}/+images">${trans[lang].see_all_placeholder.replace('{placeholder}', header_artist_data.photos)}</a>
-                    </div>
-                </div>
-            `);
+                `);
+
+                page.structure.side.insertBefore(interactions, page.structure.side.firstElementChild);
+            }
+
 
             page.structure.row.insertBefore(navlist, page.structure.main);
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
@@ -2712,12 +2767,12 @@ let last_season_time;
     }
 
     function prep_bookmark_btn() {
-        let btn = page.structure.main.querySelector('.header-new-bookmark-button');
+        let btn = page.structure.row.querySelector('.header-new-bookmark-button');
 
         update_bookmark_btn(btn);
     }
     function prep_love_btn() {
-        let btn = page.structure.main.querySelector('.header-new-love-button');
+        let btn = page.structure.row.querySelector('.header-new-love-button');
 
         update_love_btn(btn);
     }
@@ -3614,6 +3669,7 @@ let last_season_time;
         let new_header = document.createElement('section');
         new_header.classList.add('profile-header-subpage-section');
         new_header.setAttribute('id', 'bwaa-subpage-header');
+        new_header.setAttribute('data-page-type', page.type);
 
         if (settings.page_style == 2012) {
             new_header.innerHTML = (`
