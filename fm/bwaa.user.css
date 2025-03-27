@@ -868,10 +868,14 @@
             }
         }
     }
+    .friend-tabs,
     .library-controls {
         margin: 0 0 15px 0;
         display: flex;
         float: unset;
+    }
+    .friend-tabs + h3 {
+        margin-bottom: 15px !important;
     }
 
     .header-new {

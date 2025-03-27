@@ -199,8 +199,11 @@ const trans = {
                     tags: 'Tags',
                     playlists: 'Playlists'
                 },
-                following: 'Following',
-                followers: 'Followers',
+                friends: {
+                    name: 'Friends',
+                    following: 'Following',
+                    followers: 'Followers'
+                },
                 obsessions: 'Obsessions',
                 events: 'Events',
                 neighbours: 'Neighbours',
@@ -1701,6 +1704,14 @@ let last_season_time;
         let playlists_nav_btn = navlist_items.querySelector('.secondary-nav-item--playlists');
         navlist_items.removeChild(playlists_nav_btn);
 
+        let friends_nav_btn = navlist_items.querySelector('.secondary-nav-item--followers');
+        friends_nav_btn.classList.remove('secondary-nav-item--followers');
+        friends_nav_btn.classList.add('secondary-nav-item--friends');
+        friends_nav_btn.querySelector('a').textContent = trans[lang].profile.tabs.friends.name;
+
+        let following_nav_btn = navlist_items.querySelector('.secondary-nav-item--following');
+        navlist_items.removeChild(following_nav_btn);
+
 
         let is_new_account = false;
 
@@ -1728,12 +1739,6 @@ let last_season_time;
                 artists: header_metadata[1].querySelector('a'),
                 loved_tracks: (header_metadata[2] != undefined) ? header_metadata[2].querySelector('a') : placeholder_loved_tracks()
             }
-
-            journal_nav_btn.innerHTML = (`
-                <a class="secondary-nav-item-link" href="${root}user/${page.name}/journal">
-                    ${trans[lang].profile.tabs.journal}
-                </a>
-            `);
 
             // user type
             let user_type = 'user';
@@ -1924,8 +1929,8 @@ let last_season_time;
                 </div>
             `);
 
-            if (page.name != sponsor_list.sponsor_account) {
-                navlist_items.appendChild(journal_nav_btn);
+            navlist_items.appendChild(journal_nav_btn);
+            if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
                 page.structure.row.insertBefore(navlist, page.structure.main);
             }
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
@@ -2097,12 +2102,20 @@ let last_season_time;
                 header_user_data.page = trans[lang].profile.tabs.library.name;
             }
 
+            if (page.subpage == 'followers' || page.subpage == 'following') {
+                friends_nav_btn.querySelector('a').classList.add('secondary-nav-item-link--active');
+
+                bwaa_friends_page(header_user_data.page);
+
+                header_user_data.page = trans[lang].profile.tabs.friends.name;
+            }
+
+            navlist_items.appendChild(journal_nav_btn);
+
             let new_header = generic_subpage_header(
                 header_user_data.page,
                 'user'
             );
-
-            navlist_items.appendChild(journal_nav_btn);
             try {
                 page.structure.row.insertBefore(navlist, page.structure.main);
             } catch(e) {
@@ -6019,13 +6032,14 @@ let last_season_time;
      * profile library component
      */
     function bwaa_library() {
+        let library_controls = page.structure.main.querySelector('.library-controls');
+        bwaa_library_tabs(library_controls);
         bwaa_library_header();
-        bwaa_library_search();
+        bwaa_library_search(library_controls);
 
         let top_tracks = document.querySelectorAll('#top-tracks-section .chartlist .chartlist-row:not(.chartlist__placeholder-row, [data-bwaa="true"])');
 
-        if (top_tracks == null)
-            return;
+        if (!top_tracks) return;
 
         top_tracks.forEach((track) => {
             track.setAttribute('data-bwaa', 'true');
@@ -6034,7 +6048,7 @@ let last_season_time;
             let album_name = '-';
 
             let track_image = track.querySelector('.chartlist-image a');
-            if (track_image != null) {
+            if (track_image) {
                 album_link = track_image.getAttribute('href');
                 album_name = track_image.querySelector('img').getAttribute('alt');
             }
@@ -6054,24 +6068,48 @@ let last_season_time;
      * very small profile library header function to replace separators with '|'
      */
     function bwaa_library_header() {
-        let library_header = document.querySelector('.library-header:not([data-bwaa])');
-
-        if (library_header == null)
-            return;
-        library_header.setAttribute('data-bwaa', 'true');
+        let library_header = page.structure.main.querySelector('.library-header:not([data-bwaa])');
+        if (!library_header) return;
 
         library_header.innerHTML = library_header.innerHTML.replaceAll('·', '|');
     }
 
-    function bwaa_library_search() {
-        let library_search = document.body.querySelector('.library-search:not([data-bwaa])');
+    function bwaa_library_search(library_controls) {
+        let library_search = page.structure.container.querySelector('.library-search:not([data-bwaa])');
+        if (!library_search) return;
 
-        if (library_search == null)
-            return;
-        library_search.setAttribute('data-bwaa', 'true');
-
-        let library_controls = document.querySelector('.library-controls');
         library_controls.appendChild(library_search);
+    }
+
+    function bwaa_library_tabs(library_controls) {
+        let navlist_items = library_controls.querySelector('.navlist-items');
+
+        let loved_nav_btn = document.createElement('li');
+        loved_nav_btn.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--loved');
+        loved_nav_btn.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${root}user/${page.name}/library/loved">
+                ${trans[lang].profile.tabs.library.loved}
+            </a>
+        `);
+        navlist_items.appendChild(loved_nav_btn);
+
+        let tags_nav_btn = document.createElement('li');
+        tags_nav_btn.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--tags');
+        tags_nav_btn.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${root}user/${page.name}/tags">
+                ${trans[lang].profile.tabs.library.tags}
+            </a>
+        `);
+        navlist_items.appendChild(tags_nav_btn);
+
+        let playlists_nav_btn = document.createElement('li');
+        playlists_nav_btn.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--playlists');
+        playlists_nav_btn.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${root}user/${page.name}/library/playlists">
+                ${trans[lang].profile.tabs.library.playlists}
+            </a>
+        `);
+        navlist_items.appendChild(playlists_nav_btn);
     }
 
 
@@ -6121,6 +6159,42 @@ let last_season_time;
         `);
 
         page.structure.main.insertBefore(library_controls, page.structure.main.firstElementChild);
+
+        if (page.subpage == 'loved') {
+            let header = document.createElement('h3');
+            header.classList.add('text-18');
+            header.textContent = metadata;
+            library_controls.after(header);
+        }
+    }
+
+
+    function bwaa_friends_page(metadata) {
+        let tabs = document.createElement('div');
+        tabs.classList.add('friend-tabs');
+        tabs.innerHTML = (`
+            <nav class="navlist secondary-nav navlist--more" data-require="components/collapsing-nav-v2">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--following">
+                        <a class="secondary-nav-item-link ${(page.subpage == 'following') ? 'secondary-nav-item-link--active' : ''}" href="${root}user/${page.name}/following">
+                            ${trans[lang].profile.tabs.friends.following}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--followers">
+                        <a class="secondary-nav-item-link ${(page.subpage == 'followers') ? 'secondary-nav-item-link--active' : ''}" href="${root}user/${page.name}/followers">
+                            ${trans[lang].profile.tabs.friends.followers}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        `);
+
+        page.structure.main.insertBefore(tabs, page.structure.main.firstElementChild);
+
+        let header = document.createElement('h3');
+        header.classList.add('text-18');
+        header.textContent = metadata;
+        tabs.after(header);
     }
 
 
