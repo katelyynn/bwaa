@@ -987,11 +987,8 @@
             .secondary-nav-item--similar {
                 order: -24;
             }
-            .secondary-nav-item--following {
+            .secondary-nav-item--friends {
                 order: -23;
-            }
-            .secondary-nav-item--followers {
-                order: -22;
             }
             .secondary-nav-item--neighbours {
                 order: -21;
