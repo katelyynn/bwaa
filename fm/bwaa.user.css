@@ -324,7 +324,7 @@
                 }
 
                 .col-main {
-                    section {
+                    section:not(.gallery-section) {
                         margin: unset !important;
                         padding: 18px 0 !important;
                         border: unset !important;
@@ -4570,8 +4570,8 @@
         font-size: 18px;
         font-weight: bold;
 
-        [data-bwaa--page_style="2011"] &,
-        [data-bwaa--page_style="2010"] & {
+        [data-page-style="2011"] &,
+        [data-page-style="2010"] & {
             display: none;
         }
     }
@@ -4582,8 +4582,8 @@
 
     /* span the whole screen */
     .gallery-section {
-        [data-bwaa--page_style="2012"] &,
-        [data-bwaa--page_style="2013"] & {
+        [data-page-style="2012"] &,
+        [data-page-style="2013"] & {
             padding: 15px 0 !important;
             margin: -15px calc(-15px - 330px) 0 -15px !important;
             z-index: 100;
