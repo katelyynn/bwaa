@@ -5337,7 +5337,7 @@ let last_season_time;
                                     <input id="setting--page_style--2012" type="radio" value="2012" name="page_style" onchange="_notify_radio_change(this)">
                                     2012 <i class="subtext">(default)</i>
                                     <div class="alert">
-                                        The final iteration of the design from the years prior.
+                                        The final iteration of the design as it progressed before 2013.
                                     </div>
                                 </label>
                             </div>
@@ -5346,7 +5346,7 @@ let last_season_time;
                                     <input id="setting--page_style--2013" type="radio" value="2013" name="page_style" onchange="_notify_radio_change(this)">
                                     2013 <i class="subtext">(WIP)</i>
                                     <div class="alert">
-                                        A major redesign which looks very distinct compared to previous years. Generally larger text sizes and images, while being less cute as a result.
+                                        A major redesign focused on being more responsive and modern. Profile pages are not affected. Tabs are placed in the upper right instead of the left.
                                     </div>
                                 </label>
                             </div>
