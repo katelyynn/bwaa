@@ -1950,7 +1950,7 @@
                     padding: 3px 5px;
                 }
 
-                [data-page-style="2013"] & {
+                [data-page-style="2013"][data-page-type="artist"] & {
                     td {
                         font-size: 13px;
                         line-height: 18px;
