@@ -1690,12 +1690,12 @@ let last_season_time;
 
         let journal_nav_btn = document.createElement('li');
         journal_nav_btn.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--journal');
-
         journal_nav_btn.innerHTML = (`
             <a class="secondary-nav-item-link ${(page.subpage.startsWith('journal')) ? 'secondary-nav-item-link--active' : ''}" href="${root}user/${page.name}/journal">
                 Journal
             </a>
         `);
+        navlist_items.appendChild(journal_nav_btn);
 
         let loved_nav_btn = navlist_items.querySelector('.secondary-nav-item--loved');
         navlist_items.removeChild(loved_nav_btn);
@@ -1791,7 +1791,7 @@ let last_season_time;
 
 
             // user interactions
-            if (auth.name != page.name) {
+            if (!is_own_profile) {
                 let follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]').outerHTML;
 
                 let tasteometer = profile_header.querySelector('.tasteometer');
@@ -1929,8 +1929,7 @@ let last_season_time;
                 </div>
             `);
 
-            navlist_items.appendChild(journal_nav_btn);
-            if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
+            if (auth.name != sponsor_list.sponsor_account && page.name != sponsor_list.sponsor_account) {
                 page.structure.row.insertBefore(navlist, page.structure.main);
             }
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
@@ -2109,8 +2108,6 @@ let last_season_time;
 
                 header_user_data.page = trans[lang].profile.tabs.friends.name;
             }
-
-            navlist_items.appendChild(journal_nav_btn);
 
             let new_header = generic_subpage_header(
                 header_user_data.page,
