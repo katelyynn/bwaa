@@ -845,25 +845,31 @@
                 }
             }
 
-            &.user-page {
-                padding: 18px 15px;
-                border-bottom: 1px dotted var(--border);
-
-                .top-crumb {
-                    align-items: center;
-                    padding: unset;
-
-                    h1 {
-                        margin: unset !important;
-                        padding: unset;
-                        flex: 1;
-                    }
-
-                    border: none;
+            &[data-page-subpage="overview"] {
+                &[data-page-type="album"] {
+                    padding: 18px 15px;
                 }
 
-                &[data-page-type="artist"] {
-                    border: unset;
+                &[data-page-type="user"] {
+                    padding: 18px 15px;
+                    border-bottom: 1px dotted var(--border);
+
+                    .top-crumb {
+                        align-items: center;
+                        padding: unset;
+
+                        h1 {
+                            margin: unset !important;
+                            padding: unset;
+                            flex: 1;
+                        }
+
+                        border: none;
+                    }
+
+                    &[data-page-type="artist"] {
+                        border: unset;
+                    }
                 }
             }
         }

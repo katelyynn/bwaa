@@ -3893,6 +3893,7 @@ let last_season_time;
         new_header.classList.add('profile-header-subpage-section');
         new_header.setAttribute('id', 'bwaa-subpage-header');
         new_header.setAttribute('data-page-type', page.type);
+        new_header.setAttribute('data-page-subpage', page.subpage);
 
         if (settings.page_style == 2012) {
             new_header.innerHTML = (`
@@ -3908,7 +3909,6 @@ let last_season_time;
             `);
         } else {
             if ((page.type == 'user' || page.type == 'artist') && page.subpage == 'overview') {
-                new_header.classList.add('user-page');
                 new_header.innerHTML = (`
                     <div class="badge-info">
                         <div class="top-crumb">
