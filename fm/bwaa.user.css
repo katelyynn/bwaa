@@ -562,6 +562,7 @@
                                         margin: 0 -10px;
                                         padding: 8px 10px 12px;
                                         border-top: 1px dotted var(--border-3);
+                                        min-height: 82px;
 
                                         .shout-user {
                                             font: inherit;
