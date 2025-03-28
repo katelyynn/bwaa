@@ -1991,26 +1991,59 @@ let last_season_time;
 
                 let profile_actions = document.createElement('section');
                 profile_actions.classList.add('profile-actions-section');
-                profile_actions.innerHTML = (`
-                    <div class="options">
-                        ${(page.name != sponsor_list.sponsor_account) ? follow_button : ''}
-                        <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
-                        ${(page.name != sponsor_list.sponsor_account) ? `<a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>` : ''}
-                        ${(page.name == 'cutensilly') ? (`
-                        <a class="has-icon sponsor" onclick="_sponsor()">Sponsor me</a>
-                        `) : ''}
-                    </div>
-                    ${(page.name != sponsor_list.sponsor_account) ? (`
-                    <div class="tasteometer ${tasteometer_lvl}" data-taste="${tasteometer_lvl.replace('tasteometer-compat-', '')}">
-                        <p>Your musical compatibility with <strong>${page.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
-                        <div class="bar">
-                            <div class="fill" style="width: ${tasteometer_percent}"></div>
+
+                if (settings.page_style > 2007) {
+                    profile_actions.innerHTML = (`
+                        <div class="options">
+                            ${(page.name != sponsor_list.sponsor_account) ? follow_button : ''}
+                            <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
+                            ${(page.name != sponsor_list.sponsor_account) ? `<a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>` : ''}
+                            ${(page.name == 'cutensilly') ? (`
+                            <a class="has-icon sponsor" onclick="_sponsor()">Sponsor me</a>
+                            `) : ''}
                         </div>
-                        <p>${music_you_have_in_common}</p>
-                    </div>
-                    `) : ''}
-                `);
-                new_header.after(profile_actions);
+                        ${(page.name != sponsor_list.sponsor_account) ? (`
+                        <div class="tasteometer ${tasteometer_lvl}" data-taste="${tasteometer_lvl.replace('tasteometer-compat-', '')}">
+                            <p>Your musical compatibility with <strong>${page.name}</strong> is <strong>${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}</strong></p>
+                            <div class="bar">
+                                <div class="fill" style="width: ${tasteometer_percent}"></div>
+                            </div>
+                            <p>${music_you_have_in_common}</p>
+                        </div>
+                        `) : ''}
+                    `);
+                    new_header.after(profile_actions);
+                } else {
+                    profile_actions.innerHTML = (`
+                        <div class="options">
+                            ${(page.name != sponsor_list.sponsor_account) ? follow_button : ''}
+                            <a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">Send a message</a>
+                            ${(page.name != sponsor_list.sponsor_account) ? `<a class="has-icon leave-a-shout" href="${window.location.href}/shoutbox">Leave a shout</a>` : ''}
+                            ${(page.name == 'cutensilly') ? (`
+                            <a class="has-icon sponsor" onclick="_sponsor()">Sponsor me</a>
+                            `) : ''}
+                        </div>
+                    `);
+                    new_header.querySelector('.actions-legacy').innerHTML = profile_actions.innerHTML;
+
+                    let taste = document.createElement('section');
+                    taste.classList.add('taste-panel');
+                    taste.innerHTML = (`
+                        <div class="section-header">
+                            <strong>Taste-o-meter</strong>
+                        </div>
+                        <div class="section-info">
+                            <p>Your musical compatibility rating with <strong>${page.name}</strong> is:</p>
+                            <div class="rating" data-taste="${tasteometer_lvl.replace('tasteometer-compat-', '')}">
+                                ${trans[lang].profile.tasteometer[tasteometer_lvl.replace('tasteometer-compat-', '')]}
+                            </div>
+                            <strong class="light spacer-big">${music_you_have_in_common}</strong>
+                        </div>
+                    `);
+
+                    page.structure.right.appendChild(taste);
+                }
+
 
                 /*let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
                 follow_button2.setAttribute('onclick', '_update_follow_btn(this)');
@@ -2049,6 +2082,29 @@ let last_season_time;
 
             if (featured_item_wrapper != null)
                 bwaa_profile_featured_item(featured_item_wrapper);
+
+
+            // shouts
+            let shouts = page.structure.main.querySelector('#shoutbox');
+            if (shouts) {
+                let shouts_panel = document.createElement('section');
+                shouts_panel.classList.add('shouts-panel');
+                shouts_panel.innerHTML = (`
+                    <div class="section-header">
+                        <strong><a href="${root}user/${page.name}/shoutbox">
+                            ${page.name}’s Shoutbox
+                        </a></strong>
+                    </div>
+                `);
+
+                let info = document.createElement('div');
+                info.classList.add('section-info');
+                info.appendChild(shouts);
+
+                shouts_panel.appendChild(info);
+
+                page.structure.right.appendChild(shouts_panel);
+            }
 
 
 
@@ -2126,7 +2182,7 @@ let last_season_time;
             }
 
             let featured_item_section = page.structure.side.querySelector('.featured-item-section');
-            if (featured_item_section != null)
+            if (featured_item_section)
                 page.structure.side.insertBefore(recent_activity_section, featured_item_section);
             else
                 page.structure.side.firstElementChild.after(recent_activity_section);
@@ -4224,8 +4280,23 @@ let last_season_time;
             if (shout_name == null)
                 return;
 
-            if (settings.page_style < 2011)
+            if (settings.page_style > 2007 && settings.page_style < 2011)
                 shout_name.innerHTML = trans[lang].shouts.user_wrote.replace('{user}', shout_name.innerHTML);
+
+            if (settings.page_style < 2008) {
+                let avatar = shout.querySelector('.shout-user-avatar');
+                let link = shout.querySelector('.shout-user-avatar-link');
+                let name = shout.querySelector('.shout-user a');
+                let body = shout.querySelector('.shout-body');
+                let time = shout.querySelector('.shout-timestamp');
+
+                body.after(time);
+
+                name.innerHTML = `<strong>${name.textContent}</strong> said:`;
+
+                name.appendChild(avatar);
+                shout.removeChild(link);
+            }
 
             let shout_body = shout.querySelector('.shout-body p');
             shout_body.innerHTML = shout_body.innerHTML.replace('󠄼', '<span class="special">').replace('󠄛', '</span>');

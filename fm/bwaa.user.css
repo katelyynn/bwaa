@@ -232,6 +232,7 @@
             --background: #BCBEC0;
             --border: #DADADA;
             --border-2: #959595;
+            --border-3: #c2c2c2;
             --colour: #545454;
             --colour-middle: #969696;
         }
@@ -477,7 +478,7 @@
             .row {
                 background: var(--body);
                 border: 1px solid var(--border-2);
-                width: calc(100vw - (15px * 4) - (180px * 2));
+                width: calc(100vw - (15px * 5) - (180px * 2));
                 border-radius: 3px;
                 box-shadow: 3px 4px 4px 0px rgba(0,0,0,0.2);
             }
@@ -490,12 +491,151 @@
                 position: absolute;
                 top: calc(30px + 30px);
 
-                section {
+                & > section {
                     background: var(--body);
                     border: 1px solid var(--border-2);
                     width: 180px;
                     border-radius: 3px;
                     box-shadow: 3px 4px 4px 0px rgba(0,0,0,0.2);
+
+                    .section-header {
+                        height: 26px;
+                        display: flex;
+                        align-items: center;
+                        /*background: linear-gradient(180deg, rgba(234,156,168,1) 0%, rgba(215,75,89,1) 22.41379310344828%, rgba(208,31,60,1) 22.41379310344829%, rgba(208,31,60,1) 100%);*/
+                        background: linear-gradient(180deg, rgba(234,156,168,1) 0%, rgba(215,75,89,1) 50%, rgba(208,31,60,1) 50.0000001%, rgba(208,31,60,1) 100%);
+
+                        strong {
+                            flex: 1;
+                            margin-left: 9px;
+                            color: #fff;
+                            font-size: 11px;
+                            line-height: 1.16667em;
+
+                            a {
+                                font: inherit;
+                                text-decoration: none;
+                                background: none;
+                                color: inherit;
+                            }
+                        }
+                    }
+
+                    .section-info {
+                        padding: 6px 10px;
+                        font-size: 11px;
+                        line-height: 1.25;
+
+                        & > strong, & > p {
+                            margin: unset;
+                        }
+
+                        #shoutbox {
+                            .shoutbox-controls-wrapper,
+                            h2 {
+                                display: none;
+                            }
+
+                            .shout-list {
+                                margin-top: unset;
+
+                                .shout-list-item {
+                                    margin: unset;
+                                    padding: unset;
+
+                                    .shout {
+                                        margin: 0 -10px;
+                                        padding: 8px 10px 12px;
+                                        border-top: 1px dotted var(--border-3);
+
+                                        .shout-user {
+                                            font: inherit;
+                                            padding: unset;
+                                            margin: unset;
+                                            border: unset;
+
+                                            a {
+                                                color: var(--colour-middle);
+                                                background: none !important;
+                                                font: inherit;
+                                                text-decoration: none;
+
+                                                strong {
+                                                    color: #545454;
+                                                    text-decoration: underline;
+                                                }
+
+                                                &:hover strong {
+                                                    color: #353535;
+                                                }
+                                            }
+                                        }
+
+                                        .shout-user-avatar {
+                                            margin: unset;
+                                            float: right;
+                                            width: 25px;
+
+                                            .avatar-status-dot {
+                                                display: none;
+                                            }
+
+                                            img {
+                                                width: 25px;
+                                                height: 25px;
+                                                padding: unset;
+                                                border: unset;
+                                            }
+                                        }
+
+                                        .shout-body {
+                                            font: inherit;
+                                            color: inherit;
+                                            display: contents;
+                                        }
+
+                                        .shout-action {
+                                            a, button {
+                                                text-decoration: underline;
+                                                color: #545454 !important;
+
+                                                &:hover {
+                                                    background: #E5E8EE;
+                                                    color: #353535 !important;
+                                                    text-decoration: underline;
+                                                }
+                                            }
+                                        }
+
+                                        .shout-timestamp {
+                                            position: static;
+                                            text-decoration-style: dotted;
+                                            color: var(--colour-middle) !important;
+                                        }
+                                    }
+
+                                    .shout-list .shout {
+                                        padding-left: 20px;
+
+                                        .shout-list .shout {
+                                            padding-left: 30px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .spacer {
+                        margin-top: 6px;
+                    }
+                    .spacer-big {
+                        margin-top: calc(0.5em + 6px);
+                    }
+
+                    .light {
+                        color: var(--colour-middle);
+                    }
                 }
 
                 &.left-side {
@@ -919,9 +1059,6 @@
                     -webkit-box-orient: vertical;
                 }
 
-                .spacer {
-                    margin-top: 6px;
-                }
                 .stat {
                     strong {
                         color: var(--colour-middle);
