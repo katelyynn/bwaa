@@ -251,10 +251,10 @@ const trans = {
                 // in the browser console (CTRL + SHIFT + I)
                 // which, in english, returns "• scrobbling since 20 Jun 2022"
 
-                // copy this exactly but remove 'since 20 Jun 2022', leaving '• scrobbling ' (SPACE ON THE END IMPORTANT)
+                // copy this exactly but remove '20 Jun 2022', leaving '• scrobbling since ' (SPACE ON THE END IMPORTANT)
                 // obviously, apply to ur language
 
-                scrobbling_since_replace: '• scrobbling ',
+                scrobbling_since_replace: '• scrobbling since ',
 
                 //
 
@@ -1913,7 +1913,7 @@ let last_season_time;
                                     ${scrobble_flip(header_user_data.scrobbles).outerHTML} plays
                                 </div>
                                 <div class="since">
-                                    ${header_user_data.since.replace(trans[lang].profile.user_data.scrobbling_since_replace, '')}
+                                    since ${header_user_data.since.replace(trans[lang].profile.user_data.scrobbling_since_replace, '')}
                                 </div>
                             </div>
                         </div>
