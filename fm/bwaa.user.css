@@ -92,6 +92,7 @@
         --colour-middle-2: #696969;
         --colour-lower: #999;
         --text-link: #0187c5;
+        --header-text-white: #fff;
         --header-text-black: #000;
         --header-text: #D51007;
 
@@ -220,6 +221,12 @@
                 --border: #20384d;
                 --text-link: #75a2d6;
             }
+        }
+
+        [data-bwaa--page_style="2007"] & {
+            --background: #BCBEC0;
+            --border: #DADADA;
+            --border-2: #959595;
         }
     }
 
@@ -424,6 +431,63 @@
         &.halfpage {
             .col-main {
                 width: 785px;
+            }
+        }
+
+        &[data-page-style="2007"] {
+            background: unset !important;
+            border: unset;
+            left: unset;
+            padding: 0 calc((15px * 2) + 180px) !important;
+            width: 100vw !important;
+            min-width: 100vw !important;
+            max-width: 100vw !important;
+
+            .legacy-header {
+                color: var(--header-text-white);
+                font-size: 16px;
+                line-height: 22px;
+                font-weight: bold;
+                height: 30px;
+
+                display: flex;
+                align-items: center;
+
+                a {
+                    font: inherit;
+                    color: inherit;
+                    text-decoration: none;
+                }
+            }
+
+            .row {
+                background: var(--body);
+                border: 1px solid var(--border-2);
+                width: calc(100vw - (15px * 4) - (180px * 2));
+                border-radius: 3px;
+            }
+
+            & >.navlist {
+                margin: unset;
+            }
+
+            .float-side {
+                position: absolute;
+                top: calc(30px + 30px);
+
+                section {
+                    background: var(--body);
+                    border: 1px solid var(--border-2);
+                    width: 180px;
+                    border-radius: 3px;
+                }
+
+                &.left-side {
+                    left: 15px;
+                }
+                &.right-side {
+                    right: 15px;
+                }
             }
         }
     }
@@ -892,7 +956,7 @@
     }
 
     /* navlist */
-    .subpage > .navlist,
+    .subpage > .row > .navlist,
     .row > .navlist {
         position: absolute;
         top: -1px;
@@ -2416,6 +2480,13 @@
 
             & + p {
                 margin-top: -12px;
+            }
+
+            & + .more-link {
+                margin-top: -6px !important;
+            }
+            .more-link + & {
+                margin-top: 12px;
             }
         }
 
@@ -5094,6 +5165,12 @@
 
             &:last-child {
                 margin-bottom: unset;
+            }
+
+            &.disabled {
+                opacity: 0.6;
+                pointer-events: none;
+                display: none;
             }
         }
 

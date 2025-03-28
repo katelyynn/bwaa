@@ -28,11 +28,6 @@ let version = {
             name: 'Reveals work-in-progress design updates for settings interfaces',
             date: '2025-03-26',
             notice: 'will be released when ready >.<'
-        },
-        nav_2013: {
-            default: false,
-            name: 'Allows user to pick 2013 navigation',
-            date: '2025-03-26'
         }
     }
 }
@@ -1647,6 +1642,20 @@ let last_season_time;
             }
         }
 
+        if (settings.page_style < 2008) {
+            let left = document.createElement('div');
+            left.classList.add('float-side', 'left-side');
+
+            page.structure.left = left;
+            page.structure.container.appendChild(left);
+
+            let right = document.createElement('div');
+            right.classList.add('float-side', 'right-side');
+
+            page.structure.right = right;
+            page.structure.container.appendChild(right);
+        }
+
         console.info('bwaa - page structure checkup - finished');
         page.raw = JSON.stringify(page.structure);
         console.info(page);
@@ -1930,12 +1939,15 @@ let last_season_time;
             `);
 
             if (auth.name != sponsor_list.sponsor_account && page.name != sponsor_list.sponsor_account) {
-                page.structure.row.insertBefore(navlist, page.structure.main);
+                if (settings.page_style > 2007)
+                    page.structure.row.insertBefore(navlist, page.structure.main);
+                else
+                    page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
             }
             page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
             profile_header.style.setProperty('display', 'none');
 
-            if (settings.page_style == 2013) {
+            if (settings.page_style > 2012) {
                 let new_header = generic_subpage_header(
                     header_user_data.page,
                     'user',
@@ -1943,6 +1955,13 @@ let last_season_time;
                     ''
                 );
                 page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
+            } else if (settings.page_style < 2008) {
+                let new_header = legacy_subpage_header(
+                    header_user_data.page,
+                    'user',
+                    ''
+                );
+                page.structure.container.insertBefore(new_header, page.structure.container.firstElementChild);
             }
 
             // user type
@@ -2109,16 +2128,26 @@ let last_season_time;
                 header_user_data.page = trans[lang].profile.tabs.friends.name;
             }
 
-            let new_header = generic_subpage_header(
-                header_user_data.page,
-                'user'
-            );
-            try {
+            if (settings.page_style > 2007)
                 page.structure.row.insertBefore(navlist, page.structure.main);
-            } catch(e) {
-                page.structure.main.insertBefore(navlist, page.structure.main.firstElementChild)
+            else
+                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+
+            if (settings.page_style > 2007) {
+                let new_header = generic_subpage_header(
+                    header_user_data.page,
+                    'user'
+                );
+                page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
+            } else {
+                let new_header = legacy_subpage_header(
+                    header_user_data.page,
+                    'user',
+                    ''
+                );
+                page.structure.container.insertBefore(new_header, page.structure.container.firstElementChild);
             }
-            page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
+
             profile_header.style.setProperty('display', 'none');
 
             page.structure.container.classList.add('subpage');
@@ -2411,7 +2440,7 @@ let last_season_time;
                 listeners: artist_metadata[0].querySelector('abbr').getAttribute('title')
             }
 
-            if (settings.page_style == 2013) {
+            if (settings.page_style > 2012) {
                 let new_header = generic_subpage_header(
                     header_artist_data.page,
                     'artist'
@@ -2441,7 +2470,7 @@ let last_season_time;
             if (gallery_sidebar_photos_ems.length > 0) {
                 for (let i = 1; i < 5; i++) {
                     if (gallery_sidebar_photos_ems[i]) {
-                        if (i == 1 && settings.page_style == 2013) {
+                        if (i == 1 && settings.page_style > 2012) {
                             let image = gallery_sidebar_photos_ems[i].querySelector('img');
                             image.setAttribute('src', image.getAttribute('src').replace('/avatar170s/', '/avatar300s/'));
                         }
@@ -2556,7 +2585,7 @@ let last_season_time;
             let new_row;
             let new_main;
             let new_side;
-            if (settings.page_style == 2013) {
+            if (settings.page_style > 2012) {
                 new_row = document.createElement('div');
                 new_row.classList.add('row', 'lower-row');
 
@@ -2980,7 +3009,7 @@ let last_season_time;
                 add_artwork: add_artwork
             }
 
-            if (settings.page_style == 2013) {
+            if (settings.page_style > 2012) {
                 let image = page.structure.main.querySelector('.gallery-preview-image--0 img');
                 if (image)
                     image = image.getAttribute('src');
@@ -3192,7 +3221,7 @@ let last_season_time;
             let new_row;
             let new_main;
             let new_side;
-            if (settings.page_style == 2013) {
+            if (settings.page_style > 2012) {
                 new_row = document.createElement('div');
                 new_row.classList.add('row', 'lower-row');
 
@@ -3831,6 +3860,9 @@ let last_season_time;
      * @returns subpage header
      */
     function generic_subpage_header(header_title, link_type='home', direct_link='', avatar=page.avatar) {
+        if (settings.page_style < 2008)
+            return legacy_subpage_header(header_title, link_type, direct_link);
+
         // determines top text link
         //let link_field = `<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
         let link_field = `<a href="${root}">Home</a>`;
@@ -3847,7 +3879,7 @@ let last_season_time;
         else if (link_type == 'direct')
             link_field = `<a href="${direct_link}">${page.name}</a>`;
 
-        if (settings.page_style == 2013 && page.subpage == 'overview' && (page.type == 'album' || page.type == 'artist')) {
+        if (settings.page_style > 2012 && page.subpage == 'overview' && (page.type == 'album' || page.type == 'artist')) {
             link_field = `<a href="${root}music/${sanitise(page.sister)}">${page.sister}</a>`;
             header_title = page.name;
         }
@@ -3858,7 +3890,7 @@ let last_season_time;
         new_header.setAttribute('data-page-type', page.type);
         new_header.setAttribute('data-page-subpage', page.subpage);
 
-        if (settings.page_style == 2012) {
+        if (settings.page_style < 2013) {
             new_header.innerHTML = (`
                 ${(avatar != '') ? (`
                 <div class="badge-avatar">
@@ -3899,6 +3931,29 @@ let last_season_time;
         }
 
         return new_header;
+    }
+    function legacy_subpage_header(header_title, link_type='home', direct_link='') {
+        // determines top text link
+        //let link_field = `<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
+        let link_field = `<a href="${root}">Home</a>`;
+
+        // not a user
+        if (link_type == 'artist')
+            link_field = `<a href="${root}music/${sanitise(page.name)}">${page.name}</a>`;
+        else if (link_type == 'album')
+            link_field = `<a href="${root}music/${sanitise(page.sister)}">${page.sister}</a><div class="caret"></div><a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${page.name}</a>`;
+        else if (link_type == 'track')
+            link_field = `<a href="${root}music/${sanitise(page.sister)}">${page.sister}</a><div class="caret"></div><a href="${root}music/${sanitise(page.sister)}/_/${sanitise(page.name)}">${page.name}</a>`;
+        else if (link_type == 'user')
+            link_field = `<a href="${root}user/${page.name}">${page.name}</a>`;
+        else if (link_type == 'direct')
+            link_field = `<a href="${direct_link}">${page.name}</a>`;
+
+        let legacy_header = document.createElement('div');
+        legacy_header.classList.add('legacy-header');
+        legacy_header.innerHTML = link_field;
+
+        return legacy_header;
     }
 
 
@@ -4878,7 +4933,7 @@ let last_season_time;
             adaptive_skin.innerHTML = (`
                 <div class="container page-content bwaa-settings lastfm-settings subpage" data-page-style="${settings.page_style}">
                     <div class="row">
-                        ${(settings.page_style == 2013) ? (`
+                        ${(settings.page_style > 2012) ? (`
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
                                 <img src="${auth.avatar}" alt="${auth.name}">
@@ -5099,29 +5154,9 @@ let last_season_time;
                         </div>
                     </div>
                     <h2 class="tiny">Quick controls</h2>
-                    <fieldset>
-                        <legend>What era suits you best?</legend>
-                        <div class="form-group">
-                            <div class="radio-box">
-                                <label for="setting--setup_choose_era--2010">
-                                    <input id="setting--setup_choose_era--2010" type="radio" value="2010" name="setup_choose_era" onchange="_notify_radio_change(this)">
-                                    2010-2011 <i class="subtext">(WIP)</i>
-                                </label>
-                            </div>
-                            <div class="radio-box">
-                                <label for="setting--setup_choose_era--2012">
-                                    <input id="setting--setup_choose_era--2012" type="radio" value="2012" name="setup_choose_era" onchange="_notify_radio_change(this)">
-                                    2012 <i class="subtext">(default, most optimised)</i>
-                                </label>
-                            </div>
-                            <div class="radio-box">
-                                <label for="setting--setup_choose_era--2013">
-                                    <input id="setting--setup_choose_era--2013" type="radio" value="2013" name="setup_choose_era" onchange="_notify_radio_change(this)">
-                                    2013 <i class="subtext">(WIP)</i>
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
+                    <div class="more-link align-left">
+                        <a onclick="_change_settings_page('interface')">Choose your page style</a>
+                    </div>
                     <h2 class="tiny">Customise further</h2>
                     <fieldset>
                         <legend>${trans[lang].settings.seasonal.category}</legend>
@@ -5282,13 +5317,34 @@ let last_season_time;
                     <fieldset>
                         <legend>Page style</legend>
                         <div class="form-group">
-                            <div class="radio-box">
+                            <div class="radio-box ${settings.developer ? '' : 'disabled'}">
+                                <label for="setting--page_style--2007">
+                                    <input id="setting--page_style--2007" type="radio" value="2007" name="page_style" onchange="_notify_radio_change(this)">
+                                    2007 <i class="subtext">(WIP)</i>
+                                </label>
+                            </div>
+                            <div class="radio-box ${settings.developer ? '' : 'disabled'}">
+                                <label for="setting--page_style--2008">
+                                    <input id="setting--page_style--2008" type="radio" value="2008" name="page_style" onchange="_notify_radio_change(this)">
+                                    2008 <i class="subtext">(WIP)</i>
+                                    <div class="alert">
+                                        A major redesign that stayed similar at it's core from 2008 to 2012.
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="radio-box ${settings.developer ? '' : 'disabled'}">
+                                <label for="setting--page_style--2009">
+                                    <input id="setting--page_style--2009" type="radio" value="2009" name="page_style" onchange="_notify_radio_change(this)">
+                                    2009 <i class="subtext">(WIP)</i>
+                                </label>
+                            </div>
+                            <div class="radio-box ${settings.developer ? '' : 'disabled'}">
                                 <label for="setting--page_style--2010">
                                     <input id="setting--page_style--2010" type="radio" value="2010" name="page_style" onchange="_notify_radio_change(this)">
                                     2010 <i class="subtext">(WIP)</i>
                                 </label>
                             </div>
-                            <div class="radio-box">
+                            <div class="radio-box ${settings.developer ? '' : 'disabled'}">
                                 <label for="setting--page_style--2011">
                                     <input id="setting--page_style--2011" type="radio" value="2011" name="page_style" onchange="_notify_radio_change(this)">
                                     2011 <i class="subtext">(WIP)</i>
@@ -5303,12 +5359,21 @@ let last_season_time;
                                     </div>
                                 </label>
                             </div>
-                            <div class="radio-box">
+                            <div class="radio-box ${settings.developer ? '' : 'disabled'}">
                                 <label for="setting--page_style--2013">
                                     <input id="setting--page_style--2013" type="radio" value="2013" name="page_style" onchange="_notify_radio_change(this)">
                                     2013 <i class="subtext">(WIP)</i>
                                     <div class="alert">
                                         A major redesign focused on being more responsive and modern. Profile pages are not affected. Tabs are placed in the upper right instead of the left.
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="radio-box ${settings.developer ? '' : 'disabled'}">
+                                <label for="setting--page_style--2014">
+                                    <input id="setting--page_style--2014" type="radio" value="2014" name="page_style" onchange="_notify_radio_change(this)">
+                                    2014 <i class="subtext">(WIP)</i>
+                                    <div class="alert">
+                                        A continuation from the year prior which redesigns the header, footer, and adds glare to buttons. One year before the site would redesign to current day.
                                     </div>
                                 </label>
                             </div>
@@ -8033,7 +8098,7 @@ let last_season_time;
         adaptive_skin.innerHTML = (`
             <div class="container page-content bwaa-settings lastfm-settings subpage" data-page-style="${settings.page_style}">
                 <div class="row">
-                    ${(settings.page_style == 2013) ? (`
+                    ${(settings.page_style > 2012) ? (`
                         <section class="profile-header-subpage-section">
                             <div class="badge-avatar">
                                 <img src="${auth.avatar}" alt="${auth.name}">
