@@ -852,6 +852,7 @@
                     padding: 18px 15px;
                 }
 
+                &[data-page-type="artist"],
                 &[data-page-type="user"] {
                     padding: 18px 15px;
                     border-bottom: 1px dotted var(--border);
