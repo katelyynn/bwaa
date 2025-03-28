@@ -1704,13 +1704,13 @@ let last_season_time;
         let playlists_nav_btn = navlist_items.querySelector('.secondary-nav-item--playlists');
         navlist_items.removeChild(playlists_nav_btn);
 
-        let friends_nav_btn = navlist_items.querySelector('.secondary-nav-item--followers');
-        friends_nav_btn.classList.remove('secondary-nav-item--followers');
+        let friends_nav_btn = navlist_items.querySelector('.secondary-nav-item--following');
+        friends_nav_btn.classList.remove('secondary-nav-item--following');
         friends_nav_btn.classList.add('secondary-nav-item--friends');
         friends_nav_btn.querySelector('a').textContent = trans[lang].profile.tabs.friends.name;
 
-        let following_nav_btn = navlist_items.querySelector('.secondary-nav-item--following');
-        navlist_items.removeChild(following_nav_btn);
+        let followers_nav_btn = navlist_items.querySelector('.secondary-nav-item--followers');
+        navlist_items.removeChild(followers_nav_btn);
 
 
         let is_new_account = false;
