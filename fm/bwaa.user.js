@@ -2433,20 +2433,7 @@ let last_season_time;
             }
 
 
-            let tags_html = '';
-            let tags = document.body.querySelectorAll('.section-with-separator .catalogue-tags .tag a');
-            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
-
-            let index = 1;
-            tags.forEach((tag) => {
-                if (index == 1)
-                    tags_html = `${tags_html} <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
-                else
-                    tags_html = `${tags_html}, <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
-                index += 1;
-            });
-
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+            let tags_html = bwaa_page_tags('.section-with-separator .catalogue-tags .tag a');
 
 
             let gallery_sidebar_photos_ems = document.body.querySelectorAll('.col-sidebar .sidebar-image-list-item');
@@ -3010,20 +2997,7 @@ let last_season_time;
             }
 
 
-            let tags_html = '';
-            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
-            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
-
-            let index = 1;
-            tags.forEach((tag) => {
-                if (index == 1)
-                    tags_html = `${tags_html} <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
-                else
-                    tags_html = `${tags_html}, <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
-                index += 1;
-            });
-
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+            let tags_html = bwaa_page_tags('.buffer-3 .catalogue-tags .tag a');
 
 
             let new_header = document.createElement('section');
@@ -3105,7 +3079,9 @@ let last_season_time;
                             <strong>Running time</strong>
                             <p>${album_length}</p>
                         </div>
-                        ${tags_html}
+                        <div class="tags-2013">
+                            ${tags_html}
+                        </div>
                     </div>
                 `);
 
@@ -3478,20 +3454,7 @@ let last_season_time;
                 track_video = track_video_element.querySelector('.image-overlay-playlink-link').getAttribute('href').replace('https://www.youtube.com/watch?v=', '');
 
 
-            let tags_html = '';
-            let tags = document.body.querySelectorAll('.buffer-3 .catalogue-tags .tag a');
-            let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
-
-            let index = 1;
-            tags.forEach((tag) => {
-                if (index == 1)
-                    tags_html = `${tags_html} <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
-                else
-                    tags_html = `${tags_html}, <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
-                index += 1;
-            });
-
-            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+            let tags_html = bwaa_page_tags('.buffer-3 .catalogue-tags .tag a');
 
 
             let play_on_youtube = page.structure.row.querySelector('.play-this-track-playlink--youtube');
@@ -8468,5 +8431,35 @@ let last_season_time;
         `);
 
         page.structure.side.appendChild(correction);
+    }
+
+
+
+
+    function bwaa_page_tags(query) {
+        let tags_html = '';
+        let tags = document.body.querySelectorAll(query);
+        let tags_see_more = document.body.querySelector('.catalogue-tags .tags-view-all');
+
+        if (settings.page_style < 2013) {
+            tags.forEach((tag, index) => {
+                if (index == 0)
+                    tags_html = `${tags_html} <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+                else
+                    tags_html = `${tags_html}, <a href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+            });
+
+            tags_html = `${tags_html} <a class="see-more-tags" href="${(tags_see_more) ? tags_see_more.getAttribute('href') : ''}">${trans[lang].see_more}</a>`;
+        } else {
+            let tags_add = document.body.querySelector('.catalogue-tags .tags-add');
+
+            tags.forEach((tag) => {
+                tags_html = `${tags_html}<a class="tag-2013" href="${tag.getAttribute('href')}">${tag.textContent}</a>`;
+            });
+
+            tags_html = `${tags_html}${(tags_add) ? tags_add.outerHTML : ''}<div class="see-more"><a class="see-more-tags" href="${(tags_see_more) ? tags_see_more.getAttribute('href') : ''}">more tags</a></div>`;
+        }
+
+        return tags_html;
     }
 })();
