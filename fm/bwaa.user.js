@@ -4289,10 +4289,18 @@ let last_season_time;
                 let name = shout.querySelector('.shout-user a');
                 let body = shout.querySelector('.shout-body');
                 let time = shout.querySelector('.shout-timestamp');
+                let actions = shout.querySelector('.shout-actions');
+                let more = actions.querySelector('.shout-action-more');
 
+                let role;
+                let dot = avatar.querySelector('.avatar-status-dot');
+                if (dot)
+                    role = dot.classList[1].replace('avatar-status-dot--', 'user-type--');
+
+                name.after(actions);
                 body.after(time);
 
-                name.innerHTML = `<strong>${name.textContent}</strong> said:`;
+                name.innerHTML = `<strong class="${(role) ? role : ''}">${name.textContent}</strong> said:`;
 
                 name.appendChild(avatar);
                 shout.removeChild(link);
@@ -4303,17 +4311,12 @@ let last_season_time;
 
             let shout_actions = shout.querySelector('.shout-actions');
 
-            if (!settings.shouts_no_votes) {
+            if (!settings.shouts_no_votes && settings.page_style > 2007) {
                 let shout_reply = shout_actions.querySelector('.shout-action');
                 shout_reply.innerHTML = `${shout_reply.innerHTML} | `;
-
-                let vote_buttons = shout_actions.querySelectorAll('.vote-button');
-                vote_buttons.forEach((vote_button) => {
-                    vote_button.textContent = vote_button.textContent;
-                });
             }
 
-            if (settings.page_style < 2011)
+            if (settings.page_style > 2007 && settings.page_style < 2011)
                 shout_actions.innerHTML = `<a href="${root}user/${shout_name.textContent}">${trans[lang].shouts.view_profile}</a> | ${shout_actions.innerHTML}`;
         });
 

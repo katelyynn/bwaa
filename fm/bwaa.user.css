@@ -563,6 +563,29 @@
                                                 strong {
                                                     color: #545454;
                                                     text-decoration: underline;
+
+                                                    position: relative;
+                                                    padding-left: 14px;
+
+                                                    &:before {
+                                                        --width: 10px;
+                                                        --height: 10px;
+                                                        background: var(--icon-user);
+                                                        --top: 3px;
+                                                    }
+
+                                                    &.user-type--subscriber {
+                                                        &:before {
+                                                            background: var(--icon-subscriber);
+                                                        }
+                                                    }
+
+                                                    &.user-type--mod,
+                                                    &.user-type--staff {
+                                                        &:before {
+                                                            background: var(--icon-staff);
+                                                        }
+                                                    }
                                                 }
 
                                                 &:hover strong {
@@ -594,10 +617,34 @@
                                             display: contents;
                                         }
 
+                                        .shout-actions {
+                                            float: right;
+                                            clear: right;
+                                            margin-top: 9px;
+
+                                            display: flex;
+                                            text-align: right;
+                                        }
                                         .shout-action {
-                                            a, button {
-                                                text-decoration: underline;
+                                            .shout-reply {
+                                                float: right;
+                                                display: block;
+                                                width: 11px;
+                                                height: 9px;
+                                                text-indent: -9999px;
+                                                font-size: 0;
+                                                line-height: 0;
+                                                background: url('data:image/gif;base64,R0lGODlhCwAJAKIAANfX1////4yMjHBwcPHx8QAAAAAAAAAAACH5BAAAAAAALAAAAAALAAkAAAMiKLo8GjCG4YIgGA9QydUEJwTYNWAiCaJdlqVALMcOZd9DAgA7') !important;
+                                                margin-right: 2px;
+                                            }
+
+                                            button {
                                                 color: #545454 !important;
+
+                                                &.vote-button--voted {
+                                                    background: #E5E8EE;
+                                                    text-decoration: underline;
+                                                }
 
                                                 &:hover {
                                                     background: #E5E8EE;
@@ -605,6 +652,22 @@
                                                     text-decoration: underline;
                                                 }
                                             }
+                                        }
+
+                                        .shout-more-actions {
+                                            top: unset;
+                                            bottom: 12px;
+                                            right: 0;
+                                            margin: unset;
+                                            background-image: var(--cdn-flatness-sprites-21-icons) !important;
+                                            background-position: 0 -500px;
+
+                                            width: 10px;
+                                            height: 10px;
+                                        }
+
+                                        &:not(:hover, :focus-within) .shout-action-more {
+                                            display: none;
                                         }
 
                                         .shout-timestamp {
@@ -2687,6 +2750,7 @@
     }
 
     /* icons */
+    .shout-user strong:before,
     .user-types-legacy .user-type:before,
     .tags-add:before,
     .section-settings-toggle:before, .share-button-profile:after,
