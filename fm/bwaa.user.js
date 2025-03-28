@@ -1604,7 +1604,7 @@ let last_season_time;
         page.structure.container.setAttribute('data-page-style', settings.page_style);
 
         let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
-        if (other_container != null)
+        if (other_container)
             other_container.style.setProperty('display', 'none');
 
         if (page.structure.row == null || !document.body.contains(page.structure.row)) {
@@ -2143,10 +2143,8 @@ let last_season_time;
             if (page.subpage.startsWith('listening-report')) {
                 // recover nav
                 let nav = document.body.querySelector('.user-dashboard-controls');
-                if (nav != null) {
-                    let subpage_header = page.structure.main.querySelector('.profile-header-subpage-section');
-                    subpage_header.after(nav);
-                }
+                if (nav)
+                    page.structure.main.insertBefore(nav, page.structure.main.firstElementChild);
 
                 /*let other_content = document.body.querySelectorAll('.page-content[style] .listening-report-row');
                 other_content.forEach((content) => {
@@ -2154,6 +2152,7 @@ let last_season_time;
                 });*/
 
                 let other_content = document.body.querySelector('.page-content[style]');
+                other_content.setAttribute('data-page-style', settings.page_style);
                 other_content.removeAttribute('style');
             }
         }
