@@ -234,6 +234,7 @@
             --border-2: #959595;
             --border-3: #c2c2c2;
             --colour: #545454;
+            --colour-upper: #777;
             --colour-middle: #969696;
         }
     }
@@ -490,6 +491,7 @@
             .float-side {
                 position: absolute;
                 top: calc(30px + 30px);
+                line-height: 1.2727273;
 
                 & > section {
                     background: var(--body);
@@ -553,6 +555,16 @@
 
                             .shout-reply-ui {
                                 margin: unset;
+                            }
+
+                            .form-row-help-text {
+                                margin: unset !important;
+                                position: static;
+                                font: inherit !important;
+                                font-size: 11px !important;
+                                color: var(--colour-upper);
+                                background: unset;
+                                padding: unset !important;
                             }
 
                             .shout-list {
