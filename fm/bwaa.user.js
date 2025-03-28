@@ -1798,6 +1798,176 @@ let last_season_time;
                 });
             }
 
+            // about me
+            let about_me = page.structure.side.querySelector('.about-me-sidebar p');
+
+            if (about_me)
+                about_me.innerHTML = parse_markdown_text(about_me.textContent);
+
+            let is_cute = (page.name == 'cutensilly');
+            is_cute = false;
+
+            if (settings.varied_avatar_shapes)
+                page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/arXL/');
+
+            let badges = load_badges(page.name, user_type).toReversed();
+            let badges_html = document.createElement('div');
+
+            if (badges) {
+                badges.forEach((this_badge, index) => {
+                    let badge = document.createElement('div');
+                    badge.classList.add('user-type', `user-type--${this_badge.type}`, `user-type-for--${page.name}`, `user-type-reason--${this_badge.reason}`);
+                    badge.innerHTML = `<a>${this_badge.name}</a>`;
+                    badges_html.appendChild(badge);
+
+                    if (badges.length > 1) {
+                        if (index == 0) {
+                            let extra = document.createElement('div');
+                            extra.classList.add('user-type', 'user-type-extras');
+                            extra.innerHTML = `<a>+${badges.length - 1}</a>`;
+
+                            badges_html.appendChild(extra);
+                        } else {
+                            badge.classList.add('user-type-overflow');
+                        }
+                    }
+
+                    if (this_badge.type == 'sponsor')
+                        badge.setAttribute('onclick', '_sponsor()');
+                });
+            }
+
+            if (auth.name != sponsor_list.sponsor_account && page.name != sponsor_list.sponsor_account) {
+                if (settings.page_style > 2007)
+                    page.structure.row.insertBefore(navlist, page.structure.main);
+                else
+                    page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+            }
+            profile_header.style.setProperty('display', 'none');
+
+            if (settings.page_style > 2012) {
+                let new_header = generic_subpage_header(
+                    header_user_data.page,
+                    'user',
+                    '',
+                    ''
+                );
+                page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
+            } else if (settings.page_style < 2008) {
+                let new_header = legacy_subpage_header(
+                    header_user_data.page,
+                    'user',
+                    ''
+                );
+                page.structure.container.insertBefore(new_header, page.structure.container.firstElementChild);
+            }
+
+            // user type
+            if (is_cute) {
+                let user_type_banner = document.createElement('div');
+                user_type_banner.classList.add('user-type-banner', `user-type--cute`);
+                user_type_banner.textContent = 'bwaa creator';
+                page.structure.row.insertBefore(user_type_banner, page.structure.main);
+            }
+
+
+            // main user header
+            // this is on top of the actions, but appending is backwards
+            let new_header = document.createElement('section');
+            new_header.classList.add('profile-header-section');
+            new_header.setAttribute('data-page-style', settings.page_style);
+
+            if (settings.page_style > 2007) {
+                new_header.innerHTML = (`
+                    <div class="badge-avatar">
+                        ${(!is_new_account) ? (`
+                            <img src="${page.avatar}" alt="${page.name}">
+                        `) : (`
+                            <a href="${root}settings">
+                                <img src="${page.avatar}" alt="${page.name}">
+                            </a>
+                        `)}
+                        <div class="user-types">${badges_html.innerHTML}</div>
+                    </div>
+
+                    <div class="badge-info">
+                        ${(settings.page_style < 2013) ? `<h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>` : ''}
+                        ${(page.name != sponsor_list.sponsor_account) ? (`
+                        <div class="user-info" data-page-style=${settings.page_style}>
+                            <div class="top">
+                                <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
+                            </div>
+                            ${(auth != page.name) ? `
+                            <div class="bottom user-last-seen">
+                                ${trans[lang].profile.last_seen.name.replace('{time}', last_seen)}
+                            </div>
+                            ` : `
+                            <div class="bottom edit-profile-details">
+                                <a href="${root}settings">${trans[lang].profile.edit.link}</a>
+                            </div>
+                            `}
+                        </div>
+                        <div class="user-data">
+                            <div class="user-plays">
+                                <div class="count">
+                                    ${scrobble_flip(header_user_data.scrobbles).outerHTML} plays
+                                </div>
+                                <div class="since">
+                                    ${header_user_data.since.replace(trans[lang].profile.user_data.scrobbling_since_replace, '')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-activity">
+                            <a href="${header_user_data.loved_tracks.getAttribute('href')}">${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${window.location.href}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
+                        </div>
+                        `) : (`
+                        <div class="alert alert-info">
+                            This is a special bwaa account used for managing sponsors.
+                        </div>
+                        `)}
+                    </div>
+                `);
+
+                page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
+            } else {
+                new_header.innerHTML = (`
+                    <div class="avatar-legacy">
+                        ${(!is_new_account) ? (`
+                        <a href="${window.location.href}">
+                            <img src="${page.avatar}" alt="${page.name}">
+                        </a>
+                        `) : (`
+                            <a href="${root}settings">
+                                <img src="${page.avatar}" alt="${page.name}">
+                            </a>
+                        `)}
+                    </div>
+                    <div class="actions-legacy"></div>
+                    <div class="info-legacy">
+                        <strong class="realname">${header_user_data.display_name}</strong>
+                        <div class="user-types-legacy">${badges_html.innerHTML}</div>
+                        <div class="stat spacer">
+                            <strong>Registered:</strong> ${header_user_data.since.replace(trans[lang].profile.user_data.scrobbling_since_replace, '')}
+                        </div>
+                        <div class="stat">
+                            <strong>Last seen</strong> ${last_seen}
+                        </div>
+                        <div class="stat spacer">
+                            <strong>Artists played:</strong> ${header_user_data.artists.textContent}
+                        </div>
+                        <div class="stat">
+                            <strong>Scrobbles:</strong> ${header_user_data.scrobbles.textContent}
+                        </div>
+                        ${(about_me) ? (`
+                        <div class="bio spacer">
+                            ${about_me.innerHTML}
+                        </div>
+                        `) : ''}
+                    </div>
+                `);
+
+                page.structure.left.appendChild(new_header);
+            }
 
             // user interactions
             if (!is_own_profile) {
@@ -1840,7 +2010,7 @@ let last_season_time;
                     </div>
                     `) : ''}
                 `);
-                page.structure.main.insertBefore(profile_actions, page.structure.main.firstChild);
+                new_header.after(profile_actions);
 
                 /*let follow_button2 = document.body.querySelector('.profile-actions-section .header-follower-btn');
                 follow_button2.setAttribute('onclick', '_update_follow_btn(this)');
@@ -1849,127 +2019,6 @@ let last_season_time;
                     follow_button2.textContent = 'You are friends';
                 else
                     follow_button2.textContent = 'Add as friend';*/
-            }
-
-            let is_cute = (page.name == 'cutensilly');
-            is_cute = false;
-
-            if (settings.varied_avatar_shapes)
-                page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/arXL/');
-
-            let badges = load_badges(page.name, user_type).toReversed();
-            let badges_html = document.createElement('div');
-
-            if (badges) {
-                badges.forEach((this_badge, index) => {
-                    let badge = document.createElement('div');
-                    badge.classList.add('user-type', `user-type--${this_badge.type}`, `user-type-for--${page.name}`, `user-type-reason--${this_badge.reason}`);
-                    badge.innerHTML = `<a>${this_badge.name}</a>`;
-                    badges_html.appendChild(badge);
-
-                    if (badges.length > 1) {
-                        if (index == 0) {
-                            let extra = document.createElement('div');
-                            extra.classList.add('user-type', 'user-type-extras');
-                            extra.innerHTML = `<a>+${badges.length - 1}</a>`;
-
-                            badges_html.appendChild(extra);
-                        } else {
-                            badge.classList.add('user-type-overflow');
-                        }
-                    }
-
-                    if (this_badge.type == 'sponsor')
-                        badge.setAttribute('onclick', '_sponsor()');
-                });
-            }
-
-            // main user header
-            // this is on top of the actions, but appending is backwards
-            let new_header = document.createElement('section');
-            new_header.classList.add('profile-header-section');
-            new_header.innerHTML = (`
-                <div class="badge-avatar">
-                    ${(!is_new_account) ? (`
-                        <img src="${page.avatar}" alt="${page.name}">
-                    `) : (`
-                        <a href="${root}settings">
-                            <img src="${page.avatar}" alt="${page.name}">
-                        </a>
-                    `)}
-                    <div class="user-types">${badges_html.innerHTML}</div>
-                </div>
-
-                <div class="badge-info">
-                    ${(settings.page_style < 2013) ? `<h1 data-bwaa--is-cute="${is_cute}">${page.name}</h1>` : ''}
-                    ${(page.name != sponsor_list.sponsor_account) ? (`
-                    <div class="user-info" data-page-style=${settings.page_style}>
-                        <div class="top">
-                            <strong>${header_user_data.display_name}</strong>${(user_follows_you) ? trans[lang].profile.follows_you.name : ''}
-                        </div>
-                        ${(auth != page.name) ? `
-                        <div class="bottom user-last-seen">
-                            ${trans[lang].profile.last_seen.name.replace('{time}', last_seen)}
-                        </div>
-                        ` : `
-                        <div class="bottom edit-profile-details">
-                            <a href="${root}settings">${trans[lang].profile.edit.link}</a>
-                        </div>
-                        `}
-                    </div>
-                    <div class="user-data">
-                        <div class="user-plays">
-                            <div class="count">
-                                ${scrobble_flip(header_user_data.scrobbles).outerHTML} plays
-                            </div>
-                            <div class="since">
-                                ${header_user_data.since.replace(trans[lang].profile.user_data.scrobbling_since_replace, '')}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="user-activity">
-                        <a href="${header_user_data.loved_tracks.getAttribute('href')}">${trans[lang].profile.user_data.loved_tracks.replace('{count}', header_user_data.loved_tracks.textContent)}</a> | <a href="${header_user_data.artists.getAttribute('href')}">${trans[lang].profile.user_data.artists.replace('{count}', header_user_data.artists.textContent)}</a> | <a href="${window.location.href}/shoutbox">${trans[lang].profile.user_data.shouts}</a>
-                    </div>
-                    `) : (`
-                    <div class="alert alert-info">
-                        This is a special bwaa account used for managing sponsors.
-                    </div>
-                    `)}
-                </div>
-            `);
-
-            if (auth.name != sponsor_list.sponsor_account && page.name != sponsor_list.sponsor_account) {
-                if (settings.page_style > 2007)
-                    page.structure.row.insertBefore(navlist, page.structure.main);
-                else
-                    page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
-            }
-            page.structure.main.insertBefore(new_header, page.structure.main.firstElementChild);
-            profile_header.style.setProperty('display', 'none');
-
-            if (settings.page_style > 2012) {
-                let new_header = generic_subpage_header(
-                    header_user_data.page,
-                    'user',
-                    '',
-                    ''
-                );
-                page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
-            } else if (settings.page_style < 2008) {
-                let new_header = legacy_subpage_header(
-                    header_user_data.page,
-                    'user',
-                    ''
-                );
-                page.structure.container.insertBefore(new_header, page.structure.container.firstElementChild);
-            }
-
-            // user type
-            if (is_cute) {
-                let user_type_banner = document.createElement('div');
-                user_type_banner.classList.add('user-type-banner', `user-type--cute`);
-                user_type_banner.textContent = 'bwaa creator';
-                page.structure.row.insertBefore(user_type_banner, page.structure.main);
             }
 
 
@@ -1991,15 +2040,6 @@ let last_season_time;
                     <div class="date">${date}</div>
                 `);
             });
-
-
-
-
-            // about me
-            let about_me = page.structure.side.querySelector('.about-me-sidebar p');
-
-            if (about_me != null)
-                about_me.innerHTML = parse_markdown_text(about_me.textContent);
 
 
 
