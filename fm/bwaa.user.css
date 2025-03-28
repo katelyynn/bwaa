@@ -479,6 +479,7 @@
                 border: 1px solid var(--border-2);
                 width: calc(100vw - (15px * 4) - (180px * 2));
                 border-radius: 3px;
+                box-shadow: 3px 4px 4px 0px rgba(0,0,0,0.2);
             }
 
             & >.navlist {
@@ -494,6 +495,7 @@
                     border: 1px solid var(--border-2);
                     width: 180px;
                     border-radius: 3px;
+                    box-shadow: 3px 4px 4px 0px rgba(0,0,0,0.2);
                 }
 
                 &.left-side {
