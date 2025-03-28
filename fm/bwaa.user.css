@@ -551,6 +551,10 @@
                                 }
                             }
 
+                            .shout-reply-ui {
+                                margin: unset;
+                            }
+
                             .shout-list {
                                 margin-top: unset;
 
