@@ -4377,7 +4377,7 @@ let last_season_time;
             view_all_shouts.classList = 'open-more-legacy shout-popup';
             let link = view_all_shouts.querySelector('a');
 
-            link.setAttribute('onclick', `open('${link.getAttribute('href')}', '_blank', 'popup=true,width=223,height=466')`);
+            link.setAttribute('onclick', `open('${link.getAttribute('href')}', '_blank', 'popup=true,width=228,height=466')`);
             link.removeAttribute('href');
             link.textContent = 'View in popup';
         }
