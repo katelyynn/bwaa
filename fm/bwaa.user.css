@@ -485,6 +485,10 @@
                 padding: 15px !important;
                 .right-side {
                     position: static;
+
+                    .pagination {
+                        width: unset;
+                    }
                 }
             }
 
