@@ -526,6 +526,79 @@
 
             & >.navlist {
                 margin: unset;
+                box-shadow: unset;
+
+                .secondary-nav-item--shoutbox {
+                    display: none;
+                }
+
+                .navlist-items {
+                    display: flex;
+                    overflow: unset;
+                }
+
+                .navlist-item {
+                    height: 30px;
+                    margin: unset;
+
+                    a {
+                        padding: 0 11px;
+                        height: 30px;
+                        text-decoration: none !important;
+
+                        display: flex;
+                        align-items: center;
+
+                        border: 1px solid var(--border-2);
+                        border-left: unset;
+                        border-bottom: unset;
+                        border-top-right-radius: 3px;
+
+                        position: relative;
+
+                        /* todo: replace as this gradient changes if width is higher */
+                        background: linear-gradient(90deg, rgba(190,190,190,1) 0%, rgba(240,240,240,1) 10%);
+
+                        &.secondary-nav-item-link--active {
+                            background: var(--body) !important;
+                            border-left: 1px solid var(--border-2) !important;
+                            border-top-left-radius: 3px !important;
+                            margin-left: -1px;
+
+                            &:before {
+                                content: '';
+                                position: absolute;
+                                height: 2px;
+                                background: var(--body);
+                                display: block;
+                                bottom: -2px;
+                                left: -1px;
+                                right: 0;
+                                z-index: 100;
+                            }
+                        }
+
+                        &:after {
+                            display: none;
+                        }
+                    }
+
+                    &:first-child {
+                        a {
+                            background: rgba(240,240,240,1);
+                            border-left: 1px solid var(--border-2);
+                            border-top-left-radius: 3px;
+                        }
+
+                        .secondary-nav-item-link--active {
+                            margin: unset;
+
+                            &:before {
+                                border-left: 1px solid var(--border-2);
+                            }
+                        }
+                    }
+                }
             }
 
             .float-side {
@@ -947,21 +1020,7 @@
                         background: var(--user-type-pink) !important;
                     }
 
-                    .user-type--loader & {
-                        --hue-over: 90;
-                        --sat-over: 1.15;
-                        --lit-over: 0.8;
-                    }
-                    .user-type--cosmic & {
-                        --hue-over: 46;
-                        --sat-over: 1.2;
-                        --lit-over: 0.98;
-                    }
-                    .user-type--shell & {
-                        --hue-over: 232;
-                        --sat-over: 0.7;
-                        --lit-over: 0.8;
-                    }
+
 
                     .user-type-extras & {
                         box-shadow: inset 0 0 0 1px var(--border);
@@ -971,37 +1030,8 @@
                 }
 
                 &.user-type--cat {
-                    &.user-type-for--boba2814 a {
-                        --hue-over: 206;
-                        --sat-over: 1;
-                        --lit-over: 1.1;
-                    }
                     &.user-type-for--bIeak a {
-                        --hue-over: 0;
-                        --sat-over: 0;
-                        --lit-over: 1.5;
-
                         color: var(--colour) !important;
-                    }
-                    &.user-type-for--iwas15with100k a {
-                        --hue-over: 333;
-                        --sat-over: 1;
-                        --lit-over: 1;
-                    }
-                    &.user-type-for--aoivee a {
-                        --hue-over: 110;
-                        --sat-over: 1;
-                        --lit-over: 1;
-                    }
-                    &.user-type-for--Serprety a {
-                        --hue-over: 255;
-                        --sat-over: 1;
-                        --lit-over: 1;
-                    }
-                    &.user-type-for--RazzBX a {
-                        --hue-over: 245;
-                        --sat-over: 1;
-                        --lit-over: 1;
                     }
                 }
             }
@@ -8348,6 +8378,60 @@
                     --top: 5px;
                     background: url('data:image/gif;base64,R0lGODlhBwAHAKIFAJWVlerq6v///3h4eLm5uQAAAAAAAAAAACH5BAEAAAUALAAAAAAHAAcAAAMUSLpD8q+JQIOsVs3BixtFCHRhkQAAOw==');
                 }
+            }
+        }
+    }
+
+
+    .user-type {
+        a {
+            .user-type--loader & {
+                --hue-over: 90;
+                --sat-over: 1.15;
+                --lit-over: 0.8;
+            }
+            .user-type--cosmic & {
+                --hue-over: 46;
+                --sat-over: 1.2;
+                --lit-over: 0.98;
+            }
+            .user-type--shell & {
+                --hue-over: 232;
+                --sat-over: 0.7;
+                --lit-over: 0.8;
+            }
+        }
+
+        &.user-type--cat {
+            &.user-type-for--boba2814 a {
+                --hue-over: 206;
+                --sat-over: 1;
+                --lit-over: 1.1;
+            }
+            &.user-type-for--bIeak a {
+                --hue-over: 0;
+                --sat-over: 0;
+                --lit-over: 1.5;
+            }
+            &.user-type-for--iwas15with100k a {
+                --hue-over: 333;
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+            &.user-type-for--aoivee a {
+                --hue-over: 110;
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+            &.user-type-for--Serprety a {
+                --hue-over: 255;
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+            &.user-type-for--RazzBX a {
+                --hue-over: 245;
+                --sat-over: 1;
+                --lit-over: 1;
             }
         }
     }
