@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    http://last.fm/
-// @version      2025.0316
+// @version      2025.0329
 // @description  bwaaaaaaa
 // @author       kate
 // @match        https://www.last.fm/*
@@ -19,12 +19,12 @@
 console.info('bwaa - beginning to load');
 
 let version = {
-    build: '2025.0316',
+    build: '2025.0329',
     sku: 'beret',
     year: 2025,
     flags: {
         claire: {
-            default: false,
+            default: true,
             name: 'Reveals work-in-progress design updates for settings interfaces',
             date: '2025-03-26',
             notice: 'will be released when ready >.<'
@@ -1412,6 +1412,16 @@ let last_season_time;
 
     // header
     function bwaa_load_header() {
+        if (page.subpage == 'shoutbox_overview' && settings.page_style < 2008) {
+            let masthead = document.body.querySelector('.masthead');
+            masthead.classList.add('hide');
+
+            let main_content = document.body.querySelector('.main-content');
+            main_content.classList.add('mini');
+
+            return;
+        }
+
         let auth_link = document.querySelector('a.auth-link');
         let inner = document.body.querySelector('.masthead-inner-wrap');
 
@@ -2084,26 +2094,33 @@ let last_season_time;
                 bwaa_profile_featured_item(featured_item_wrapper);
 
 
-            // shouts
-            let shouts = page.structure.main.querySelector('#shoutbox');
-            if (shouts) {
-                let shouts_panel = document.createElement('section');
-                shouts_panel.classList.add('shouts-panel');
-                shouts_panel.innerHTML = (`
-                    <div class="section-header">
-                        <strong><a href="${root}user/${page.name}/shoutbox">
-                            ${page.name}’s Shoutbox
-                        </a></strong>
-                    </div>
-                `);
+            if (settings.page_style < 2008) {
+                // shouts
+                let shouts = page.structure.main.querySelector('#shoutbox');
+                if (shouts) {
+                    let shouts_panel = document.createElement('section');
+                    shouts_panel.classList.add('shouts-panel');
+                    shouts_panel.innerHTML = (`
+                        <div class="section-header">
+                            <strong><a href="${root}user/${page.name}/shoutbox">
+                                ${page.name}’s Shoutbox
+                            </a></strong>
+                        </div>
+                    `);
 
-                let info = document.createElement('div');
-                info.classList.add('section-info');
-                info.appendChild(shouts);
+                    let info = document.createElement('div');
+                    info.classList.add('section-info');
+                    info.appendChild(shouts);
 
-                shouts_panel.appendChild(info);
+                    shouts_panel.appendChild(info);
 
-                page.structure.right.appendChild(shouts_panel);
+                    page.structure.right.appendChild(shouts_panel);
+                }
+
+                // fix recent tracks having border
+                let featured_track_mobile = page.structure.main.querySelector('.profile-mobile-featured-track');
+                if (featured_track_mobile)
+                    page.structure.main.removeChild(featured_track_mobile);
             }
 
 
@@ -2279,6 +2296,30 @@ let last_season_time;
                 let other_content = document.body.querySelector('.page-content[style]');
                 other_content.setAttribute('data-page-style', settings.page_style);
                 other_content.removeAttribute('style');
+            }
+
+            if (settings.page_style < 2008 && page.subpage == 'shoutbox_overview') {
+                // shouts
+                let shouts = page.structure.main.querySelector('#shoutbox');
+                if (shouts) {
+                    let shouts_panel = document.createElement('section');
+                    shouts_panel.classList.add('shouts-panel');
+                    shouts_panel.innerHTML = (`
+                        <div class="section-header">
+                            <strong><a href="${root}user/${page.name}/shoutbox">
+                                ${page.name}’s Shoutbox
+                            </a></strong>
+                        </div>
+                    `);
+
+                    let info = document.createElement('div');
+                    info.classList.add('section-info');
+                    info.appendChild(shouts);
+
+                    shouts_panel.appendChild(info);
+
+                    page.structure.right.appendChild(shouts_panel);
+                }
             }
         }
     }
@@ -4045,6 +4086,9 @@ let last_season_time;
         else if (link_type == 'direct')
             link_field = `<a href="${direct_link}">${page.name}</a>`;
 
+        if (page.subpage == 'overview' && link_type == 'user')
+            link_field = page.name;
+
         let legacy_header = document.createElement('div');
         legacy_header.classList.add('legacy-header');
         legacy_header.innerHTML = link_field;
@@ -4054,11 +4098,15 @@ let last_season_time;
 
 
     function sanitise(text) {
+        if (!text) return;
+
         return encodeURI(text
         .replaceAll(' ', '+')
         .replaceAll('/', '%2F'));
     }
     function sanitise_text(text) {
+        if (!text) return;
+
         return text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -4067,6 +4115,8 @@ let last_season_time;
         .replace(/'/g, '&#039;');
     }
     function desanitise(text) {
+        if (!text) return;
+
         return decodeURI(text
         .replaceAll('+', ' ')
         .replaceAll('%2F', '/'));
@@ -4319,6 +4369,18 @@ let last_season_time;
             if (settings.page_style > 2007 && settings.page_style < 2011)
                 shout_actions.innerHTML = `<a href="${root}user/${shout_name.textContent}">${trans[lang].shouts.view_profile}</a> | ${shout_actions.innerHTML}`;
         });
+
+        if (!shouts) return;
+
+        let view_all_shouts = document.body.querySelector('.shout-list + .more-link-fullwidth-right');
+        if (view_all_shouts) {
+            view_all_shouts.classList = 'open-more-legacy shout-popup';
+            let link = view_all_shouts.querySelector('a');
+
+            link.setAttribute('onclick', `open('${link.getAttribute('href')}', '_blank', 'popup=true,width=223,height=466')`);
+            link.removeAttribute('href');
+            link.textContent = 'View in popup';
+        }
 
         if (!settings.varied_avatar_shapes)
             return;

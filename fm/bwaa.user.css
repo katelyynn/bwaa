@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bwaa (dev)
 @namespace      github.com/katelyynn/bwaa
-@version        2025.0316
+@version        2025.0329
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.css
@@ -9,7 +9,7 @@
 
 @-moz-document domain("last.fm") {
     :root {
-        --version-build: '2025.0316';
+        --version-build: '2025.0329';
     }
 
     :root {
@@ -236,6 +236,8 @@
             --colour: #545454;
             --colour-upper: #777;
             --colour-middle: #969696;
+
+            --header-text: #D01F3C;
         }
     }
 
@@ -283,6 +285,7 @@
     .main-content {
         padding-top: calc(70px + 8px) !important;
 
+        &.mini,
         [data-bwaa--sticky_nav="true"] & {
             padding-top: unset !important;
         }
@@ -457,6 +460,25 @@
             min-width: 100% !important;
             max-width: 100% !important;
 
+            &[data-page-subpage="shoutbox_overview"] {
+                .legacy-header,
+                & > .navlist,
+                .left-side,
+                & > .row {
+                    display: none;
+                }
+
+                overflow: hidden;
+                padding: 15px !important;
+                .right-side {
+                    position: static;
+                }
+            }
+
+            &:after {
+                display: none;
+            }
+
             .legacy-header {
                 color: var(--header-text-white);
                 font-size: 16px;
@@ -476,12 +498,30 @@
                 }
             }
 
-            .row {
+            & > .row {
                 background: var(--body);
                 border: 1px solid var(--border-2);
                 width: calc(100vw - (15px * 5) - (180px * 2));
                 border-radius: 3px;
                 box-shadow: 3px 4px 4px 0px rgba(0,0,0,0.2);
+
+                .col-main {
+                    padding: 15px 14px;
+                }
+            }
+
+            h2 {
+                font-size: 20px;
+                line-height: 1.3em;
+
+                a {
+                    background: none !important;
+                    text-decoration: none;
+                }
+            }
+
+            .chartlist {
+                margin-top: 10px;
             }
 
             & >.navlist {
@@ -706,6 +746,8 @@
                                             position: static;
                                             text-decoration-style: dotted;
                                             color: var(--colour-middle) !important;
+                                            cursor: text;
+                                            background: none !important;
                                         }
                                     }
 
@@ -1622,6 +1664,10 @@
         background-repeat: repeat-x;
         display: flex !important;
         justify-content: center;
+
+        &.hide {
+            display: none !important;
+        }
 
         [data-bwaa--theme="paint_it_black"] & {
             background-position: 0 -80px;
@@ -2745,9 +2791,18 @@
             margin: -15px -15px 0 -15px;
             padding: 15px 15px;
 
+            [data-page-style="2007"] & {
+                margin: 20px 0 0 0 !important;
+                padding: unset;
+            }
+
             &:not(.profile-header-subpage-section + &, .async-content-error-message) {
                 border-top: 1px dotted var(--border);
                 margin: 30px -15px 0 -15px;
+
+                [data-page-style="2007"] & {
+                    border: unset;
+                }
             }
 
             &:first-child {
@@ -2782,6 +2837,7 @@
     }
 
     /* icons */
+    .shout-popup a:before,
     .shout-user strong:before,
     .user-types-legacy .user-type:before,
     .tags-add:before,
@@ -5883,6 +5939,10 @@
         color: inherit;
         overflow: hidden;
 
+        &.hide {
+            display: none;
+        }
+
         .container {
             border: unset;
             padding-left: 15px !important;
@@ -8259,6 +8319,36 @@
             padding: 0 3px;
             font-size: 12px;
             line-height: 24px;
+        }
+    }
+
+    .main-content:before,
+    .page-content.visible-xs {
+        display: none !important;
+    }
+
+
+    .open-more-legacy {
+        margin-top: 0.72727273em;
+        color: var(--colour-middle);
+
+        a {
+            color: inherit !important;
+            background: none !important;
+            position: relative;
+        }
+
+        &.shout-popup {
+            a {
+                padding-left: calc(7px + 3px);
+
+                &:before {
+                    --width: 7px;
+                    --height: 7px;
+                    --top: 5px;
+                    background: url('data:image/gif;base64,R0lGODlhBwAHAKIFAJWVlerq6v///3h4eLm5uQAAAAAAAAAAACH5BAEAAAUALAAAAAAHAAcAAAMUSLpD8q+JQIOsVs3BixtFCHRhkQAAOw==');
+                }
+            }
         }
     }
 }
