@@ -3351,6 +3351,15 @@ let last_season_time;
             }
 
 
+            if (settings.page_style < 2008) {
+                // shouts
+                let shouts = page.structure.main.querySelector('#shoutbox');
+                if (shouts) {
+                    page.structure.side.appendChild(shouts);
+                }
+            }
+
+
 
 
             // sidebar
@@ -4370,16 +4379,30 @@ let last_season_time;
                 shout_actions.innerHTML = `<a href="${root}user/${shout_name.textContent}">${trans[lang].shouts.view_profile}</a> | ${shout_actions.innerHTML}`;
         });
 
-        if (!shouts) return;
+        if (!shouts || shouts.length == 0) return;
 
-        let view_all_shouts = document.body.querySelector('.shout-list + .more-link-fullwidth-right');
-        if (view_all_shouts) {
-            view_all_shouts.classList = 'open-more-legacy shout-popup';
-            let link = view_all_shouts.querySelector('a');
+        if (settings.page_style < 2008) {
+            if (page.type != 'user') {
+                let header = document.body.querySelector('#shoutbox .shoutbox h2');
+                let for_item = document.createElement('h5');
+                for_item.classList.add('subhead');
+                if (page.type == 'artist')
+                    for_item.textContent = `For ${page.name}`;
+                else if (page.type == 'artist' || page.type == 'album')
+                    for_item.textContent = `For ${page.sister} - ${page.name}`;
 
-            link.setAttribute('onclick', `open('${link.getAttribute('href')}', '_blank', 'popup=true,width=228,height=466')`);
-            link.removeAttribute('href');
-            link.textContent = 'View in popup';
+                header.after(for_item);
+            }
+
+            let view_all_shouts = document.body.querySelector('.shout-list + .more-link-fullwidth-right');
+            if (view_all_shouts) {
+                view_all_shouts.classList = 'open-more-legacy shout-popup';
+                let link = view_all_shouts.querySelector('a');
+
+                link.setAttribute('onclick', `open('${link.getAttribute('href')}', '_blank', 'popup=true,width=228,height=466')`);
+                link.removeAttribute('href');
+                link.textContent = 'View in popup';
+            }
         }
 
         if (!settings.varied_avatar_shapes)

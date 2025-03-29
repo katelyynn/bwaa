@@ -230,14 +230,17 @@
 
         [data-bwaa--page_style="2007"] & {
             --background: #BCBEC0;
+            --body-alt: #E9EBEF;
             --border: #DADADA;
             --border-2: #959595;
             --border-3: #c2c2c2;
             --colour: #545454;
             --colour-upper: #777;
             --colour-middle: #969696;
+            --colour-middle-alt: #9E9E9E;
 
             --header-text: #D01F3C;
+            --header-text-alt: #869AB7;
         }
     }
 
@@ -510,14 +513,48 @@
                 }
             }
 
-            h2 {
-                font-size: 20px;
-                line-height: 1.3em;
+            &[data-page-type="artist"], &[data-page-type="album"], &[data-page-type="track"] {
+                padding: 0 15px 0 calc((15px * 2) + 180px) !important;
 
-                a {
-                    background: none !important;
-                    text-decoration: none;
+                .row {
+                    width: calc(100vw - (15px * 4) - 180px);
+                    display: flex;
+
+                    .col-main, .col-sidebar {
+                        width: 50%;
+                        font: inherit;
+                    }
+
+                    .col-sidebar {
+                        background: var(--body-alt);
+
+                        h2 {
+                            color: var(--header-text-alt);
+                        }
+                    }
                 }
+
+                #tracklist .section-controls {
+                    & > button, ul {
+                        display: none !important;
+                    }
+                }
+            }
+
+            .col-main, .col-sidebar {
+                h2 {
+                    font-size: 20px !important;
+                    line-height: 1.3em !important;
+
+                    a {
+                        background: none !important;
+                        text-decoration: none;
+                    }
+                }
+            }
+
+            .track-overview-video-column {
+                display: none;
             }
 
             .chartlist {
@@ -601,6 +638,197 @@
                 }
             }
 
+            #shoutbox {
+                .shoutbox-controls-wrapper {
+                    display: none;
+                }
+
+                .shout-form {
+                    padding: unset;
+                    margin: 0 0 0.7em 0;
+                    border: unset;
+
+                    textarea {
+                        height: 56px;
+                        resize: vertical !important;
+                    }
+
+                    .avatar {
+                        display: none;
+                    }
+                }
+
+                .shout-reply-ui {
+                    margin: unset;
+                }
+
+                .form-row-help-text {
+                    margin: unset !important;
+                    position: static;
+                    font: inherit !important;
+                    font-size: 11px !important;
+                    color: var(--colour-upper);
+                    background: unset;
+                    padding: unset !important;
+                }
+
+                .shout-list {
+                    margin-top: unset;
+
+                    .shout-list-item {
+                        margin: unset;
+                        padding: unset;
+
+                        .shout {
+                            margin: 0 0 1.4em 62px !important;
+                            padding: 0 0 0 10px !important;
+                            border-left: solid 1px var(--border-3);
+                            min-height: 71px;
+                            line-height: 1.2em;
+
+                            .shout-user {
+                                font: inherit;
+                                padding: unset;
+                                margin: unset;
+                                border: unset;
+
+                                a {
+                                    color: var(--colour-middle);
+                                    background: none !important;
+                                    font: inherit;
+                                    text-decoration: none;
+
+                                    strong {
+                                        font: inherit;
+                                        color: inherit;
+                                        text-decoration: underline;
+
+                                        position: relative;
+                                        padding-left: 14px;
+
+                                        &:before {
+                                            --width: 10px;
+                                            --height: 10px;
+                                            background: var(--icon-user);
+                                            --top: 3px;
+                                        }
+
+                                        &.user-type--subscriber {
+                                            &:before {
+                                                background: var(--icon-subscriber);
+                                            }
+                                        }
+
+                                        &.user-type--mod,
+                                        &.user-type--staff {
+                                            &:before {
+                                                background: var(--icon-staff);
+                                            }
+                                        }
+                                    }
+
+                                    &:hover strong {
+                                        color: #353535;
+                                    }
+                                }
+                            }
+
+                            .shout-user-avatar {
+                                margin: unset;
+                                position: absolute;
+                                top: 0;
+                                left: -62px;
+                                width: 52px;
+
+                                .avatar-status-dot {
+                                    display: none;
+                                }
+
+                                img {
+                                    width: 52px;
+                                    height: 52px;
+                                    padding: unset;
+                                    border: unset;
+                                }
+                            }
+
+                            .shout-body {
+                                font: inherit;
+                                color: inherit;
+                                display: contents;
+                            }
+
+                            .shout-actions {
+                                float: right;
+                                clear: right;
+                                margin-top: 9px;
+
+                                display: flex;
+                                text-align: right;
+                            }
+                            .shout-action {
+                                .shout-reply {
+                                    float: right;
+                                    display: block;
+                                    width: 11px;
+                                    height: 9px;
+                                    text-indent: -9999px;
+                                    font-size: 0;
+                                    line-height: 0;
+                                    background: url('data:image/gif;base64,R0lGODlhCwAJAKIAANfX1////4yMjHBwcPHx8QAAAAAAAAAAACH5BAAAAAAALAAAAAALAAkAAAMiKLo8GjCG4YIgGA9QydUEJwTYNWAiCaJdlqVALMcOZd9DAgA7') !important;
+                                    margin-right: 2px;
+                                }
+
+                                button {
+                                    color: #545454 !important;
+
+                                    &.vote-button--voted {
+                                        background: #E5E8EE;
+                                        text-decoration: underline;
+                                    }
+
+                                    &:hover {
+                                        background: #E5E8EE;
+                                        color: #353535 !important;
+                                        text-decoration: underline;
+                                    }
+                                }
+                            }
+
+                            .shout-more-actions {
+                                top: unset;
+                                bottom: 12px;
+                                right: 0;
+                                margin: unset;
+                                background-image: var(--cdn-flatness-sprites-21-icons) !important;
+                                background-position: 0 -500px;
+
+                                width: 10px;
+                                height: 10px;
+                            }
+
+                            &:not(:hover, :focus-within) .shout-action-more {
+                                display: none;
+                            }
+
+                            .shout-timestamp {
+                                position: static;
+                                text-decoration-style: dotted;
+                                color: var(--colour-middle) !important;
+                                cursor: text;
+                                background: none !important;
+                            }
+                        }
+
+                        .shout-list {
+                            .shout-list-item {
+                                margin-left: 25px;
+                            }
+                        }
+                    }
+                }
+            }
+
             .float-side {
                 position: absolute;
                 top: calc(30px + 30px);
@@ -646,120 +874,30 @@
                         }
 
                         #shoutbox {
-                            .shoutbox-controls-wrapper,
                             h2 {
                                 display: none;
                             }
 
-                            .shout-form {
-                                padding: unset;
-                                margin: 0 0 0.7em 0;
-                                border: unset;
-
-                                textarea {
-                                    height: 56px;
-                                    resize: vertical !important;
-                                }
-
-                                .avatar {
-                                    display: none;
-                                }
-                            }
-
-                            .shout-reply-ui {
-                                margin: unset;
-                            }
-
-                            .form-row-help-text {
-                                margin: unset !important;
-                                position: static;
-                                font: inherit !important;
-                                font-size: 11px !important;
-                                color: var(--colour-upper);
-                                background: unset;
-                                padding: unset !important;
-                            }
-
                             .shout-list {
-                                margin-top: unset;
-
                                 .shout-list-item {
                                     margin: unset;
-                                    padding: unset;
 
                                     .shout {
-                                        margin: 0 -10px;
-                                        padding: 8px 10px 12px;
+                                        margin: 0 -10px !important;
+                                        padding: 8px 10px 12px !important;
                                         border-top: 1px dotted var(--border-3);
+                                        border-left: unset;
                                         min-height: 82px;
 
-                                        .shout-user {
-                                            font: inherit;
-                                            padding: unset;
-                                            margin: unset;
-                                            border: unset;
-
-                                            a {
-                                                color: var(--colour-middle);
-                                                background: none !important;
-                                                font: inherit;
-                                                text-decoration: none;
-
-                                                strong {
-                                                    color: #545454;
-                                                    text-decoration: underline;
-
-                                                    position: relative;
-                                                    padding-left: 14px;
-
-                                                    &:before {
-                                                        --width: 10px;
-                                                        --height: 10px;
-                                                        background: var(--icon-user);
-                                                        --top: 3px;
-                                                    }
-
-                                                    &.user-type--subscriber {
-                                                        &:before {
-                                                            background: var(--icon-subscriber);
-                                                        }
-                                                    }
-
-                                                    &.user-type--mod,
-                                                    &.user-type--staff {
-                                                        &:before {
-                                                            background: var(--icon-staff);
-                                                        }
-                                                    }
-                                                }
-
-                                                &:hover strong {
-                                                    color: #353535;
-                                                }
-                                            }
-                                        }
-
                                         .shout-user-avatar {
-                                            margin: unset;
                                             float: right;
+                                            position: static;
                                             width: 25px;
-
-                                            .avatar-status-dot {
-                                                display: none;
-                                            }
 
                                             img {
                                                 width: 25px;
                                                 height: 25px;
-                                                padding: unset;
-                                                border: unset;
                                             }
-                                        }
-
-                                        .shout-body {
-                                            font: inherit;
-                                            color: inherit;
-                                            display: contents;
                                         }
 
                                         .shout-actions {
@@ -803,32 +941,14 @@
                                             top: unset;
                                             bottom: 12px;
                                             right: 0;
-                                            margin: unset;
-                                            background-image: var(--cdn-flatness-sprites-21-icons) !important;
-                                            background-position: 0 -500px;
-
-                                            width: 10px;
-                                            height: 10px;
-                                        }
-
-                                        &:not(:hover, :focus-within) .shout-action-more {
-                                            display: none;
-                                        }
-
-                                        .shout-timestamp {
-                                            position: static;
-                                            text-decoration-style: dotted;
-                                            color: var(--colour-middle) !important;
-                                            cursor: text;
-                                            background: none !important;
                                         }
                                     }
 
                                     .shout-list .shout {
-                                        padding-left: 20px;
+                                        padding-left: 20px !important;
 
                                         .shout-list .shout {
-                                            padding-left: 30px;
+                                            padding-left: 30px !important;
                                         }
                                     }
                                 }
@@ -8434,5 +8554,14 @@
                 --lit-over: 1;
             }
         }
+    }
+
+
+    .subhead {
+        margin-top: -12px;
+        color: var(--colour-middle-alt);
+        font-weight: bold;
+        font-size: 13px;
+        margin: 0 0 1em 0;
     }
 }
