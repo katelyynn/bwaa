@@ -1952,7 +1952,9 @@ let last_season_time;
                             </a>
                         `)}
                     </div>
+                    ${(!is_own_profile) ? (`
                     <div class="actions-legacy"></div>
+                    `) : ''}
                     <div class="info-legacy">
                         <strong class="realname">${header_user_data.display_name}</strong>
                         <div class="user-types-legacy">${badges_html.innerHTML}</div>
@@ -2253,12 +2255,90 @@ let last_season_time;
                 );
                 page.structure.row.insertBefore(new_header, page.structure.row.firstElementChild);
             } else {
-                let new_header = legacy_subpage_header(
+                let header = legacy_subpage_header(
                     header_user_data.page,
                     'user',
                     ''
                 );
-                page.structure.container.insertBefore(new_header, page.structure.container.firstElementChild);
+                page.structure.container.insertBefore(header, page.structure.container.firstElementChild);
+
+                // user type
+                let user_type = 'user';
+                let user_follows_you = (profile_header.querySelector('.label.user-follow') != undefined);
+
+                // custom badges
+                let user_is_subscriber = profile_header.querySelector('.user-status-subscriber');
+                let user_is_staff = profile_header.querySelector('.user-status-staff');
+                let user_is_mod = profile_header.querySelector('.user-status-mod');
+                if (user_is_staff)
+                    user_type = 'staff';
+                else if (user_is_mod)
+                    user_type = 'mod';
+                else if (user_is_subscriber)
+                    user_type = 'subscriber';
+                console.info('bwaa - user is of type', user_type);
+
+                if (settings.varied_avatar_shapes)
+                    page.avatar = page.avatar.replace('/i/u/avatar170s/', '/i/u/arXL/');
+
+                let badges = load_badges(page.name, user_type).toReversed();
+                let badges_html = document.createElement('div');
+
+                if (badges) {
+                    badges.forEach((this_badge, index) => {
+                        let badge = document.createElement('div');
+                        badge.classList.add('user-type', `user-type--${this_badge.type}`, `user-type-for--${page.name}`, `user-type-reason--${this_badge.reason}`);
+                        badge.innerHTML = `<a>${this_badge.name}</a>`;
+                        badges_html.appendChild(badge);
+
+                        if (badges.length > 1) {
+                            if (index == 0) {
+                                let extra = document.createElement('div');
+                                extra.classList.add('user-type', 'user-type-extras');
+                                extra.innerHTML = `<a>+${badges.length - 1}</a>`;
+
+                                badges_html.appendChild(extra);
+                            } else {
+                                badge.classList.add('user-type-overflow');
+                            }
+                        }
+
+                        if (this_badge.type == 'sponsor')
+                            badge.setAttribute('onclick', '_sponsor()');
+                    });
+                }
+
+
+                // main user header
+                // this is on top of the actions, but appending is backwards
+                let new_header = document.createElement('section');
+                new_header.classList.add('profile-header-section');
+                new_header.setAttribute('data-page-style', settings.page_style);
+                new_header.innerHTML = (`
+                    <div class="avatar-legacy">
+                        ${(!is_new_account) ? (`
+                        <a href="${window.location.href}">
+                            <img src="${page.avatar}" alt="${page.name}">
+                        </a>
+                        `) : (`
+                            <a href="${root}settings">
+                                <img src="${page.avatar}" alt="${page.name}">
+                            </a>
+                        `)}
+                    </div>
+                    <div class="actions-legacy">
+                        <div class="options">
+                            <a class="has-icon visit-profile" href="${root}user/${page.name}">
+                                Visit profile
+                            </a>
+                        </div>
+                    </div>
+                    <div class="info-legacy">
+                        <div class="user-types-legacy">${badges_html.innerHTML}</div>
+                    </div>
+                `);
+
+                page.structure.left.appendChild(new_header);
             }
 
             profile_header.style.setProperty('display', 'none');
