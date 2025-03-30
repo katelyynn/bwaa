@@ -3030,6 +3030,7 @@
 
         [data-page-style="2007"] & {
             .chartlist-row {
+                font-family: Arial, Helvetica, Verdana, "Free Sans", "FreeSans", sans-serif;
                 --general-td-padding: 2px 5px 4px 5px !important;
 
                 font-size: 12px;
