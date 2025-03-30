@@ -241,6 +241,7 @@
             --border-2: #959595;
             --border-3: #c2c2c2;
             --border-4: #ccc;
+            --border-5: #b5b5b5;
             --colour: #545454;
             --colour-upper: #777;
             --colour-middle: #969696;
@@ -251,6 +252,9 @@
 
             --action: #98AABF;
             --action-hover: #6087B0;
+
+            --chartlist-odd: none;
+            --chartlist-hover: #eee;
         }
     }
 
@@ -2740,6 +2744,22 @@
                     height: 22px;
                     line-height: 16px;
                     padding: 3px 5px;
+
+                    [data-page-style="2007"] & {
+                        padding: var(--general-td-padding);
+                    }
+                }
+
+                [data-page-style="2007"] & {
+                    border-top: 1px solid var(--border) !important;
+
+                    &:hover {
+                        border-color: var(--border-5) !important;
+                    }
+
+                    .chartlist-bar {
+                        width: calc(38% - 8px) !important;
+                    }
                 }
 
                 [data-page-style="2013"][data-page-type="artist"] & {
@@ -3004,6 +3024,90 @@
                             }
                         }
                     }
+                }
+            }
+        }
+
+        [data-page-style="2007"] & {
+            .chartlist-row {
+                --general-td-padding: 2px 5px 4px 5px !important;
+
+                font-size: 12px;
+                line-height: 1.16667em;
+
+                a {
+                    background: unset !important;
+
+                    &:not(:hover) {
+                        text-decoration: none;
+                    }
+                }
+
+                .chartlist-image {
+                    display: none;
+                }
+
+                td {
+                    height: unset;
+                    line-height: inherit !important;
+                }
+
+                .chartlist-timestamp {
+                    width: 11em;
+                    padding-left: 7px;
+                    font: inherit;
+                    color: var(--colour-middle);
+                    border-left: 1px solid var(--border-5);
+                    text-align: left;
+                }
+
+                .chartlist-index {
+                    color: var(--colour-middle);
+                    font: inherit;
+                    border-right: 1px solid var(--border-5);
+                }
+
+                .chartlist-bar {
+                    padding: 0 0 0 8px !important;
+                    border-left: 1px solid var(--border-5);
+                    width: calc(38% - 8px) !important;
+
+                    .chartlist-count-bar {
+                        /*position: relative;
+
+                        &:before {
+                            content: '';
+                            position: absolute;
+                            left: 0;
+                            right: 0;
+                            top: -1px;
+                            height: 1px;
+                            display: block;
+                            background: var(--body);
+                        }*/
+
+                        margin-top: -1px;
+                        background: var(--body);
+
+                        .chartlist-count-bar-slug {
+                            background-color: var(--border-4) !important;
+                            height: 18px;
+                            line-height: 18px;
+                            border-radius: 0 50px 50px 0 !important;
+                            padding: unset !important;
+                        }
+
+                        .chartlist-count-bar-value {
+                            text-shadow: unset !important;
+                            height: 18px !important;
+                            padding-left: 4px !important;
+                            padding-right: 9px !important;
+                        }
+                    }
+                }
+
+                &:hover {
+                    border-color: var(--border-5) !important;
                 }
             }
         }
