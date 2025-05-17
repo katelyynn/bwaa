@@ -13,7 +13,6 @@
 // @require      https://unpkg.com/@popperjs/core@2
 // @require      https://unpkg.com/tippy.js@6
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
-// @require      https://katelyynn.github.io/bleh/fm/js/snow.js?a=b
 // ==/UserScript==
 
 console.info('bwaa - beginning to load');
@@ -1422,15 +1421,18 @@ let last_season_time;
             return;
         }
 
-        let auth_link = document.querySelector('a.auth-link');
-        let inner = document.body.querySelector('.masthead-inner-wrap');
+        let masthead = document.body.querySelector('.masthead:not([data-bleh])');
+        if (!masthead) return;
+        masthead.setAttribute('data-bleh', 'true');
 
-        if (inner.hasAttribute('data-bwaa'))
-            return;
-        inner.setAttribute('data-bwaa', 'true');
+        let new_auth = masthead.querySelector('.auth-dropdown-menu');
+        let auth_link = masthead.querySelector('.masthead-nav-wrap > .site-auth .auth-link');
+
+        let inner = masthead.querySelector('.masthead-inner-wrap');
+
 
         if (auth_link) {
-            let site_auth = inner.querySelector('.site-auth');
+            let site_auth = masthead.querySelector('.site-auth.hidden-xs');
 
             // logged in
             let text = document.createElement('p');
@@ -1438,25 +1440,22 @@ let last_season_time;
             auth_link.appendChild(text);
 
 
-            let notif_btn_txt = inner.querySelector('[data-analytics-label="notifications"] .auth-dropdown-item-left').textContent.trim();
-            let notif_badge = inner.querySelector('[data-analytics-label="notifications"] .notification-count-badge');
+            let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+            let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
 
-            let inbox_btn_txt = inner.querySelector('[data-analytics-label="inbox"] .auth-dropdown-item-left').textContent.trim();
-            let inbox_badge = inner.querySelector('[data-analytics-label="inbox"] .notification-count-badge');
-
-            let logout_btn = inner.querySelector('[data-require="components/logout-form"]');
+            let logout_btn = new_auth.querySelector('[data-require="components/logout-form"]');
             let logout_btn_anchor = logout_btn.querySelector('a');
-            logout_btn_anchor.classList.remove('auth-dropdown-menu-item', 'js-logout-button', 'mimic-link', 'masthead-nav-control');
+            logout_btn_anchor.classList.remove('auth-logout-cta');
 
             let user_companion_nav = document.createElement('div');
             user_companion_nav.classList.add('user-companion-nav');
             user_companion_nav.innerHTML = (`
-                ${(!settings.no_notifs) ? `<a href="${root}inbox/notifications">${notif_btn_txt}${(notif_badge) ? ` (${notif_badge.textContent.trim()})` : ''}</a> | ` : ''}<a href="${root}inbox">${inbox_btn_txt}${(inbox_badge != null ? ` (${inbox_badge.textContent.trim()})` : '')}</a> | ${logout_btn.outerHTML}
+                ${(!settings.no_notifs) ? `<a href="${root}inbox/notifications">Notifications${(notif_count) ? ` (${notif_count.textContent.trim()})` : ''}</a> | ` : ''}<a href="${root}inbox">Inbox${(inbox_count) ? ` (${inbox_count.textContent.trim()})` : ''}</a> | ${logout_btn.outerHTML}
             `);
             site_auth.appendChild(user_companion_nav);
 
 
-            let menu = site_auth.querySelector('.auth-dropdown-menu');
+            let menu = new_auth;
             menu.innerHTML = (`
                 <li>
                     <a href="${root}" class="auth-dropdown-menu-item">
@@ -1497,7 +1496,7 @@ let last_season_time;
         } else {
             // guest
 
-            let site_auth_anon = inner.querySelector('.site-auth--anon');
+            let site_auth_anon = masthead.querySelector('.site-auth--anon');
 
             let login_btn = site_auth_anon.querySelector('.site-auth-control');
             login_btn.classList.add('logon-button');
@@ -1509,7 +1508,7 @@ let last_season_time;
 
 
         // navigation
-        let links = inner.querySelector('.navlist-items');
+        let links = masthead.querySelector('.navlist-items');
         links.innerHTML = (`
             <li class="masthead-nav-item">
                 <a href="${root}music" class="masthead-nav-control">
