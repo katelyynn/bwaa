@@ -4,7 +4,43 @@
 // Licensed under GPLv3
 //
 
+import { settings } from './build/config';
+import { log } from './build/log';
+import {
+    auth,
+    auth_link,
+    bwaa_url,
+    page,
+    root,
+    setup_url,
+    shout_parse_queue,
+    sponsor_url
+} from './build/page';
+import { load_settings } from './config';
+import { theme_version, version } from './main';
+import florence from '@tealmiku/florence';
+
 export function bwaa() {
+    florence({
+        page,
+        on_head_load: () => {
+            append_style();
+            favi();
+        },
+        on_body_load: () => {
+            favi();
+
+            auth_link.state = document.querySelector('a.auth-link');
+            if (auth_link.state)
+                auth.name = auth_link.state
+                    .querySelector('img')
+                    .getAttribute('alt');
+
+            load_settings();
+
+            dynamic_theming();
+        }
+    });
     let head_observer = new MutationObserver((mutations) => {
         if (document.head) {
             append_style();

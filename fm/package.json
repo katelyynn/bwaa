@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@tealmiku/florence": "^2025.1019.0",
     "cssnano": "^7.1.0",
     "dompurify": "^3.2.6",
     "esbuild": "^0.25.8",
@@ -9,6 +10,10 @@
     "postcss": "^8.5.6",
     "showdown": "^2.1.0",
     "tippy.js": "^6.3.7"
+  },
+  "scripts": {
+    "build": "node index.js && node minify.js",
+    "dev": "node index.js dev"
   },
   "type": "module"
 }
