@@ -15,11 +15,8 @@ import { tl, trans } from '../build/trans.js';
 import { dialog, dialog_rm } from './dialog.js';
 import { settings, settings_store } from '../build/config.js';
 import { log } from '../build/log.js';
-import { save_profile_cache } from '../pages/profile.js';
 import { toggle } from './toggle.js';
 import { save_setting } from './settings.js';
-import { load_chart_colours } from '../chart.js';
-import { sponsor_list } from '../build/sponsor.js';
 
 export function markdown(
     text,
@@ -381,46 +378,6 @@ export function markdown(
 
     if (body.nodeName != '#text') patch_wiki_contents(body);
 
-    // funny local restriction message
-    if (line_breaks && body.nodeName != '#text') {
-        local_restriction(body);
-        body.querySelectorAll('p').forEach((text) => {
-            local_restriction(text);
-        });
-    }
-
-    // this looks like a mess, but essentially profile colours are
-    // a nice 'thank you' vanity reward for sponsors <3
-    if (allow_hue) {
-        if (
-            !sponsor_list ||
-            (sponsor_list && !sponsor_list.sponsors.includes(name))
-        )
-            allow_hue = false;
-    }
-
-    if ((allow_banners || allow_hue) && will_cache) {
-        profile_cache =
-            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-        cache = profile_cache[page.name] || {};
-    }
-
-    if (allow_banners) {
-        const banner = body.querySelector('img[alt="banner"]');
-
-        if (banner) {
-            const src = banner.src;
-
-            if (src) {
-                cache.banner = src;
-            } else {
-                cache.banner = 'accent';
-            }
-        } else {
-            delete cache.banner;
-        }
-    }
-
     // add lazy-loading to images
     if (body.nodeName != '#text') {
         body.querySelectorAll('img').forEach((image) => {
@@ -441,43 +398,6 @@ export function markdown(
             image.after(container);
             container.appendChild(image);
         });
-    }
-
-    if (allow_hue) {
-        console.info(hue, sat, lit);
-
-        if (hue !== undefined && sat !== undefined && lit !== undefined) {
-            if (take_effect) {
-                document.body.style.setProperty('--hue-album', hue);
-                document.body.style.setProperty('--sat-album', sat);
-                document.body.style.setProperty('--lit-album', lit);
-
-                load_chart_colours();
-            }
-
-            cache.hue = hue;
-            cache.sat = sat;
-            cache.lit = lit;
-
-            log('custom accent settings present', 'profile', 'info', {
-                hue,
-                sat,
-                lit
-            });
-        } else {
-            if (cache.hue) delete cache.hue;
-            if (cache.sat) delete cache.sat;
-            if (cache.lit) delete cache.lit;
-
-            log('cleared custom accent settings', 'profile', 'log');
-        }
-    }
-
-    if (cache && will_cache) {
-        log('finalised cache from markdown parsing', 'markdown', 'info', {
-            cache
-        });
-        save_profile_cache(cache, profile_cache, name);
     }
 
     return body;

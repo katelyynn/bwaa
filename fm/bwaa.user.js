@@ -3799,6 +3799,204 @@
     }
   });
 
+  // node_modules/color-thief-browser/dist/color-thief.min.js
+  var require_color_thief_min = __commonJS({
+    "node_modules/color-thief-browser/dist/color-thief.min.js"(exports, module) {
+      var CanvasImage = function(a) {
+        this.canvas = document.createElement("canvas"), this.context = this.canvas.getContext("2d"), document.body.appendChild(this.canvas), this.width = this.canvas.width = a.width, this.height = this.canvas.height = a.height, this.context.drawImage(a, 0, 0, this.width, this.height);
+      };
+      CanvasImage.prototype.clear = function() {
+        this.context.clearRect(0, 0, this.width, this.height);
+      }, CanvasImage.prototype.update = function(a) {
+        this.context.putImageData(a, 0, 0);
+      }, CanvasImage.prototype.getPixelCount = function() {
+        return this.width * this.height;
+      }, CanvasImage.prototype.getImageData = function() {
+        return this.context.getImageData(0, 0, this.width, this.height);
+      }, CanvasImage.prototype.removeCanvas = function() {
+        this.canvas.parentNode.removeChild(this.canvas);
+      };
+      var ColorThief3 = function() {
+      };
+      if (ColorThief3.prototype.getColor = function(a, b) {
+        var c = this.getPalette(a, 5, b), d = c[0];
+        return d;
+      }, ColorThief3.prototype.getPalette = function(a, b, c) {
+        "undefined" == typeof b && (b = 10), ("undefined" == typeof c || 1 > c) && (c = 10);
+        for (var d, e, f, g, h, i = new CanvasImage(a), j = i.getImageData(), k = j.data, l2 = i.getPixelCount(), m = [], n2 = 0; l2 > n2; n2 += c) d = 4 * n2, e = k[d + 0], f = k[d + 1], g = k[d + 2], h = k[d + 3], h >= 125 && (e > 250 && f > 250 && g > 250 || m.push([e, f, g]));
+        var o = MMCQ.quantize(m, b), p = o ? o.palette() : null;
+        return i.removeCanvas(), p;
+      }, !pv) var pv = { map: function(a, b) {
+        var c = {};
+        return b ? a.map(function(a2, d) {
+          return c.index = d, b.call(c, a2);
+        }) : a.slice();
+      }, naturalOrder: function(a, b) {
+        return b > a ? -1 : a > b ? 1 : 0;
+      }, sum: function(a, b) {
+        var c = {};
+        return a.reduce(b ? function(a2, d, e) {
+          return c.index = e, a2 + b.call(c, d);
+        } : function(a2, b2) {
+          return a2 + b2;
+        }, 0);
+      }, max: function(a, b) {
+        return Math.max.apply(null, b ? pv.map(a, b) : a);
+      } };
+      var MMCQ = (function() {
+        function a(a2, b2, c2) {
+          return (a2 << 2 * i) + (b2 << i) + c2;
+        }
+        function b(a2) {
+          function b2() {
+            c2.sort(a2), d2 = true;
+          }
+          var c2 = [], d2 = false;
+          return { push: function(a3) {
+            c2.push(a3), d2 = false;
+          }, peek: function(a3) {
+            return d2 || b2(), void 0 === a3 && (a3 = c2.length - 1), c2[a3];
+          }, pop: function() {
+            return d2 || b2(), c2.pop();
+          }, size: function() {
+            return c2.length;
+          }, map: function(a3) {
+            return c2.map(a3);
+          }, debug: function() {
+            return d2 || b2(), c2;
+          } };
+        }
+        function c(a2, b2, c2, d2, e2, f2, g2) {
+          var h3 = this;
+          h3.r1 = a2, h3.r2 = b2, h3.g1 = c2, h3.g2 = d2, h3.b1 = e2, h3.b2 = f2, h3.histo = g2;
+        }
+        function d() {
+          this.vboxes = new b(function(a2, b2) {
+            return pv.naturalOrder(a2.vbox.count() * a2.vbox.volume(), b2.vbox.count() * b2.vbox.volume());
+          });
+        }
+        function e(b2) {
+          var c2, d2, e2, f2, g2 = 1 << 3 * i, h3 = new Array(g2);
+          return b2.forEach(function(b3) {
+            d2 = b3[0] >> j, e2 = b3[1] >> j, f2 = b3[2] >> j, c2 = a(d2, e2, f2), h3[c2] = (h3[c2] || 0) + 1;
+          }), h3;
+        }
+        function f(a2, b2) {
+          var d2, e2, f2, g2 = 1e6, h3 = 0, i2 = 1e6, k2 = 0, l3 = 1e6, m = 0;
+          return a2.forEach(function(a3) {
+            d2 = a3[0] >> j, e2 = a3[1] >> j, f2 = a3[2] >> j, g2 > d2 ? g2 = d2 : d2 > h3 && (h3 = d2), i2 > e2 ? i2 = e2 : e2 > k2 && (k2 = e2), l3 > f2 ? l3 = f2 : f2 > m && (m = f2);
+          }), new c(g2, h3, i2, k2, l3, m, b2);
+        }
+        function g(b2, c2) {
+          function d2(a2) {
+            var b3, d3, e3, f3, g3, h4 = a2 + "1", j3 = a2 + "2", k3 = 0;
+            for (i2 = c2[h4]; i2 <= c2[j3]; i2++) if (o[i2] > n2 / 2) {
+              for (e3 = c2.copy(), f3 = c2.copy(), b3 = i2 - c2[h4], d3 = c2[j3] - i2, g3 = d3 >= b3 ? Math.min(c2[j3] - 1, ~~(i2 + d3 / 2)) : Math.max(c2[h4], ~~(i2 - 1 - b3 / 2)); !o[g3]; ) g3++;
+              for (k3 = p[g3]; !k3 && o[g3 - 1]; ) k3 = p[--g3];
+              return e3[j3] = g3, f3[h4] = e3[j3] + 1, [e3, f3];
+            }
+          }
+          if (c2.count()) {
+            var e2 = c2.r2 - c2.r1 + 1, f2 = c2.g2 - c2.g1 + 1, g2 = c2.b2 - c2.b1 + 1, h3 = pv.max([e2, f2, g2]);
+            if (1 == c2.count()) return [c2.copy()];
+            var i2, j2, k2, l3, m, n2 = 0, o = [], p = [];
+            if (h3 == e2) for (i2 = c2.r1; i2 <= c2.r2; i2++) {
+              for (l3 = 0, j2 = c2.g1; j2 <= c2.g2; j2++) for (k2 = c2.b1; k2 <= c2.b2; k2++) m = a(i2, j2, k2), l3 += b2[m] || 0;
+              n2 += l3, o[i2] = n2;
+            }
+            else if (h3 == f2) for (i2 = c2.g1; i2 <= c2.g2; i2++) {
+              for (l3 = 0, j2 = c2.r1; j2 <= c2.r2; j2++) for (k2 = c2.b1; k2 <= c2.b2; k2++) m = a(j2, i2, k2), l3 += b2[m] || 0;
+              n2 += l3, o[i2] = n2;
+            }
+            else for (i2 = c2.b1; i2 <= c2.b2; i2++) {
+              for (l3 = 0, j2 = c2.r1; j2 <= c2.r2; j2++) for (k2 = c2.g1; k2 <= c2.g2; k2++) m = a(j2, k2, i2), l3 += b2[m] || 0;
+              n2 += l3, o[i2] = n2;
+            }
+            return o.forEach(function(a2, b3) {
+              p[b3] = n2 - a2;
+            }), d2(h3 == e2 ? "r" : h3 == f2 ? "g" : "b");
+          }
+        }
+        function h(a2, c2) {
+          function h3(a3, b2) {
+            for (var c3, d2 = 1, e2 = 0; k > e2; ) if (c3 = a3.pop(), c3.count()) {
+              var f2 = g(i2, c3), h4 = f2[0], j3 = f2[1];
+              if (!h4) return;
+              if (a3.push(h4), j3 && (a3.push(j3), d2++), d2 >= b2) return;
+              if (e2++ > k) return;
+            } else a3.push(c3), e2++;
+          }
+          if (!a2.length || 2 > c2 || c2 > 256) return false;
+          var i2 = e(a2), j2 = 0;
+          i2.forEach(function() {
+            j2++;
+          });
+          var m = f(a2, i2), n2 = new b(function(a3, b2) {
+            return pv.naturalOrder(a3.count(), b2.count());
+          });
+          n2.push(m), h3(n2, l2 * c2);
+          for (var o = new b(function(a3, b2) {
+            return pv.naturalOrder(a3.count() * a3.volume(), b2.count() * b2.volume());
+          }); n2.size(); ) o.push(n2.pop());
+          h3(o, c2 - o.size());
+          for (var p = new d(); o.size(); ) p.push(o.pop());
+          return p;
+        }
+        var i = 5, j = 8 - i, k = 1e3, l2 = 0.75;
+        return c.prototype = { volume: function(a2) {
+          var b2 = this;
+          return (!b2._volume || a2) && (b2._volume = (b2.r2 - b2.r1 + 1) * (b2.g2 - b2.g1 + 1) * (b2.b2 - b2.b1 + 1)), b2._volume;
+        }, count: function(b2) {
+          var c2 = this, d2 = c2.histo;
+          if (!c2._count_set || b2) {
+            var e2, f2, g2, h3 = 0;
+            for (e2 = c2.r1; e2 <= c2.r2; e2++) for (f2 = c2.g1; f2 <= c2.g2; f2++) for (g2 = c2.b1; g2 <= c2.b2; g2++) index = a(e2, f2, g2), h3 += d2[index] || 0;
+            c2._count = h3, c2._count_set = true;
+          }
+          return c2._count;
+        }, copy: function() {
+          var a2 = this;
+          return new c(a2.r1, a2.r2, a2.g1, a2.g2, a2.b1, a2.b2, a2.histo);
+        }, avg: function(b2) {
+          var c2 = this, d2 = c2.histo;
+          if (!c2._avg || b2) {
+            var e2, f2, g2, h3, j2, k2 = 0, l3 = 1 << 8 - i, m = 0, n2 = 0, o = 0;
+            for (f2 = c2.r1; f2 <= c2.r2; f2++) for (g2 = c2.g1; g2 <= c2.g2; g2++) for (h3 = c2.b1; h3 <= c2.b2; h3++) j2 = a(f2, g2, h3), e2 = d2[j2] || 0, k2 += e2, m += e2 * (f2 + 0.5) * l3, n2 += e2 * (g2 + 0.5) * l3, o += e2 * (h3 + 0.5) * l3;
+            k2 ? c2._avg = [~~(m / k2), ~~(n2 / k2), ~~(o / k2)] : c2._avg = [~~(l3 * (c2.r1 + c2.r2 + 1) / 2), ~~(l3 * (c2.g1 + c2.g2 + 1) / 2), ~~(l3 * (c2.b1 + c2.b2 + 1) / 2)];
+          }
+          return c2._avg;
+        }, contains: function(a2) {
+          var b2 = this, c2 = a2[0] >> j;
+          return gval = a2[1] >> j, bval = a2[2] >> j, c2 >= b2.r1 && c2 <= b2.r2 && gval >= b2.g1 && gval <= b2.g2 && bval >= b2.b1 && bval <= b2.b2;
+        } }, d.prototype = { push: function(a2) {
+          this.vboxes.push({ vbox: a2, color: a2.avg() });
+        }, palette: function() {
+          return this.vboxes.map(function(a2) {
+            return a2.color;
+          });
+        }, size: function() {
+          return this.vboxes.size();
+        }, map: function(a2) {
+          for (var b2 = this.vboxes, c2 = 0; c2 < b2.size(); c2++) if (b2.peek(c2).vbox.contains(a2)) return b2.peek(c2).color;
+          return this.nearest(a2);
+        }, nearest: function(a2) {
+          for (var b2, c2, d2, e2 = this.vboxes, f2 = 0; f2 < e2.size(); f2++) c2 = Math.sqrt(Math.pow(a2[0] - e2.peek(f2).color[0], 2) + Math.pow(a2[1] - e2.peek(f2).color[1], 2) + Math.pow(a2[2] - e2.peek(f2).color[2], 2)), (b2 > c2 || void 0 === b2) && (b2 = c2, d2 = e2.peek(f2).color);
+          return d2;
+        }, forcebw: function() {
+          var a2 = this.vboxes;
+          a2.sort(function(a3, b3) {
+            return pv.naturalOrder(pv.sum(a3.color), pv.sum(b3.color));
+          });
+          var b2 = a2[0].color;
+          b2[0] < 5 && b2[1] < 5 && b2[2] < 5 && (a2[0].color = [0, 0, 0]);
+          var c2 = a2.length - 1, d2 = a2[c2].color;
+          d2[0] > 251 && d2[1] > 251 && d2[2] > 251 && (a2[c2].color = [255, 255, 255]);
+        } }, { quantize: h };
+      })();
+      module.exports = ColorThief3;
+    }
+  });
+
   // node_modules/cropperjs/dist/cropper.js
   var require_cropper = __commonJS({
     "node_modules/cropperjs/dist/cropper.js"(exports, module) {
@@ -6538,204 +6736,6 @@
     }
   });
 
-  // node_modules/color-thief-browser/dist/color-thief.min.js
-  var require_color_thief_min = __commonJS({
-    "node_modules/color-thief-browser/dist/color-thief.min.js"(exports, module) {
-      var CanvasImage = function(a) {
-        this.canvas = document.createElement("canvas"), this.context = this.canvas.getContext("2d"), document.body.appendChild(this.canvas), this.width = this.canvas.width = a.width, this.height = this.canvas.height = a.height, this.context.drawImage(a, 0, 0, this.width, this.height);
-      };
-      CanvasImage.prototype.clear = function() {
-        this.context.clearRect(0, 0, this.width, this.height);
-      }, CanvasImage.prototype.update = function(a) {
-        this.context.putImageData(a, 0, 0);
-      }, CanvasImage.prototype.getPixelCount = function() {
-        return this.width * this.height;
-      }, CanvasImage.prototype.getImageData = function() {
-        return this.context.getImageData(0, 0, this.width, this.height);
-      }, CanvasImage.prototype.removeCanvas = function() {
-        this.canvas.parentNode.removeChild(this.canvas);
-      };
-      var ColorThief3 = function() {
-      };
-      if (ColorThief3.prototype.getColor = function(a, b) {
-        var c = this.getPalette(a, 5, b), d = c[0];
-        return d;
-      }, ColorThief3.prototype.getPalette = function(a, b, c) {
-        "undefined" == typeof b && (b = 10), ("undefined" == typeof c || 1 > c) && (c = 10);
-        for (var d, e, f, g, h, i = new CanvasImage(a), j = i.getImageData(), k = j.data, l2 = i.getPixelCount(), m = [], n2 = 0; l2 > n2; n2 += c) d = 4 * n2, e = k[d + 0], f = k[d + 1], g = k[d + 2], h = k[d + 3], h >= 125 && (e > 250 && f > 250 && g > 250 || m.push([e, f, g]));
-        var o = MMCQ.quantize(m, b), p = o ? o.palette() : null;
-        return i.removeCanvas(), p;
-      }, !pv) var pv = { map: function(a, b) {
-        var c = {};
-        return b ? a.map(function(a2, d) {
-          return c.index = d, b.call(c, a2);
-        }) : a.slice();
-      }, naturalOrder: function(a, b) {
-        return b > a ? -1 : a > b ? 1 : 0;
-      }, sum: function(a, b) {
-        var c = {};
-        return a.reduce(b ? function(a2, d, e) {
-          return c.index = e, a2 + b.call(c, d);
-        } : function(a2, b2) {
-          return a2 + b2;
-        }, 0);
-      }, max: function(a, b) {
-        return Math.max.apply(null, b ? pv.map(a, b) : a);
-      } };
-      var MMCQ = (function() {
-        function a(a2, b2, c2) {
-          return (a2 << 2 * i) + (b2 << i) + c2;
-        }
-        function b(a2) {
-          function b2() {
-            c2.sort(a2), d2 = true;
-          }
-          var c2 = [], d2 = false;
-          return { push: function(a3) {
-            c2.push(a3), d2 = false;
-          }, peek: function(a3) {
-            return d2 || b2(), void 0 === a3 && (a3 = c2.length - 1), c2[a3];
-          }, pop: function() {
-            return d2 || b2(), c2.pop();
-          }, size: function() {
-            return c2.length;
-          }, map: function(a3) {
-            return c2.map(a3);
-          }, debug: function() {
-            return d2 || b2(), c2;
-          } };
-        }
-        function c(a2, b2, c2, d2, e2, f2, g2) {
-          var h3 = this;
-          h3.r1 = a2, h3.r2 = b2, h3.g1 = c2, h3.g2 = d2, h3.b1 = e2, h3.b2 = f2, h3.histo = g2;
-        }
-        function d() {
-          this.vboxes = new b(function(a2, b2) {
-            return pv.naturalOrder(a2.vbox.count() * a2.vbox.volume(), b2.vbox.count() * b2.vbox.volume());
-          });
-        }
-        function e(b2) {
-          var c2, d2, e2, f2, g2 = 1 << 3 * i, h3 = new Array(g2);
-          return b2.forEach(function(b3) {
-            d2 = b3[0] >> j, e2 = b3[1] >> j, f2 = b3[2] >> j, c2 = a(d2, e2, f2), h3[c2] = (h3[c2] || 0) + 1;
-          }), h3;
-        }
-        function f(a2, b2) {
-          var d2, e2, f2, g2 = 1e6, h3 = 0, i2 = 1e6, k2 = 0, l3 = 1e6, m = 0;
-          return a2.forEach(function(a3) {
-            d2 = a3[0] >> j, e2 = a3[1] >> j, f2 = a3[2] >> j, g2 > d2 ? g2 = d2 : d2 > h3 && (h3 = d2), i2 > e2 ? i2 = e2 : e2 > k2 && (k2 = e2), l3 > f2 ? l3 = f2 : f2 > m && (m = f2);
-          }), new c(g2, h3, i2, k2, l3, m, b2);
-        }
-        function g(b2, c2) {
-          function d2(a2) {
-            var b3, d3, e3, f3, g3, h4 = a2 + "1", j3 = a2 + "2", k3 = 0;
-            for (i2 = c2[h4]; i2 <= c2[j3]; i2++) if (o[i2] > n2 / 2) {
-              for (e3 = c2.copy(), f3 = c2.copy(), b3 = i2 - c2[h4], d3 = c2[j3] - i2, g3 = d3 >= b3 ? Math.min(c2[j3] - 1, ~~(i2 + d3 / 2)) : Math.max(c2[h4], ~~(i2 - 1 - b3 / 2)); !o[g3]; ) g3++;
-              for (k3 = p[g3]; !k3 && o[g3 - 1]; ) k3 = p[--g3];
-              return e3[j3] = g3, f3[h4] = e3[j3] + 1, [e3, f3];
-            }
-          }
-          if (c2.count()) {
-            var e2 = c2.r2 - c2.r1 + 1, f2 = c2.g2 - c2.g1 + 1, g2 = c2.b2 - c2.b1 + 1, h3 = pv.max([e2, f2, g2]);
-            if (1 == c2.count()) return [c2.copy()];
-            var i2, j2, k2, l3, m, n2 = 0, o = [], p = [];
-            if (h3 == e2) for (i2 = c2.r1; i2 <= c2.r2; i2++) {
-              for (l3 = 0, j2 = c2.g1; j2 <= c2.g2; j2++) for (k2 = c2.b1; k2 <= c2.b2; k2++) m = a(i2, j2, k2), l3 += b2[m] || 0;
-              n2 += l3, o[i2] = n2;
-            }
-            else if (h3 == f2) for (i2 = c2.g1; i2 <= c2.g2; i2++) {
-              for (l3 = 0, j2 = c2.r1; j2 <= c2.r2; j2++) for (k2 = c2.b1; k2 <= c2.b2; k2++) m = a(j2, i2, k2), l3 += b2[m] || 0;
-              n2 += l3, o[i2] = n2;
-            }
-            else for (i2 = c2.b1; i2 <= c2.b2; i2++) {
-              for (l3 = 0, j2 = c2.r1; j2 <= c2.r2; j2++) for (k2 = c2.g1; k2 <= c2.g2; k2++) m = a(j2, k2, i2), l3 += b2[m] || 0;
-              n2 += l3, o[i2] = n2;
-            }
-            return o.forEach(function(a2, b3) {
-              p[b3] = n2 - a2;
-            }), d2(h3 == e2 ? "r" : h3 == f2 ? "g" : "b");
-          }
-        }
-        function h(a2, c2) {
-          function h3(a3, b2) {
-            for (var c3, d2 = 1, e2 = 0; k > e2; ) if (c3 = a3.pop(), c3.count()) {
-              var f2 = g(i2, c3), h4 = f2[0], j3 = f2[1];
-              if (!h4) return;
-              if (a3.push(h4), j3 && (a3.push(j3), d2++), d2 >= b2) return;
-              if (e2++ > k) return;
-            } else a3.push(c3), e2++;
-          }
-          if (!a2.length || 2 > c2 || c2 > 256) return false;
-          var i2 = e(a2), j2 = 0;
-          i2.forEach(function() {
-            j2++;
-          });
-          var m = f(a2, i2), n2 = new b(function(a3, b2) {
-            return pv.naturalOrder(a3.count(), b2.count());
-          });
-          n2.push(m), h3(n2, l2 * c2);
-          for (var o = new b(function(a3, b2) {
-            return pv.naturalOrder(a3.count() * a3.volume(), b2.count() * b2.volume());
-          }); n2.size(); ) o.push(n2.pop());
-          h3(o, c2 - o.size());
-          for (var p = new d(); o.size(); ) p.push(o.pop());
-          return p;
-        }
-        var i = 5, j = 8 - i, k = 1e3, l2 = 0.75;
-        return c.prototype = { volume: function(a2) {
-          var b2 = this;
-          return (!b2._volume || a2) && (b2._volume = (b2.r2 - b2.r1 + 1) * (b2.g2 - b2.g1 + 1) * (b2.b2 - b2.b1 + 1)), b2._volume;
-        }, count: function(b2) {
-          var c2 = this, d2 = c2.histo;
-          if (!c2._count_set || b2) {
-            var e2, f2, g2, h3 = 0;
-            for (e2 = c2.r1; e2 <= c2.r2; e2++) for (f2 = c2.g1; f2 <= c2.g2; f2++) for (g2 = c2.b1; g2 <= c2.b2; g2++) index = a(e2, f2, g2), h3 += d2[index] || 0;
-            c2._count = h3, c2._count_set = true;
-          }
-          return c2._count;
-        }, copy: function() {
-          var a2 = this;
-          return new c(a2.r1, a2.r2, a2.g1, a2.g2, a2.b1, a2.b2, a2.histo);
-        }, avg: function(b2) {
-          var c2 = this, d2 = c2.histo;
-          if (!c2._avg || b2) {
-            var e2, f2, g2, h3, j2, k2 = 0, l3 = 1 << 8 - i, m = 0, n2 = 0, o = 0;
-            for (f2 = c2.r1; f2 <= c2.r2; f2++) for (g2 = c2.g1; g2 <= c2.g2; g2++) for (h3 = c2.b1; h3 <= c2.b2; h3++) j2 = a(f2, g2, h3), e2 = d2[j2] || 0, k2 += e2, m += e2 * (f2 + 0.5) * l3, n2 += e2 * (g2 + 0.5) * l3, o += e2 * (h3 + 0.5) * l3;
-            k2 ? c2._avg = [~~(m / k2), ~~(n2 / k2), ~~(o / k2)] : c2._avg = [~~(l3 * (c2.r1 + c2.r2 + 1) / 2), ~~(l3 * (c2.g1 + c2.g2 + 1) / 2), ~~(l3 * (c2.b1 + c2.b2 + 1) / 2)];
-          }
-          return c2._avg;
-        }, contains: function(a2) {
-          var b2 = this, c2 = a2[0] >> j;
-          return gval = a2[1] >> j, bval = a2[2] >> j, c2 >= b2.r1 && c2 <= b2.r2 && gval >= b2.g1 && gval <= b2.g2 && bval >= b2.b1 && bval <= b2.b2;
-        } }, d.prototype = { push: function(a2) {
-          this.vboxes.push({ vbox: a2, color: a2.avg() });
-        }, palette: function() {
-          return this.vboxes.map(function(a2) {
-            return a2.color;
-          });
-        }, size: function() {
-          return this.vboxes.size();
-        }, map: function(a2) {
-          for (var b2 = this.vboxes, c2 = 0; c2 < b2.size(); c2++) if (b2.peek(c2).vbox.contains(a2)) return b2.peek(c2).color;
-          return this.nearest(a2);
-        }, nearest: function(a2) {
-          for (var b2, c2, d2, e2 = this.vboxes, f2 = 0; f2 < e2.size(); f2++) c2 = Math.sqrt(Math.pow(a2[0] - e2.peek(f2).color[0], 2) + Math.pow(a2[1] - e2.peek(f2).color[1], 2) + Math.pow(a2[2] - e2.peek(f2).color[2], 2)), (b2 > c2 || void 0 === b2) && (b2 = c2, d2 = e2.peek(f2).color);
-          return d2;
-        }, forcebw: function() {
-          var a2 = this.vboxes;
-          a2.sort(function(a3, b3) {
-            return pv.naturalOrder(pv.sum(a3.color), pv.sum(b3.color));
-          });
-          var b2 = a2[0].color;
-          b2[0] < 5 && b2[1] < 5 && b2[2] < 5 && (a2[0].color = [0, 0, 0]);
-          var c2 = a2.length - 1, d2 = a2[c2].color;
-          d2[0] > 251 && d2[1] > 251 && d2[2] > 251 && (a2[c2].color = [255, 255, 255]);
-        } }, { quantize: h };
-      })();
-      module.exports = ColorThief3;
-    }
-  });
-
   // node_modules/@ungap/weakmap/esm/index.js
   var self2 = {};
   try {
@@ -7072,7 +7072,7 @@
   }
   function parseAttributes(node, holes, parts, path) {
     var attributes = node.attributes;
-    var cache2 = [];
+    var cache3 = [];
     var remove2 = [];
     var array = normalizeAttributes(attributes, parts);
     var length = array.length;
@@ -7083,8 +7083,8 @@
       var sparse;
       if (direct || 1 < (sparse = attribute2.value.split(UIDC)).length) {
         var name = attribute2.name;
-        if (cache2.indexOf(name) < 0) {
-          cache2.push(name);
+        if (cache3.indexOf(name) < 0) {
+          cache3.push(name);
           var realName = parts.shift().replace(
             direct ? /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ : new RegExp(
               "^(?:|[\\S\\s]*?\\s)(" + name + `)\\s*=\\s*('|")[\\S\\s]*`,
@@ -7623,13 +7623,13 @@
   // node_modules/lighterhtml/esm/index.js
   var { create, freeze, keys } = Object;
   var tProto = Tagger.prototype;
-  var cache = esm_default3(new esm_default());
+  var cache2 = esm_default3(new esm_default());
   var createRender = (Tagger2) => ({
     html: outer("html", Tagger2),
     svg: outer("svg", Tagger2),
     render(where, what) {
       const hole = typeof what === "function" ? what() : what;
-      const info = cache.get(where) || cache.set(where, createCache());
+      const info = cache2.get(where) || cache2.set(where, createCache());
       const wire = hole instanceof LighterHole ? unroll(Tagger2, info, hole) : hole;
       if (wire !== info.wire) {
         info.wire = wire;
@@ -7641,12 +7641,12 @@
   });
   var createCache = () => ({ stack: [], entry: null, wire: null });
   var outer = (type, Tagger2) => {
-    const cache2 = esm_default3(new esm_default());
+    const cache3 = esm_default3(new esm_default());
     const fixed = (info) => function() {
       return unroll(Tagger2, info, hole.apply(null, arguments));
     };
     hole.for = (ref2, id) => {
-      const memo = cache2.get(ref2) || cache2.set(ref2, create(null));
+      const memo = cache3.get(ref2) || cache3.set(ref2, create(null));
       return memo[id] || (memo[id] = fixed(createCache()));
     };
     hole.node = function() {
@@ -10855,17 +10855,17 @@
     if (isEqual2 === void 0) {
       isEqual2 = areInputsEqual;
     }
-    var cache2 = null;
+    var cache3 = null;
     function memoized() {
       var newArgs = [];
       for (var _i = 0; _i < arguments.length; _i++) {
         newArgs[_i] = arguments[_i];
       }
-      if (cache2 && cache2.lastThis === this && isEqual2(newArgs, cache2.lastArgs)) {
-        return cache2.lastResult;
+      if (cache3 && cache3.lastThis === this && isEqual2(newArgs, cache3.lastArgs)) {
+        return cache3.lastResult;
       }
       var lastResult = resultFn.apply(this, newArgs);
-      cache2 = {
+      cache3 = {
         lastResult,
         lastArgs: newArgs,
         lastThis: this
@@ -10873,7 +10873,7 @@
       return lastResult;
     }
     memoized.clear = function clear() {
-      cache2 = null;
+      cache3 = null;
     };
     return memoized;
   }
@@ -18129,9 +18129,6 @@
   function sanitise(text3, method = "+") {
     return encodeURIComponent(text3).replaceAll("%2B", "%252B").replaceAll("%20", method);
   }
-  function sanitise_text(text3) {
-    return text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-  }
   function desanitise(text3, method = "+") {
     return decodeURIComponent(text3.replaceAll(method, "%20")).replaceAll(
       "%252B",
@@ -18168,25 +18165,6 @@
     }
     let interpolated = current + diff2 * proximity;
     return (interpolated % 360 + 360) % 360;
-  }
-  function lazy(elem, func, options = {}) {
-    const { threshold = 0.1, rootMargin = "50px" } = options;
-    const observer = new IntersectionObserver(
-      (entries2) => {
-        entries2.forEach((entry) => {
-          if (entry.isIntersecting) {
-            log2("now allowing load", "lazy", "info", {
-              elem,
-              options
-            });
-            func(elem);
-            observer.unobserve(elem);
-          }
-        });
-      },
-      { threshold, rootMargin }
-    );
-    observer.observe(elem);
   }
   function copy(text3) {
     navigator.clipboard.writeText(text3).then(() => {
@@ -18306,11 +18284,6 @@
     if (string == "") string = (/* @__PURE__ */ new Date()).toString();
     const date = DateTime.fromJSDate(new Date(string));
     return date.toFormat("HH:mm:ss Z");
-  }
-  function int_from_string(string) {
-    const match3 = string.match(/[\d.,\s\u00A0\u202F]+/);
-    if (match3) return clean_number(match3[0]);
-    return string;
   }
   function set_storage(key, val) {
     try {
@@ -19687,6 +19660,182 @@
     return elem;
   }
 
+  // src/components/select.js
+  unsafeWindow._update_inbuilt_select = function(id, value) {
+    update_inbuilt_select(id, value);
+  };
+  function update_inbuilt_select(id, value) {
+    document.documentElement.setAttribute(`data-bwaa--inbuilt-${id}`, value);
+  }
+  function select(values, initial = "", name = "", func = null) {
+    let select2;
+    let button;
+    if (values.length === 0) {
+      return html.node``;
+    }
+    if (initial == "")
+      initial = values.find((v) => "value" in v)?.value ?? initial;
+    let container = html.node`
+        <div class="select-wrap custom-selector">
+            <select ref=${(el) => select2 = el} name=${name}>
+                ${values.map((value) => {
+      if (value.value == null) return html.node``;
+      return html.node`
+                        <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
+                    `;
+    })}
+            </select>
+            <button class="select-button" type="button" ref=${(el) => button = el} />
+        </div>
+    `;
+    let menu = tippy_esm_default(button, {
+      theme: "select-menu",
+      content: html.node``,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      appendTo: document.body,
+      onShow(instance) {
+        if (values.length > 15) {
+          setTimeout(() => {
+            instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
+              behavior: "instant",
+              block: "center"
+            });
+          }, 1);
+        }
+      }
+    });
+    set_select(initial);
+    container.set = (val) => {
+      set_select(val);
+    };
+    container.value = () => {
+      return select2.value;
+    };
+    return container;
+    function set_select(selected) {
+      values.some((value) => {
+        if (value.value == selected) {
+          render(button, html`${value.text}`);
+          return false;
+        }
+      });
+      select2.value = selected;
+      if (name != "")
+        document.documentElement.setAttribute(
+          `data-bwaa--inbuilt-id_${name}`,
+          selected
+        );
+      if (func) func(selected);
+      menu.setContent(html.node`
+        ${values.map((value) => {
+        if (value.value == null) {
+          return html.node`
+                    <div class="select-header">
+                        ${value.text}
+                    </div>
+                `;
+        }
+        return html.node`
+                <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(value.value)}>
+                    ${value.text}
+                </button>
+            `;
+      })}
+    `);
+    }
+  }
+  function select_prepare(element) {
+    let values = [];
+    element.querySelectorAll("option").forEach((option2) => {
+      values.push({
+        value: option2.value,
+        text: option2.textContent
+      });
+    });
+    return values;
+  }
+  function custom_select(select2, element_to_append) {
+    console.info(select2);
+    let id = select2.getAttribute("id");
+    let value = select2.value;
+    let value_objects = select2.querySelectorAll("option");
+    let menu_list = document.createElement("div");
+    value_objects.forEach((object) => {
+      let object_value = object.getAttribute("value");
+      let object_text = object.textContent;
+      let item = document.createElement("button");
+      item.classList.add(
+        "btn",
+        "dropdown-menu-clickable-item",
+        "select-item"
+      );
+      item.setAttribute(
+        "onclick",
+        `_set_custom_select_value('${id}', '${object_value}')`
+      );
+      item.setAttribute("data-value", object_value);
+      item.setAttribute("type", "button");
+      item.textContent = object_text;
+      menu_list.appendChild(item);
+    });
+    let button = document.createElement("button");
+    button.classList.add("select-button");
+    button.setAttribute("id", `select-${id}`);
+    button.setAttribute("type", "button");
+    button.textContent = menu_list.querySelector(
+      `[data-value="${value}"]`
+    ).textContent;
+    let theme_menu_item = tippy_esm_default(button, {
+      theme: "select-menu",
+      content: html.node([menu_list.innerHTML]),
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        update_custom_select(instance.popper, select2.value);
+      }
+    });
+    element_to_append.appendChild(button);
+  }
+  unsafeWindow._set_custom_select_value = function(select_id, value) {
+    let select2 = document.getElementById(select_id);
+    select2.value = value;
+    console.info(select2, `#select-${select_id}`);
+    update_custom_select(
+      document.getElementById(`select-${select_id}`)._tippy.popper,
+      value,
+      select_id
+    );
+    document.documentElement.setAttribute(
+      `data-bwaa--inbuilt-${select_id}`,
+      value
+    );
+  };
+  function update_custom_select(element = document.body, value = "", select_id = "") {
+    let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
+    btns.forEach((btn) => {
+      if (btn.getAttribute("data-value") != value) {
+        btn.classList.remove("active");
+      } else {
+        btn.classList.add("active");
+        let sel_button = document.body.querySelector(
+          `#select-${select_id}`
+        );
+        console.log(sel_button);
+        if (!sel_button) return;
+        sel_button.textContent = btn.textContent;
+      }
+    });
+  }
+  unsafeWindow._update_inbuilt_selection = function(id, index3) {
+    document.getElementById(id).selectedIndex = index3;
+    update_inbuilt_select(id, document.getElementById(id).value);
+  };
+
   // src/components/input.js
   function input({
     type = "text",
@@ -19791,188 +19940,6 @@
       error_tooltip.show();
     }
   }
-
-  // src/components/select.js
-  unsafeWindow._update_inbuilt_select = function(id, value) {
-    update_inbuilt_select(id, value);
-  };
-  function update_inbuilt_select(id, value) {
-    document.documentElement.setAttribute(`data-bwaa--inbuilt-${id}`, value);
-  }
-  function select(values, initial = "", name = "", func = null) {
-    let select2;
-    let button;
-    if (values.length === 0) {
-      return html.node``;
-    }
-    if (initial == "")
-      initial = values.find((v) => "value" in v)?.value ?? initial;
-    let container = html.node`
-        <div class="select-wrap custom-selector">
-            <select ref=${(el) => select2 = el} name=${name}>
-                ${values.map((value) => {
-      if (value.value == null) return html.node``;
-      return html.node`
-                        <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
-                    `;
-    })}
-            </select>
-            <button class="select-button" type="button" ref=${(el) => button = el} />
-        </div>
-    `;
-    let menu = tippy_esm_default(button, {
-      theme: "select-menu",
-      content: html.node``,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      onShow(instance) {
-        if (values.length > 15) {
-          setTimeout(() => {
-            instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
-              behavior: "instant",
-              block: "center"
-            });
-          }, 1);
-        }
-      }
-    });
-    set_select(initial);
-    container.set = (val) => {
-      set_select(val);
-    };
-    container.value = () => {
-      return select2.value;
-    };
-    return container;
-    function set_select(selected) {
-      values.some((value) => {
-        if (value.value == selected) {
-          render(button, html`${value.text}`);
-          return false;
-        }
-      });
-      select2.value = selected;
-      if (name != "")
-        document.documentElement.setAttribute(
-          `data-bwaa--inbuilt-id_${name}`,
-          selected
-        );
-      if (func) func(selected);
-      menu.setContent(html.node`
-        ${values.map((value) => {
-        if (value.value == null) {
-          return html.node`
-                    <div class="select-header">
-                        ${value.text}
-                    </div>
-                `;
-        }
-        return html.node`
-                <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(value.value)}>
-                    ${value.text}
-                </button>
-            `;
-      })}
-    `);
-    }
-  }
-  function select_prepare(element) {
-    let values = [];
-    element.querySelectorAll("option").forEach((option2) => {
-      values.push({
-        value: option2.value,
-        text: option2.textContent
-      });
-    });
-    return values;
-  }
-  function select_prepare_list(list, icon = null) {
-    return list.map((item) => {
-      if (typeof item === "string") return { value: item, text: item, icon };
-      return item;
-    });
-  }
-  function custom_select(select2, element_to_append) {
-    console.info(select2);
-    let id = select2.getAttribute("id");
-    let value = select2.value;
-    let value_objects = select2.querySelectorAll("option");
-    let menu_list = document.createElement("div");
-    value_objects.forEach((object) => {
-      let object_value = object.getAttribute("value");
-      let object_text = object.textContent;
-      let item = document.createElement("button");
-      item.classList.add(
-        "btn",
-        "dropdown-menu-clickable-item",
-        "select-item"
-      );
-      item.setAttribute(
-        "onclick",
-        `_set_custom_select_value('${id}', '${object_value}')`
-      );
-      item.setAttribute("data-value", object_value);
-      item.setAttribute("type", "button");
-      item.textContent = object_text;
-      menu_list.appendChild(item);
-    });
-    let button = document.createElement("button");
-    button.classList.add("select-button");
-    button.setAttribute("id", `select-${id}`);
-    button.setAttribute("type", "button");
-    button.textContent = menu_list.querySelector(
-      `[data-value="${value}"]`
-    ).textContent;
-    let theme_menu_item = tippy_esm_default(button, {
-      theme: "select-menu",
-      content: html.node([menu_list.innerHTML]),
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        update_custom_select(instance.popper, select2.value);
-      }
-    });
-    element_to_append.appendChild(button);
-  }
-  unsafeWindow._set_custom_select_value = function(select_id, value) {
-    let select2 = document.getElementById(select_id);
-    select2.value = value;
-    console.info(select2, `#select-${select_id}`);
-    update_custom_select(
-      document.getElementById(`select-${select_id}`)._tippy.popper,
-      value,
-      select_id
-    );
-    document.documentElement.setAttribute(
-      `data-bwaa--inbuilt-${select_id}`,
-      value
-    );
-  };
-  function update_custom_select(element = document.body, value = "", select_id = "") {
-    let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
-    btns.forEach((btn) => {
-      if (btn.getAttribute("data-value") != value) {
-        btn.classList.remove("active");
-      } else {
-        btn.classList.add("active");
-        let sel_button = document.body.querySelector(
-          `#select-${select_id}`
-        );
-        console.log(sel_button);
-        if (!sel_button) return;
-        sel_button.textContent = btn.textContent;
-      }
-    });
-  }
-  unsafeWindow._update_inbuilt_selection = function(id, index3) {
-    document.getElementById(id).selectedIndex = index3;
-    update_inbuilt_select(id, document.getElementById(id).value);
-  };
 
   // src/components/settings.js
   function setting({
@@ -20766,7 +20733,6 @@
         `data-bwaa--theme_type`,
         settings.theme_type
       );
-      chart_reflow();
     }
     if (settings_store[id] && value == settings_store[id].default && ["hue", "sat", "lit"].includes(id)) {
       document.body.style.removeProperty(`--${settings_store[id].css}`);
@@ -20813,364 +20779,4360 @@
     return clone5;
   }
 
-  // src/pages/wiki.js
-  function bleh_wiki() {
-    let wiki_panel = document.createElement("section");
-    wiki_panel.classList.add("wiki-panel");
-    wiki_panel.innerHTML = page.structure.main.innerHTML;
-    page.structure.main.innerHTML = "";
-    page.structure.main.appendChild(wiki_panel);
-    page.structure.main.classList.add("not-a-panel");
-    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
-    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
-    let side_actions = document.createElement("section");
-    side_actions.classList.add("side-actions");
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    if (original_edit_button) {
-      let side_edit = document.createElement("a");
-      side_edit.classList.add("btn", "side-action");
-      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
-      side_edit.setAttribute("data-type", "edit");
-      side_edit.textContent = tl2(trans.edit);
-      side_actions.appendChild(side_edit);
+  // src/config.js
+  function load_settings(skip2 = false) {
+    if (!skip2) {
+      for (let setting2 in settings_store) {
+        if (settings[setting2] == null)
+          settings[setting2] = settings_store[setting2].default;
+      }
+      if (!settings.version) settings.version = 1e7;
     }
-    if (original_version_history) {
-      let side_history = document.createElement("a");
-      side_history.classList.add("btn", "side-action");
-      side_history.setAttribute("href", original_version_history.getAttribute("href"));
-      side_history.setAttribute("data-type", "history");
-      side_history.textContent = tl2(trans.timeline);
-      side_actions.appendChild(side_history);
+    if (!settings.theme_type) {
+      if (settings.theme == "light" || settings.theme == "ink")
+        settings.theme_type = "light";
+      else settings.theme_type = "dark";
     }
-    let wiki_author = wiki_panel.querySelector(".wiki-author");
-    if (wiki_author) {
-      let h22 = wiki_panel.querySelector("h2.text-18");
-      let sub_text = document.createElement("div");
-      sub_text.classList.add("sub-text", "space-below", "header-style");
-      sub_text.innerHTML = `
-            <div class="breadcrumb-origin prominent">
-                ${h22 ? h22.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
-            </div>
-            <div class="wiki-author-side">
-                ${wiki_author.innerHTML}
-            </div>
-        `;
-      wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
-      if (h22)
-        wiki_panel.removeChild(h22);
+    for (let setting2 in settings) {
+      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_store.hue.default && settings.sat == settings_store.sat.default && settings.lit == settings_store.lit.default)
+        continue;
+      if (settings_store[setting2] && settings_store[setting2].css)
+        document.body.style.setProperty(
+          `--${settings_store[setting2].css}`,
+          `${settings[setting2]}${settings_store[setting2].suffix || ""}`
+        );
+      document.documentElement.setAttribute(
+        `data-bwaa--${setting2}`,
+        `${settings[setting2]}`
+      );
     }
-    let wiki = wiki_panel.querySelector(".wiki");
-    if (!wiki) return;
-    patch_wiki_contents(wiki);
-    let factbox = wiki_panel.querySelector(".factbox");
-    if (factbox) {
-      let facts = html.node`
-            <section class="facts">
-                ${factbox}
-            </section>
-        `;
-      side_actions.after(facts);
+    load_skus();
+    compile_settings();
+    if (document.body.classList.contains("user-dashboard-layout")) {
+      document.documentElement.setAttribute("data-bwaa--theme", "oled");
+      page.state.settings_reload = true;
     }
   }
-  function bleh_wiki_history() {
-    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (!breadcrumb_root) {
-      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
+  function refresh_all(search = document) {
+    for (let item in settings_store)
+      update_item(item, settings[item], false, search);
+  }
+  function reset_item(item) {
+    update_item(item, settings_store[item].default);
+  }
+  function update_params(params = {}) {
+    for (let item in params) {
+      update_item(item, params[item]);
     }
-    let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below", "header-style");
-    sub_text.innerHTML = `
-        <div class="breadcrumb">
-            ${breadcrumb_root.querySelector("a").outerHTML}
-            <div class="breadcrumb-name prominent">
-                ${breadcrumb_name.textContent}
-            </div>
-        </div>
-    `;
-    breadcrumb_root.style.setProperty("display", "none");
-    breadcrumb_name.style.setProperty("display", "none");
-    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
-    if (!buffer_container)
-      buffer_container = page.structure.container.querySelector(".wiki-history");
-    let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
-    let pagination = buffer_container.querySelector(".pagination");
-    let wiki_panel = document.createElement("section");
-    wiki_panel.classList.add("wiki-history-panel");
-    wiki_panel.appendChild(sub_text);
-    wiki_panel.appendChild(wiki_history_table);
-    page.structure.main.appendChild(wiki_panel);
-    buffer_container.style.setProperty("display", "none");
-    if (pagination)
-      wiki_panel.appendChild(pagination);
-    let side_actions = html.node`
-        <section class="side-actions">
-            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-                ${tl2(trans.view_latest)}
-            </a>
-        </section>
-    `;
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    let entries2 = page.structure.main.querySelectorAll(".wiki-history-entry");
-    entries2.forEach((entry) => {
-      let author = entry.querySelector(".wiki-history-author");
-      let avatar2 = author.querySelector(".wiki-history-author-avatar");
-      let name = author.querySelector(".link-block-target");
-      if (name && avatar2) {
-        let badge = patch_avatar(avatar2, name.textContent, "wiki");
-        if (badge && badge.type) {
-          if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
-            name.style.setProperty("--hue-over", badge.hue);
-            name.style.setProperty("--sat-over", badge.sat);
-            name.style.setProperty("--lit-over", badge.lit);
+  }
+  unsafeWindow._reset_all = function() {
+    reset_all();
+  };
+  unsafeWindow._reset_item = function(item) {
+    reset_item(item);
+  };
+  unsafeWindow._update_params = function(params = {}) {
+    update_params(params);
+  };
+  unsafeWindow._update_item = function(item, value) {
+    update_item(item, value);
+  };
+  function update_item(item, value, modify = true, search = document) {
+    let container = search.querySelector(`#container-${item}`);
+    if (container) console.info(container);
+    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
+      return;
+    try {
+      let new_value = false;
+      if (value != settings[item]) new_value = true;
+      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
+        request_reload();
+      if (settings_base[item].type == "slider" && modify)
+        settings[item] = value;
+      if (!modify) console.info(item, value, modify);
+      if (settings_base[item].type == "slider") {
+        try {
+          let slider = search.querySelector(`#slider-${item}`);
+          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+          slider.value = settings[item];
+          search.querySelector(`#slider-track-${item}`).style.setProperty(
+            "--percent",
+            `${settings[item] / slider.getAttribute("max") * 100}%`
+          );
+        } catch (e) {
+        }
+        document.body.style.setProperty(
+          `--${settings_base[item].css}`,
+          `${value}${settings_base[item].unit}`
+        );
+        document.documentElement.setAttribute(
+          `data-bwaa--${item}`,
+          `${value}`
+        );
+        if (item == "hue" || item == "sat" || item == "lit") {
+          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
+            document.body.style.removeProperty(
+              `--${settings_base.hue.css}`
+            );
+            document.body.style.removeProperty(
+              `--${settings_base.sat.css}`
+            );
+            document.body.style.removeProperty(
+              `--${settings_base.lit.css}`
+            );
+            document.documentElement.setAttribute(
+              "data-bwaa--hsl-override",
+              "true"
+            );
           } else {
-            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+            document.documentElement.setAttribute(
+              "data-bwaa--hsl-override",
+              "false"
+            );
           }
-        } else if (badge) {
-          name.classList.add(badge.type);
+        }
+      } else if (settings_base[item].type == "toggle") {
+        if (settings[item] == settings_base[item].values[0] && modify) {
+          settings[item] = settings_base[item].values[1];
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.body.style.setProperty(
+            `--${item}`,
+            settings_base[item].values[1]
+          );
+          document.documentElement.setAttribute(
+            `data-bwaa--${item}`,
+            `${settings_base[item].values[1]}`
+          );
+        } else if (modify) {
+          settings[item] = settings_base[item].values[0];
+          console.log(`toggle-${item}`);
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          document.body.style.setProperty(
+            `--${item}`,
+            settings_base[item].values[0]
+          );
+          document.documentElement.setAttribute(
+            `data-bwaa--${item}`,
+            `${settings_base[item].values[0]}`
+          );
+        } else {
+          if (settings[item] == settings_base[item].values[0]) {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          } else {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          }
+        }
+      } else if (settings_base[item].type == "options") {
+        if (modify) {
+          settings[item] = value;
+          document.body.style.setProperty(`--${item}`, value);
+          document.documentElement.setAttribute(
+            `data-bwaa--${item}`,
+            value
+          );
+          let toggle2 = document.getElementById(`toggle-${item}-${value}`);
+          if (toggle2) toggle2.setAttribute("aria-checked", true);
+          let other_toggles = search.querySelectorAll(
+            `[data-toggle="${item}"]`
+          );
+          other_toggles.forEach((toggle3) => {
+            let other_value = toggle3.getAttribute("data-toggle-value");
+            if (other_value == value) return;
+            else toggle3.setAttribute("aria-checked", false);
+          });
+        } else {
+          if (settings[item] == value) {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
+          } else {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
+          }
         }
       }
+      if (modify) log2(`updated ${item} to ${settings[item]}`, "settings");
+      compile_settings();
+    } catch (e) {
+    }
+    if (container) {
+      if (settings[item] != settings_base[item].value)
+        container.classList.add("modified");
+      else container.classList.remove("modified");
+    }
+    if (item == "hue" || item == "sat" || item == "lit") {
+      update_colour_swatches();
+    }
+  }
+  function request_reload() {
+    if (page.type == "bleh_setup") return;
+    log2("requesting reload", "settings");
+    reload_pending.state = true;
+    notify({
+      title: tl2(trans.refresh_pending.name),
+      body: tl2(trans.refresh_pending.body),
+      icon: "icon-16-settings",
+      persist: true,
+      actions: [
+        {
+          action: () => invoke_reload(),
+          text: tl2(trans.refresh),
+          type: "refresh"
+        }
+      ]
     });
   }
-  function bleh_wiki_editor() {
-    let wiki_edit_panel = document.createElement("section");
-    wiki_edit_panel.classList.add("wiki-edit-panel");
-    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
-    page.structure.main.innerHTML = "";
-    page.structure.main.appendChild(wiki_edit_panel);
-    page.structure.main.classList.add("not-a-panel");
-    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (!breadcrumb_name) {
-      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
-      if (breadcrumb_name)
-        page.structure.content_top.style.setProperty("display", "none");
-    }
-    if (!breadcrumb_root) {
-      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
-    }
-    let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below", "header-style");
-    sub_text.innerHTML = `
-        <div class="breadcrumb">
-            ${breadcrumb_root.querySelector("a").outerHTML}
-            <div class="breadcrumb-name prominent">
-                ${breadcrumb_name.textContent}
-            </div>
-        </div>
-    `;
-    breadcrumb_root.style.setProperty("display", "none");
-    breadcrumb_name.style.setProperty("display", "none");
-    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
-    page.structure.side.innerHTML = "";
-    const side_actions = html.node`
-        <section class="side-actions">
-            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-                ${tl2(trans.view_latest)}
-            </a>
-        </section>
-    `;
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    const presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
-    const standards = [
-      tl2(trans.wiki_standard_tracks),
-      tl2(trans.wiki_standard_artists),
-      tl2(trans.wiki_standard_quotations)
-    ];
-    page.structure.side.appendChild(html.node`
-        <section class="wiki-presets-panel">
-            <h3 class="text-18">${tl2(trans.symbol_presets)}</h3>
-            <div class="presets">
-                ${presets.map((preset) => {
-      let item = html.node`
-                        <div class="preset" onclick=${() => copy(preset)}>
-                            ${preset}
-                        </div>
-                    `;
-      tippy_esm_default(item, {
-        content: tl2(trans.click_to_copy),
-        delay: [500, 0]
-      });
-      return item;
-    })}
-            </div>
-            <ul class="wiki-standards generic-list">
-                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
-            </ul>
-        </section>
-    `);
-    page.structure.side.appendChild(html.node`
-        <section class="wiki-syntax-panel bleh--blank-panel">
-            <h3 class="text-18">${tl2(trans.fancy_syntax)}</h3>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[artist]julie[/artist]</div>
-                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`) }}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`) }}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`) }}</div>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
-                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`) }}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
-                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`) }}</div>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[tag]grunge[/tag]</div>
-                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`) }}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[user]${auth.name}[/user]</div>
-                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`) }}</div>
-                </div>
-            </div>
-        </section>
-    `);
-    let rules = page.structure.main.querySelector(".wiki-style-rules");
-    rules.removeAttribute("id");
-    let rules_panel = document.createElement("section");
-    rules_panel.classList.add("rules-panel");
-    rules_panel.setAttribute("id", "stylerules");
-    rules_panel.innerHTML = rules.innerHTML;
-    page.structure.side.appendChild(rules_panel);
+  unsafeWindow._invoke_reload = function() {
+    invoke_reload();
+  };
+  function invoke_reload() {
+    window.location.reload();
   }
-  function patch_wiki() {
-    if (ff("show_wiki_label")) {
-      let wiki_col = page.structure.main.querySelector(".wiki-column");
-      let wiki_empty = false;
-      if (!wiki_col) wiki_col = page.structure.main.querySelector(".wiki-section");
-      if (!wiki_col) return;
-      let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
-      if (!wiki_block) {
-        wiki_block = wiki_col.querySelector(".wiki-block-cta");
-        wiki_empty = true;
+  function update_colour_swatches() {
+    let found = false;
+    let custom = null;
+    let seasonal = null;
+    let swatches = page.structure.main.querySelectorAll(".swatch");
+    swatches.forEach((swatch) => {
+      let h = swatch.style.getPropertyValue("--hue-over");
+      let s2 = swatch.style.getPropertyValue("--sat-over");
+      let l2 = swatch.style.getPropertyValue("--lit-over");
+      let parent = swatch.parentElement;
+      if (swatch.classList[0] == "dropdown-menu-clickable-item")
+        parent = swatch;
+      if (h == settings.hue && s2 == settings.sat && l2 == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
+        parent.setAttribute("aria-checked", "true");
+        if (swatch.classList[0] != "dropdown-menu-clickable-item")
+          found = true;
+      } else {
+        parent.setAttribute("aria-checked", "false");
       }
-      let read_more = wiki_block.querySelector("a:last-child");
-      if (read_more) {
-        read_more.classList.add("read-more");
-        read_more.textContent = tl2(trans.read_more).toLowerCase();
+      if (!custom && swatch.getAttribute("data-swatch-type") == "customise")
+        custom = parent;
+      if (!seasonal && swatch.getAttribute("data-swatch-type") == "default")
+        seasonal = parent;
+    });
+    if (found) return;
+    if (custom && settings.accent_type != "season")
+      custom.setAttribute("aria-checked", "true");
+    else if (seasonal) seasonal.setAttribute("aria-checked", "true");
+  }
+  unsafeWindow._reset_inbuilt_item = function(item) {
+    reset_inbuilt_item(item);
+  };
+  unsafeWindow._update_inbuilt_params = function(params = {}) {
+    update_inbuilt_params(params);
+  };
+  unsafeWindow._update_inbuilt_item = function(item, value) {
+    update_inbuilt_item(item, value);
+  };
+  function update_inbuilt_item(item, value, modify = true, element = document.body) {
+    console.warn("update item", item, value, "modify", modify);
+    let test_if_valid = element.querySelector(`#toggle-${item}`);
+    console.warn(test_if_valid, `toggle-${item}`);
+    if (test_if_valid == void 0) return;
+    if (inbuilt_settings[item].type == "toggle") {
+      if (modify) {
+        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
+        log2(`updated (inbuilt) ${item} to ${!value}`, "settings");
       }
-      wiki_col.insertBefore(html.node`
-            <div class="sub-text">
-                <p>${tl2(trans.about)}</p>
-                <span class="right-links">
-                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl2(trans.edit_wiki).toLowerCase()}</a></p>
-                    ${!wiki_empty && read_more ? html.node`<p>${read_more}</p>` : ""}
-                </span>
-            </div>
-        `, wiki_col.firstElementChild);
-      if (!wiki_empty)
-        patch_wiki_contents(wiki_block);
+      if (value == inbuilt_settings[item].values[0] && modify) {
+        element.querySelector(
+          `#inbuilt-companion-checkbox-${item}`
+        ).checked = false;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+        document.documentElement.setAttribute(
+          `data-bwaa--inbuilt-${item}`,
+          inbuilt_settings[item].values[1]
+        );
+      } else if (modify) {
+        element.querySelector(
+          `#inbuilt-companion-checkbox-${item}`
+        ).checked = true;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+        document.documentElement.setAttribute(
+          `data-bwaa--inbuilt-${item}`,
+          inbuilt_settings[item].values[0]
+        );
+      } else {
+        console.warn(
+          item,
+          value,
+          value == true,
+          value == false,
+          typeof value,
+          "boolean"
+        );
+        if (value == true) {
+          console.warn(item, value, "TRUE");
+          element.querySelector(
+            `#inbuilt-companion-checkbox-${item}`
+          ).checked = true;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          document.documentElement.setAttribute(
+            `data-bwaa--inbuilt-${item}`,
+            true
+          );
+        } else if (value == false) {
+          console.warn(item, value, "FALSE");
+          element.querySelector(
+            `#inbuilt-companion-checkbox-${item}`
+          ).checked = false;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.documentElement.setAttribute(
+            `data-bwaa--inbuilt-${item}`,
+            false
+          );
+        }
+      }
     }
   }
-  function patch_wiki_contents(wiki_block) {
-    let links = wiki_block.querySelectorAll("a");
-    links.forEach((link) => {
-      let href = link.getAttribute("href");
-      let type;
-      let name = link.textContent.trim();
-      let sister;
-      if (!href.startsWith(root)) {
-        if (href && is_link_external(href)) {
-          const url = new URL(href);
-          const scheme = url.protocol;
-          const hostname = url.hostname;
-          const path = url.pathname + url.search + url.hash;
-          let dangerous = false;
-          if (!scheme || !scheme.startsWith("http")) dangerous = true;
-          link.addEventListener("click", (e) => {
-            if (settings.trusted_sites.includes(hostname)) return;
-            e.preventDefault();
-            external_url_prompt(href, dangerous);
+
+  // src/seasonal.js
+  function set_season() {
+    if (!settings.seasonal) return;
+    let last_season_seen = localStorage.getItem("bwaa_last_season_seen") || "";
+    let now2 = /* @__PURE__ */ new Date();
+    log2(`it is now ${now2}`, "season", "log");
+    stored_season.offset = calculate_offset(now2);
+    log2(`calculated offset as ${stored_season.offset}`, "season");
+    let current_year = now2.getFullYear();
+    seasonal_events.forEach((season, index3) => {
+      log2(
+        `running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`,
+        "season",
+        "log"
+      );
+      log2(
+        `${now2 >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now2 <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`,
+        "season",
+        "log"
+      );
+      season.days_until = -DateTime.now().diff(
+        DateTime.fromISO(
+          season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)
+        ),
+        "days"
+      ).days;
+      season.is_next_year = false;
+      if (season.days_until < 0) {
+        season.days_until = -DateTime.now().diff(
+          DateTime.fromISO(
+            season.start.replace("y0", current_year + 1).replace("{offset}", stored_season.offset)
+          ),
+          "days"
+        ).days;
+        season.is_next_year = true;
+      }
+      if (now2 >= new Date(
+        season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)
+      ) && now2 <= new Date(
+        season.end.replace("y0", current_year).replace("{offset}", stored_season.offset)
+      )) {
+        stored_season.now = now2;
+        stored_season.year = current_year;
+        update_season_nav();
+        if (stored_season.id == season.id) return;
+        stored_season.id = season.id;
+        stored_season.start = season.start;
+        stored_season.end = season.end;
+        stored_season.snowflakes = season.snowflakes;
+        if (now2.getDate() == 31) {
+          stored_season.new_years_eve = true;
+          stored_season.seasonal_timer = setInterval(
+            update_season_nav,
+            1e3
+          );
+        } else if (stored_season.seasonal_timer) {
+          clearInterval(stored_season.seasonal_timer);
+        }
+        if (seasonal_events[index3 + 1] == null) {
+          stored_season.next_id = seasonal_events[0].id;
+          stored_season.next_start = seasonal_events[0].start;
+          stored_season.next_is_new_year = true;
+        } else {
+          stored_season.next_id = seasonal_events[index3 + 1].id;
+          stored_season.next_start = seasonal_events[index3 + 1].start;
+          stored_season.next_is_new_year = false;
+        }
+        log2(`${season.id} from ${season.start} to ${season.end}`, "season");
+        log2(
+          `next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`,
+          "season"
+        );
+        document.documentElement.setAttribute(
+          "data-bwaa--season",
+          season.id
+        );
+        if (season.snowflakes.state && settings.seasonal_particles != "none") {
+          log2("let the snow start!", "season");
+          prep_snow();
+          let snowflakes_enabled = true;
+          let snowflakes_count = season.snowflakes.count;
+          if (settings.seasonal_particles == "less" && snowflakes_count > 10)
+            snowflakes_count = snowflakes_count * 0.45;
+          begin_snowflakes(snowflakes_enabled, snowflakes_count);
+        }
+        if (last_season_seen != "" && last_season_seen != season.id) {
+          notify({
+            id: "new_season",
+            title: tl2(trans.new_season),
+            body: tl2(trans.value_for_time).replace("{v}", tl2(trans.seasonal.listing[season.id])).replace(
+              "{time}",
+              DateTime.fromISO(
+                season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
+              ).toRelative(DateTime.fromISO(stored_season.now))
+            ),
+            icon: "icon-16-season",
+            persist: true
           });
-          if (link.textContent != href) {
-            tippy_esm_default(link, {
-              theme: "name-sister-combo",
-              content: html.node`
-                            <span class="name">
-                                <span class="link">
-                                    ${scheme != "https:" ? html.node`
-                                    <span class="scheme">
-                                        ${scheme}//
-                                    </span>
-                                    ` : ""}
-                                    ${hostname ? html.node`
-                                    <span class="hostname">
-                                        ${hostname}
-                                    </span>
-                                    ` : html.node`
-                                    <span class="hostname">
-                                        ${path}
-                                    </span>
-                                    `}
-                                    ${path != "/" && hostname ? html.node`
-                                    <span class="path">
-                                        ${path}
-                                    </span>
-                                    ` : ""}
-                                </span>
-                            </span>
-                            <span class="sister">${tl2(trans.external)}</span>
-                        `
-            });
-          }
+        }
+        set_storage("bwaa_last_season_seen", season.id);
+        return;
+      }
+    });
+    let lowest = 400;
+    let next_season = {
+      start: ""
+    };
+    if (stored_season.id == "none") {
+      seasonal_events.forEach((season) => {
+        if (season.days_until < lowest) {
+          lowest = season.days_until;
+          next_season = season;
+        }
+      });
+      stored_season.now = now2;
+      stored_season.year = current_year;
+      stored_season.next_id = next_season.id;
+      stored_season.next_start = next_season.start;
+      stored_season.next_is_new_year = next_season.is_next_year;
+      log2("next season found", "season", "info", {
+        next: next_season,
+        stored: stored_season,
+        date: stored_season.next_start.replace(
+          "y0",
+          stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year
+        ).replace("{offset}", stored_season.offset)
+      });
+    }
+  }
+  function calculate_offset(now2) {
+    let offset3 = now2.getTimezoneOffset();
+    if (offset3 == 0) return "+0000";
+    const sign2 = offset3 < 0 ? "+" : "-";
+    offset3 = Math.abs(offset3);
+    const hours = Math.floor(offset3 / 60);
+    const minutes = offset3 % 60;
+    const formatted_hours = hours < 10 ? `0${hours}` : hours.toString();
+    const formatted_minutes = minutes < 10 ? `0${minutes}` : minutes.toString();
+    return sign2 + formatted_hours + formatted_minutes;
+  }
+  function seasonal_timer_start(bypass = false) {
+    if (stored_season.new_years_eve && !bypass) return;
+    if (seasonal_timer.state) return;
+    seasonal_timer.state = setInterval(set_season, 1e3);
+    log2("started interval", "season", "info");
+    if (!page.header.season_tooltip) return;
+    page.header.season_tooltip.setContent(html.node`
+        <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans.seasonal.listing[stored_season.id])}</span>
+        <span class="season-exclusive">${tl2(trans.seasonal.live)}</span>
+    `);
+    page.header.season.classList.add("live");
+  }
+  function seasonal_timer_end() {
+    if (stored_season.new_years_eve) return;
+    if (!seasonal_timer.state) return;
+    clearInterval(seasonal_timer.state);
+    seasonal_timer.state = null;
+    log2("ended interval", "season", "info");
+    if (!page.header.season_tooltip) return;
+    page.header.season_tooltip.setContent(html.node`
+        <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans.seasonal.listing[stored_season.id])}</span>
+        <span class="season-exclusive">${tl2(trans.seasonal.notice)}</span>
+    `);
+    page.header.season.classList.remove("live");
+  }
+  function update_season_nav() {
+    if (!page.header.season) return;
+    page.header.season.setAttribute("data-season", stored_season.id);
+    if (!stored_season.new_years_eve) {
+      page.header.season.textContent = DateTime.fromISO(
+        stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
+      ).toRelative(DateTime.fromISO(stored_season.now));
+    } else {
+      let next = stored_season.next_start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset);
+      if (stored_season.next_is_new_year)
+        next = stored_season.next_start.replace("y0", stored_season.year + 1).replace("{offset}", stored_season.offset);
+      let time_until = new Date(next) - /* @__PURE__ */ new Date();
+      page.header.season.textContent = countdown_to(time_until);
+      page.header.season_tooltip.setContent(html.node`
+            <span class="season-colour-name">${tl2(trans.seasonal.listing[stored_season.id])}</span>
+            <span class="season-exclusive">${tl2(trans.seasonal.live)}</span>
+        `);
+    }
+  }
+  function countdown_to(time_until) {
+    const duration = Duration.fromMillis(time_until).shiftTo(
+      "days",
+      "hours",
+      "minutes",
+      "seconds"
+    );
+    let { days, hours, minutes, seconds } = duration.toObject();
+    days = Math.floor(days);
+    hours = Math.floor(hours);
+    minutes = Math.floor(minutes);
+    seconds = Math.floor(seconds);
+    hours = String(hours).padStart(2, "0");
+    minutes = String(minutes).padStart(2, "0");
+    seconds = String(seconds).padStart(2, "0");
+    if (days != 0)
+      return DateTime.fromISO(
+        stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
+      ).toRelative(DateTime.fromISO(stored_season.now));
+    if (hours == "00" && minutes == "00" && seconds == "00") set_season();
+    return `${hours}:${minutes}:${seconds}`;
+  }
+  function prep_snow() {
+    let prev_container = document.getElementById("snowflakes");
+    if (prev_container != null) return;
+    document.documentElement.appendChild(html.node`
+        <div class="snow-container" id="snowflakes">
+            <span class="snow snowflake"></span>
+        </div>`);
+  }
+  function begin_snowflakes(enabled, count) {
+    if (!enabled) return;
+    let dynamic_css = "";
+    var snow_html = "";
+    for (let i = 1; i < count; i++) {
+      snow_html += '<i class="snow"></i>';
+      let rndX = snow_rand(0, 1e6) * 1e-4, rndO = snow_rand(-1e5, 1e5) * 1e-4, rndT = (snow_rand(3, 8) * 10).toFixed(2), rndS = (snow_rand(0, 1e4) * 1e-4).toFixed(2);
+      dynamic_css += ".snow:nth-child(" + i + "){opacity:" + (snow_rand(1, 1e4) * 1e-4).toFixed(2) + ";transform:translate(" + rndX.toFixed(2) + "vw,-10px) scale(" + rndS + ");animation:fall-" + i + " " + snow_rand(10, 30) + "s -" + snow_rand(0, 30) + "s linear infinite}@keyframes fall-" + i + "{" + rndT + "%{transform:translate(" + (rndX + rndO).toFixed(2) + "vw," + rndT + "vh) scale(" + rndS + ")}to{transform:translate(" + (rndX + rndO / 2).toFixed(2) + "vw, 105vh) scale(" + rndS + ")}}";
+    }
+    document.getElementById("snowflakes").innerHTML = "<style>" + dynamic_css + "</style>" + snow_html;
+  }
+  function snow_rand(a, b) {
+    return Math.floor(Math.random() * (b - a + 1)) + a;
+  }
+
+  // src/components/share.js
+  function share(url) {
+    let input2;
+    dialog({
+      id: "share",
+      title: tl2(trans.share),
+      body: html.node`
+            <div class="share-top content-form">
+                <input
+                    type="text"
+                    readonly
+                    value=${url}
+                    class="share-input"
+                    ref=${(el) => input2 = el}
+                />
+                <button
+                    class="btn primary icon copy"
+                    onclick=${() => {
+        input2.select();
+        document.execCommand("copy");
+        notify({
+          title: tl2(trans.copied_to_clipboard),
+          icon: "icon-16-copy"
+        });
+      }}
+                >${tl2(trans.copy)}</button>
+            </div>
+            <div class="share-links">
+                <a
+                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-twitter"
+                >Twitter</a>
+                <a
+                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-facebook"
+                >Facebook</a>
+            </div>
+        `,
+      replace_if_possible: true
+    });
+  }
+
+  // src/style.js
+  function append_style() {
+    document.documentElement.classList.add("florence-supports-loading");
+    for (var member in settings) delete settings[member];
+    Object.assign(settings, JSON.parse(localStorage.getItem("bwaa")));
+    let cached_style = localStorage.getItem("bwaa_cached_style") || "";
+    const split = window.location.pathname.replace(root, "").split("/");
+    const length = split.length - 1;
+    if (split[length] == "playback" && split[2] == "listening-report" || split[0] == "labs") {
+      log2("disabled loading for special interface", "style");
+      return;
+    }
+    document.documentElement.setAttribute("data-bwaa--theme", settings.theme);
+    if (settings.dev) return;
+    if (cached_style == "") {
+      log2("never cached, fetching", "style");
+      fetch_new_style();
+    } else {
+      log2("requesting cache", "style");
+      load_cached_style(cached_style);
+    }
+  }
+  function load_cached_style(cached_style) {
+    const style = html.node`
+        <style id="bwaa--cached-style">${cached_style}</style>
+    `;
+    document.documentElement.appendChild(style);
+    style.onload = () => {
+      log2("loaded cache", "style");
+      log2("checking timeout", "style");
+      check_if_style_cache_is_valid();
+    };
+  }
+  function check_if_style_cache_is_valid() {
+    const cached_style_timeout = new Date(
+      localStorage.getItem("bwaa_cached_style_timeout")
+    );
+    const current_time = /* @__PURE__ */ new Date();
+    if (cached_style_timeout < current_time) {
+      log2("fetching new, expired timeout", "style");
+      fetch_new_style();
+    } else {
+      log2(`timeout valid until ${cached_style_timeout}`, "style");
+    }
+  }
+  function fetch_new_style(delete_old_style = false, reload_on_finish = false, allow_incompatible = false) {
+    const url = `https://github.com/katelyynn/bwaa/raw/refs/heads/${settings.branch}/fm/bwaa.css?${Math.random()}`;
+    log2(`making request ${url}`, "style");
+    GM_xmlhttpRequest({
+      method: "GET",
+      url,
+      onload: (res) => {
+        log2(`style responded ${res.status}`, "style");
+        if (res.status != 200) {
+          log2("error fetching", "style", "error", { res });
           return;
         }
+        const text3 = res.responseText;
+        const style = html.node`
+                <style>${text3}</style>
+            `;
+        document.documentElement.appendChild(style);
+        style.onload = () => {
+          const theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+          if (!allow_incompatible && theme_version2 != version.build) {
+            log2(
+              "denied loading, incompatible version",
+              "style",
+              "info",
+              {
+                theme: theme_version2,
+                script: version.build
+              }
+            );
+            document.documentElement.removeChild(style);
+            return;
+          }
+          if (delete_old_style)
+            document.documentElement.removeChild(
+              document.getElementById("bwaa--cached-style")
+            );
+          log2("loaded", "style");
+          document.body.classList.add("bwaa");
+          if (reload_on_finish) invoke_reload();
+        };
+        const expire = /* @__PURE__ */ new Date();
+        expire.setHours(expire.getHours() + 1);
+        localStorage.setItem("bwaa_cached_style", text3);
+        localStorage.setItem("bwaa_cached_style_timeout", expire);
+        log2(`cached until ${expire}`, "style");
+      },
+      onerror: (e) => {
+        log2("error fetching", "style", "error", { e });
       }
-      if (href.endsWith("/+wiki")) return;
-      href = href.replace(root, "").replace("music/+noredirect/", "music/").replace("music/", "");
-      if (href.startsWith("user/")) return;
-      if (href.startsWith("tag/")) {
-        type = "tag";
+    });
+  }
+  function parse_version(v) {
+    const parts = v.split(".").map(Number);
+    while (parts.length < 3) parts.push(0);
+    return parts.slice(0, 3);
+  }
+  function compare_versions(a, b) {
+    const [a_maj, a_min, a_patch] = parse_version(a);
+    const [b_maj, b_min, b_patch] = parse_version(b);
+    if (a_maj !== b_maj) return a_maj > b_maj ? 1 : -1;
+    if (a_min !== b_min) return a_min > b_min ? 1 : -1;
+    if (a_patch !== b_patch) return a_patch > b_patch ? 1 : -1;
+    return 0;
+  }
+  function update_comparison(current, latest) {
+    return compare_versions(latest, current) === 1;
+  }
+  function update_check(force = false, btn = null, func = null) {
+    if (!force) {
+      const last_checked = localStorage.getItem("bwaa_update_checked") || null;
+      const next_check = localStorage.getItem("bwaa_update_next_check") || null;
+      const current_time = /* @__PURE__ */ new Date();
+      if (last_checked && next_check && new Date(next_check) > current_time) {
+        log2("update check skipped", "update", "info", {
+          next_in: next_check,
+          current_time
+        });
+        if (func) func();
+        return;
+      }
+    }
+    if (btn) btn.setAttribute("disabled", "");
+    let url = `https://katelyynn.github.io/bwaa/fm/src/build/build.json?${Date.now()}`;
+    download_with_progress(url, (percent) => {
+    }).then(async (blob) => {
+      const text3 = await blob.text();
+      if (btn) btn.removeAttribute("disabled");
+      try {
+        let data2 = JSON.parse(text3);
+        console.log(data2);
+        let update_required = update_comparison(version.build, data2.build);
+        set_storage("bwaa_update_required", update_required.toString());
+        set_storage("bwaa_update_to", data2.build);
+        set_storage("bwaa_update_checked", (/* @__PURE__ */ new Date()).toString());
+        let next = /* @__PURE__ */ new Date();
+        next.setHours(next.getHours() + 2);
+        set_storage("bwaa_update_next_check", next.toString());
+        log2("update check finished", "update", "info", {
+          next_in: next,
+          current_time: /* @__PURE__ */ new Date()
+        });
+        if (func) func();
+      } catch (e) {
+        log2("error parsing", "update", "error", { error: e });
+      }
+    });
+  }
+  function prompt_for_update() {
+    dialog({
+      id: "bwaa_update",
+      title: tl2(trans.update_to_version).replace(
+        "{v}",
+        localStorage.getItem("bwaa_update_to") || "unknown"
+      ),
+      body: html.node`
+            <div class="forms">
+                <div class="form">
+                    <div class="form-group proceed">
+                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl2(trans.update_now)}</button>
+                    </div>
+                </div>
+                <div class="form">
+                    <div class="form-group deny">
+                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl2(trans.ignore_for_now)}</button>
+                    </div>
+                </div>
+            </div>
+        `,
+      dismiss: false,
+      type: "update",
+      replace_if_possible: true
+    });
+  }
+  function ignore_update() {
+    dialog_rm({
+      id: "bwaa_update"
+    });
+  }
+  function start_update() {
+    open(
+      `https://github.com/katelyynn/bwaa/raw/${settings.branch}/fm/bwaa.user.js`
+    );
+    dialog({
+      id: "bwaa_update",
+      title: tl2(trans.update_to_version).replace(
+        "{v}",
+        localStorage.getItem("bwaa_update_to") || "unknown"
+      ),
+      body: html.node`
+            <div class="forms">
+                <div class="form">
+                    <div class="form-group proceed">
+                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl2(trans.finish)}</button>
+                    </div>
+                </div>
+            </div>
+        `,
+      dismiss: false,
+      type: "update",
+      replace_if_possible: true
+    });
+  }
+  function finish_update() {
+    dialog({
+      id: "bwaa_wait",
+      title: tl2(trans.update_to_version).replace(
+        "{v}",
+        localStorage.getItem("bwaa_update_to") || "unknown"
+      ),
+      body: html.node`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl2(trans.downloading_styles)}</div>
+            </div>
+        `,
+      type: "wait",
+      dismiss: false,
+      replace_if_possible: true
+    });
+    set_storage("bwaa_update_required", "false");
+    set_storage("bwaa_update_checked", (/* @__PURE__ */ new Date()).toString());
+    fetch_new_style(false, true, true);
+  }
+  function force_refresh_style() {
+    localStorage.removeItem("bwaa_cached_style");
+    localStorage.removeItem("bwaa_cached_style_timeout");
+    window.setTimeout(invoke_reload, 400);
+  }
+
+  // src/components/dynamic_theming.js
+  function dynamic_theming() {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    page.state.media = media;
+    match2(media);
+    media.addEventListener("change", match2);
+  }
+  function match2(media = page.state.media) {
+    if (!settings.theme_schedule) return;
+    if (media.matches) apply_theme("night");
+    else apply_theme("day");
+  }
+  function apply_theme(time2) {
+    if (settings.theme == settings[`theme_${time2}`]) return;
+    log2(`applying theme for time ${time2}`, "dynamic theming");
+    save_setting("theme", settings[`theme_${time2}`]);
+  }
+
+  // node_modules/@tealmiku/florence/dist/florence.js
+  function log3(text3, system, type = "info", append = {}) {
+    let system_colour;
+    switch (system) {
+      case "load":
+        system_colour = "#8CB9D9";
+        break;
+      case "lotus":
+        system_colour = "#8CD9A6";
+        break;
+      case "season":
+        system_colour = "#65B6D8";
+        break;
+      case "page":
+        system_colour = "#E4B381";
+        break;
+      case "page structure":
+        system_colour = "#D88A69";
+        break;
+      case "style":
+        system_colour = "#C9C678";
+        break;
+      case "profile":
+        system_colour = "#D56854";
+        break;
+      case "settings":
+        system_colour = "#6D6977";
+        break;
+      case "sponsor":
+        system_colour = "#CE4E88";
+        break;
+      default:
+        system_colour = "#C8DD88";
+        break;
+    }
+    if (Object.keys(append).length > 0)
+      console[type](
+        `%c${system}%c ${text3}`,
+        `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`,
+        "color: unset",
+        append
+      );
+    else
+      console[type](
+        `%c${system}%c ${text3}`,
+        `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`,
+        "color: unset"
+      );
+  }
+  var version2 = "2025.1019";
+  var last_page_type = {
+    state: void 0
+  };
+  var last_page_subpage = {
+    state: void 0
+  };
+  function florence({
+    page: page2,
+    on_head_load,
+    on_body_load,
+    on_mutation,
+    on_page_change,
+    on_subpage_change,
+    on_error
+  }) {
+    log3("starting florence", "load", "info", {
+      page: page2,
+      on_head_load,
+      on_body_load,
+      on_mutation,
+      on_page_change,
+      on_subpage_change,
+      on_error
+    });
+    let head_observer = new MutationObserver(() => {
+      if (document.head) {
+        document.documentElement.classList.add("florence-supports-loading");
+        if (on_head_load) on_head_load();
+        head_observer.disconnect();
+      }
+    });
+    head_observer.observe(document.documentElement, {
+      childList: true
+    });
+    let pre_observer = new MutationObserver((mutations) => {
+      log3("pre", "load", "info", { mutations });
+      if (document.body) {
+        log3(`${JSON.stringify(document.body.classList)}`, "load");
+        document.body.classList.add("florence");
+      }
+      if (document.body && document.body.querySelector(".adaptive-skin-container") && document.body.querySelector(".footer")) {
+        main2();
+        pre_observer.disconnect();
+      } else if (document.body && document.body.querySelector(":scope > .container")) {
+        document.body.classList.add("florence-loaded");
+      }
+    });
+    pre_observer.observe(document.documentElement, {
+      childList: true
+    });
+    function main2() {
+      log3("main thread starting", "page", "log", {
+        document,
+        body: document.body
+      });
+      let performance_start = performance.now();
+      try {
+        if (on_body_load) on_body_load();
+        flow();
+        const observer = new MutationObserver((mutations) => {
+          if (!mutations[0]) return;
+          const nodes = [
+            ...mutations[0].addedNodes,
+            ...mutations[0].removedNodes
+          ];
+          if (nodes.length && nodes.every(
+            (n2) => n2.nodeType == 1 && (n2.hasAttribute("data-tippy-root") || (n2.id || "").startsWith("tippy-"))
+          )) {
+            log3("ignored", "mutation", "log", { mutations });
+            return;
+          }
+          log3("loop", "mutation", "log", { mutations });
+          flow();
+        });
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+        let performance_end = performance.now();
+        log3(
+          `finished in ${(performance_end - performance_start) / 1e3} seconds`,
+          "load"
+        );
+      } catch (e) {
+        log3(`florence ran into an error`, "load", "error", { e });
+        if (on_error) on_error(e);
+      }
+    }
+    function flow() {
+      let performance_start = performance.now();
+      assign_page();
+      if (page2.state.error) return;
+      if (on_mutation) on_mutation();
+      let performance_end = performance.now();
+      log3(
+        `finished in ${(performance_end - performance_start) / 1e3} seconds`,
+        "loop"
+      );
+    }
+    function assign_page() {
+      document.documentElement.classList.add("florence-supports-loading");
+      if (!page2.structure.wrapper)
+        page2.structure.wrapper = document.body.querySelector(".main-content");
+      let main_content = page2.structure.wrapper.querySelector(
+        ":scope > :last-child:not([data-florence])"
+      );
+      if (main_content) {
+        assign_page_type();
+        if (on_page_change) on_page_change(main_content);
+        main_content.setAttribute("data-florence", "true");
       } else {
-        let split = href.split("/");
-        if (split.length == 1) {
-          type = "artist";
-        } else if (split.length == 2) {
-          type = "album";
-          name = desanitise(split[1]);
-          sister = desanitise(split[0]);
-        } else if (split.length == 3) {
-          type = "track";
-          name = desanitise(split[2]);
-          sister = desanitise(split[0]);
+        assign_page_subpage();
+      }
+      document.body.classList.add("florence-loaded");
+    }
+    function assign_page_type() {
+      let page_classes = document.body.classList;
+      page_classes.forEach((page_class, index3) => {
+        if (page_class.startsWith("namespace")) {
+          page2.initial = page_class.replace("namespace--", "");
+          let page_split = page2.initial.split("_");
+          page2.type = page_split[0];
+          if (page2.type == "music") {
+            page2.type = page_split[1];
+          }
+          if (page2.type != last_page_type.state) {
+            last_page_type.state = page2.type;
+            log3(page2.type, "page");
+          }
+          assign_page_subpage();
+          return;
+        }
+        if (index3 > 4) return;
+      });
+    }
+    function assign_page_subpage() {
+      page2.subpage = page2.initial.replace(page2.type, "").replace("_", "").replace("music_", "").replace("festival_", "event_");
+      if (last_page_subpage.state != page2.subpage) {
+        last_page_subpage.state = page2.subpage;
+        log3(`subpage of ${page2.subpage}`, "page");
+        if (on_subpage_change) on_subpage_change();
+      }
+    }
+  }
+
+  // src/components/structure.js
+  function checkup_page_structure(is_subpage = false, header = null) {
+    let params = new URLSearchParams(document.location.search);
+    page.requested = {
+      tab: params.get("tab"),
+      page: params.get("page"),
+      token: params.get("token"),
+      collage: params.get("collage")
+    };
+    if (!page.structure.container || !document.body.contains(page.structure.container)) {
+      log2("page missing container, creating", "page structure");
+      page.structure.container = document.createElement("div");
+      page.structure.container.classList.add("page-content", "container");
+      let container_full_width = document.body.querySelector(
+        ".container--full-width"
+      );
+      if (container_full_width)
+        container_full_width.insertBefore(
+          page.structure.container,
+          container_full_width.firstElementChild
+        );
+      else
+        document.body.querySelector(".adaptive-skin-container").appendChild(page.structure.container);
+    }
+    page.structure.container.setAttribute("data-assigned", "true");
+    let other_container = document.body.querySelector(
+      ".page-content.container:not([data-assigned])"
+    );
+    if (other_container) other_container.style.setProperty("display", "none");
+    if (!page.structure.row || !document.body.contains(page.structure.row)) {
+      log2("page missing row, creating", "page structure");
+      page.structure.row = document.createElement("div");
+      page.structure.row.classList.add("row");
+      page.structure.container.insertBefore(
+        page.structure.row,
+        page.structure.container.firstElementChild
+      );
+    }
+    if (page.structure.row.classList.contains("buffer-4"))
+      page.structure.row.classList = "row col-main-is-primary";
+    page.structure.row.setAttribute("data-assigned", "true");
+    if (!page.structure.main || !document.body.contains(page.structure.main)) {
+      log2("page missing main, creating", "page structure");
+      page.structure.main = document.createElement("div");
+      page.structure.main.classList.add("col-main");
+      page.structure.row.appendChild(page.structure.main);
+    }
+    page.structure.main.setAttribute("data-assigned", "true");
+    let other_main = page.structure.row.querySelector(
+      ".col-main.hidden-xs:not([data-assigned])"
+    );
+    if (other_main) other_main.style.setProperty("display", "none");
+    if (!page.structure.side || !document.body.contains(page.structure.side)) {
+      log2("page missing side", "page structure");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+      if (!page.structure.side) {
+        log2("page missing side, creating", "page structure");
+        page.structure.side = document.createElement("div");
+        page.structure.side.classList.add("col-sidebar");
+        page.structure.row.appendChild(page.structure.side);
+      }
+    }
+    log2("finished", "page structure");
+    if (header) {
+      let navlist = header.querySelector(".navlist");
+      if (navlist) {
+        page.structure.row.insertBefore(
+          navlist,
+          page.structure.row.firstElementChild
+        );
+        page.structure.nav = navlist;
+        let overview = page.structure.nav.querySelector(
+          ".secondary-nav-item--overview a"
+        );
+        if (overview) {
+          const href = overview.getAttribute("href").replace(root, "");
+          if (href == "settings" || href == "inbox" || href == "charts")
+            overview = null;
+        }
+        let text3 = tl2(trans[page.type]);
+        if (page.type == "user") text3 = tl2(trans.profile);
+        if (overview) overview.textContent = text3;
+      }
+    }
+  }
+  function checkup_nav() {
+    if (!ff("short")) return;
+    if (page.structure.nav)
+      page.structure.nav.setAttribute("data-assigned", "true");
+    let navlists = page.structure.container.querySelectorAll(":scope > .navlist");
+    navlists.forEach((nav, index3) => {
+      console.info(index3);
+      if (index3 < 1) return;
+      if (ff("mualani")) {
+        let toolbar = html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `;
+        page.structure.row.insertBefore(toolbar, page.structure.content);
+      } else {
+        page.structure.row.insertBefore(nav, page.structure.content);
+      }
+    });
+  }
+  function convert_to_toolbar() {
+    const nav = page.structure.content_top.querySelector(".navlist");
+    if (!nav) return;
+    nav.classList.add("redesigned-navigation");
+    page.structure.toolbar = html.node`
+        <div class="toolbar">
+            ${nav}
+        </div>
+    `;
+    page.structure.row.insertBefore(
+      page.structure.toolbar,
+      page.structure.row.firstChild
+    );
+    page.structure.content_top.style.display = "none";
+  }
+
+  // src/pages/bwaa_config.js
+  function bwaa_settings() {
+    page.structure.container = document.body.querySelector(".page-content");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    checkup_page_structure();
+    page.name = auth.name;
+    page.subpage = "";
+    update_page();
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    let params = new URLSearchParams(document.location.search);
+    page.requested.tab = params.get("tab");
+    page.requested.setting = params.get("setting");
+    let path = window.location.pathname.split("/");
+    let tab = path[path.length - 1];
+    if (tab == "bwaa") tab = null;
+    if (page.requested.tab && !tab) tab = page.requested.tab;
+    const tabs = {
+      home: {
+        name: tl2(trans.home)
+      },
+      interface: {
+        name: tl2(trans.interface)
+      },
+      profile: {
+        name: tl2(trans.profile),
+        icon: "user"
+      },
+      seasonal: {
+        name: tl2(trans.seasonal.name)
+      },
+      performance: {
+        name: tl2(trans.troubleshooting)
+      },
+      sku: {
+        name: tl2(trans.flags),
+        password: settings.hu_tao
+      }
+    };
+    render(page.structure.side, html`
+        <div class="cta first priority sponsor colourful">
+            ${auth.sponsor ? html.node`
+                <strong>${tl2(trans.you_are_a_sponsor)}</strong>
+                <a class="see-more" onclick=${() => sponsor_manage()}>${tl2(trans.manage_sponsor)}</a>
+            ` : html.node`
+                <strong>${tl2(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick=${() => sponsor()}>${tl2(trans.sponsor)}</a>
+            `}
+        </div>
+        <section class="side-actions">
+            <button class="btn side-action" data-type="import" onclick=${() => import_settings4()}>
+                ${tl2(trans.import)}
+            </button>
+            <button class="btn side-action" data-type="export" onclick=${() => export_settings()}>
+                ${tl2(trans.export)}
+            </button>
+            <button class="btn side-action" data-type="reset" onclick=${() => reset_settings()}>
+                ${tl2(trans.reset)}
+            </button>
+        </section>
+        <div class="form-section settings-form">
+            <p class="card-tip">
+                ${version.brand} ${version.build}.${version.sku}
+                <i>(florence ${version2})</i>
+            </p>
+        </div>
+    `);
+    page.state.nav_items = [];
+    render(page.structure.main, html`
+        <nav class="navlist secondary-nav navlist--more">
+            <ul class="navlist-items">
+                ${Object.entries(tabs).map(([id, tab2]) => {
+      if (tab2.hide_if) return html.node``;
+      if (tab2.type && tab2.type == "fill") {
+        return html.node`
+                            <div class="fill" />
+                        `;
+      }
+      let item;
+      const elem = html.node`
+                        <li class="navlist-item secondary-nav-item">
+                            <a class="secondary-nav-item-link bleh--nav" ref=${(el) => item = el} data-bwaa-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>
+                                ${tab2.label ? tab2.label : tab2.name}
+                            </a>
+                        </li>
+                    `;
+      page.state.nav_items.push(item);
+      return elem;
+    })}
+            </ul>
+        </nav>
+        <div id="bleh-settings-inject" ref=${(el) => page.state.inject = el} />
+    `);
+    if (!tab) change_settings_page("home");
+    else change_settings_page(tab);
+    if (page.requested.setting) scroll_to_setting(page.requested.setting);
+  }
+  function page_loading() {
+    render(page.state.inject, html`
+        <div class="form-section settings-form">
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl2(trans.loading)}</div>
+            </div>
+        </div>
+    `);
+  }
+  async function render_setting_page(page_id) {
+    if (page_id == "home") {
+      if (auth.pro === null) {
+        setTimeout(() => {
+          render_setting_page("home");
+        }, 10);
+        page_loading();
+        return;
+      }
+      register_skip_to([]);
+      let update_btn;
+      let pause_btn;
+      const update_required = localStorage.getItem("bleh_update_required") || "false";
+      const last_checked = localStorage.getItem("bleh_update_checked") || null;
+      const version_to_install = localStorage.getItem("bleh_update_to") || null;
+      let paused = localStorage.getItem("bleh_update_paused") || "false";
+      let paused_until = localStorage.getItem("bleh_update_paused_until") || null;
+      let badge_count = 0;
+      let badges = load_badges(auth.name);
+      if (badges) badge_count = badges.length;
+      if (auth.pro) badge_count++;
+      const auth_key = localStorage.getItem("bleh_auth");
+      const auth_valid = localStorage.getItem("bleh_auth_valid");
+      render(page.state.inject, html`
+            <section class="form-section settings-form">
+                <h2 class="form-header">Welcome to <i style="margin-right: 2px">re:</i>bwaa!</h2>
+                <p>You currently have version 3483249324932432</p>
+                <div class="profile-actions-section standalone">
+                    <div class="options">
+                        <a class="has-icon sponsor" onclick=${() => sponsor()}>${tl2(trans.sponsor)}</a>
+                    </div>
+                </div>
+                <h2 class="tiny">Quick controls</h2>
+                <div class="more-link align-left">
+                    <a onclick=${() => change_settings_page("interface")}>Choose your page style</a>
+                </div>
+                <h2 class="tiny">Customise further</h2>
+                <fieldset>
+                    <legend>Fun</legend>
+                    ${setting({ id: "seasonal" })}
+                    ${setting({ id: "seasonal_accent" })}
+                    ${setting({ id: "seasonal_particles" })}
+                    ${setting({ id: "seasonal_particles_fps" })}
+                    ${setting({ id: "seasonal_overlays" })}
+                </fieldset>
+                <div class="update-center-header">
+                    ${paused === "true" ? html.node`
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
+                            </div>
+                            <div class="check-circle paused colourful">
+                                <div class="bleh-icon" data-type="paused" />
+                            </div>
+                        </div>
+                        <div class="update-center-details">
+                            <h2>${tl2(trans.updates_paused)}</h2>
+                            <p class="last-checked">${tl2(trans.paused_until_date).replace("{d}", DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
+                        </div>
+                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl2(trans.check)}</button>
+                    ` : update_required === "false" ? html.node`
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
+                            </div>
+                            ${last_checked ? html.node`
+                            <div class="check-circle colourful">
+                                <div class="bleh-icon" data-type="check-thick" />
+                            </div>
+                            ` : ""}
+                        </div>
+                        <div class="update-center-details">
+                            ${last_checked ? html.node`
+                            <h2>${tl2(trans.you_are_up_to_date)}</h2>
+                            <p class="last-checked">${tl2(trans.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
+                            ` : html.node`
+                            <h2>${tl2(trans.missing_updates)}</h2>
+                            <p class="last-checked">${tl2(trans.never_checked)}</p>
+                            `}
+                        </div>
+                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+        notify({
+          id: "update",
+          title: tl2(trans.updates),
+          body: tl2(trans.checked_for_updates),
+          icon: "icon-16-update"
+        });
+        render_setting_page("general");
+      })}>${tl2(trans.check)}</button>
+                    ` : html.node`
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
+                            </div>
+                        </div>
+                        <div class="update-center-details">
+                            <h2>${tl2(trans.update_available_to_install)}</h2>
+                            ${last_checked ? html.node`
+                                <p class="last-checked">${tl2(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
+                            ` : html.node`
+                                <p class="last-checked">${tl2(trans.never_checked)}</p>
+                            `}
+                        </div>
+                        <div class="button-group">
+                            <button class="btn icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+        notify({
+          id: "update",
+          title: tl2(trans.updates),
+          body: tl2(trans.checked_for_updates),
+          icon: "icon-16-update"
+        });
+        render_setting_page("general");
+      })}>${tl2(trans.check)}</button>
+                            <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl2(trans.install_now)}</button>
+                        </div>
+                    `}
+                </div>
+                ${last_checked && paused === "false" && update_required === "true" ? html.node`
+                    <div class="alert alert-info">${tl2(trans.you_are_installing_version, { v: version_to_install })}</div>
+                ` : html.node`
+                    <div class="alert alert-info">${tl2(trans.you_are_running_version, { v: version.build })}</div>
+                `}
+            </section>
+            <section class="form-section settings-form">
+                <h4>${tl2(trans.profile)}</h4>
+                <div class="setting-group">
+                    ${auth.name ? html.node`
+                        <div class="setting" data-type="info">
+                            <div class="avatar-container">
+                                <div class="avatar-inner">
+                                    <img src=${auth.avatar} alt=${auth.name} />
+                                </div>
+                            </div>
+                            <div class="heading">
+                                <h5>${auth.name}</h5>
+                            </div>
+                            <div class="info">
+                                <p>${tl2(trans.profile_and_badges, { c: badge_count.toString() })}</p>
+                                ${badge_count > 0 ? html.node`
+                                    <button class="see-more" onclick=${() => {
+        dialog({
+          id: "badges",
+          title: auth.name,
+          body: html.node`
+                                                <div class="generic-table-list badge-list">
+                                                    ${badges ? badges.map((badge) => {
+            let style;
+            let classname = "";
+            if (badge.icon && badge.hue && badge.sat && badge.lit) {
+              style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+            } else {
+              classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+            }
+            return html.node`
+                                                            <div class="generic-table-list-entry badge-list-entry">
+                                                                <div class="icon-container colourful ${classname}" style=${style}>
+                                                                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                                </div>
+                                                                <div class="name colourful ${classname}" style=${style}>
+                                                                    ${badge.name}
+                                                                </div>
+                                                                <div class="text">
+                                                                    ${badge.reason}
+                                                                </div>
+                                                            </div>
+                                                        `;
+          }) : ""}
+                                                    ${auth.pro ? html.node`
+                                                        <div class="generic-table-list-entry badge-list-entry">
+                                                            <div class="icon-container colourful user-status-subscriber">
+                                                                <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                            </div>
+                                                            <div class="name colourful user-status-subscriber">
+                                                                ${tl2(trans.badges["user-status-subscriber"].name)}
+                                                            </div>
+                                                            <div class="text">
+                                                                ${tl2(trans.badges["user-status-subscriber"].reason)}
+                                                            </div>
+                                                        </div>
+                                                    ` : ""}
+                                                </div>
+                                            `
+        });
+      }}>${tl2(trans.view)}</button>
+                                ` : ""}
+                            </div>
+                        </div>
+                    ` : ""}
+                    ${auth.sponsor ? html.node`
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.you_are_a_sponsor)}</h5>
+                                <p>${tl2(trans.sponsor_get_badge)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
+                                    ${tl2(trans.manage_sponsor)}
+                                </button>
+                            </div>
+                        </div>
+                    ` : html.node`
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.news_sponsor_cta)}</h5>
+                                <p>${tl2(trans.api.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
+                                    ${tl2(trans.sponsor)}
+                                </button>
+                            </div>
+                        </div>
+                    `}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl2(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
+                                ${tl2(trans.update_check)}
+                            </button>
+                            <p>${sponsor_list.latest}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            ${!page.mobile ? html.node`
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.branding)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: "branding_type" })}
+                    </div>
+                </section>
+            ` : ""}
+            ${auth.name ? html.node`
+                <section class="form-section settings-form">
+                    <h4>API</h4>
+                    <div class="setting-group">
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.api.name)}</h5>
+                                <p>${tl2(trans.api.body)}</p>
+                            </div>
+                        </div>
+                        <div class="setting" data-type="info">
+                            <div class="heading">
+                                <h5>${tl2(trans.api_status)}</h5>
+                            </div>
+                            <div class="info">
+                                ${auth_key && auth_valid == "true" ? html.node`
+                                <p>${tl2(trans.connected)}</p>
+                                ` : html.node`
+                                <p>${tl2(trans.not_connected)}</p>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            ` : ""}
+            <section class="form-section settings-form">
+                <h4>${tl2(trans.language)}</h4>
+                <div class="setting-group">
+                    <div class="languages">
+                        ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
+        let date;
+        const row = html.node`
+                                <div class="language-row${lang == key ? " active" : ""}">
+                                    <div class="flag" name=${key} />
+                                    <div class="name">
+                                        <p><strong>${language.name}</strong> ${{ html: tl2(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
+                                    </div>
+                                    ${language.new ? html.node`
+                                        <div class="badges">
+                                            <div class="new-badge">${tl2(trans.new)}</div>
+                                        </div>
+                                    ` : html.node`
+                                        <div class="badges"></div>
+                                    `}
+                                    ${language.percent ? () => {
+          const elem = html.node`
+                                                                <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
+                                                                    ${language.percent}%
+                                                                </div>
+                                                            `;
+          tippy_esm_default(elem, {
+            content: `${tl2(trans.amount_translated, { c: language.translated })}, ${tl2(trans.missing_translated, { c: language.missing })}`
+          });
+          return elem;
+        } : ""}
+                                    <div class="date">
+                                        <p ref=${(el) => date = el}>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
+                                    </div>
+                                </div>
+                            `;
+        if (language.last_updated != "latest") {
+          tippy_esm_default(date, {
+            content: DateTime.fromISO(
+              language.last_updated
+            ).toLocaleString(DateTime.DATE_MED)
+          });
+        }
+        return row;
+      })}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl2(trans.submit_language.name)}</h5>
+                            <p>${tl2(trans.submit_language.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
+                                ${tl2(trans.help_contribute)}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `);
+    } else if (page_id == "interface") {
+      let render_tip = function() {
+        adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
+        render(adaptive_tip, html`
+                ${tl2(trans.adaptive_tip, {
+          day: tl2(trans.themes[settings.theme_day]),
+          night: tl2(trans.themes[settings.theme_night])
+        })}
+                <a onclick=${() => {
+          dialog({
+            id: "auto_theme",
+            title: tl2(trans.themes.name),
+            body: html.node`
+                            <div class="setting-group">
+                                ${theme_day = setting({
+              id: "theme_day",
+              list: [
+                {
+                  value: "light",
+                  text: tl2(trans.themes.light)
+                },
+                {
+                  value: "ink",
+                  text: tl2(trans.themes.ink)
+                },
+                {
+                  value: "dark",
+                  text: tl2(trans.themes.dark)
+                },
+                {
+                  value: "darker",
+                  text: tl2(trans.themes.darker)
+                },
+                {
+                  value: "oled",
+                  text: tl2(trans.themes.oled)
+                }
+              ],
+              func: () => {
+                render_tip();
+                bubbles.re_render();
+                match2();
+              }
+            })}
+                                ${theme_night = setting({
+              id: "theme_night",
+              list: [
+                {
+                  value: "light",
+                  text: tl2(trans.themes.light)
+                },
+                {
+                  value: "ink",
+                  text: tl2(trans.themes.ink)
+                },
+                {
+                  value: "dark",
+                  text: tl2(trans.themes.dark)
+                },
+                {
+                  value: "darker",
+                  text: tl2(trans.themes.darker)
+                },
+                {
+                  value: "oled",
+                  text: tl2(trans.themes.oled)
+                }
+              ],
+              func: () => {
+                render_tip();
+                bubbles.re_render();
+                match2();
+              }
+            })}
+                            </div>
+                            <p class="card-tip">${tl2(trans.theme_schedule)}</p>
+                        `
+          });
+        }}>
+                    ${tl2(trans.change_schedule)}
+                </a>
+            `);
+      };
+      let colourful_active;
+      let colourful_all;
+      let sat_bg2;
+      let adaptive_tip;
+      let bubbles;
+      render(
+        page.state.inject,
+        html`
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.appearance)}</h4>
+                    <div class="setting-group">
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.themes.name)}</h5>
+                            </div>
+                            <div class="info v">
+                                ${bubbles = theme_bubbles(() => {
+          sat_bg2.compat();
+          render_tip();
+          match2();
+        })}
+                                <p
+                                    class="card-tip"
+                                    ref=${(el) => adaptive_tip = el}
+                                />
+                            </div>
+                        </div>
+                        ${setting({ id: "solarium" })}
+                        ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.hue)}</h5>
+                            </div>
+                            <div class="info swatch-info">
+                                <div
+                                    id="colour_custom"
+                                    class="swatch-group palette"
+                                ></div>
+                                <div class="sep swatch-sep" />
+                                <div
+                                    id="colour_palette"
+                                    class="swatch-group palette"
+                                ></div>
+                            </div>
+                        </div>
+                        <div class="setting" data-type="options">
+                            <div class="heading">
+                                <h5>${tl2(trans.change_my_colour_when.name)}</h5>
+                                <p>${tl2(trans.change_my_colour_when.body)}</p>
+                            </div>
+                            <div class="primary-selections">
+                                ${setting({
+          id: "hue_from_album",
+          standalone: true
+        })}
+                                ${colourful_active = setting({
+          id: "colourful_tracks",
+          standalone: true,
+          func: () => {
+            colourful_all.compat();
+          }
+        })}
+                                ${colourful_all = setting({
+          id: "colourful_tracks_all",
+          standalone: true,
+          func: () => {
+            colourful_active.compat();
+          }
+        })}
+                            </div>
+                        </div>
+                        ${ff("card_saturation") ? html.node`
+                                ${sat_bg2 = setting({ id: "sat_bg" })}
+                            ` : ""}
+                        ${setting({ id: "noise" })}
+                    </div>
+                </section>
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.fonts)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: "font" })}
+                        ${setting({ id: "font_weight" })}
+                        ${setting({ id: "font_weight_medium" })}
+                        ${setting({ id: "font_weight_bold" })}
+                        ${setting({ id: "font_emoji" })}
+                    </div>
+                </section>
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.artwork)}</h4>
+                    <div class="inner-preview pad">
+                        <div class="palette albums" style="height: fit-content">
+                            <div
+                                class="album-cover swatch"
+                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"
+                            ></div>
+                            <div
+                                class="album-cover swatch"
+                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/b897255bf422baa93a42536af293f9f8.jpg')"
+                            ></div>
+                            <div
+                                class="album-cover swatch"
+                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg')"
+                            ></div>
+                            <div
+                                class="album-cover swatch"
+                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/510546e3b6df7504392274c528c77780.jpg')"
+                            ></div>
+                            <div
+                                class="album-cover swatch"
+                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/49cc807f69d59746b6b04be3434e6637.jpg')"
+                            ></div>
+                            <div
+                                class="album-cover swatch"
+                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/dd76702cea38c838a3090dd9496d92d9.jpg')"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "gloss" })}
+                        ${setting({ id: "grid_glow" })}
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "avatar_radius" })}
+                    </div>
+                </section>
+            `
+      );
+      render_tip();
+      display_colour_presets();
+      update_colour_swatches();
+    } else if (page_id == "seasonal") {
+      register_skip_to([]);
+      render(
+        page.state.inject,
+        html`
+                <div class="form-section settings-form">
+                    <div class="seasonal-inner">
+                        <div class="sub-text">
+                            ${tl2(trans.seasonal_timeline)}
+                        </div>
+                        <h4>
+                            ${DateTime.fromJSDate(
+          new Date(stored_season.now)
+        ).toLocaleString(DateTime.DATE_FULL)}
+                        </h4>
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "seasonal" })}
+                        <div class="setting" data-type="info">
+                            <div class="heading">
+                                <h5>${tl2(trans.current_season)}</h5>
+                            </div>
+                            <div class="info">
+                                <div
+                                    class="icon-combo"
+                                    data-season=${stored_season.id}
+                                >
+                                    <div
+                                        class="bleh-icon bleh-seasonal-icon"
+                                    ></div>
+                                    <p>
+                                        ${tl2(
+          trans.seasonal.listing[stored_season.id]
+        )}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl2(trans.started)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="current_season_start">${DateTime.fromISO(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl2(trans.ends_in)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="current_season">${DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
+                        </div>
+                    </div>
+                    ` : settings.seasonal ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl2(trans.next_in)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="next_season_start">${DateTime.fromISO(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
+                        </div>
+                    </div>
+                    ` : ""}
+                        ${settings.seasonal ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl2(trans.calculated_offset)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>${stored_season.offset}</p>
+                        </div>
+                    </div>
+                    ` : ""}
+                    </div>
+                    <h4>${tl2(trans.settings)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: "seasonal_particles" })}
+                        ${setting({ id: "seasonal_particles_fps" })}
+                        ${setting({ id: "seasonal_overlays" })}
+                    </div>
+                </div>
+            `
+      );
+    } else if (page_id == "performance") {
+      register_skip_to([]);
+      if (settings.hu_tao != "develop") {
+        dialog({
+          id: "development_only",
+          body: html.node`
+                    <div class="modal-vertical-inner error-inner">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
+                        <h1>${tl2(trans.intended_for_development.name)}</h1>
+                        <p>${tl2(trans.intended_for_development.body)}</p>
+                    </div>
+                `,
+          theme: "error"
+        });
+      }
+      render(
+        page.state.inject,
+        html`
+                <section class="form-section settings-form">
+                    <div class="alert alert-danger">
+                        ${tl2(trans.beware_notice)}
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "dev" })} ${setting({ id: "branch" })}
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.force_refresh_style.name)}</h5>
+                                <p>${tl2(trans.force_refresh_style.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button
+                                    class="btn see-more update-check"
+                                    onclick=${() => force_refresh_style()}
+                                >
+                                    ${tl2(trans.refresh)}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <h4>Debug information</h4>
+                    <ul>
+                        <li>Theme loading is currently ${!settings.dev}</li>
+                        <li>
+                            <span class="lotus lotus-name lotus-name-small"
+                                >lotus</span
+                            >
+                            is currently ${settings.corrections}
+                        </li>
+                        <br />
+                        <li>
+                            Theme will expire at
+                            <span class="time"
+                                >${time(
+          localStorage.getItem(
+            "bleh_cached_style_timeout"
+          )
+        )}</span
+                            >
+                        </li>
+                        <li>
+                            <span class="lotus lotus-name lotus-name-small"
+                                >lotus</span
+                            >
+                            (artist) will expire at
+                            <span class="time"
+                                >${time(
+          localStorage.getItem("lotus_artist_expire")
+        )}</span
+                            >
+                        </li>
+                        <li>
+                            <span class="lotus lotus-name lotus-name-small"
+                                >lotus</span
+                            >
+                            (album_track) will expire at
+                            <span class="time"
+                                >${time(
+          localStorage.getItem(
+            "lotus_album_track_expire"
+          )
+        )}</span
+                            >
+                        </li>
+                        <br />
+                        <li>
+                            It is currently
+                            <span class="time">${time()}</span>
+                        </li>
+                        <br />
+                        <li>
+                            Has the timeout expired?
+                            ${new Date(
+          localStorage.getItem(
+            "bleh_cached_style_timeout"
+          )
+        ) < /* @__PURE__ */ new Date()}
+                        </li>
+                    </ul>
+                    <div class="sep"></div>
+                    <h4>${tl2(trans.development)}</h4>
+                    <button
+                        class="see-more"
+                        onclick=${() => {
+          if (settings.hu_tao == "develop") {
+            change_settings_page("sku");
+          } else {
+            dialog({
+              id: "hu_tao",
+              title: tl2(trans.development),
+              body: html.node`
+                                ${setting({ id: "hu_tao", text: false, focus: true })}
+                            `
+            });
+          }
+        }}
+                    >
+                        ${tl2(trans.manage_feature_flags)}
+                    </button>
+                </section>
+            `
+      );
+    } else if (page_id == "profile") {
+      if (!auth.name) {
+        render(
+          page.state.inject,
+          html`
+                    <div class="form-section settings-form">
+                        <div class="loading-data-container">
+                            <div class="loading-data-text error">
+                                ${tl2(trans.not_logged_in)}
+                            </div>
+                        </div>
+                    </div>
+                `
+        );
+        return;
+      }
+      register_skip_to([]);
+      let friends;
+      let starred;
+      console.info("friends", settings.friends, settings);
+      render(
+        page.state.inject,
+        html`
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.banners)}</h4>
+                    <div class="inner-preview pad">
+                        <div class="profile-mockup">
+                            <div class="mockup-header">
+                                <img
+                                    class="mockup-avatar"
+                                    src="${auth.avatar}"
+                                />
+                                <div class="mockup-info">
+                                    <div class="mockup-subtext"></div>
+                                    <div class="mockup-name"></div>
+                                </div>
+                            </div>
+                            <div class="mockup-container">
+                                <div class="mockup-col-main">
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                                <div class="mockup-col-sidebar">
+                                    <div
+                                        class="mockup-panel mockup-obsession-panel"
+                                    >
+                                        <img
+                                            class="mockup-obsession-art"
+                                            src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg"
+                                        />
+                                        <div
+                                            class="mockup-obsession-name"
+                                        ></div>
+                                    </div>
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                            </div>
+                            <div
+                                class="profile-mockup-background from-avatar"
+                                style="background-image: url(${auth.avatar.replace(
+          "/avatar42s/",
+          "/avatar300s/"
+        )})"
+                            ></div>
+                            ${cache.banner ? html.node`
+                        <div class="profile-mockup-background from-banner" style="background-image: url(${cache.banner})"></div>
+                        ` : html.node`
+                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
+                        `}
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <div class="setting" data-type="options">
+                            <div class="heading">
+                                <h5>${tl2(trans.view_backgrounds_on)}</h5>
+                            </div>
+                            <div class="primary-selections">
+                                ${setting({
+          id: "profile_header_own",
+          standalone: true
+        })}
+                                ${setting({
+          id: "profile_header_others",
+          standalone: true
+        })}
+                            </div>
+                        </div>
+                        ${setting({ id: "profile_avi_background" })}
+                    </div>
+                </section>
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.other)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: "bio_markdown" })}
+                        ${setting({ id: "show_your_progress" })}
+                    </div>
+                </section>
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.activity)}</h4>
+                    <p>${tl2(trans.what_are_activities)}</p>
+                    <div class="inner-preview pad">
+                        <div class="preview-card activity-preview" />
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "activities" })}
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.clear_history)}</h5>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button
+                                    class="see-more"
+                                    onclick=${() => {
+          localStorage.removeItem(
+            "bwaa_recent_activity"
+          );
+          notify({
+            id: "cleared_history",
+            title: tl2(
+              trans.cleared_activity_history
+            ),
+            type: "success"
+          });
+        }}
+                                >
+                                    ${tl2(trans.clear)}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "activity_shout" })}
+                        ${setting({ id: "activity_image" })}
+                        ${setting({ id: "activity_obsess" })}
+                        ${setting({ id: "activity_love" })}
+                        ${setting({ id: "activity_bookmark" })}
+                        ${setting({ id: "activity_wiki" })}
+                        ${setting({ id: "activity_install" })}
+                    </div>
+                </section>
+            `
+      );
+      activity_preview();
+    } else if (page_id == "accessibility") {
+      register_skip_to([]);
+      render(
+        page.state.inject,
+        html`
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.accessibility)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: "reduced_motion" })}
+                        ${setting({ id: "accessible_name_colours" })}
+                        ${setting({ id: "underline_links" })}
+                    </div>
+                </section>
+                ${ff("static_gifs") ? html.node`
+            <section class="form-section settings-form">
+                <h4>${tl2(trans.images)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: "static_gifs" })}
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl2(trans.apply_to)}<div class="new-badge">${tl2(trans.new)}</div></h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({ id: "static_avatars", standalone: true })}
+                            ${setting({ id: "static_music", standalone: true })}
+                        </div>
+                    </div>
+                    ${setting({ id: "static_banners" })}
+                </div>
+            </section>
+            ` : ""}
+            `
+      );
+    } else if (page_id == "sku") {
+      register_skip_to([]);
+      render(
+        page.state.inject,
+        html`
+                <div class="form-section settings-form">
+                    <div class="panel-intro">
+                        <div class="sub-text">
+                            ${version.build}.${version.sku}
+                        </div>
+                        <h1>☆⌒(>w<)</h1>
+                    </div>
+                    <div class="sep" />
+                    <h4>${tl2(trans.manage_feature_flags)}</h4>
+                    <div class="alert alert-danger">
+                        ${tl2(trans.beware_notice)}
+                    </div>
+                    <div class="setting-group">
+                        ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
+          let value = ff(flag);
+          let checkbox;
+          let state;
+          return html.node`
+                            <div class="setting" data-type="toggle" onclick=${() => {
+            let current = checkbox.checked;
+            checkbox.checked = !current;
+            state.setAttribute("aria-checked", !current);
+            settings.feature_flags[flag] = !current;
+            document.documentElement.setAttribute(
+              `data-ff--${flag}`,
+              (!current).toString()
+            );
+            compile_settings();
+          }}>
+                                <div class="heading">
+                                    <h5>${details.name}</h5>
+                                    ${details.notice ? html.node`<p>${{ html: details.notice }}</p>` : ""}
+                                    <div class="info-row">
+                                        <div class="new-badge flag-${details.default}">${details.default}</div><p class="date">${details.date}</p><p>${flag}</p>
+                                    </div>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <input type="checkbox" ref=${(el) => checkbox = el} value=${value} checked=${value} />
+                                    <button class="toggle" aria-checked=${value} ref=${(el) => state = el}>
+                                        <div class="dot" />
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+        })}
+                    </div>
+                </div>
+            `
+      );
+    } else if (page_id == "music") {
+      register_skip_to([
+        {
+          id: "corrections",
+          name: tl2(trans.correct_titles_with_lotus)
+        },
+        {
+          id: "format_guest_features",
+          name: tl2(trans.format_guest_features.name)
+        },
+        {
+          id: "stacked_chartlist_info",
+          name: tl2(trans.track_column_view)
+        },
+        {
+          id: "colourful_counts",
+          name: tl2(trans.colourful_counts.name)
+        },
+        {
+          id: "travis",
+          name: tl2(trans.redirect_messages.name)
+        },
+        {
+          id: "gloss",
+          type: "slider",
+          name: tl2(trans.gloss.name)
+        },
+        {
+          id: "grid_glow",
+          name: tl2(trans.grid_glow.name)
+        },
+        {
+          id: "gendered_tags",
+          name: tl2(trans.gendered_tags.name)
+        }
+      ]);
+      render(
+        page.state.inject,
+        html`
+                <div class="form-section settings-form">
+                    <h4 class="top-header">${tl2(trans.music)}</h4>
+                    <h4>${tl2(trans.tracklist)}</h4>
+                    <div class="inner-preview pad">
+                        <div class="tracks">
+                            <div class="track realtime">
+                                <div class="cover"></div>
+                                <div class="info">
+                                    <div class="title"></div>
+                                    <div class="artist"></div>
+                                    <div class="album"></div>
+                                </div>
+                                <div class="time"></div>
+                            </div>
+                            <div class="track">
+                                <div class="cover"></div>
+                                <div class="info">
+                                    <div class="title"></div>
+                                    <div class="artist"></div>
+                                    <div class="album"></div>
+                                </div>
+                                <div class="time"></div>
+                            </div>
+                            <div class="track">
+                                <div class="cover"></div>
+                                <div class="info">
+                                    <div class="title"></div>
+                                    <div class="artist"></div>
+                                    <div class="album"></div>
+                                </div>
+                                <div class="time"></div>
+                            </div>
+                            <div class="track">
+                                <div class="cover"></div>
+                                <div class="info">
+                                    <div class="title"></div>
+                                    <div class="artist"></div>
+                                    <div class="album"></div>
+                                </div>
+                                <div class="time"></div>
+                            </div>
+                            <div class="track">
+                                <div class="cover"></div>
+                                <div class="info">
+                                    <div class="title"></div>
+                                    <div class="artist"></div>
+                                    <div class="album"></div>
+                                </div>
+                                <div class="time"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "stacked_chartlist_info" })}
+                        ${setting({ id: "expand_tracks" })}
+                        ${setting({ id: "glacier_library_graphs" })}
+                    </div>
+                    <div class="inner-preview pad">
+                        <div class="bars" ref=${(el) => bars = el}>
+                            ${() => {
+          let max2 = 3e4;
+          for (let value = 1e3; value <= max2; value += 1e3) {
+            bars.appendChild(chartlist_bar(value, max2));
+          }
+        }}
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "colourful_counts" })}
+                    </div>
+                </div>
+            `
+      );
+    }
+  }
+  function register_skip_to(list = null) {
+    if (!ff("skip_to_setting")) return;
+    if (list == null) return;
+    let panel = page.structure.side.querySelector(".skip-to-list");
+    panel.innerHTML = "";
+    list.forEach((item) => {
+      let button = document.createElement("button");
+      button.classList.add("skip-to-item");
+      button.setAttribute("onclick", `_scroll_to_setting('${item.id}')`);
+      button.textContent = item.name;
+      if (item.type != null) button.setAttribute("data-type", item.type);
+      panel.appendChild(button);
+    });
+  }
+  unsafeWindow._scroll_to_setting = function(id) {
+    scroll_to_setting(id);
+  };
+  function scroll_to_setting(id) {
+    let setting2 = document.body.querySelector(`#container-${id}`);
+    if (setting2 != null) {
+      let y = setting2.getBoundingClientRect().top + window.scrollY - 300;
+      window.scroll({
+        top: y,
+        behavior: "smooth"
+      });
+    }
+  }
+  unsafeWindow._change_settings_page = function(page2, setting2 = null) {
+    change_settings_page(page2, setting2);
+  };
+  function change_settings_page(page_id, setting2 = null) {
+    if (page_id == page.state.settings_page) return;
+    window.history.pushState(page_id, "", `${root}bwaa/${page_id}`);
+    page.state.settings_page = page_id;
+    render(page.state.inject, html``);
+    page.state.nav_items.forEach((item) => {
+      if (item.getAttribute("data-bwaa-page") != page_id) {
+        item.classList.remove("secondary-nav-item-link--active");
+      } else {
+        item.classList.add("secondary-nav-item-link--active");
+      }
+    });
+    if (page_id == "seasonal") seasonal_timer_start();
+    else seasonal_timer_end();
+    try {
+      render_setting_page(page_id);
+    } catch (e) {
+      render(
+        page.state.inject,
+        html`
+                <div class="form-section settings-form">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">
+                            ${tl2(trans.value_failed_to_load).replace(
+          "{v}",
+          tl2(trans.settings)
+        )}
+                        </div>
+                        <pre class="error-info">
+${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</pre
+                        >
+                    </div>
+                </div>
+            `
+      );
+    }
+    if (page_id == "seasonal") {
+      refresh_all();
+    }
+    if (page_id == "seasonal" && settings.seasonal && stored_season.id != "none" && stored_season.start && stored_season.end) {
+      tippy_esm_default(document.getElementById("current_season"), {
+        content: new Date(
+          stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
+        ).toLocaleString(lang)
+      });
+      tippy_esm_default(document.getElementById("current_season_start"), {
+        content: new Date(
+          stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
+        ).toLocaleString(lang)
+      });
+      tippy_esm_default(document.getElementById("next_season_start"), {
+        content: new Date(
+          stored_season.next_start.replace(
+            "y0",
+            stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year
+          ).replace("{offset}", stored_season.offset)
+        ).toLocaleString(lang)
+      });
+    }
+    if (setting2 != null) {
+      let setting_container = page.structure.main.querySelector(
+        `.setting[data-id="${setting2}"]`
+      );
+      if (setting_container != null) {
+        let y = setting_container.getBoundingClientRect().top + window.scrollY - 300;
+        window.scroll({
+          top: y,
+          behavior: "smooth"
+        });
+      }
+    }
+  }
+  function load_skus() {
+    for (let flag in version.feature_flags) {
+      let current_state = version.feature_flags[flag].default;
+      if (settings.feature_flags[flag] != null)
+        current_state = settings.feature_flags[flag];
+      document.documentElement.setAttribute(
+        `data-ff--${flag}`,
+        current_state
+      );
+    }
+  }
+  unsafeWindow._update_flag_toggle = function(flag, container) {
+    update_flag_toggle(flag, container);
+  };
+  function update_flag_toggle(flag, container) {
+    let button = container.querySelector(".toggle");
+    if (!button) return;
+    let current_state = ff(flag);
+    button.setAttribute("aria-checked", !current_state);
+    settings.feature_flags[flag] = !current_state;
+    document.documentElement.setAttribute(
+      `data-ff--${flag}`,
+      `${!current_state}`
+    );
+    compile_settings();
+  }
+  function display_colour_presets() {
+    let colours = {
+      custom: [
+        {
+          type: "default",
+          sets: {
+            hue: 255,
+            sat: 1,
+            lit: 1
+          },
+          displays: {
+            hue: "var(--hue-seasonal, 255)",
+            sat: "var(--sat-seasonal, 1)",
+            lit: "var(--lit-seasonal, 1)"
+          }
+        },
+        {
+          type: "avatar",
+          sets: {
+            hue: auth.sets.hue,
+            sat: auth.sets.sat,
+            lit: auth.sets.lit
+          },
+          requires_flag: "colour_based_on_avatar"
+        },
+        {
+          type: "adaptive",
+          requires_flag: "adaptive_colours"
+        },
+        {
+          type: "customise"
+        }
+      ],
+      palette: [
+        {
+          sets: {
+            hue: 0,
+            sat: 1.2,
+            lit: 0.9
+          },
+          label: trans.red
+        },
+        {
+          sets: {
+            hue: 19,
+            sat: 1.275,
+            lit: 0.95
+          },
+          label: trans.orange
+        },
+        {
+          sets: {
+            hue: 48,
+            sat: 1.5,
+            lit: 1
+          },
+          label: trans.yellow
+        },
+        {
+          sets: {
+            hue: 98,
+            sat: 1.05,
+            lit: 1.025
+          },
+          label: trans.lime
+        },
+        {
+          sets: {
+            hue: 131,
+            sat: 1,
+            lit: 0.925
+          },
+          label: trans.green
+        },
+        {
+          sets: {
+            hue: 188,
+            sat: 1,
+            lit: 1.1
+          },
+          label: trans.aqua
+        },
+        {
+          sets: {
+            hue: 228,
+            sat: 1.3,
+            lit: 0.9
+          },
+          label: trans.blue
+        },
+        {
+          sets: {
+            hue: 254,
+            sat: 1.07,
+            lit: 1
+          },
+          label: trans.purple
+        },
+        {
+          sets: {
+            hue: 317,
+            sat: 1.1,
+            lit: 1
+          },
+          label: trans.pink
+        },
+        {
+          sets: {
+            hue: 0,
+            sat: 0,
+            lit: 1
+          },
+          label: trans.grey
+        }
+      ]
+    };
+    let exclusives = {
+      christmas: [
+        {
+          type: "season",
+          name: tl2(trans.seasonal.presets.nonsense),
+          sets: {
+            hue: 352,
+            sat: 1.8,
+            lit: 0.925
+          }
+        },
+        {
+          type: "season",
+          name: tl2(trans.seasonal.presets.fruitcake),
+          sets: {
+            hue: 24,
+            sat: 0.93,
+            lit: 1
+          }
+        },
+        {
+          type: "season",
+          name: tl2(trans.seasonal.presets.mistletoe),
+          sets: {
+            hue: 130,
+            sat: 0.45,
+            lit: 0.75
+          }
+        },
+        {
+          type: "season",
+          name: tl2(trans.seasonal.presets.festival),
+          sets: {
+            hue: 240,
+            sat: 1.4,
+            lit: 0.875
+          }
+        }
+      ]
+    };
+    exclusives.new_years = exclusives.christmas;
+    let hue_range;
+    let sat_range;
+    let lit_range;
+    for (let type in colours) {
+      const swatch_group = page.structure.main.querySelector(
+        `#colour_${type}`
+      );
+      if (!swatch_group) return;
+      colours[type].forEach((colour2) => {
+        if (colour2.requires_flag && version.feature_flags.hasOwnProperty(colour2.requires_flag)) {
+          if (!ff(colour2.requires_flag)) return;
+        }
+        if (colour2.type == "avatar" && !auth.name) return;
+        let text3;
+        if (colour2.label) text3 = tl2(colour2.label);
+        if (!colour2.type) colour2.type = "colour";
+        if (!colour2.displays && colour2.sets) colour2.displays = colour2.sets;
+        let blob;
+        let text_elem;
+        let swatch = html.node`
+                <button class="swatch-container" onclick=${() => {
+          if (!colour2.sets) return;
+          hue_range.set(colour2.sets.hue);
+          sat_range.set(colour2.sets.sat);
+          lit_range.set(colour2.sets.lit);
+        }}>
+                    <div class="swatch colourful" ref=${(el) => blob = el} data-swatch-type=${colour2.type} />
+                    <strong ref=${(el) => text_elem = el} />
+                </button>
+            `;
+        if (type == "custom") text3 = tl2(trans[colour2.type]);
+        if (colour2.type == "customise") {
+          text3 = tl2(trans.edit);
+          let colour3;
+          tippy_esm_default(swatch, {
+            theme: "window",
+            content: html.node`
+                        <div class="dialog-settings">
+                            <div class="setting-group blend">
+                                ${ff("colour_based_on_hex") ? html.node`
+                                <div class="setting" data-type="text">
+                                    <div class="heading">
+                                        <h5>${tl2(trans.convert_from_hex)}</h5>
+                                    </div>
+                                    <div class="input-container content-form">
+                                        ${colour3 = input({
+              type: "colour",
+              value: "#999999",
+              maxlength: 7,
+              warn_if_empty: true
+            })}
+                                        <button class="btn primary icon convert" onclick=${() => {
+              const value = colour3.value();
+              const hsl = hex_to_hsl(value);
+              hue_range.set(hsl.h);
+              sat_range.set(
+                clamp_sat2(hsl.s / 100 * 3)
+              );
+              lit_range.set(hsl.l / 100 + 0.35);
+            }}>${tl2(trans.convert)}</button>
+                                    </div>
+                                </div>
+                                ` : ""}
+                                ${hue_range = setting({ id: "hue", func: update_colour_swatches })}
+                                ${sat_range = setting({ id: "sat", func: update_colour_swatches })}
+                                ${lit_range = setting({ id: "lit", func: update_colour_swatches })}
+                            </div>
+                        </div>
+                    `,
+            placement: "bottom",
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: "click",
+            appendTo: document.body
+          });
+        }
+        if (colour2.sets) {
+          colour2.sets.accent_type = colour2.type;
+          blob.style.setProperty("--hue-over", colour2.displays.hue);
+          blob.style.setProperty("--sat-over", colour2.displays.sat);
+          blob.style.setProperty("--lit-over", colour2.displays.lit);
+        }
+        if (colour2.type == "default" && stored_season.id != "none") {
+          text3 = tl2(trans.seasonal.name);
+          if (exclusives.hasOwnProperty(stored_season.id)) {
+            delete colour2.sets;
+            exclusives[stored_season.id] = [
+              {
+                type: "default",
+                name: tl2(trans.default),
+                sets: {
+                  hue: 255,
+                  sat: 1,
+                  lit: 1
+                },
+                displays: {
+                  hue: "var(--hue-seasonal, 255)",
+                  sat: "var(--sat-seasonal, 1)",
+                  lit: "var(--lit-seasonal, 1)"
+                }
+              },
+              ...exclusives[stored_season.id]
+            ];
+            tippy_esm_default(swatch, {
+              theme: "menu",
+              content: "",
+              allowHTML: true,
+              placement: "bottom",
+              interactive: true,
+              interactiveBorder: 10,
+              trigger: "click",
+              onShow(instance) {
+                const content = instance.popper.querySelector(".tippy-content");
+                render(
+                  content,
+                  html`
+                                    ${exclusives[stored_season.id].forEach(
+                    (colour3) => {
+                      colour3.sets = {
+                        accent_type: colour3.type,
+                        ...colour3.sets
+                      };
+                      if (!colour3.displays)
+                        colour3.displays = colour3.sets;
+                      return html.node`
+                                        <button class="dropdown-menu-clickable-item" aria-checked=${colour3.displays.hue == settings.hue && colour3.displays.sat == settings.sat && colour3.displays.lit} onclick=${() => {
+                        hue_range.set(colour3.displays.hue);
+                        sat_range.set(colour3.displays.sat);
+                        lit_range.set(colour3.displays.lit);
+                      }} style="--hue-over: ${colour3.displays.hue}; --sat-over: ${colour3.displays.sat}; --lit-over: ${colour3.displays.lit}">
+                                            ${colour3.name}
+                                        </button>
+                                    `;
+                    }
+                  )}
+                                `
+                );
+                display_seasonal_exclusives(
+                  content,
+                  colours,
+                  exclusives
+                );
+              }
+            });
+          }
+        }
+        text_elem.textContent = text3;
+        tippy_esm_default(swatch, {
+          content: text3
+        });
+        swatch_group.appendChild(swatch);
+      });
+    }
+  }
+  function prepare_corrections_page() {
+    let corrections_table_artist = document.getElementById("corrections-artist");
+    for (let artist in artist_corrections) {
+      if (artist == "version") continue;
+      corrections_table_artist.appendChild(html.node`
+        <div class="correction-row">
+                <div class="primary-name pre-transition">
+                    <h5>${artist}</h5>
+                </div>
+                <div class="arrow-divider"></div>
+                <div class="primary-name post-transition">
+                    <h5>${artist_corrections[artist]}</h5>
+                </div>
+        </div>`);
+    }
+    let corrections_table_albums_tracks = document.getElementById(
+      "corrections-albums_tracks"
+    );
+    for (let artist in album_track_corrections) {
+      if (artist == "version") continue;
+      corrections_table_albums_tracks.appendChild(html.node`
+            <div class="artist-row">
+                <h5>${artist}</h5>
+            </div>
+        `);
+      for (let media in album_track_corrections[artist]) {
+        corrections_table_albums_tracks.appendChild(html.node`
+                <div class="correction-row">
+                    <div class="primary-name pre-transition">
+                        <h5>${media}</h5>
+                    </div>
+                    <div class="arrow-divider"></div>
+                    <div class="primary-name post-transition">
+                        <h5>${album_track_corrections[artist][media]}</h5>
+                    </div>
+                </div>
+            `);
+      }
+    }
+  }
+  function import_settings4() {
+    let text3;
+    const modal = dialog({
+      id: "import_settings",
+      title: tl2(trans.import_settings),
+      body: html.node`
+            <p class="big-modal-alert alert-danger">${tl2(trans.import_notice)}</p>
+            <br>
+            <textarea class="modal-text" ref=${(el) => text3 = el} />
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick="_dialog_rm({id: 'import_settings'})">
+                    ${tl2(trans.cancel)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary download" onclick=${() => {
+        try {
+          const parsed2 = JSON.parse(text3.value);
+          set_storage("bwaa", text3.value);
+          Object.assign(settings, parsed2);
+          load_settings();
+          dialog_rm({
+            id: "import_settings"
+          });
+        } catch (e) {
+          dialog({
+            id: "import_failed",
+            title: tl2(trans.import_failed),
+            body: html.node`
+                                <p class="big-modal-alert alert-error">${tl2(trans.import_failed.notice)}</p>
+                                <div class="modal-footer">
+                                    <div class="fill"></div>
+                                    <button class="btn primary done" onclick=${() => dialog_rm({ id: "import_failed" })}>
+                                        ${tl2(trans.done)}
+                                    </button>
+                                </div>
+                            `
+          });
+          console.error(e);
+        } finally {
+        }
+      }}>
+                    ${tl2(trans.import)}
+                </button>
+            </div>
+        `
+    });
+  }
+  function export_settings() {
+    share(JSON.stringify(compile_settings()));
+  }
+  unsafeWindow._reset_settings = function() {
+    dialog({
+      id: "reset_settings",
+      title: tl2(trans.reset_settings),
+      body: html.node`
+            <div class="big-modal-alert alert-error">
+                <strong>${tl2(trans.reset_notice)}</strong>
+                <a class="see-more" onclick=${() => export_settings()}>${tl2(trans.make_a_backup)}</a>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">
+                    ${tl2(trans.cancel)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary icon" data-type="reset" onclick="_confirm_reset()">
+                    ${tl2(trans.reset)}
+                </button>
+            </div>
+        `
+    });
+  };
+  unsafeWindow._confirm_reset = function() {
+    for (var member in settings) delete settings[member];
+    load_settings(true);
+    dialog_rm({
+      id: "reset_settings"
+    });
+  };
+  function activity_preview() {
+    let preview = page.structure.main.querySelector(".activity-preview");
+    if (!preview) return;
+    let random_types = [
+      "love",
+      "love",
+      "love",
+      "unlove",
+      "bookmark",
+      "unbookmark",
+      "obsess",
+      "image_upload",
+      "shout",
+      "shout",
+      "wiki"
+    ];
+    let random_involved = [
+      {
+        name: "Espresso",
+        type: "track",
+        sister: "Sabrina Carpenter"
+      },
+      {
+        name: "Busy Woman",
+        type: "track",
+        sister: "Sabrina Carpenter"
+      },
+      {
+        name: "I might say something stupid",
+        type: "track",
+        sister: "Charli xcx"
+      },
+      {
+        name: "Seigfried",
+        type: "track",
+        sister: "Frank Ocean"
+      },
+      {
+        name: "OLYMPIAN",
+        type: "track",
+        sister: "Playboi Carti"
+      },
+      {
+        name: "GODSTAINED",
+        type: "track",
+        sister: "Quadeca"
+      },
+      {
+        name: "hypochondriac",
+        type: "album",
+        sister: "brakence"
+      },
+      {
+        name: "my anti-aircraft friend",
+        type: "album",
+        sister: "julie"
+      },
+      {
+        name: "In Utero",
+        type: "album",
+        sister: "Nirvana"
+      },
+      {
+        name: "channel ORANGE",
+        type: "album",
+        sister: "Frank Ocean"
+      },
+      {
+        name: "Future",
+        type: "artist"
+      },
+      {
+        name: "Billie Eilish",
+        type: "artist"
+      },
+      {
+        name: "Swirlies",
+        type: "artist"
+      },
+      {
+        name: "Lucy Bedroque",
+        type: "artist"
+      },
+      {
+        name: "underscores",
+        type: "artist"
+      },
+      {
+        name: "Bladee",
+        type: "artist"
+      },
+      {
+        name: "Charli xcx",
+        type: "artist"
+      },
+      {
+        name: "Dawn FM",
+        type: "album",
+        sister: "The Weeknd"
+      },
+      {
+        name: "Random Access Memories",
+        type: "album",
+        sister: "Daft Punk"
+      },
+      {
+        name: "how i'm feeling now",
+        type: "album",
+        sister: "Charli xcx"
+      },
+      {
+        name: "Revengeseekerz",
+        type: "album",
+        sister: "Jane Remover"
+      },
+      {
+        name: "Around The Fur",
+        type: "album",
+        sister: "Deftones"
+      },
+      {
+        name: "Exmilitary",
+        type: "album",
+        sister: "Death Grips"
+      },
+      {
+        name: "OFFLINE!",
+        type: "album",
+        sister: "JPEGMAFIA"
+      },
+      {
+        name: "TRUST! - OFFLINE",
+        type: "track",
+        sister: "JPEGMAFIA"
+      },
+      {
+        name: "Hotline Bling",
+        type: "track",
+        sister: "Drake"
+      },
+      {
+        name: "All Eyez On Me",
+        type: "track",
+        sister: "2Pac"
+      },
+      {
+        name: "DOGTOOTH",
+        type: "track",
+        sister: "Tyler, The Creator"
+      },
+      {
+        name: "so american",
+        type: "track",
+        sister: "Olivia Rodrigo"
+      },
+      {
+        name: "I KNOW ?",
+        type: "track",
+        sister: "Travis Scott"
+      },
+      {
+        name: "Apple Pie",
+        type: "track",
+        sister: "Travis Scott"
+      },
+      {
+        name: "34+35",
+        type: "track",
+        sister: "Ariana Grande"
+      },
+      {
+        name: "New Again",
+        type: "track",
+        sister: "Kanye West"
+      },
+      {
+        name: "Radio Friendly Unit Shifter",
+        type: "track",
+        sister: "Nirvana"
+      },
+      {
+        name: "Empty Out Your Pockets",
+        type: "track",
+        sister: "Juice WRLD"
+      },
+      {
+        name: "Party By Myself",
+        type: "track",
+        sister: "Juice WRLD"
+      },
+      {
+        name: "Death Race For Love",
+        type: "album",
+        sister: "Juice WRLD"
+      },
+      {
+        name: "Timeless",
+        type: "track",
+        sister: "The Weeknd"
+      },
+      {
+        name: "SKITZO",
+        type: "track",
+        sister: "The Weeknd"
+      },
+      {
+        name: "OPM BABI",
+        type: "track",
+        sister: "Playboi Carti"
+      }
+    ];
+    make_random_activity(preview, random_types, random_involved);
+    make_random_activity(preview, random_types, random_involved);
+    make_random_activity(preview, random_types, random_involved);
+    page.state.activity_preview_timer = setInterval(function() {
+      if (!preview) {
+        clearInterval(page.state.activity_preview_timer);
+        return;
+      }
+      make_random_activity(preview, random_types, random_involved);
+    }, 2300);
+  }
+  function make_random_activity(preview, random_types, random_involved) {
+    activity_preview_new(preview, {
+      type: random_types[Math.floor(Math.random() * random_types.length)],
+      date: /* @__PURE__ */ new Date(),
+      involved: [
+        structuredClone(random_involved)[Math.floor(Math.random() * random_involved.length)]
+      ]
+    });
+  }
+  function activity_preview_new(parent, activity) {
+    parent.insertBefore(render_activity(activity), parent.firstElementChild);
+    if (parent.childElementCount > 3)
+      parent.removeChild(parent.lastElementChild);
+  }
+  function theme_bubbles(func = null) {
+    const themes = [
+      {
+        id: "adaptive",
+        name: tl2(trans.auto),
+        hide: !ff("adaptive_theme"),
+        new_release: true
+      },
+      {
+        id: "glass",
+        type: "light",
+        name: tl2(trans.glass),
+        hide: !ff("glass"),
+        new_release: true
+      },
+      {
+        type: "sep",
+        hide: !ff("adaptive_theme")
+      },
+      {
+        id: "light",
+        type: "light",
+        name: tl2(trans.themes.light)
+      },
+      {
+        id: "ink",
+        type: "light",
+        name: tl2(trans.themes.ink)
+      },
+      {
+        type: "sep"
+      },
+      {
+        id: "dark",
+        formal: "ash",
+        type: "dark",
+        name: tl2(trans.themes.dark)
+      },
+      {
+        id: "darker",
+        formal: "dark",
+        type: "darker",
+        name: tl2(trans.themes.darker)
+      },
+      {
+        id: "oled",
+        formal: "void",
+        type: "oled",
+        name: tl2(trans.themes.oled)
+      }
+    ];
+    let buttons = [];
+    const bubbles = html.node`
+        <div class="theme-bubbles">
+            ${themes.map((theme) => {
+      if (theme.hide) return html.node``;
+      if (theme.type == "sep") {
+        return html.node`
+                        <div class="sep theme-bubble-sep" />
+                    `;
+      }
+      if (!theme.formal) theme.formal = theme.id;
+      const bubble = html.node`
+                    <button class="theme-bubble" data-theme-id=${theme.id} onclick=${() => update_theme_bubble(theme.id)}>
+                        <div class="bubble">
+                            ${theme.id == "adaptive" ? html.node`
+                            <div class="inner theme-preview" data-bwaa--theme=${settings.theme_day} data-bwaa--theme_type=${["light", "ink"].includes(settings.theme_day) ? "light" : "dark"}>
+                                ${theme_preview()}
+                            </div>
+                            <div class="inner theme-preview" data-bwaa--theme=${settings.theme_night} data-bwaa--theme_type=${["light", "ink"].includes(settings.theme_night) ? "light" : "dark"}>
+                                ${theme_preview()}
+                            </div>
+                            ` : html.node`
+                            <div class="inner theme-preview" data-bwaa--theme=${theme.id} data-bwaa--theme_type=${theme.type}>
+                                ${theme_preview()}
+                            </div>
+                            `}
+                        </div>
+                        <strong>
+                            ${theme.name}
+                            ${theme.new_release ? html.node`<div class="new-badge">${tl2(trans.new)}</div>` : ""}
+                        </strong>
+                    </button>
+                `;
+      buttons.push(bubble);
+      return bubble;
+    })}
+        </div>
+    `;
+    bubbles.re_render = () => {
+      const adaptive = buttons.find(
+        (button) => button.getAttribute("data-theme-id") == "adaptive"
+      );
+      const bubble = adaptive.querySelector(":scope > .bubble");
+      render(
+        bubble,
+        html`
+                <div
+                    class="inner theme-preview"
+                    data-bwaa--theme=${settings.theme_day}
+                    data-bwaa--theme_type=${["light", "ink"].includes(
+          settings.theme_day
+        ) ? "light" : "dark"}
+                >
+                    ${theme_preview()}
+                </div>
+                <div
+                    class="inner theme-preview"
+                    data-bwaa--theme=${settings.theme_night}
+                    data-bwaa--theme_type=${["light", "ink"].includes(
+          settings.theme_night
+        ) ? "light" : "dark"}
+                >
+                    ${theme_preview()}
+                </div>
+            `
+      );
+    };
+    update_theme_bubble();
+    return bubbles;
+    function update_theme_bubble(theme = null) {
+      if (theme) {
+        if (theme != "adaptive") {
+          save_setting("theme_schedule", false);
+          save_setting("theme", theme);
+        } else {
+          save_setting("theme_schedule", true);
+        }
+        if (func) func(theme);
+      }
+      buttons.forEach((button) => {
+        const type = button.getAttribute("data-theme-id");
+        if (!settings.theme_schedule) {
+          button.setAttribute("aria-selected", settings.theme == type);
+        } else if (type == "adaptive") {
+          button.setAttribute("aria-selected", true);
+        } else {
+          button.setAttribute("aria-selected", false);
+        }
+      });
+    }
+  }
+
+  // src/components/menu.js
+  function register_menu(element, menu) {
+    element.setAttribute("data-has-bleh-menu", true);
+    element.addEventListener(
+      "contextmenu",
+      (e) => {
+        e.preventDefault();
+        log2("requested", "menu", "info", { e });
+        menu.setProps({
+          placement: "right-start",
+          offset: [0, 0],
+          getReferenceClientRect: () => ({
+            width: 0,
+            height: 0,
+            top: e.clientY,
+            bottom: e.clientY,
+            left: e.clientX,
+            right: e.clientX
+          })
+        });
+        menu.show();
+      },
+      true
+    );
+  }
+  function page_menu() {
+    if (!ff("menus")) return;
+    const menu = tippy_esm_default(document.body, {
+      theme: "context-menu",
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      appendTo: document.body,
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    document.addEventListener("contextmenu", (e) => {
+      if (!show_menu(e)) return;
+      e.preventDefault();
+      const elem = e.target;
+      const is_image = elem.tagName == "IMG";
+      const has_link = elem.href;
+      const contents = html.node`
+            ${is_image ? html.node`
+                        <button class="dropdown-menu-clickable-item" data-type="image" onclick=${() => {
+        open(elem.src, "_blank");
+      }}>
+                            ${tl2(trans.view_image)}
+                        </button>
+                    ` : ""}
+            ${has_link ? html.node`
+                        <a class="dropdown-menu-clickable-item" data-type="link" href=${elem.href} target=${elem.target}>
+                            ${tl2(trans.open)}
+                        </a>
+                    ` : ""}
+        `;
+      if (![...contents.childNodes].some(
+        (node) => node.nodeType == Node.ELEMENT_NODE
+      ))
+        return;
+      menu.setProps({
+        getReferenceClientRect: () => ({
+          width: 0,
+          height: 0,
+          top: e.clientY,
+          bottom: e.clientY,
+          left: e.clientX,
+          right: e.clientX
+        })
+      });
+      menu.setContent(contents);
+      menu.show();
+    });
+  }
+  function show_menu(e) {
+    const target = e.target;
+    console.info("menu target", target);
+    if (target.closest("[data-has-bleh-menu]")) return false;
+    return true;
+  }
+
+  // src/avatar.js
+  function patch_avatar(avatar2, name, type = "", parent = null, side = "right") {
+    if (avatar2.hasAttribute("data-bwaa-avatar")) return {};
+    avatar2.setAttribute("data-bwaa-avatar", "true");
+    const avatar_img2 = avatar2.querySelector("img");
+    if (!avatar_img2) return {};
+    avatar_img2.setAttribute(
+      "src",
+      avatar_img2.getAttribute("src").replace("/64s/", "/avatar70s/")
+    );
+    avatar2.setAttribute("title", "");
+    let badges = load_badges(name);
+    let pre_existing_badge = avatar2.querySelector(".avatar-status-dot");
+    if (badges && pre_existing_badge) avatar2.removeChild(pre_existing_badge);
+    if (!parent) avatar2.classList.add("avatar-can-hoverbox");
+    else parent.classList.add("parent-can-hoverbox");
+    let pre_existing_badge_type;
+    if (pre_existing_badge)
+      pre_existing_badge_type = pre_existing_badge.classList[1].replace(
+        "avatar-status-dot--",
+        "user-status-"
+      );
+    if (pre_existing_badge_type == "user-follow") {
+      pre_existing_badge = null;
+      pre_existing_badge_type = null;
+    }
+    if (badges)
+      avatar2.appendChild(create_badge(badges[badges.length - 1], true));
+    let image_header;
+    const popup = tippy_esm_default(parent ? parent : avatar2, {
+      theme: "context-menu",
+      content: html.node`
+            <div class="track-preview user-preview">
+                <div class="image">
+                    <div class="inner-image">
+                        <img src=${avatar_img2.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
+                    </div>
+                </div>
+                <div class="info">
+                    <h5 class="title">${name}</h5>
+                    ${badges ? html.node`
+                    <div class="badges">
+                        ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
+                        ${pre_existing_badge ? create_badge({
+        type: pre_existing_badge_type,
+        name: tl2(
+          trans.badges[pre_existing_badge_type].name
+        ),
+        reason: tl2(
+          trans.badges[pre_existing_badge_type].reason
+        ),
+        inbuilt: true
+      }) : ""}
+                    </div>
+                    ` : pre_existing_badge ? html.node`
+                    <div class="badges">
+                        ${create_badge({
+        type: pre_existing_badge_type,
+        name: tl2(
+          trans.badges[pre_existing_badge_type].name
+        ),
+        reason: tl2(
+          trans.badges[pre_existing_badge_type].reason
+        ),
+        inbuilt: true
+      })}
+                    </div>
+                    ` : ""}
+                </div>
+            </div>
+            <a class="dropdown-menu-clickable-item" data-type="profile" href="${root}user/${name}">
+                ${tl2(trans.profile)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="library" href="${root}user/${name}/library">
+                ${tl2(trans.library)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="friends" href="${root}user/${name}/friends">
+                ${tl2(trans.friends)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="shouts" href="${root}user/${name}/shoutbox">
+                ${tl2(trans.shouts)}
+            </a>
+        `,
+      placement: side,
+      interactive: true,
+      trigger: "click",
+      appendTo: document.body
+    });
+    register_menu(parent ? parent : avatar2, popup);
+    control_gif_pause(avatar_img2);
+    if (badges) return badges[badges.length - 1];
+    else if (pre_existing_badge)
+      return { type: pre_existing_badge.classList[1] };
+    else return { type: "none" };
+  }
+  function return_name_from_avatar(avatar2) {
+    if (!avatar2) return;
+    if (!avatar2.hasAttribute("alt")) return;
+    if (avatar2.getAttribute("alt") == tl2(trans.your_avatar)) return auth;
+    return avatar2.getAttribute("alt").replace(tl2(trans.avatar_for_user), "");
+  }
+  unsafeWindow._expand_avatar = function(src) {
+    expand_avatar(src);
+  };
+  function expand_avatar(src, alt = "") {
+    dialog({
+      id: "avatar",
+      body: html.node`
+            <div class="full-avatar-wrapper">
+                <div class="full-avatar">
+                    <img src=${src} alt=${alt}>
+                    ${alt != "" ? () => {
+        const elem = html.node`
+                            <div class="alt-text">
+                                ALT
+                            </div>
+                        `;
+        tippy_esm_default(elem, {
+          content: alt
+        });
+        return elem;
+      } : ""}
+                </div>
+                <div class="modal-footer">
+                    <div class="fill"></div>
+                    <div class="button-group">
+                        <a class="btn primary open" href=${src} target="_blank">
+                            ${tl2(trans.open_new_tab)}
+                        </a>
+                    </div>
+                    <div class="fill"></div>
+                </div>
+            </div>
+        `,
+      type: "avatar",
+      has_overlays: false
+    });
+  }
+  function style_name_from_badge(name, badge) {
+    if (!badge) return;
+    if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+      name.style.setProperty("--hue-over", badge.hue);
+      name.style.setProperty("--sat-over", badge.sat);
+      name.style.setProperty("--lit-over", badge.lit);
+    } else if (badge.type) {
+      name.classList.add(
+        `user-status--bleh-${badge.type}`,
+        `user-status--bleh-user-${badge.user}`
+      );
+    } else {
+      name.classList.add(badge.type);
+    }
+  }
+
+  // src/pages/gallery.js
+  function bleh_gallery() {
+    if (page.subpage != "image") return;
+    log2("focusing on image", "gallery");
+    let image_sidebar = page.structure.side.querySelector(
+      ".js-gallery-image-details > div"
+    );
+    if (!image_sidebar) return;
+    if (image_sidebar.hasAttribute("data-bwaa-gallery")) return;
+    image_sidebar.setAttribute("data-bwaa-gallery", "true");
+    if (!ff("new_gallery_experience")) {
+      patch_gallery_focused_image(
+        image_sidebar,
+        page.structure.container.querySelector(".gallery-image-buttons")
+      );
+      return;
+    }
+    let image_details;
+    let gallery_section;
+    let first = false;
+    try {
+      gallery_section = page.structure.main.querySelector(".gallery-section");
+      if (gallery_section) {
+        first = true;
+        if (ff("short"))
+          page.structure.row.insertBefore(
+            gallery_section,
+            page.structure.content
+          );
+        else page.structure.nav.after(gallery_section);
+        image_details = html.node`
+                <section class="image-details" />
+            `;
+      } else {
+        image_details = page.structure.main.querySelector(".image-details");
+        image_details.innerHTML = "";
+      }
+    } catch (e) {
+      gallery_section = page.structure.container.querySelector(".gallery-section");
+      image_details = page.structure.main.querySelector(".image-details");
+      image_details.innerHTML = "";
+    }
+    image_details.appendChild(image_sidebar);
+    let image_title = image_details.querySelector(".gallery-image-title");
+    let image_date = image_details.querySelector(".gallery-image-uploaded-by");
+    if (image_title.textContent.trim() == "") {
+      image_title.classList.add("gallery-image-title-empty");
+      image_title.textContent = tl2(trans.no_title);
+    }
+    let breadcrumbs = document.body.querySelector(".content-top-lower-row");
+    let breadcrumb_root = breadcrumbs.querySelector("a");
+    let breadcrumb_name = breadcrumbs.querySelector(".subpage-title");
+    let image_title_container = document.createElement("div");
+    image_title_container.classList.add("image-title-container");
+    image_title_container.innerHTML = `
+        <div class="sub-text">
+            <div class="breadcrumb">
+                ${breadcrumb_root.outerHTML}
+                <div class="breadcrumb-name">
+                    ${breadcrumb_name.textContent}
+                </div>
+            </div>
+            ${image_date.outerHTML}
+        </div>
+        <div class="title-layer">
+            ${image_title.outerHTML}
+            <div class="vote-number" data-side="pos">+0</div>
+        </div>
+    `;
+    image_details.insertBefore(image_title_container, image_sidebar);
+    breadcrumbs.style.setProperty("display", "none");
+    page.structure.main.insertBefore(
+      image_details,
+      page.structure.main.firstElementChild
+    );
+    if (first) image_details.after(html.node`<div class="sep" />`);
+    let description = image_details.querySelector(".gallery-image-description");
+    if (!description) {
+      description = document.createElement("p");
+      description.classList.add(
+        "gallery-image-description",
+        "gallery-image-description-empty"
+      );
+      description.textContent = tl2(trans.no_description);
+      image_details.querySelector("[data-image-url]").appendChild(description);
+    }
+    let buttons = image_details.querySelector(".gallery-image-buttons");
+    let button_container = document.createElement("div");
+    button_container.classList.add("button-container-wrapper");
+    button_container.appendChild(buttons);
+    let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
+    vote_buttons.after(create_divider());
+    const positive_btn = vote_buttons.querySelector(
+      ':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)'
+    ).cloneNode(true);
+    const negative_btn = vote_buttons.querySelector(
+      ':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)'
+    ).cloneNode(true);
+    const positive = parseInt(
+      positive_btn.querySelector(".gallery-image-votes").lastChild.textContent.trim()
+    );
+    const negative = parseInt(
+      negative_btn.querySelector(".gallery-image-votes").lastChild.textContent.trim()
+    );
+    const number = positive - negative;
+    const is_negative = number < 0;
+    let vote_badge = image_title_container.querySelector(".vote-number");
+    vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
+    vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
+    tippy_esm_default(vote_badge, {
+      content: tl2(trans.gallery_sum)
+    });
+    let buttons_extra = document.createElement("div");
+    buttons_extra.classList.add(
+      "gallery-image-buttons",
+      "gallery-image-buttons-extra"
+    );
+    button_container.appendChild(buttons_extra);
+    image_details.appendChild(button_container);
+    let open_button = html.node`
+        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
+            ${tl2(trans.expand)}
+        </button>
+    `;
+    tippy_esm_default(open_button, {
+      content: tl2(trans.expand_to_full_resolution)
+    });
+    buttons_extra.appendChild(open_button);
+    let share_button = html.node`
+        <button class="image-share-button" onclick=${() => share(window.location.href)}>
+            ${tl2(trans.share)}
+        </button>
+    `;
+    buttons_extra.appendChild(share_button);
+    share_button.after(create_divider());
+    let delete_button = image_details.querySelector(".gallery-image-delete");
+    if (delete_button) buttons_extra.appendChild(delete_button);
+    let report_button = image_details.querySelector(
+      ".gallery-image-report-form"
+    );
+    let report_text = report_button.querySelector("button");
+    tippy_esm_default(report_text, {
+      content: report_text.textContent
+    });
+    report_text.textContent = tl2(trans.report);
+    buttons_extra.appendChild(report_button);
+    let star_buttons = image_details.querySelectorAll(
+      ".gallery-image-preferred-button :is(button, a)"
+    );
+    star_buttons.forEach((star_button) => {
+      star_button.removeAttribute("title");
+      let text3 = star_button.querySelector(".gallery-image-preferred-states");
+      text3.textContent = tl2(trans.star);
+    });
+    let view_all_container = page.structure.main.querySelector(
+      ".more-link-fullwidth-right-flush-top"
+    );
+    if (view_all_container) {
+      let side_actions = document.createElement("section");
+      side_actions.classList.add("side-actions");
+      if (!page.mobile) page.structure.side.appendChild(side_actions);
+      else page.structure.main.appendChild(side_actions);
+      let view_all = view_all_container.querySelector("a");
+      view_all.classList.add("btn", "side-action");
+      view_all.setAttribute("data-type", "gallery");
+      side_actions.appendChild(view_all);
+      page.structure.main.removeChild(view_all_container);
+      if (page.type == "artist" || ff("display_album_bookmark")) {
+        let view_saved = document.createElement("a");
+        view_saved.classList.add("btn", "side-action");
+        view_saved.setAttribute(
+          "href",
+          `${view_all.getAttribute("href")}?tab=saved`
+        );
+        view_saved.setAttribute("data-type", "gallery-saved");
+        view_saved.textContent = tl2(trans.view_saved);
+        side_actions.appendChild(view_saved);
+      }
+    }
+    if (page.type == "artist" || ff("display_album_bookmark"))
+      patch_gallery_focused_image(image_sidebar, buttons);
+  }
+  function expand_gallery_image() {
+    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
+    expand_avatar(image_src);
+  }
+  function create_divider() {
+    let divider = document.createElement("div");
+    divider.classList.add("listen-divider");
+    return divider;
+  }
+  function bleh_gallery_upload() {
+    let content_top = document.body.querySelector(".page-content");
+    content_top.innerHTML = "";
+    if (!ff("mesmerizer")) {
+      page.structure.row.insertBefore(
+        html.node`
+            <section class="gallery-section gallery--initialised">
+                <div class="gallery-image-container">
+                    <div class="gallery-slides">
+                        <div class="gallery-image gallery-slide image-preview active-slide">
+                            <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `,
+        page.structure.row.firstElementChild
+      );
+      let form2 = page.structure.main.querySelector(".form-horizontal");
+      form2.classList.add("panel-form");
+      let upload_rules_group2 = form2.querySelector(
+        ".form-group--description + .form-group"
+      );
+      let rules2 = upload_rules_group2.querySelector(".gallery-upload-rules");
+      let rules_panel = document.createElement("section");
+      rules_panel.classList.add("rules-panel");
+      rules_panel.innerHTML = rules2.innerHTML;
+      page.structure.side.appendChild(rules_panel);
+      form2.removeChild(upload_rules_group2);
+      return;
+    }
+    const form = page.structure.main.querySelector(":scope > form");
+    const upload_rules_group = form.querySelector(
+      ".form-group--description + .form-group"
+    );
+    const rules = upload_rules_group.querySelector(".gallery-upload-rules");
+    page.structure.side.appendChild(html.node`
+        <section class="rules-panel">
+            ${{ html: rules.innerHTML }}
+        </section>
+    `);
+    form.removeChild(upload_rules_group);
+    const token = form.querySelector(':scope > [name="csrfmiddlewaretoken"]');
+    const title = form.querySelector('[name="title"]');
+    const description = form.querySelector('[name="description"]');
+    const file_input = form.querySelector('input[type="file"]');
+    const formats = form.querySelector(".form-row-help-text");
+    if (page.type == "artist") {
+      title.value = correct_artist(page.name);
+    } else {
+      title.value = correct_item_by_artist(page.name, page.sister);
+    }
+    const panel = html.node`
+        <section class="gallery-upload-panel bleh--panel">
+            <h4>${tl2(trans.image_details)}</h4>
+            <form method="post" action=${form.getAttribute("action")} enctype=${form.getAttribute("enctype")}>
+                ${token}
+                <div style="display: none">
+                    ${file_input}
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl2(trans.title)}</h5>
+                        </div>
+                        <div class="input-container content-form wide">
+                            ${title}
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl2(trans.description)}</h5>
+                        </div>
+                        <div class="input-container content-form textarea">
+                            ${description}
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-footer end">
+                    <button class="btn primary icon" data-type="upload" type="submit">
+                        ${tl2(trans.upload)}
+                    </button>
+                </div>
+            </form>
+        </section>
+    `;
+    page.structure.main.appendChild(panel);
+    let dropzone;
+    let container;
+    page.structure.row.insertBefore(
+      html.node`
+        <section class="gallery-section gallery--initialised">
+            <div class="dropzone" ref=${(el) => dropzone = el} onclick=${() => {
+        file_input.click();
+      }}>
+                <div class="dropzone-message">${tl2(trans.dropzone)}</div>
+                <div class="card-tip">${formats.textContent}</div>
+            </div>
+            <div class="gallery-image-container" ref=${(el) => container = el}>
+                <div class="gallery-slides">
+                    <div class="gallery-image gallery-slide image-preview active-slide">
+                        <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
+                    </div>
+                </div>
+            </div>
+        </section>
+    `,
+      page.structure.row.firstElementChild
+    );
+    ["dragenter", "dragover"].forEach((type) => {
+      dropzone.addEventListener(type, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        container.setAttribute("data-dragging", true);
+        dropzone.setAttribute("data-dragging", true);
+      });
+    });
+    ["dragleave", "drop"].forEach((type) => {
+      dropzone.addEventListener(type, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        container.setAttribute("data-dragging", false);
+        dropzone.setAttribute("data-dragging", false);
+      });
+    });
+    dropzone.addEventListener("drop", (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length) file_input.files = files;
+      file_input.dispatchEvent(new Event("change"));
+    });
+    file_input.addEventListener("change", () => {
+      log2("file input changed", "gallery", "info", {
+        files: file_input.files
+      });
+      if (!file_input.files.length) return;
+      const file = file_input.files[0];
+      const reader = new FileReader();
+      dropzone.setAttribute("data-has-file", true);
+      reader.onload = (event3) => {
+        page.state.image_preview.src = event3.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    form.style.setProperty("display", "none");
+  }
+  function bleh_gallery_upload_check() {
+    if (page.subpage != "images_image-upload" || !page.state.image_preview)
+      return;
+    if (ff("mesmerizer")) {
+      const artwork_finder = page.structure.main.querySelector(
+        "#lfmmaf-widget:not([data-bleh])"
+      );
+      if (artwork_finder) {
+        artwork_finder.setAttribute("data-bleh", true);
+        const group = page.structure.main.querySelector(".setting-group");
+        const controls = artwork_finder.querySelectorAll(
+          ".form-group-controls > *"
+        );
+        let info;
+        group.insertBefore(
+          html.node`
+                <div class="setting" data-type="info">
+                    <div class="heading">
+                        <h5>${{ html: artwork_finder.querySelector("label").innerHTML }}</h5>
+                    </div>
+                    <div class="info artwork-finder-info" ref=${(el) => info = el} />
+                </div>
+            `,
+          group.firstElementChild
+        );
+        controls.forEach((control) => {
+          info.appendChild(control);
+        });
+      }
+      return;
+    }
+    const image_preview = page.structure.main.querySelector(
+      ".form-image-preview"
+    );
+    if (!image_preview) return;
+    page.state.image_preview.setAttribute(
+      "src",
+      image_preview.getAttribute("src")
+    );
+  }
+  function bleh_gallery_list() {
+    let upload_btn = page.structure.main.querySelector(".btn-add");
+    if (upload_btn) {
+      upload_btn.classList = "btn view-all-button back upload-button";
+      let upload_panel = document.createElement("section");
+      upload_panel.classList.add("view-all-panel", "upload-panel");
+      upload_panel.appendChild(upload_btn);
+      page.structure.side.insertBefore(
+        upload_panel,
+        page.structure.side.firstElementChild
+      );
+    }
+    page.structure.main.classList.add("bleh--gallery");
+    if (page.type == "artist") patch_gallery_image_listing();
+  }
+  function patch_gallery_image_listing() {
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    if (page.requested.tab != "saved" || page.requested.page != null)
+      page.structure.container.setAttribute("data-bwaa--gallery-tab", "all");
+    else
+      page.structure.container.setAttribute(
+        "data-bwaa--gallery-tab",
+        "saved"
+      );
+    let nav = html.node`
+        <div class="toolbar">
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
+                            ${tl2(trans.photos)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("saved")}>
+                            ${tl2(trans.saved)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    `;
+    page.structure.row.insertBefore(nav, page.structure.content);
+    let bookmarks_panel;
+    page.structure.main.after(html.node`
+        <div class="col-main bleh--bookmarks not-a-panel">
+            <section class="bookmarks-panel" ref=${(el) => bookmarks_panel = el}>
+                <ul class="image-list" data-kate-processed="true"></ul>
+            </section>
+        </div>
+    `);
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      bookmarked_images[page.name].forEach((image) => {
+        let image_element = document.createElement("li");
+        image_element.classList.add("image-list-item-wrapper");
+        image_element.setAttribute("data-image-id", image);
+        image_element.innerHTML = `
+                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
+                </a>
+            `;
+        page.structure.container.querySelector(".bookmarks-panel .image-list").appendChild(image_element);
+        if (ff("remove_bookmark")) {
+          let menu = tippy_esm_default(image_element, {
+            theme: "context-menu",
+            content: html.node`
+                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bwaa--image-is-bookmarked="true">
+                            ${tl2(trans.remove_save)}
+                        </button>
+                    `,
+            placement: "right-start",
+            trigger: "manual",
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+            onShow(instance) {
+              instance.popper.addEventListener("click", (event3) => {
+                instance.hide();
+              });
+            }
+          });
+          register_menu(image_element, menu);
+        }
+      });
+      let image_list = page.structure.main.querySelectorAll(".image-list-item");
+      image_list.forEach((image_list_item) => {
+        let image_id_split = image_list_item.getAttribute("href").split("/");
+        let image_id_length = image_id_split.length;
+        let image_id = image_id_split[image_id_length - 1];
+        if (bookmarked_images[page.name].includes(image_id)) {
+          image_list_item.classList.add("image-list-item-bookmarked");
+        }
+      });
+    } else {
+      render(
+        bookmarks_panel,
+        html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">
+                        ${tl2(trans.no_images_saved)}
+                    </div>
+                </div>
+            `
+      );
+    }
+  }
+  function gallery_tab(id) {
+    page.structure.container.setAttribute("data-bwaa--gallery-tab", id);
+  }
+  function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
+    let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
+    let focused_image_id_length = focused_image_id_split.length - 1;
+    let focused_image_id = focused_image_id_split[focused_image_id_length];
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    let image_is_bookmarked = false;
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      if (bookmarked_images[page.name].includes(focused_image_id)) {
+        image_is_bookmarked = true;
+        log2("focused is bookmarked", "gallery");
+      }
+    }
+    const save_btn = html.node`
+        <button class="bleh--gallery-bookmark-image-btn btn--has-icon" data-bwaa--image-is-bookmarked=${image_is_bookmarked} onclick=${() => update_image_bookmark(save_btn, focused_image_id)}>
+            ${tl2(trans.save)}
+        </button>
+    `;
+    gallery_interactions.appendChild(save_btn);
+  }
+  function update_image_bookmark(button, id) {
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    let is_bookmarked = button.getAttribute("data-bwaa--image-is-bookmarked") == "true";
+    if (!bookmarked_images.hasOwnProperty(page.name))
+      bookmarked_images[page.name] = [];
+    if (is_bookmarked) {
+      button.setAttribute("data-bwaa--image-is-bookmarked", "false");
+      let new_artist_bookmarks = [];
+      for (let image in bookmarked_images[page.name]) {
+        if (bookmarked_images[page.name][image] != id) {
+          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
         }
       }
-      if (sister)
-        tippy_esm_default(link, {
-          theme: "name-sister-combo",
-          content: html.node`
-                    <span class="name">${name}</span>
-                    <span class="sister">${sister}</span>
-                `
-        });
-      if (type) link.setAttribute("data-link-type", type);
+      bookmarked_images[page.name] = new_artist_bookmarks;
+      log2(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
+    } else {
+      button.setAttribute("data-bwaa--image-is-bookmarked", "true");
+      bookmarked_images[page.name].push(id);
+      log2(`image ${id} from ${page.name} added to bookmarks`, "gallery");
+    }
+    set_storage("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
+  }
+
+  // src/components/colourful_counts.js
+  function patch_artist_ranks_in_list_view(track) {
+    let count_bar = track.querySelector(".chartlist-count-bar");
+    if (!count_bar) return;
+    let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
+    if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
+      return;
+    let count = count_bar.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value");
+    if (!count_bar.hasAttribute("data-kate-processed")) {
+      count_bar.setAttribute("data-kate-processed", "true");
+      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
+      count_bar.setAttribute("data-bwaa--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+      count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+      count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+      count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+    }
+  }
+  function parse_scrobbles_as_rank(scrobbles) {
+    let scrobble_milestone = 0;
+    let scrobble_proximity = 0;
+    let max_rank = 15;
+    for (let rank = max_rank; rank >= 0; rank--) {
+      if (scrobbles >= ranks[rank].start) {
+        scrobble_milestone = rank;
+        break;
+      }
+    }
+    let milestone_hue = ranks[scrobble_milestone].hue;
+    let milestone_sat = ranks[scrobble_milestone].sat;
+    let milestone_lit = ranks[scrobble_milestone].lit;
+    if (scrobble_milestone < max_rank) {
+      let current_start = ranks[scrobble_milestone].start;
+      let next_start = ranks[scrobble_milestone + 1].start;
+      scrobble_proximity = (scrobbles - current_start) / (next_start - current_start);
+    }
+    if (scrobble_milestone < max_rank) {
+      let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
+      let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
+      let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
+      milestone_hue = interpolate_hue(milestone_hue, next_milestone_hue, scrobble_proximity);
+      milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
+      milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
+    }
+    log2(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
+    return {
+      milestone: scrobble_milestone,
+      proximity: scrobble_proximity,
+      hue: milestone_hue,
+      sat: milestone_sat,
+      lit: milestone_lit
+    };
+  }
+
+  // src/components/profile_shortcut.js
+  unsafeWindow._open_profile_shortcut_window = function() {
+    open_profile_shortcut_window();
+  };
+  function open_profile_shortcut_window() {
+    let modal = dialog({
+      id: "profile_shortcut",
+      title: tl2(trans.profile_shortcut.name),
+      body: html.node`
+            ${setting({ id: "profile_shortcut", text: false, focus: true, standalone: true })}
+        `
     });
+    modal.querySelector("#text-profile_shortcut").focus();
+  }
+  unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+  };
+  function other_listener(id) {
+    let input2;
+    let submit;
+    dialog({
+      id: "other_listener",
+      title: tl2(trans.view_others_library),
+      body: html.node`
+        <div class="setting standalone" data-type="text">
+            <div class="avatar-container">
+                <div class="avatar-inner avatar--bleh-missing">
+                    <img>
+                </div>
+            </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl2(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
+        let name = input2.value;
+        let link = id;
+        dialog_rm({
+          id: "other_listener"
+        });
+        window.location.href = `${root}user/${name}/library/music/${link}`;
+      }}>${tl2(trans.done)}</button>
+            </div>
+        </div>
+        `
+    });
+    input2.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        submit.click();
+      }
+    });
+    tippy_esm_default(submit, {
+      content: tl2(trans.save)
+    });
+    input2.focus();
+  }
+  unsafeWindow._save_profile_shortcut = function() {
+    let profile_name = document.getElementById("text-profile_shortcut").value;
+    let profile_img = document.getElementById("avatar-profile_shortcut");
+    if (profile_name == "" || profile_name == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      save_setting("profile_shortcut", "");
+      return;
+    }
+    profile_img.classList.add("requesting");
+    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
+      console.log("DOC", doc);
+      profile_img.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        set_storage("bleh_profile_shortcut_avi", avatar_src);
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl2(trans.profile_shortcut.name),
+          body: tl2(trans.profile_shortcut.linked).replace(
+            "{u}",
+            profile_name
+          ),
+          icon: "icon-16-profile-shortcut"
+        });
+        save_setting("profile_shortcut", profile_name);
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl2(trans.profile_shortcut.name),
+          body: tl2(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      }
+    });
+  };
+
+  // src/components/hoshino.js
+  function hoshino(artwork, name, sister, link = null) {
+    if (!ff("hoshino")) return;
+    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
+    const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
+    const href = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
+    if (!album_name || !album_sister) {
+      log2("no cache to be used", "hoshino", "info", {
+        artwork,
+        name,
+        sister,
+        album: {
+          album_name,
+          album_sister,
+          href
+        }
+      });
+      return;
+    }
+    const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
+    artwork.src = art;
+    log2(`loaded cover art ${art}`, "hoshino", "info", {
+      art,
+      artwork,
+      name,
+      sister
+    });
+    artwork.setAttribute("data-hoshino", true);
+    artwork.alt = album_name;
+    if (link && href) {
+      if (link.nodeName != "A") {
+        const new_link = html.node`
+                <a href=${href} class=${link.classList} data-hoshino-recreated="true">
+                    ${artwork}
+                </a>
+            `;
+        link.parentElement.insertBefore(new_link, link);
+        link.remove();
+        return;
+      }
+      link.setAttribute("href", href);
+    }
+  }
+  function hoshino_return(name, sister) {
+    if (!ff("hoshino")) return;
+    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
+    const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
+    if (!album_name || !album_sister) {
+      log2("no cache to be used", "hoshino", "info", {
+        name,
+        sister,
+        album: {
+          album_name,
+          album_sister
+        }
+      });
+      return;
+    }
+    const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
+    return art;
+  }
+  function load_hoshino_artwork(name, sister) {
+    let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    const entry = hoshino_cache[sister_lower]?.[name_lower];
+    log2(`loaded artwork ${entry?.artwork} from cache`, "hoshino", "info", {
+      entry,
+      name,
+      sister
+    });
+    return entry;
+  }
+  function save_hoshino_artwork(artwork, name, sister, listeners = null) {
+    let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
+    if (!hoshino_cache[sister_lower][name_lower])
+      hoshino_cache[sister_lower][name_lower] = {};
+    if (!artwork || artwork.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) {
+      if (artwork) delete hoshino_cache[sister_lower][name_lower].artwork;
+      set_storage("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
+    } else {
+      hoshino_cache[sister_lower][name_lower].artwork = artwork;
+    }
+    if (listeners)
+      hoshino_cache[sister_lower][name_lower].listeners = listeners;
+    log2(`saved artwork ${artwork} to cache`, "hoshino", "info", {
+      artwork,
+      name,
+      sister,
+      listeners
+    });
+    set_storage("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
+  }
+
+  // src/components/about_artist.js
+  function bleh_about_artist() {
+    let legacy_container = page.structure.main.querySelector(".about-artist");
+    if (!legacy_container) return;
+    let avatar2 = legacy_container.querySelector(
+      ".gallery-preview-image--0 img"
+    );
+    let listeners = legacy_container.querySelector(".about-artist-listeners");
+    let tags = legacy_container.querySelector(".about-artist-tags");
+    let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
+    if (wiki) wiki.classList.remove("visible-lg");
+    let about_artist_container = legacy_container.parentElement;
+    about_artist_container.classList.add("about-artist-container");
+    render(
+      about_artist_container,
+      html`
+            <div class="about-artist-panel">
+                <div class="avatar-side">
+                    ${avatar2 ? html.node`
+                    <img src=${avatar2.getAttribute("src")}>
+                    <a onclick=${() => expand_avatar(avatar2.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
+                ` : html.node`
+                    <img class="missing-artist">
+                `}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl2(trans.about)}</div>
+                    <h1>
+                        <a
+                            href="${root}music/${redirect()}${sanitise(
+        page.sister
+      )}"
+                            >${correct_artist(page.sister)}</a
+                        >
+                    </h1>
+                    ${listeners} ${tags} ${wiki}
+                </div>
+            </div>
+            ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl2(trans.others_featured)}</div>` : ""}
+        `
+    );
+    if (page.sister_others.length > 0) {
+      about_artist_container.appendChild(html.node`
+            <div class="about-guest-features-panel">
+                ${page.sister_others.map((guest) => {
+        return html.node`
+                        <a class="about-guest-feature" href="${root}music/${redirect()}${sanitise(guest)}">
+                            ${guest}
+                        </a>
+                    `;
+      })}
+            </div>
+        `);
+    }
+    page.structure.side.appendChild(about_artist_container);
   }
 
   // src/components/markdown.js
@@ -22269,7 +26231,7 @@
     allow_icons = false,
     allow_hue = false,
     take_effect = false,
-    cache: cache2 = false,
+    cache: cache3 = false,
     allow_socials = false,
     allow_lists = true,
     allow_alignment = false,
@@ -22498,9 +26460,9 @@
     });
     const body = html.node([parsed2]);
     log2("rendered", "markdown", "info", { body });
-    let profile_cache;
-    const will_cache = cache2 === true;
-    log2(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache2 });
+    let profile_cache2;
+    const will_cache = cache3 === true;
+    log2(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache3 });
     const link_strings = {
       "open.spotify.com": "Spotify",
       "spotify.com": "Spotify",
@@ -22552,33 +26514,6 @@
         `);
     }
     if (body.nodeName != "#text") patch_wiki_contents(body);
-    if (line_breaks && body.nodeName != "#text") {
-      local_restriction(body);
-      body.querySelectorAll("p").forEach((text4) => {
-        local_restriction(text4);
-      });
-    }
-    if (allow_hue) {
-      if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name))
-        allow_hue = false;
-    }
-    if ((allow_banners || allow_hue) && will_cache) {
-      profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      cache2 = profile_cache[page.name] || {};
-    }
-    if (allow_banners) {
-      const banner2 = body.querySelector('img[alt="banner"]');
-      if (banner2) {
-        const src = banner2.src;
-        if (src) {
-          cache2.banner = src;
-        } else {
-          cache2.banner = "accent";
-        }
-      } else {
-        delete cache2.banner;
-      }
-    }
     if (body.nodeName != "#text") {
       body.querySelectorAll("img").forEach((image) => {
         if (!line_breaks) {
@@ -22594,36 +26529,6 @@
         image.after(container);
         container.appendChild(image);
       });
-    }
-    if (allow_hue) {
-      console.info(hue2, sat, lit);
-      if (hue2 !== void 0 && sat !== void 0 && lit !== void 0) {
-        if (take_effect) {
-          document.body.style.setProperty("--hue-album", hue2);
-          document.body.style.setProperty("--sat-album", sat);
-          document.body.style.setProperty("--lit-album", lit);
-          load_chart_colours();
-        }
-        cache2.hue = hue2;
-        cache2.sat = sat;
-        cache2.lit = lit;
-        log2("custom accent settings present", "profile", "info", {
-          hue: hue2,
-          sat,
-          lit
-        });
-      } else {
-        if (cache2.hue) delete cache2.hue;
-        if (cache2.sat) delete cache2.sat;
-        if (cache2.lit) delete cache2.lit;
-        log2("cleared custom accent settings", "profile", "log");
-      }
-    }
-    if (cache2 && will_cache) {
-      log2("finalised cache from markdown parsing", "markdown", "info", {
-        cache: cache2
-      });
-      save_profile_cache(cache2, profile_cache, name);
     }
     return body;
   }
@@ -22799,10 +26704,6 @@
         `
     });
   }
-  function local_restriction(text3) {
-    if (text3.textContent.trim().startsWith("Due to local laws, we are temporarily"))
-      text3.classList.add("local-restriction");
-  }
   function external_url_prompt(url, dangerous = false) {
     log2(
       `prompted warning for url ${url}, dangerous is ${dangerous}`,
@@ -22877,5645 +26778,364 @@
     });
   }
 
-  // src/components/menu.js
-  function register_menu(element, menu) {
-    element.setAttribute("data-has-bleh-menu", true);
-    element.addEventListener(
-      "contextmenu",
-      (e) => {
-        e.preventDefault();
-        log2("requested", "menu", "info", { e });
-        menu.setProps({
-          placement: "right-start",
-          offset: [0, 0],
-          getReferenceClientRect: () => ({
-            width: 0,
-            height: 0,
-            top: e.clientY,
-            bottom: e.clientY,
-            left: e.clientX,
-            right: e.clientX
-          })
-        });
-        menu.show();
-      },
-      true
-    );
-  }
-  function page_menu() {
-    if (!ff("menus")) return;
-    const menu = tippy_esm_default(document.body, {
-      theme: "context-menu",
-      placement: "right-start",
-      trigger: "manual",
-      interactive: true,
-      interactiveBorder: 10,
-      offset: [0, 0],
-      appendTo: document.body,
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-      }
-    });
-    document.addEventListener("contextmenu", (e) => {
-      if (!show_menu(e)) return;
-      e.preventDefault();
-      const elem = e.target;
-      const is_image = elem.tagName == "IMG";
-      const has_link = elem.href;
-      const contents = html.node`
-            ${is_image ? html.node`
-                        <button class="dropdown-menu-clickable-item" data-type="image" onclick=${() => {
-        open(elem.src, "_blank");
-      }}>
-                            ${tl2(trans.view_image)}
-                        </button>
-                    ` : ""}
-            ${has_link ? html.node`
-                        <a class="dropdown-menu-clickable-item" data-type="link" href=${elem.href} target=${elem.target}>
-                            ${tl2(trans.open)}
-                        </a>
-                    ` : ""}
-        `;
-      if (![...contents.childNodes].some(
-        (node) => node.nodeType == Node.ELEMENT_NODE
-      ))
-        return;
-      menu.setProps({
-        getReferenceClientRect: () => ({
-          width: 0,
-          height: 0,
-          top: e.clientY,
-          bottom: e.clientY,
-          left: e.clientX,
-          right: e.clientX
-        })
-      });
-      menu.setContent(contents);
-      menu.show();
-    });
-  }
-  function show_menu(e) {
-    const target = e.target;
-    console.info("menu target", target);
-    if (target.closest("[data-has-bleh-menu]")) return false;
-    return true;
-  }
-
-  // src/components/profile_header.js
-  function redesign_profile_header(is_own_profile, is_following) {
-    let base_header = document.body.querySelector(".header-info-secondary");
-    if (!base_header) return;
-    let katsune = ff("katsune");
-    let taste = "";
-    let taste_percentage = "";
-    let taste_artists = [];
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
-      let taste_meter = base_header.querySelector(".tasteometer");
-      if (taste_meter) {
-        taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
-        let artists = taste_meter.querySelectorAll("a");
-        artists.forEach((artist) => {
-          taste_artists.push(
-            correct_artist(artist.getAttribute("title"))
-          );
-        });
-        taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
-        if (taste_percentage == "99%") taste_percentage = "100%";
-      }
-    }
-    let about_me = page.structure.container.querySelector(".about-me-sidebar");
-    let profile_header = html.node`
-        <section class="side-actions" />
-    `;
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account && auth.name) {
-      let follow_wrap = document.body.querySelector(
-        ".header-avatar .class > div"
-      );
-      if (follow_wrap) {
-        let follow_btn = follow_wrap.querySelector("button");
-        follow_btn.classList.add("btn", "side-action");
-        follow_btn.classList.remove("toggle-button", "header-follower-btn");
-        follow_btn.setAttribute("data-type", "follow");
-        profile_header.appendChild(follow_wrap);
-        if (is_following) follow_btn.setAttribute("data-followed", "true");
-        let mutual_text = document.createElement("i");
-        mutual_text.textContent = tl2(trans.following_mutuals);
-        follow_btn.appendChild(mutual_text);
-        if (!katsune)
-          tippy_esm_default(follow_btn, {
-            content: follow_btn.textContent
-          });
-        follow_btn.addEventListener("click", () => {
-          window.setTimeout(() => {
-            follow_btn._tippy.setContent(follow_btn.textContent);
-          }, 50);
-        });
-      } else {
-        let follow_placeholder = document.createElement("button");
-        follow_placeholder.classList.add("btn", "side-action");
-        follow_placeholder.setAttribute("data-type", "follow");
-        follow_placeholder.textContent = tl2(trans.blocked);
-        follow_placeholder.setAttribute("disabled", "true");
-        follow_placeholder.setAttribute("data-ignored", "true");
-        profile_header.appendChild(follow_placeholder);
-      }
-    }
-    if (!is_own_profile) {
-      let msg_button = document.body.querySelector(".header-message-user");
-      if (msg_button) {
-        if (page.name != sponsor_list.sponsor_account) {
-          friends_button(profile_header);
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "message",
-            link: msg_button.getAttribute("href")
-          });
-          if (page.name == sponsor_list.special[0]) {
-            create_profile_top_item(profile_header, {
-              name: page.name,
-              type: "sponsor",
-              link: () => sponsor(),
-              action: "button"
-            });
-          }
-        } else {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "sponsor",
-            link: () => sponsor(),
-            action: "button"
-          });
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "message_sponsor",
-            link: msg_button.getAttribute("href"),
-            full: true
-          });
-        }
-      }
-      if (page.name != sponsor_list.sponsor_account) {
-        if (ff("compare")) {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "compare",
-            link: `${root}bleh/minis/compare?profile=${page.name}`
-          });
-        }
-      }
-      if (page.structure.container.querySelector(".user-status-staff")) {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "support",
-          link: "https://support.last.fm"
-        });
-      }
-    } else {
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        type: "edit",
-        link: `${root}settings`
-      });
-      if (ff("minis")) {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "minis",
-          link: `${root}bleh/minis`
-        });
-      } else {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "labs",
-          link: `${root}labs`,
-          tooltip: `
-                    <strong>${tl2(trans.labs_by_last)}</strong>
-                    <p>${tl2(trans.labs_by_last.tagline)}</p>
-                `,
-          tooltip_style: "stack",
-          allow_html: true
-        });
-      }
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        type: "obsession",
-        link: `${root}user/${page.name}/obsessions/set`
-      });
-      if (ff("charts")) {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "collage",
-          link: `${root}bleh/minis/collage`,
-          text: tl2(trans.collage)
-        });
-      }
-    }
+  // src/pages/wiki.js
+  function bleh_wiki() {
+    let wiki_panel = document.createElement("section");
+    wiki_panel.classList.add("wiki-panel");
+    wiki_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
+    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
     if (!page.mobile)
-      page.structure.side.insertBefore(
-        profile_header,
-        page.structure.side.firstElementChild
-      );
+      page.structure.side.appendChild(side_actions);
     else
-      page.structure.main.insertBefore(
-        profile_header,
-        page.structure.main.firstElementChild
-      );
-    let listen_container = page.structure.row.querySelector(".listen-panel");
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune && auth.name) {
-      if (taste == "") {
-        listen_container.appendChild(html.node`
-                <div class="loading-data-container">
-                    <div class="loading-data-text error">${tl2(trans.missing_component)}</div>
-                </div>
-            `);
-        return;
-      }
-      let taste_wrap = html.node`
-            <div class="btn listen-item ${taste != "super" && taste != "very_low" ? "icon" : ""} taste">
-                <div class="taste-icon colourful" data-taste=${taste}>
-                    <div class="bleh-icon" />
-                </div>
-                <div class="span">
-                    <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
-                    <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
-                    <div class="info">
-                        <h3>${html.node([
-        tl2(trans.you_share_count_with).replace(
-          "{c}",
-          `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`
-        )
-      ])}</h3>
-                        <p>
-                            ${taste_artists.length == 1 ? taste_artists[0] : ""}
-                            ${taste_artists.length == 2 ? tl2(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
-                            ${taste_artists.length == 3 ? tl2(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
-                        </p>
-                    </div>
-                </div>
+      page.structure.main.appendChild(side_actions);
+    if (original_edit_button) {
+      let side_edit = document.createElement("a");
+      side_edit.classList.add("btn", "side-action");
+      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
+      side_edit.setAttribute("data-type", "edit");
+      side_edit.textContent = tl2(trans.edit);
+      side_actions.appendChild(side_edit);
+    }
+    if (original_version_history) {
+      let side_history = document.createElement("a");
+      side_history.classList.add("btn", "side-action");
+      side_history.setAttribute("href", original_version_history.getAttribute("href"));
+      side_history.setAttribute("data-type", "history");
+      side_history.textContent = tl2(trans.timeline);
+      side_actions.appendChild(side_history);
+    }
+    let wiki_author = wiki_panel.querySelector(".wiki-author");
+    if (wiki_author) {
+      let h22 = wiki_panel.querySelector("h2.text-18");
+      let sub_text = document.createElement("div");
+      sub_text.classList.add("sub-text", "space-below", "header-style");
+      sub_text.innerHTML = `
+            <div class="breadcrumb-origin prominent">
+                ${h22 ? h22.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
+            </div>
+            <div class="wiki-author-side">
+                ${wiki_author.innerHTML}
             </div>
         `;
-      tippy_esm_default(taste_wrap, {
-        theme: "stack",
-        content: html.node`
-                <span>
-                    ${tl2(trans.taste_similarity)}
-                </span>
-                <div class="hint">${tl2(trans.click_for_more_options)}</div>
-            `
-      });
-      if (taste_artists.length > 1) {
-        tippy_esm_default(taste_wrap, {
-          theme: "context-menu",
-          content: html.node`
-                    <h4 class="menu-header">${tl2(trans.compare_plays)}</h4>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
-                    </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
-                    </a>
-                    ${taste_artists.length >= 2 ? html.node`
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
-                    </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
-                    </a>
-                    ` : ""}
-                    ${taste_artists.length >= 3 ? html.node`
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
-                    </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
-                    </a>
-                    ` : ""}
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl2(trans.compare)}</a>
-                `,
-          trigger: "click",
-          placement: "bottom",
-          interactive: true,
-          interactiveBorder: 10,
-          offset: [0, 0]
-        });
-      }
-      const row = listen_container.querySelector(".listener-row");
-      row.after(taste_wrap);
+      wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
+      if (h22)
+        wiki_panel.removeChild(h22);
+    }
+    let wiki = wiki_panel.querySelector(".wiki");
+    if (!wiki) return;
+    patch_wiki_contents(wiki);
+    let factbox = wiki_panel.querySelector(".factbox");
+    if (factbox) {
+      let facts = html.node`
+            <section class="facts">
+                ${factbox}
+            </section>
+        `;
+      side_actions.after(facts);
     }
   }
-  function create_profile_top_item(parent, {
-    name,
-    link,
-    text: text3 = "",
-    type,
-    new_release = false,
-    updated = false,
-    action = "",
-    tooltip = "",
-    allow_html = false,
-    tooltip_theme = ""
-  }) {
-    log2(`creating top item of ${name}, ${link}, ${text3}`, "profile");
-    let side_action;
-    if (action === "button") {
-      side_action = html.node`
-            <button
-                class="btn side-action"
-                data-type=${type}
-                onclick=${link}
-            >
-                ${tl2(trans[type])}
-                ${new_release ? html.node`<div class="new-badge">${tl2(trans.new)}</div>` : ""}
-                ${updated ? html.node`<div class="new-badge">${tl2(trans.updated)}</div>` : ""}
-            </button>
-        `;
-    } else {
-      side_action = html.node`
-            <a
-                class="btn side-action"
-                data-type=${type}
-                href=${link}
-            >
-                ${tl2(trans[type])}
-                ${new_release ? html.node`<div class="new-badge">${tl2(trans.new)}</div>` : ""}
-                ${updated ? html.node`<div class="new-badge">${tl2(trans.updated)}</div>` : ""}
+  function bleh_wiki_history() {
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
+    if (!breadcrumb_root) {
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
+    }
+    let sub_text = document.createElement("div");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
+    sub_text.innerHTML = `
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector("a").outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `;
+    breadcrumb_root.style.setProperty("display", "none");
+    breadcrumb_name.style.setProperty("display", "none");
+    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
+    if (!buffer_container)
+      buffer_container = page.structure.container.querySelector(".wiki-history");
+    let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
+    let pagination = buffer_container.querySelector(".pagination");
+    let wiki_panel = document.createElement("section");
+    wiki_panel.classList.add("wiki-history-panel");
+    wiki_panel.appendChild(sub_text);
+    wiki_panel.appendChild(wiki_history_table);
+    page.structure.main.appendChild(wiki_panel);
+    buffer_container.style.setProperty("display", "none");
+    if (pagination)
+      wiki_panel.appendChild(pagination);
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl2(trans.view_latest)}
             </a>
-        `;
-    }
-    parent.appendChild(side_action);
-    return side_action;
-  }
-  function friends_button(parent) {
-    return;
-    let friend_state = settings.friends.includes(page.name);
-    let star_state = settings.starred_friend == page.name;
-    if (!friend_state && star_state) {
-      star_state = false;
-      save_setting("starred_friend", "");
-    }
-    const elem = html.node`
-        <button class="btn side-action" data-type="friends" onclick=${() => {
-      if (friend_state) {
-        dialog({
-          id: "remove_friend",
-          title: tl2(trans.remove_friend.name),
-          body: html.node`
-                        <p>${tl2(trans.remove_friend.body).replace("{u}", page.name)}</p>
-                        <div class="modal-footer">
-                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: "remove_friend" })}>
-                                ${tl2(trans.cancel)}
-                            </button>
-                            <div class="fill"></div>
-                            <button class="btn primary icon danger" data-type="minus" onclick=${() => {
-            friend_state = false;
-            star_state = false;
-            const new_list = settings.friends.filter(
-              (item) => item != page.name
-            );
-            save_setting("friends", new_list);
-            save_setting("starred_friend", "");
-            dialog_rm({ id: "remove_friend" });
-            update_visual();
-            notify({
-              id: "friends",
-              title: tl2(trans.removed_friend),
-              body: page.name,
-              icon: "icon-16-minus",
-              type: "error"
-            });
-          }}>
-                                ${tl2(trans.remove)}
-                            </button>
-                        </div>
-                    `
-        });
-      } else {
-        friend_state = true;
-        const new_list = [...settings.friends, page.name];
-        save_setting("friends", new_list);
-        update_visual();
-        notify({
-          id: "friends",
-          title: tl2(trans.added_as_friend),
-          body: page.name,
-          icon: "icon-16-users",
-          type: "success"
-        });
-      }
-    }} />
-    `;
-    tippy_esm_default(elem, {
-      content: tl2(trans.friend_difference)
-    });
-    const menu = tippy_esm_default(elem, {
-      theme: "context-menu",
-      content: html.node``,
-      placement: "right-start",
-      trigger: "manual",
-      interactive: true,
-      interactiveBorder: 10,
-      offset: [0, 0],
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-        instance.setContent(html.node`
-                <button class="dropdown-menu-clickable-item" data-type="starred_friend" data-is-shortcut=${star_state} onclick=${() => {
-          if (star_state) {
-            star_state = false;
-            save_setting("starred_friend", "");
-            update_visual();
-            notify({
-              id: "friends",
-              title: tl2(trans.removed_star),
-              body: page.name,
-              icon: "icon-16-minus",
-              type: "error"
-            });
-          } else {
-            star_state = true;
-            save_setting("starred_friend", page.name);
-            update_visual();
-            notify({
-              id: "friends",
-              title: tl2(trans.added_star),
-              body: page.name,
-              icon: "icon-16-starred-friend"
-            });
-          }
-        }}>
-                    ${star_state ? tl2(trans.remove_as_star_friend) : tl2(trans.add_as_starred_friend)}
-                </button>
-            `);
-      }
-    });
-    register_menu(elem, menu);
-    update_visual();
-    function update_visual() {
-      elem.setAttribute("data-friends", friend_state);
-      elem.setAttribute("data-starred", star_state);
-      if (star_state) {
-        elem.textContent = tl2(trans.starred_friend.name);
-      } else if (friend_state) {
-        elem.textContent = tl2(trans.friends);
-      } else {
-        elem.textContent = tl2(trans.add_as_friend);
-      }
-    }
-    parent.appendChild(elem);
-  }
-
-  // src/components/structure.js
-  function checkup_page_structure(is_subpage = false, header = null) {
-    if (document.body.style.getPropertyValue("--hue-album")) {
-      document.body.style.removeProperty("--hue-album");
-      document.body.style.removeProperty("--sat-album");
-      document.body.style.removeProperty("--lit-album");
-      load_chart_colours();
-    }
-    let params = new URLSearchParams(document.location.search);
-    page.requested = {
-      tab: params.get("tab"),
-      page: params.get("page"),
-      token: params.get("token"),
-      collage: params.get("collage")
-    };
-    if (!page.structure.container || !document.body.contains(page.structure.container)) {
-      log2("page missing container, creating", "page structure");
-      page.structure.container = document.createElement("div");
-      page.structure.container.classList.add("page-content", "container");
-      let container_full_width = document.body.querySelector(
-        ".container--full-width"
-      );
-      if (container_full_width)
-        container_full_width.insertBefore(
-          page.structure.container,
-          container_full_width.firstElementChild
-        );
-      else
-        document.body.querySelector(".adaptive-skin-container").appendChild(page.structure.container);
-    }
-    page.structure.container.setAttribute("data-assigned", "true");
-    let other_container = document.body.querySelector(
-      ".page-content.container:not([data-assigned])"
-    );
-    if (other_container) other_container.style.setProperty("display", "none");
-    if (!page.structure.row || !document.body.contains(page.structure.row)) {
-      log2("page missing row, creating", "page structure");
-      page.structure.row = document.createElement("div");
-      page.structure.row.classList.add("row");
-      page.structure.container.insertBefore(
-        page.structure.row,
-        page.structure.container.firstElementChild
-      );
-    }
-    if (page.structure.row.classList.contains("buffer-4"))
-      page.structure.row.classList = "row col-main-is-primary";
-    page.structure.row.setAttribute("data-assigned", "true");
-    if (!page.structure.main || !document.body.contains(page.structure.main)) {
-      log2("page missing main, creating", "page structure");
-      page.structure.main = document.createElement("div");
-      page.structure.main.classList.add("col-main");
-      page.structure.row.appendChild(page.structure.main);
-    }
-    page.structure.main.setAttribute("data-assigned", "true");
-    let other_main = page.structure.row.querySelector(
-      ".col-main.hidden-xs:not([data-assigned])"
-    );
-    if (other_main) other_main.style.setProperty("display", "none");
-    if (!page.structure.side || !document.body.contains(page.structure.side)) {
-      log2("page missing side", "page structure");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-      if (!page.structure.side) {
-        log2("page missing side, creating", "page structure");
-        page.structure.side = document.createElement("div");
-        page.structure.side.classList.add("col-sidebar");
-        page.structure.row.appendChild(page.structure.side);
-      }
-    }
-    if (ff("short")) {
-      page.structure.content = html.node`
-            <main class="content">
-                ${page.structure.main}
-                ${page.structure.side}
-            </main>
-        `;
-      page.structure.row.appendChild(page.structure.content);
-    }
-    log2("finished", "page structure");
-    if (ff("refreshed_music_nav") && header) {
-      let navlist = header.querySelector(".navlist");
-      if (navlist) {
-        navlist.classList.add("redesigned-navigation");
-        page.structure.container.insertBefore(
-          navlist,
-          page.structure.container.firstElementChild
-        );
-        page.structure.nav = navlist;
-        let overview = page.structure.nav.querySelector(
-          ".secondary-nav-item--overview a"
-        );
-        if (overview) {
-          const href = overview.getAttribute("href").replace(root, "");
-          if (href == "settings" || href == "inbox" || href == "charts")
-            overview = null;
-        }
-        if (overview) overview.textContent = tl2(trans.home);
-      }
-      if (is_subpage) {
-        let content_top = document.body.querySelector(".content-top");
-        if (content_top) {
-          content_top.classList.add("redesigned-content-top");
-          page.structure.content_top = content_top;
-          if (content_top.querySelector(".content-top-back-link"))
-            content_top.style.setProperty("display", "none");
-          let content_top_nav = content_top.querySelector(".navlist");
-          if (!content_top_nav && ff("beret"))
-            content_top.style.setProperty("display", "none");
-          if (ff("short")) {
-            if (!content_top.style.hasOwnProperty("display"))
-              page.structure.row.insertBefore(
-                content_top,
-                page.structure.content
-              );
-            else page.structure.row.appendChild(content_top);
-          } else {
-            if (navlist) navlist.after(content_top);
-            else
-              page.structure.container.insertBefore(
-                content_top,
-                page.structure.container.firstElementChild
-              );
-          }
-        } else {
-          let subpage_title = page.structure.main.querySelector(
-            ":scope > .subpage-title"
-          );
-          if (!subpage_title)
-            subpage_title = page.structure.main.querySelector(
-              ":scope > .section-controls > .subpage-title"
-            );
-          if (!subpage_title)
-            subpage_title = page.structure.main.querySelector(
-              ":scope > section:first-child .section-controls > .subpage-title"
-            );
-          if (subpage_title) {
-            content_top = html.node`
-                        <div class="content-top redesigned-content-top">
-                            <div class="content-top-inner-wrap">
-                                <div class="container content-top-lower">
-                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-            page.structure.content_top = content_top;
-            content_top.style.setProperty("display", "none");
-            if (ff("short"))
-              page.structure.row.appendChild(content_top);
-            else navlist.after(content_top);
-            try {
-              page.structure.main.removeChild(subpage_title);
-            } catch (e) {
-            }
-          }
-          navlist = page.structure.main.querySelector(".navlist");
-          if (navlist) {
-            navlist.classList.add("redesigned-navigation");
-            if (ff("mualani")) {
-              let toolbar = html.node`
-                            <div class="toolbar">
-                                ${navlist}
-                            </div>
-                        `;
-              page.structure.row.insertBefore(
-                toolbar,
-                page.structure.row.firstElementChild
-              );
-            } else {
-              page.structure.row.insertBefore(
-                navlist,
-                page.structure.content
-              );
-            }
-          }
-          let btn_add = page.structure.main.querySelector(":scope > .btn-add");
-          if (!btn_add)
-            btn_add = page.structure.main.querySelector(
-              ":scope > section:first-child .btn-add"
-            );
-          if (btn_add) {
-            let side_actions = document.createElement("section");
-            side_actions.classList.add("side-actions");
-            if (!page.mobile)
-              page.structure.side.appendChild(side_actions);
-            else page.structure.main.appendChild(side_actions);
-            btn_add.classList = "btn side-action";
-            btn_add.setAttribute("data-type", "add");
-            btn_add.textContent = tl2(trans.add);
-            side_actions.appendChild(btn_add);
-          }
-          let radio2 = page.structure.main.querySelector(
-            ":scope > .section-controls > .section-playlink"
-          );
-          if (radio2) {
-            let side_actions = document.createElement("section");
-            side_actions.classList.add("side-actions");
-            if (!page.mobile)
-              page.structure.side.appendChild(side_actions);
-            else page.structure.main.appendChild(side_actions);
-            radio2.classList = "btn stationlink js-playlink-station radio-button";
-            let type = radio2.getAttribute("data-analytics-label");
-            render(
-              radio2,
-              html`
-                            <h3 class="sub-text">${tl2(trans.radio)}</h3>
-                            <h4>${tl2(trans[type])}</h4>
-                        `
-            );
-            radio2.removeAttribute("title");
-            side_actions.appendChild(radio2);
-          }
-        }
-        let similar_artists = page.structure.side.querySelector(
-          ".similar-items-sidebar"
-        );
-        if (similar_artists) {
-          similar_artists.parentElement.classList.add(
-            "similar-artists-panel"
-          );
-          page.structure.side.removeChild(similar_artists.parentElement);
-        }
-      } else {
-        let content_top = document.body.querySelector(".content-top");
-        if (content_top) content_top.classList.add("legacy-content-top");
-      }
-    }
-  }
-  function checkup_nav() {
-    if (!ff("short")) return;
-    if (page.structure.nav)
-      page.structure.nav.setAttribute("data-assigned", "true");
-    let navlists = page.structure.container.querySelectorAll(":scope > .navlist");
-    navlists.forEach((nav, index3) => {
-      console.info(index3);
-      if (index3 < 1) return;
-      if (ff("mualani")) {
-        let toolbar = html.node`
-                <div class="toolbar">
-                    ${nav}
-                </div>
-            `;
-        page.structure.row.insertBefore(toolbar, page.structure.content);
-      } else {
-        page.structure.row.insertBefore(nav, page.structure.content);
-      }
-    });
-  }
-  function convert_to_toolbar() {
-    const nav = page.structure.content_top.querySelector(".navlist");
-    if (!nav) return;
-    nav.classList.add("redesigned-navigation");
-    page.structure.toolbar = html.node`
-        <div class="toolbar">
-            ${nav}
-        </div>
-    `;
-    page.structure.row.insertBefore(
-      page.structure.toolbar,
-      page.structure.row.firstChild
-    );
-    page.structure.content_top.style.display = "none";
-  }
-
-  // src/components/auto_edit.js
-  function bleh_auto_edits() {
-    let corrections_panel = document.body.querySelector("#subscription-corrections");
-    page.structure.main.appendChild(corrections_panel);
-    let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
-    nav.insertBefore(html.node`
-        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
-            <a class="secondary-nav-item-link" href="${root}settings/subscription">
-                ${tl2(trans.back)}
-            </a>
-        </li>
-    `, nav.firstElementChild);
-  }
-
-  // src/pages/lastfm_settings.js
-  var import_cropperjs = __toESM(require_cropper(), 1);
-
-  // src/components/radio_toggle.js
-  function radio({ name, value, values = {} }) {
-    let buttons = [];
-    let elem = html.node`
-        <div class="primary-selections">
-        ${Object.entries(values).map(([key, val]) => {
-      const icon = val.icon;
-      let input2;
-      const button = html.node`
-                <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
-        update_radio(key);
-      }}>
-                    <div class="radio-cont">
-                        <input type="radio" name=${name} value=${key} required ref=${(el) => input2 = el}>
-                        <div class="radio" aria-checked=${value == key} />
-                    </div>
-                    ${icon ? html.node`
-                                <div class="icon">
-                                    <div class="bleh-icon" style="--icon: var(--${icon})" />
-                                </div>
-                            ` : ""}
-                    <div class="heading">
-                        <h5>${typeof val.name == "object" ? tl(val.name) : val.name}</h5>
-                    </div>
-                </div>
-            `;
-      input2.checked = value == key;
-      buttons.push(button);
-      return button;
-    })}
-        </div>
-    `;
-    function update_radio(val) {
-      buttons.forEach((btn) => {
-        btn.querySelector("input").checked = btn.getAttribute("data-value") == val;
-        btn.querySelector(".radio").setAttribute(
-          "aria-checked",
-          btn.getAttribute("data-value") == val
-        );
-      });
-    }
-    return elem;
-  }
-  function radio_convert(existing) {
-    if (!existing) return {};
-    let values = {};
-    existing.forEach((item) => {
-      const input2 = item.querySelector("input");
-      const label = item.querySelector("label");
-      values[input2.value] = {
-        name: label.textContent.trim()
-      };
-    });
-    return values;
-  }
-
-  // src/pages/lastfm_settings.js
-  var cropper;
-  function bleh_native_settings() {
-    let no_data = page.structure.container.querySelector(
-      ":scope > .no-data-message"
-    );
-    if (no_data) {
-      page.structure.main.appendChild(no_data);
-    }
-    if (page.subpage == "overview") {
-      patch_settings_profile_tab();
-    } else if (page.subpage == "privacy") {
-      patch_settings_privacy_tab();
-    } else if (page.subpage == "subscription_overview") {
-      let panel = page.structure.container.querySelector(".row + div");
-      let subscription = panel.querySelector("#current-subscription");
-      let edits = panel.querySelector("#automatic-edits");
-      let merch_h = panel.querySelector(":scope > h2");
-      let merch = panel.querySelector("#mechandise-discount");
-      let history = panel.querySelector("#pro-history");
-      merch.insertBefore(merch_h, merch.firstElementChild);
-      page.structure.main.appendChild(subscription);
-      page.structure.main.appendChild(edits);
-      page.structure.main.appendChild(merch);
-      page.structure.main.appendChild(history);
-      let button = subscription.querySelector(".btn-primary");
-      if (button)
-        button.classList.add("subscription-button", "icon", "primary");
-      let more_link_wrap = edits.querySelector(".more-link");
-      if (more_link_wrap) {
-        more_link_wrap.classList = "";
-        let edit_buttons = more_link_wrap.querySelectorAll("a");
-        edit_buttons.forEach((edit_button, index3) => {
-          edit_button.classList.add(
-            "btn",
-            "edit-lead-button",
-            "icon",
-            "primary"
-          );
-          if (index3 == 0) edit_button.classList.add("edit-album");
-          else edit_button.classList.add("edit-track");
-        });
-      }
-    } else if (page.subpage.startsWith("subscription_automatic-edits")) {
-      bleh_auto_edits();
-    } else if (page.subpage == "account_overview") {
-      bleh_accounts();
-    } else if (page.subpage == "website") {
-      bleh_website();
-    } else if (page.subpage == "change-username_overview") {
-      bleh_name_change();
-    } else if (page.subpage == "applications_overview") {
-      bleh_applications();
-    }
-    if (ff("katsune")) return;
-    let edit_header = document.createElement("section");
-    edit_header.classList.add(
-      "redesigned-header",
-      "edit-header",
-      "no-background"
-    );
-    edit_header.innerHTML = `
-        <div class="tag-side">
-            <div class="tag-icon cog-icon"></div>
-        </div>
-        <div class="info-side">
-            <div class="sub-text">${tl2(trans.settings)}</div>
-            <h1>${header_text}</h1>
-        </div>
-    `;
-    page.structure.container.insertBefore(
-      edit_header,
-      page.structure.container.firstElementChild
-    );
-  }
-  function patch_settings_profile_tab() {
-    let update_picture = page.structure.main.querySelector("#update-picture");
-    if (!update_picture) return;
-    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    patch_settings_profile_panel(token, update_picture);
-    patch_settings_charts_panel(token);
-  }
-  function patch_settings_charts_panel(token) {
-    let charts_panel = document.getElementById("update-chart");
-    if (charts_panel.hasAttribute("data-kate-processed")) return;
-    charts_panel.setAttribute("data-kate-processed", "true");
-    charts_panel.classList.add("bleh--panel");
-    let original_chart_settings = {
-      recent: {
-        recent_artwork: document.getElementById(
-          "id_show_recent_tracks_artwork"
-        ).checked,
-        count: document.getElementById("id_chart_length_recent_tracks").outerHTML,
-        recent_realtime: document.getElementById(
-          "id_auto_refresh_recent_tracks"
-        ).checked
-      },
-      artists: {
-        timeframe: document.getElementById("id_chart_range_top_artists").outerHTML,
-        style: document.getElementById(
-          "id_chart_style_and_length_top_artists"
-        ).outerHTML
-      },
-      albums: {
-        timeframe: document.getElementById("id_chart_range_top_albums").outerHTML,
-        style: document.getElementById(
-          "id_chart_style_and_length_top_albums"
-        ).outerHTML
-      },
-      tracks: {
-        count: document.getElementById("id_chart_length_top_tracks").outerHTML,
-        timeframe: document.getElementById("id_chart_range_top_tracks").outerHTML
-      }
-    };
-    charts_panel.innerHTML = `
-        <h4>${tl2(trans.recent_tracks)}</h4>
-        <form action="${root}settings#update-chart" name="chart-form" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="inner-preview pad">
-                <div class="tracks recent">
-                    <div class="track realtime">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                        ${original_chart_settings.recent.count}
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl2(trans.recent_artwork)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                        <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl2(trans.recent_realtime.name)}</h5>
-                        <p>${tl2(trans.recent_realtime.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                        <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <h4>${tl2(trans.top_artists)}</h4>
-            <div class="inner-preview pad">
-                <div class="item-grid artist">
-                    <div class="grid-primary artist">
-                        <div class="grid-item"></div>
-                    </div>
-                    <div class="grid-mains">
-                        <div class="grid-main artist">
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                        </div>
-                        <div class="grid-main artist">
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tracks artist">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                        ${original_chart_settings.artists.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_style)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
-                        ${original_chart_settings.artists.style}
-                    </div>
-                </div>
-            </div>
-            <h4>${tl2(trans.top_albums)}</h4>
-            <div class="inner-preview pad">
-                <div class="item-grid album">
-                    <div class="grid-primary album">
-                        <div class="grid-item"></div>
-                    </div>
-                    <div class="grid-mains">
-                        <div class="grid-main album">
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                        </div>
-                        <div class="grid-main album">
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tracks album">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                        ${original_chart_settings.albums.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_style)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
-                        ${original_chart_settings.albums.style}
-                    </div>
-                </div>
-            </div>
-            <h4>${tl2(trans.top_tracks)}</h4>
-            <div class="inner-preview pad">
-                <div class="tracks">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                        ${original_chart_settings.tracks.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                        ${original_chart_settings.tracks.count}
-                    </div>
-                </div>
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl2(trans.save)}
-                </button>
-                <input type="hidden" value="chart" name="submit">
-            </div>
-        </form>
-    `;
-    custom_select(
-      charts_panel.querySelector("#id_chart_length_recent_tracks"),
-      charts_panel.querySelector("#id_chart_length_recent_tracks_select")
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_range_top_artists"),
-      charts_panel.querySelector("#id_chart_range_top_artists_select")
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_style_and_length_top_artists"),
-      charts_panel.querySelector(
-        "#id_chart_style_and_length_top_artists_select"
-      )
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_range_top_albums"),
-      charts_panel.querySelector("#id_chart_range_top_albums_select")
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_style_and_length_top_albums"),
-      charts_panel.querySelector(
-        "#id_chart_style_and_length_top_albums_select"
-      )
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_range_top_tracks"),
-      charts_panel.querySelector("#id_chart_range_top_tracks_select")
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_length_top_tracks"),
-      charts_panel.querySelector("#id_chart_length_top_tracks_select")
-    );
-    for (let category in original_chart_settings) {
-      for (let setting2 in original_chart_settings[category]) {
-        update_inbuilt_item(
-          setting2,
-          original_chart_settings[category][setting2],
-          false
-        );
-      }
-    }
-    let selects = document.body.querySelectorAll("select");
-    selects.forEach((select2) => {
-      select2.setAttribute(
-        "onchange",
-        `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`
-      );
-      update_inbuilt_select(select2.getAttribute("id"), select2.value);
-    });
-  }
-  function patch_settings_profile_panel(token, update_picture) {
-    update_picture.classList.add("bleh--panel");
-    const upload_form = update_picture.querySelector(".avatar-upload-form");
-    const avatar_url = update_picture.querySelector(".image-upload-preview img").getAttribute("src");
-    const upload_finished = update_picture.querySelector(".alert-success");
-    if (page.state.avatar_changer && upload_finished) {
-      const id = page.state.avatar_changer.getAttribute("data-modal-id");
-      dialog_rm({ id });
-    }
-    let form_display_name = document.getElementById("id_full_name").value;
-    let form_website = document.getElementById("id_homepage").value;
-    let form_country = document.getElementById("id_country");
-    let form_about_me = document.getElementById("id_about_me").textContent;
-    let chars;
-    let about;
-    let preview;
-    const markdown_settings = {
-      allow_headers: true,
-      allow_banners: true,
-      allow_icons: true,
-      allow_hue: true,
-      cache: true,
-      take_effect: false,
-      allow_socials: true,
-      allow_alignment: true
-    };
-    let banner_setting;
-    let accent_setting;
-    render(
-      update_picture,
-      html`
-            <h4>${tl2(trans.profile)}</h4>
-            <div class="banner-preview"></div>
-            <div class="profile-container">
-                <div class="avatar-side">
-                    <div
-                        class="avatar image-upload-preview"
-                        onclick=${() => avatar(token)}
-                    >
-                        <img
-                            src=${avatar_url}
-                            alt=${tl2(trans.your_avatar)}
-                            loading="lazy"
-                        />
-                        <div class="avatar-overlay"></div>
-                    </div>
-                </div>
-                <div class="info-side">
-                    <div class="header-info">
-                        <div class="header">
-                            <h1>${auth.name}</h1>
-                        </div>
-                        <div class="header-title-secondary">
-                            <span
-                                class="header-title-secondary--pre"
-                                id="header-title-display-name--pre"
-                            ></span>
-                            <span
-                                class="header-title-display-name"
-                                id="header-title-display-name"
-                            ></span>
-                            <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
-                        <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
-                        </div>
-                    </div>
-                    <div class="sub-info">
-                        <form
-                            action="${root}settings#update-profile"
-                            name="profile-form"
-                            data-form-type="identity"
-                            method="post"
-                        >
-                            <input
-                                type="hidden"
-                                name="csrfmiddlewaretoken"
-                                value="${token}"
-                            />
-                            <div class="info-grid">
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.subtitle)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="text"
-                                            name="full_name"
-                                            value=${form_display_name}
-                                            maxlength="36"
-                                            id="id_full_name"
-                                            oninput="_update_display_name(this.value)"
-                                            data-form-type="other"
-                                        />
-                                        <div class="tip">
-                                            ${tl2(trans.pronoun_tip)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.country)}
-                                    </div>
-                                    ${select(
-        select_prepare(form_country),
-        form_country.value,
-        "country"
-      )}
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">${tl2(trans.about)}</div>
-                                    <div class="input about-me" id="about_me">
-                                        <textarea
-                                            name="about_me"
-                                            placeholder=${tl2(
-        trans.anything_you_can_imagine
-      )}
-                                            cols="40"
-                                            rows="10"
-                                            class="textarea--s"
-                                            maxlength="500"
-                                            id="id_about_me"
-                                            oninput=${() => update_about()}
-                                            ref=${(el) => about = el}
-                                            data-form-type="other"
-                                        >
-                                            ${form_about_me}
-                                        </textarea
-                                        >
-                                        <div class="dual-tip">
-                                            <div
-                                                class="tip markdown-enabled"
-                                                onclick=${() => markdown_prompt(
-        markdown_settings
-      )}
-                                            >
-                                                ${tl2(trans.supports_markdown)}
-                                            </div>
-                                            <div
-                                                class="tip characters"
-                                                ref=${(el) => chars = el}
-                                            >
-                                                ${tl2(
-        trans.value_characters_max,
-        { v: "500" }
-      )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.about_me_preview)}
-                                    </div>
-                                    <span
-                                        class="bleh--about-me-preview markdown-body"
-                                        ref=${(el) => preview = el}
-                                    ></span>
-                                </div>
-                                <div class="info-row" style="display: none">
-                                    <div class="title">
-                                        ${tl2(trans.website)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="url"
-                                            name="homepage"
-                                            value="${form_website}"
-                                            id="id_homepage"
-                                            data-form-type="website"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="save-row">
-                                <div class="form-submit">
-                                    <button
-                                        type="submit"
-                                        class="btn-primary save"
-                                        data-form-type="action"
-                                    >
-                                        ${tl2(trans.save)}
-                                    </button>
-                                    <input
-                                        type="hidden"
-                                        value="profile"
-                                        name="submit"
-                                    />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div
-                    class="setting"
-                    data-type="info"
-                    ref=${(el) => banner_setting = el}
-                />
-                <div
-                    class="setting"
-                    data-type="info"
-                    disabled=${!auth.sponsor}
-                    ref=${(el) => accent_setting = el}
-                />
-                ${setting({ id: "avatar_radius" })}
-            </div>
-        `
-    );
-    page.structure.main.removeChild(
-      page.structure.main.querySelector("#update-profile")
-    );
-    update_about();
-    function update_about() {
-      log2("re-rendering", "about", "log");
-      const value = about.value;
-      chars.textContent = tl2(trans.value_characters_max, {
-        v: `${value.length}/500`
-      });
-      chars.setAttribute("data-exceeded", value.length >= 500);
-      render(preview, markdown(value, markdown_settings));
-      let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      let cache2 = profile_cache[auth.name];
-      console.info("cache", cache2);
-      render(
-        banner_setting,
-        html`
-                <div class="heading">
-                    <h5>${tl2(trans.profile_banner.name)}</h5>
-                    <p>${tl2(trans.profile_banner.body)}</p>
-                    ${cache2.banner ? html.node`
-                <p>${tl2(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
-                ` : ""}
-                </div>
-                ${() => {
-          if (!cache2.banner)
-            return html.node`
-                        <div class="info">
-                            <p>${tl2(trans.none)}</p>
-                        </div>
-                    `;
-          let banner_image = html.node`
-                    <div class="banner-image" style="background-image: url(${cache2.banner})" />
-                `;
-          tippy_esm_default(banner_image, {
-            content: cache2.banner
-          });
-          return banner_image;
-        }}
-            `
-      );
-      const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
-      console.info(
-        "cache update",
-        about.value,
-        cache2.hue,
-        cache2.sat,
-        cache2.lit
-      );
-      let edit;
-      render(
-        accent_setting,
-        html`
-                <div class="heading">
-                    <h5>
-                        ${tl2(trans.profile_accent.name)}<span
-                            class="new-badge sponsor-related"
-                            >${tl2(trans.sponsors_only)}</span
-                        ><span class="new-badge beta">${tl2(trans.new)}</span>
-                    </h5>
-                    <p>${tl2(trans.profile_accent.body)}</p>
-                </div>
-                <div class="info">
-                    <div
-                        class="colour-tile colourful"
-                        style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}"
-                    />
-                    <div class="swatch-group palette">
-                        <button
-                            class="swatch-container"
-                            ref=${(el) => edit = el}
-                            onclick=${() => {
-          let hue_range;
-          let sat_range;
-          let lit_range;
-          const match3 = about.value.match(accent_regex);
-          console.info(match3);
-          if (match3) {
-            save_setting(
-              "profile_hue",
-              parseInt(match3[1], 10)
-            );
-            save_setting(
-              "profile_sat",
-              parseFloat(match3[2])
-            );
-            save_setting(
-              "profile_lit",
-              parseFloat(match3[3])
-            );
-            settings_store.profile_hue.default = settings.hue;
-            settings_store.profile_sat.default = settings.sat;
-            settings_store.profile_lit.default = settings.lit;
-          }
-          let accent_preview;
-          dialog({
-            id: "profile_accent",
-            title: tl2(trans.profile_accent.name),
-            body: html.node`
-                                <div class="setting-group">
-                                    <div class="setting" data-type="info">
-                                        <div class="heading">
-                                            <h5>${tl2(trans.preview)}</h5>
-                                        </div>
-                                        <div class="info">
-                                            <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
-                                        </div>
-                                    </div>
-                                    ${ff("colour_based_on_hex") ? html.node`
-                                    <div class="setting" data-type="text">
-                                        <div class="heading">
-                                            <h5>${tl2(trans.convert_from_hex)}</h5>
-                                        </div>
-                                        <div class="input-container content-form">
-                                            ${colour = input({
-              type: "colour",
-              value: "#999999",
-              maxlength: 7,
-              warn_if_empty: true
-            })}
-                                            <button class="btn primary icon convert" onclick=${() => {
-              const value2 = colour.value();
-              const hsl = hex_to_hsl(value2);
-              hue_range.set(hsl.h);
-              sat_range.set(
-                clamp_sat(hsl.s / 100 * 3)
-              );
-              lit_range.set(
-                hsl.l / 100 + 0.35
-              );
-            }}>${tl2(trans.convert)}</button>
-                                        </div>
-                                    </div>
-                                    ` : ""}
-                                    ${hue_range = setting({ id: "profile_hue", func: update_colour_preview })}
-                                    ${sat_range = setting({ id: "profile_sat", func: update_colour_preview })}
-                                    ${lit_range = setting({ id: "profile_lit", func: update_colour_preview })}
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
-                                        ${tl2(trans.back)}
-                                    </button>
-                                    <div class="fill"></div>
-                                    <button class="btn primary continue" onclick=${() => {
-              const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
-              if (match3) {
-                about.value = about.value.replace(
-                  accent_regex,
-                  new_accent
-                );
-              } else {
-                const trimmed = about.value.trimEnd();
-                if (trimmed.length == 0) {
-                  about.value = new_accent;
-                } else {
-                  about.value = trimmed + "\n\n" + new_accent;
-                }
-              }
-              about.dispatchEvent(
-                new InputEvent("input", {
-                  bubbles: true,
-                  cancelable: true
-                })
-              );
-              dialog_rm({ id: "profile_accent" });
-              status({
-                title: tl2(
-                  trans.profile_accent.reminder
-                )
-              });
-            }}>
-                                        ${tl2(trans.change)}
-                                    </button>
-                                </div>
-                            `
-          });
-          function update_colour_preview() {
-            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
-          }
-        }}
-                        >
-                            <div
-                                class="swatch colourful"
-                                data-swatch-type="customise"
-                            />
-                        </button>
-                    </div>
-                </div>
-            `
-      );
-      tippy_esm_default(edit, {
-        content: tl2(trans.edit)
-      });
-    }
-    update_display_name(form_display_name);
-  }
-  unsafeWindow._update_display_name = function(value) {
-    update_display_name(value);
-  };
-  function update_display_name(value) {
-    document.getElementById("header-title-display-name").textContent = value;
-    let pronouns = use_pronouns(value);
-    document.getElementById("header-title-display-name--pre").textContent = pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka);
-  }
-  function use_pronouns(value) {
-    value = value.replaceAll(" ", "");
-    if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/"))
-      return true;
-    return false;
-  }
-  function avatar(token = "") {
-    if (!token) token = page.token;
-    else page.token = token;
-    page.state.avatar_changer = dialog({
-      id: "edit_avatar",
-      title: tl2(trans.change_avatar),
-      body: html.node`
-            <div class="forms">
-                <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                    <div class="form-group form-group--avatar js-form-group upload-avatar">
-                        <div class="js-form-group-controls form-group-controls">
-                            <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
-                                ${tl2(trans.upload)}
-                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl2(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
-                            </span>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-primary save" id="avatar_saver">
-                        ${tl2(trans.save)}
-                    </button>
-                    <input type="hidden" value="avatar" name="submit">
-                </form>
-                <form action="${root}settings/avatar/delete" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                    <div class="form-group delete-avatar">
-                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl2(trans.delete)}</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl2(trans.cancel)}</button>
-                <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl2(trans.save)}</button>
-            </div>
-        `
-    });
-    page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
-    const file_button = page.state.avatar_changer.querySelector(".btn-file");
-    const save_button = page.state.avatar_changer.querySelector(
-      ".modal-footer .primary"
-    );
-    let form;
-    function update_avatar(e) {
-      console.info(e);
-      if (!e.target.files || !e.target.files[0]) return;
-      form = page.state.avatar_changer.querySelector(".bleh-modal-body");
-      if (e.target.files[0].type == "image/gif") {
-        save_avatar();
-        finish_saving_avatar();
-        return;
-      }
-      let reader = new FileReader();
-      reader.onload = function() {
-        crop(reader.result);
-        save_button.removeAttribute("disabled");
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    function save_avatar() {
-      page.state.avatar_changer.querySelector("#avatar_saver").click();
-    }
-    function finish_saving_avatar() {
-      page.state.avatar_changer.setAttribute("data-loading", "true");
-      page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
-        button.setAttribute("disabled", "true");
-        button.removeAttribute("onclick");
-      });
-    }
-    function crop(file) {
-      let crop_image;
-      let save;
-      const crop_dialog = dialog({
-        id: "crop",
-        title: tl2(trans.crop_avatar),
-        body: html.node`
-                <div class="crop">
-                    <img src=${file} ref=${(el) => crop_image = el}>
-                </div>
-                <div class="alert alert-info">
-                    ${tl2(trans.crop_notice)}
-                </div>
-                <div class="modal-footer">
-                    <button class="see-more cancel" onclick=${() => {
-          if (cropper && cropper.destroy) cropper.destroy();
-          cropper = null;
-          avatar();
-        }}>${tl2(trans.cancel)}</button>
-                    <div class="fill"></div>
-                    <button class="btn primary save" onclick=${() => {
-          if (!cropper) return;
-          crop_dialog.querySelectorAll(".bleh-modal-body button").forEach((button) => {
-            button.setAttribute("disabled", "true");
-            button.removeAttribute("onclick");
-          });
-          const canvas = cropper.getCroppedCanvas();
-          canvas.toBlob((blob) => {
-            const cropped_file = new File(
-              [blob],
-              "avatar.png",
-              { type: "image/png" }
-            );
-            const inner_form = form.querySelector("form");
-            inner_form.style.display = "none";
-            crop_dialog.querySelector(".bleh-modal-body").appendChild(inner_form);
-            const file_input = inner_form.querySelector('input[type="file"]');
-            const data_transfer = new DataTransfer();
-            data_transfer.items.add(cropped_file);
-            file_input.files = data_transfer.files;
-            inner_form.querySelector("#avatar_saver").click();
-          }, "image/png");
-        }} ref=${(el) => save = el} disabled>${tl2(trans.save)}</button>
-                </div>
-            `
-      });
-      page.state.avatar_changer = crop_dialog;
-      crop_image.onload = () => {
-        if (cropper && cropper.destroy) cropper.destroy();
-        crop_image.style.maxWidth = "none";
-        crop_image.style.width = crop_image.naturalWidth + "px";
-        crop_image.style.height = crop_image.naturalHeight + "px";
-        cropper = new import_cropperjs.default(crop_image, {
-          viewMode: 3,
-          dragMode: "crop",
-          movable: true,
-          zoomable: true,
-          scalable: false,
-          cropBoxMovable: true,
-          cropBoxResizable: true,
-          background: false,
-          guides: true,
-          autoCropArea: 1
-        });
-        save.removeAttribute("disabled");
-      };
-    }
-  }
-  function patch_settings_privacy_tab() {
-    let privacy_panel = document.getElementById("privacy");
-    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    bleh_communication_panel(token);
-    patch_settings_privacy_panel(token, privacy_panel);
-  }
-  function bleh_communication_panel(token) {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    let panel = page.structure.main.querySelector("#ignorelist");
-    panel.classList.add("bleh--panel");
-    let list = panel.querySelectorAll(".ignore-list tr");
-    let new_list = document.createElement("div");
-    new_list.classList.add(
-      "generic-table-list",
-      "user-vertical-list",
-      "take-space"
-    );
-    let exceeded = false;
-    let exceed_amount = 10;
-    let amount = 0;
-    list.forEach((item, index3) => {
-      let name = item.querySelector("td").textContent.trim();
-      let form2 = item.querySelector("form");
-      let button = form2.querySelector("button");
-      button.classList.add("icon", "chibi", "danger-subtle");
-      button.setAttribute("data-type", "trash");
-      let entry = html.node`
-            <div class="generic-table-list-entry user-vertical-list-item">
-                <div class="name">
-                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
-                </div>
-                <div class="text preview">
-                    ${profile_notes.hasOwnProperty(name) ? html.node`
-                        <p id="profile-note-row-preview--${name}">${{ html: profile_notes[name] }}</p>
-                    ` : ""}
-                </div>
-                <div class="actions">
-                    ${form2}
-                </div>
-            </div>
-        `;
-      if (index3 > exceed_amount && !exceeded) exceeded = true;
-      if (exceeded) entry.classList.add("entry-is-exceeded");
-      new_list.appendChild(entry);
-      amount += 1;
-    });
-    if (exceeded) {
-      let remainder = amount - exceed_amount;
-      new_list.classList.add("list-is-exceeded");
-      new_list.setAttribute("data-expanded", "false");
-      let expand = html.node`
-            <button class="see-more expand-down" onclick=${() => {
-        expand.style.display = "none";
-        new_list.setAttribute("data-expanded", "true");
-      }}>
-                ${tl2(trans.view_count_more).replace("{c}", remainder.toString())}
-            </button>
-        `;
-      new_list.appendChild(expand);
-    }
-    let form = page.structure.main.querySelector('[name="ignorelist"]');
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    render(
-      panel,
-      html`
-            <h4>${tl2(trans.block_list)}</h4>
-            <div class="user-top-panel">
-                <div class="user-top-avatar user-top-avatar-side-left">
-                    <div class="bleh-icon"></div>
-                </div>
-                <img
-                    class="user-top-avatar user-top-avatar-main"
-                    src=${auth.avatar.replace("avatar42s", "avatar300s")}
-                    alt=${auth.name}
-                />
-                <div class="user-top-avatar user-top-avatar-side-right">
-                    <div class="bleh-icon"></div>
-                </div>
-            </div>
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl2(trans.profile)}</h5>
-                    <form
-                        action="${root}settings/privacy#ignorelist"
-                        name="ignorelist"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="csrfmiddlewaretoken"
-                            value=${page.token}
-                        />
-                        <div class="input-container">
-                            <input
-                                type="text"
-                                maxlength="80"
-                                id="id_user"
-                                name="user"
-                                placeholder=${tl2(trans.enter_username)}
-                            />
-                            <input
-                                type="hidden"
-                                name="listaction"
-                                value="add"
-                            />
-                            <input
-                                type="hidden"
-                                name="submit"
-                                value="ignorelist"
-                            />
-                            <button
-                                class="bleh--btn primary icon block"
-                                type="submit"
-                            >
-                                ${tl2(trans.block)}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="alert alert-info">
-                ${tl2(trans.blocked_count).replace("{c}", amount)}
-            </div>
-            ${new_list}
-            <div class="sep" />
-            <h5>${tl2(trans.when_blocked)}</h5>
-            <div class="to-consider">
-                <ul class="to-consider-good">
-                    <li>${tl2(trans.blocked_user_public)}</li>
-                    <li>${tl2(trans.blocked_user_message)}</li>
-                    <li>${tl2(trans.blocked_user_new_shouts)}</li>
-                </ul>
-                <ul class="to-consider-bad">
-                    <li>${tl2(trans.blocked_user_old_shouts)}</li>
-                    <li>${tl2(trans.blocked_user_view_profile)}</li>
-                </ul>
-            </div>
-        `
-    );
-  }
-  function patch_settings_privacy_panel(token, privacy_panel) {
-    privacy_panel.classList.add("bleh--panel");
-    let original_privacy_settings = {
-      recent_listening: document.getElementById("id_hide_realtime").checked,
-      receiving_msgs: document.getElementById("id_message_privacy").outerHTML,
-      disable_shoutbox: document.getElementById("id_shoutbox_disabled").checked
-    };
-    privacy_panel.innerHTML = `
-        <h4>${tl2(trans.privacy)}</h4>
-        <form action="${root}settings/privacy" name="privacy" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="inner-preview pad">
-                <div class="tracks recent_listening">
-                    <div class="track realtime">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl2(trans.recent_listening.name)}</h5>
-                        <p>${tl2(trans.recent_listening.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                        <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="setting" data-type="options">
-                    <div class="heading">
-                        <h5>${tl2(trans.allow_messages_from)}</h5>
-                    </div>
-                    <div class="primary-selections">
-                        ${original_privacy_settings.receiving_msgs}
-                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                            <h5>${tl2(trans.everyone)}</h5>
-                        </div>
-                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                            <h5>${tl2(trans.following_and_neighbours)}</h5>
-                        </div>
-                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                            <h5>${tl2(trans.following)}</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="inner-preview pad">
-                <div class="shouts">
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl2(trans.close_shouts.name)}</h5>
-                        <p>${tl2(trans.close_shouts.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                        <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl2(trans.save)}
-                </button>
-                <input type="hidden" value="privacy" name="submit">
-            </div>
-        </form>
-    `;
-    for (let setting2 in original_privacy_settings) {
-      update_inbuilt_item(setting2, original_privacy_settings[setting2], false);
-    }
-    let selects = document.body.querySelectorAll("select");
-    selects.forEach((select2) => {
-      select2.setAttribute(
-        "onchange",
-        `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`
-      );
-      update_inbuilt_select(select2.getAttribute("id"), select2.value);
-    });
-  }
-  function bleh_accounts() {
-    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let original_settings = {
-      email_language: page.structure.main.querySelector('[name="language"]'),
-      marketing_emails: page.structure.main.querySelector(
-        '[name="opt_in_marketing"]'
-      ),
-      email: page.structure.main.querySelector('[name="email"]').value,
-      captcha: page.structure.main.querySelector(".lfm-recaptcha")
-    };
-    render(
-      page.structure.main,
-      html`
-            <section class="bleh--panel">
-                <h4>${tl2(trans.information)}</h4>
-                <div class="setting-group">
-                    <form
-                        action="${root}settings/change-username/send-email"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="csrfmiddlewaretoken"
-                            value="${token}"
-                        />
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.username.name)}</h5>
-                                <p>
-                                    ${{
-        html: tl2(trans.username.body).replace(
-          "{a}",
-          `<a href="https://support.last.fm/" target="_blank">`
-        ).replace("{/a}", "</a>")
-      }}
-                                </p>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_current_username"
-                                    type="text"
-                                    name="current_username"
-                                    value="${auth.name}"
-                                    disabled
-                                    required
-                                />
-                                <button class="btn chibi icon primary submit">
-                                    ${tl2(trans.send)}
-                                </button>
-                                <input
-                                    type="hidden"
-                                    value="change_username"
-                                    name="submit"
-                                />
-                            </div>
-                        </div>
-                    </form>
-                    <form
-                        action="${root}settings/account"
-                        name="change-email"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="csrfmiddlewaretoken"
-                            value="${token}"
-                        />
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.email)}</h5>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_email"
-                                    type="text"
-                                    name="email"
-                                    value="${original_settings.email}"
-                                    required
-                                />
-                                <button class="btn chibi icon primary submit">
-                                    ${tl2(trans.save)}
-                                </button>
-                                <input
-                                    type="hidden"
-                                    value="email_update"
-                                    name="submit"
-                                />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <form
-                    class="password-container"
-                    action="${root}settings/account/password#change-password"
-                    name="change-password"
-                    method="post"
-                >
-                    <input
-                        type="hidden"
-                        name="csrfmiddlewaretoken"
-                        value="${token}"
-                    />
-                    <div class="setting-group">
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.password)}</h5>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_password"
-                                    type="password"
-                                    name="password"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.new_password)}</h5>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_new_password"
-                                    type="password"
-                                    name="new_password"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.confirm_password)}</h5>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_new_password_confirmation"
-                                    type="password"
-                                    name="new_password_confirmation"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        ${original_settings.captcha}
-                    </div>
-                    <div class="settings-footer end">
-                        <button class="btn-primary save" type="submit">
-                            ${tl2(trans.change)}
-                        </button>
-                    </div>
-                </form>
-            </section>
-            <section class="bleh--panel">
-                <h4>${tl2(trans.communication)}</h4>
-                <form
-                    action="${root}settings/account"
-                    name="email-settings"
-                    method="post"
-                >
-                    <input
-                        type="hidden"
-                        name="csrfmiddlewaretoken"
-                        value="${token}"
-                    />
-                    <div class="setting-group">
-                        <div class="setting" data-type="select">
-                            <div class="heading">
-                                <h5>${tl2(trans.email_language)}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector">
-                                ${select(
-        select_prepare(
-          original_settings.email_language
-        ),
-        original_settings.email_language.value,
-        original_settings.email_language.name
-      )}
-                            </div>
-                        </div>
-                        ${toggle({
-        value: original_settings.marketing_emails.checked,
-        name: original_settings.marketing_emails.name,
-        title: tl2(trans.marketing_emails.name),
-        body: tl2(trans.marketing_emails.body),
-        standalone: false
-      })}
-                    </div>
-                    <div class="settings-footer end">
-                        <button class="btn-primary save" type="submit">
-                            ${tl2(trans.save)}
-                        </button>
-                        <input
-                            type="hidden"
-                            value="email_settings"
-                            name="submit"
-                        />
-                    </div>
-                </form>
-            </section>
-            <section class="bleh--panel">
-                <h4>${tl2(trans.security)}</h4>
-                <form
-                    action="${root}settings/account"
-                    name="email-settings"
-                    method="post"
-                >
-                    <input
-                        type="hidden"
-                        name="csrfmiddlewaretoken"
-                        value="${token}"
-                    />
-                    <div class="setting-group">
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.logout_everywhere)}</h5>
-                            </div>
-                            <div class="toggle-wrap">
-                                <a
-                                    class="see-more danger logout"
-                                    href="${root}settings/account/logout-everywhere"
-                                >
-                                    ${tl2(trans.logout)}
-                                </a>
-                            </div>
-                        </div>
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.delete_account.name)}</h5>
-                                <p>${tl2(trans.delete_account.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <a
-                                    class="see-more danger delete-account"
-                                    href="${root}settings/account/delete"
-                                >
-                                    ${tl2(
-        trans.delete_account_permanently
-      ).replace("{u}", auth.name)}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </section>
-        `
-    );
-    for (let setting2 in original_settings) {
-      update_inbuilt_item(setting2, original_settings[setting2], false);
-    }
-  }
-  function bleh_name_change() {
-    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    return;
-  }
-  function bleh_website() {
-    const token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    const auto_correct = page.structure.main.querySelector(
-      '[name="corrections_enabled"]:checked'
-    );
-    const preferred_affiliate = page.structure.main.querySelector(
-      '[name="preferred_affiliate"]:checked'
-    );
-    const timezone = page.structure.main.querySelector('[name="timezone"]');
-    const help_text = page.structure.main.querySelector(".js-field-help-text");
-    const location = page.structure.main.querySelector(
-      '[data-require="components/location-form-field-v2"]'
-    );
-    const radius = page.structure.main.querySelector('[name="event_radius"]');
-    let timezone_text;
-    page.structure.main.insertBefore(
-      html.node`
-            <form class="dont-move" action="${root}settings/website" method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.website)}</h4>
-                    <div class="setting-group">
-                        <div class="setting v2" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans.auto_correct_scrobbles.name)}</h5>
-                                <p>${tl2(trans.auto_correct_scrobbles.body)}</p>
-                            </div>
-                            ${radio({
-        name: auto_correct.name,
-        value: auto_correct.value,
-        values: {
-          False: {
-            name: tl2(
-              trans.auto_correct_scrobbles.false
-            )
-          },
-          True: {
-            name: tl2(
-              trans.auto_correct_scrobbles.true
-            )
-          }
-        }
-      })}
-                        </div>
-                    </div>
-                    <div class="alert alert-danger">
-                        ${tl2(trans.auto_correct_scrobbles.warning)}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.events)}</h4>
-                    <div class="setting-group">
-                        <div class="setting v2" data-type="select">
-                            <div class="heading">
-                                <h5>${tl2(trans.timezone)}</h5>
-                                <p ref=${(el) => timezone_text = el}>${help_text.textContent.trim()}</p>
-                            </div>
-                            ${select(
-        select_prepare(timezone),
-        timezone.value,
-        timezone.name,
-        (val) => {
-          fetch(
-            `${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`
-          ).then((res) => res.text()).then((dom) => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(
-              dom,
-              "text/html"
-            );
-            const text3 = doc.querySelector("p");
-            if (!text3) return;
-            timezone_text.textContent = text3.textContent;
-          }).catch(
-            (e) => log2(
-              "unable to get text",
-              "timezone",
-              "error",
-              { e }
-            )
-          );
-        }
-      )}
-                        </div>
-                        <div class="setting v2" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.location.name)}</h5>
-                                <p>${tl2(trans.location.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                ${location}
-                            </div>
-                        </div>
-                        <div class="setting v2" data-type="select">
-                            <div class="heading">
-                                <h5>${tl2(trans.event_radius)}</h5>
-                            </div>
-                            ${select(select_prepare(radius), radius.value, radius.name)}
-                        </div>
-                    </div>
-                    <div class="settings-footer end">
-                        <button type="submit" class="btn-primary save">
-                            ${tl2(trans.save)}
-                        </button>
-                        <input type="hidden" value="website" name="submit">
-                    </div>
-                </section>
-            </form>
-            <section class="bleh--panel">
-                <h4>${tl2(trans.playback)}</h4>
-                <form action="${root}settings/website" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${token}>
-                    <div class="setting-group">
-                        <div class="setting v2" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans.preferred_affiliate.name)}</h5>
-                                <p>${tl2(trans.preferred_affiliate.body)}</p>
-                            </div>
-                            ${radio({
-        name: preferred_affiliate.name,
-        value: preferred_affiliate.value,
-        values: radio_convert(
-          page.structure.main.querySelectorAll(
-            "#id_preferred_affiliate > .lfm-form-radio"
-          )
-        )
-      })}
-                        </div>
-                    </div>
-                    <div class="settings-footer end">
-                        <button type="submit" class="btn-primary save">
-                            ${tl2(trans.save)}
-                        </button>
-                        <input type="hidden" value="playback" name="submit">
-                    </div>
-                </form>
-            </section>
-        `,
-      page.structure.main.firstElementChild
-    );
-    const website = page.structure.main.querySelector("#website");
-    website.remove();
-    const playback = page.structure.main.querySelector("#playback");
-    playback.remove();
-  }
-  function bleh_applications() {
-    let session_types = page.structure.main.querySelectorAll(".api-sessions");
-    let suggested;
-    let connected;
-    if (session_types.length > 1) {
-      suggested = session_types[0];
-      connected = session_types[1];
-    } else {
-      connected = session_types[0];
-    }
-    render(
-      page.structure.main,
-      html`
-            <section class="applications">
-                <div class="section-intro">
-                    <h3>${tl2(trans.applications)}</h3>
-                    <p>${tl2(trans.applications_intro)}</p>
-                </div>
-                ${suggested ? html`
-                        <h2>${tl2(trans.suggested)}</h2>
-                        ${suggested}
-                    ` : ""}
-                <h2>${tl2(trans.connected)}</h2>
-                ${connected}
-            </section>
-        `
-    );
-    session_types.forEach((session_type) => {
-      let sessions = session_type.querySelectorAll(".api-session");
-      sessions.forEach((session) => {
-        const details = session.querySelector(".api-session-details");
-        const form = session.querySelector("form");
-        const button = form.querySelector("button");
-        button.classList.add("chibi");
-        tippy_esm_default(button, {
-          content: button.textContent
-        });
-        const name = details.querySelector(".api-session-app-name");
-        const desc = details.querySelector(".api-session-app-description");
-        const status2 = details.querySelector(".api-session-status");
-        const image = details.querySelector(".api-session-app-image");
-        image.classList = "";
-        const default_image = image.src.endsWith(
-          "14d19fbdca555c1782176cd789e81af7.png"
-        );
-        render(
-          session,
-          html`
-                    <div class="session-header">
-                        <div
-                            class="session-image"
-                            data-default-image=${default_image}
-                        >
-                            ${image}
-                        </div>
-                        <div class="session-details">${name} ${desc}</div>
-                        ${form}
-                    </div>
-                    ${status2 ? html.node`
-                <div class="session-footer">
-                    ${status2}
-                </div>
-                ` : ""}
-                `
-        );
-      });
-    });
-  }
-
-  // src/pages/obsession.js
-  function bleh_obsession() {
-    let obsession_container = document.querySelector(".obsession-container");
-    if (!obsession_container) return;
-    page.structure.container = document.body.querySelector(
-      ".page-content:not(.obsession-container .page-content)"
-    );
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log2("unable to find elements", "page structure");
-    }
-    let content_top = document.body.querySelector(".content-top");
-    checkup_page_structure(false, content_top);
-    log2("status is", "page", "info", page);
-    update_page();
-    page.structure.container.setAttribute("data-beret", "false");
-    page.structure.container.setAttribute("data-short", "false");
-    let background = obsession_container.querySelector(
-      ".obsession-background-inner"
-    );
-    background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
-    if (!background.endsWith("/4128a6eb29f94943c9d206c08e625904.jpg")) {
-      try {
-        let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
-        let hsl = rgb_to_hsl(
-          parseInt(bg[0]),
-          parseInt(bg[1]),
-          parseInt(bg[2])
-        );
-        document.body.style.setProperty("--hue-album", hsl.h);
-        document.body.style.setProperty(
-          "--sat-album",
-          clamp_sat2(hsl.s / 100 * 3)
-        );
-        document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
-        log2(
-          `sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat2(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`,
-          "hue from album"
-        );
-      } catch (e) {
-        console.error(e);
-        log2("no cover present", "hue from album");
-      }
-    }
-    let track_title = obsession_container.querySelector(
-      ".obsession-meta-track"
-    );
-    let track_artist = obsession_container.querySelector(
-      ".obsession-meta-artist"
-    );
-    let scrobbles = obsession_container.querySelector(
-      ".obsession-meta-scrobbles"
-    );
-    let link = track_title.querySelector("a").getAttribute("href");
-    let by = track_artist.querySelector(".obsession-meta-artist-by");
-    track_artist.removeChild(by);
-    let artist_name = track_artist.querySelector("a");
-    if (artist_corrections.hasOwnProperty(artist_name.textContent)) {
-      let corrected_artist = artist_corrections[artist_name.textContent];
-      log2(
-        `corrected ${artist_name.textContent} as ${corrected_artist}`,
-        "lotus"
-      );
-      artist_name.textContent = corrected_artist;
-    }
-    artist_name.classList.add("header-new-crumb");
-    if (settings.format_guest_features) {
-      let formatted_title = name_includes(
-        track_title.textContent.trim(),
-        artist_name.textContent
-      );
-      let song_title = formatted_title[0];
-      let song_tags = formatted_title[1];
-      page.corrected = formatted_title[4];
-      render(
-        track_title,
-        html.node`
-            <div class="title">${song_title.trim()}</div>
-            ${song_tags.map(
-          (tag) => html.node`
-                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${tag.text}</div>
-            `
-        )}
-        `
-      );
-      let song_guests = formatted_title[3];
-      page.sister_others = formatted_title[3];
-      for (let guest in song_guests) {
-        track_artist.innerHTML = `${track_artist.innerHTML},`;
-        let guest_element = document.createElement("a");
-        guest_element.classList.add("header-new-crumb");
-        guest_element.setAttribute(
-          "href",
-          `${root}music/${redirect()}${sanitise(song_guests[guest])}`
-        );
-        guest_element.textContent = song_guests[guest];
-        track_artist.appendChild(guest_element);
-      }
-    } else {
-      if (!track_title.hasAttribute("data-kate-processed")) {
-        track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist(
-          track_title.textContent.trim(),
-          artist_name.textContent
-        );
-        log2(
-          `corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`,
-          "lotus"
-        );
-        if (corrected_title != track_title.textContent)
-          page.corrected = true;
-        track_title.textContent = corrected_title;
-      }
-    }
-    track_title.classList.remove("obsession-meta-track");
-    let track_header = html.node`
-        <section class="redesigned-header redesigned-track-header no-background obsession-track-header">
-            <div class="info-side">
-                <div class="sub-text">${tl2(trans.obsession)}</div>
-                <div class="title-container">
-                    <h1><a href="${link}">${track_title}</a></h1>
-                </div>
-                <h2>${html.node([track_artist.innerHTML])}</h2>
-            </div>
         </section>
     `;
-    page.structure.container.insertBefore(
-      track_header,
-      page.structure.container.firstElementChild
-    );
-    let video = obsession_container.querySelector(".obsession-video-container");
-    if (video) track_header.after(video);
-    let obsession_reason = obsession_container.querySelector(".obsession-reason");
-    if (obsession_reason) {
-      let obsession_reason_text = obsession_reason.textContent;
-      obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
-    }
-    let obsession_author = document.querySelector(
-      ".obsession-details-intro a"
-    ).textContent;
-    let obsession_avatar = document.querySelector(
-      ".obsession-details-intro-avatar-wrap .avatar"
-    );
-    page.name = obsession_author;
-    let date = obsession_container.querySelector(
-      ".obsession-details-date-short"
-    );
-    let quote = html.node`
-        <section class="obsession-quote sour">
-            ${obsession_reason ? html.node`
-            <div class="quote">
-                ${obsession_reason.textContent}
-            </div>
-            ` : html.node`
-            <div class="quote no-quote">
-                ...
-            </div>
-            `}
-            <div class="sub-text">
-                <div class="obsession-author">
-                    ${obsession_avatar}
-                    <strong class="name">${obsession_author}</strong>
-                    <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
-                </div>
-                ${scrobbles ? html.node`
-                <div class="obsession-listens">
-                    ${html.node([scrobbles.innerHTML])}
-                </div>
-                ` : ""}
-                <div class="obsession-date">
-                    ${date.textContent}
-                </div>
-            </div>
-        </section>
-    `;
-    let manage = obsession_container.querySelector("form");
-    if (manage) {
-      quote.appendChild(manage);
-      quote.querySelector("button").textContent = tl2(trans.delete);
-    }
-    page.structure.main.insertBefore(
-      quote,
-      page.structure.main.firstElementChild
-    );
-    let author = quote.querySelector(".obsession-author");
-    let badge = patch_avatar(
-      obsession_avatar,
-      obsession_author,
-      "",
-      author,
-      "bottom"
-    );
-    if (badge.type) {
-      author.classList.add("colourful");
-      author.classList.add(
-        `user-status--bleh-${badge.type}`,
-        `user-status--bleh-user-${obsession_author}`
-      );
-    }
-    let related = html.node`
-        <section class="obsession-related sour" />
-    `;
-    let other_tracks = document.body.querySelector(".other-obsessions");
-    if (other_tracks) {
-      let header = document.createElement("h2");
-      header.textContent = tl2(trans.others_from_profile).replace(
-        "{user}",
-        obsession_author
-      );
-      related.appendChild(header);
-      let see_more = other_tracks.nextElementSibling;
-      related.appendChild(other_tracks);
-      if (see_more) {
-        let more = document.createElement("div");
-        more.classList.add("more-link-fullwidth-right");
-        more.appendChild(see_more.querySelector("a"));
-        related.appendChild(more);
-      }
-    }
-    let shared_users = document.body.querySelector(".fellow-obsessors");
-    if (shared_users) {
-      if (other_tracks) {
-        let sep = document.createElement("div");
-        sep.classList.add("sep");
-        related.appendChild(sep);
-      }
-      let header = document.createElement("h2");
-      header.textContent = tl2(trans.shared_with_others);
-      related.appendChild(header);
-      let users = shared_users.querySelectorAll(".avatar");
-      users.forEach((user) => {
-        let name = user.querySelector("img").getAttribute("alt");
-        patch_avatar(user, name);
-      });
-      related.appendChild(shared_users);
-    }
-    quote.after(related);
-    let pages = obsession_container.querySelector(".obsession-pagination");
-    if (pages) page.structure.container.appendChild(pages);
-  }
-
-  // src/components/hoshino.js
-  function hoshino(artwork, name, sister, link = null) {
-    if (!ff("hoshino")) return;
-    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
-    const name_lower = name.toLowerCase();
-    const sister_lower = sister.toLowerCase();
-    const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
-    const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
-    const href = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
-    if (!album_name || !album_sister) {
-      log2("no cache to be used", "hoshino", "info", {
-        artwork,
-        name,
-        sister,
-        album: {
-          album_name,
-          album_sister,
-          href
-        }
-      });
-      return;
-    }
-    const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
-    artwork.src = art;
-    log2(`loaded cover art ${art}`, "hoshino", "info", {
-      art,
-      artwork,
-      name,
-      sister
-    });
-    artwork.setAttribute("data-hoshino", true);
-    artwork.alt = album_name;
-    if (link && href) {
-      if (link.nodeName != "A") {
-        const new_link = html.node`
-                <a href=${href} class=${link.classList} data-hoshino-recreated="true">
-                    ${artwork}
-                </a>
-            `;
-        link.parentElement.insertBefore(new_link, link);
-        link.remove();
-        return;
-      }
-      link.setAttribute("href", href);
-    }
-  }
-  function hoshino_return(name, sister) {
-    if (!ff("hoshino")) return;
-    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
-    const name_lower = name.toLowerCase();
-    const sister_lower = sister.toLowerCase();
-    const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
-    const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
-    if (!album_name || !album_sister) {
-      log2("no cache to be used", "hoshino", "info", {
-        name,
-        sister,
-        album: {
-          album_name,
-          album_sister
-        }
-      });
-      return;
-    }
-    const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
-    return art;
-  }
-  function load_hoshino_artwork(name, sister) {
-    let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
-    const name_lower = name.toLowerCase();
-    const sister_lower = sister.toLowerCase();
-    const entry = hoshino_cache[sister_lower]?.[name_lower];
-    log2(`loaded artwork ${entry?.artwork} from cache`, "hoshino", "info", {
-      entry,
-      name,
-      sister
-    });
-    return entry;
-  }
-  function save_hoshino_artwork(artwork, name, sister, listeners = null) {
-    let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
-    const name_lower = name.toLowerCase();
-    const sister_lower = sister.toLowerCase();
-    if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
-    if (!hoshino_cache[sister_lower][name_lower])
-      hoshino_cache[sister_lower][name_lower] = {};
-    if (!artwork || artwork.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) {
-      if (artwork) delete hoshino_cache[sister_lower][name_lower].artwork;
-      set_storage("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
-    } else {
-      hoshino_cache[sister_lower][name_lower].artwork = artwork;
-    }
-    if (listeners)
-      hoshino_cache[sister_lower][name_lower].listeners = listeners;
-    log2(`saved artwork ${artwork} to cache`, "hoshino", "info", {
-      artwork,
-      name,
-      sister,
-      listeners
-    });
-    set_storage("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
-  }
-
-  // src/pages/profile.js
-  async function bleh_profiles() {
-    if (page.subpage == "obsessions_obsession") {
-      bleh_obsession();
-      return;
-    }
-    let profile_header = document.body.querySelector(".header--user");
-    if (!profile_header) return;
-    page.name = profile_header.querySelector(".header-title a").textContent;
-    let is_subpage = page.subpage != "overview";
-    page.structure.container = document.body.querySelector(
-      ".page-content:not(.profile-cards-container, .report-box-container .page-content)"
-    );
-    try {
-      page.structure.row = page.structure.container.querySelector(".row:not(._buffer)");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log2("unable to find elements", "page structure");
-    }
-    checkup_page_structure(is_subpage, profile_header);
-    page.supports_shoutbox = page.structure.nav.querySelector(
-      ".secondary-nav-item--shoutbox"
-    );
-    let new_account = false;
-    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache2 = profile_cache[page.name] || {};
-    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    if (page.subpage == "overview") {
-      if (!about_me_sidebar) {
-        delete cache2.banner;
-        delete cache2.hue;
-        delete cache2.sat;
-        delete cache2.lit;
-        about_me_sidebar = html.node`
-                <section class="about-me-sidebar">
-                    <h2>${tl2(trans.about)}</h2>
-                    <p class="subtle">${tl2(trans.no_about).replace("{u}", page.name)}</p>
-                </section>
-            `;
-        page.structure.side.insertBefore(
-          about_me_sidebar,
-          page.structure.side.firstElementChild
-        );
-      } else {
-        if (settings.bio_markdown) {
-          let about_me_text = about_me_sidebar.querySelector("p");
-          let result = bio_parse(about_me_text, cache2);
-          about_me_text.after(result);
-          about_me_text.remove();
-        }
-      }
-      if (page.mobile)
-        page.structure.main.insertBefore(
-          about_me_sidebar,
-          page.structure.main.firstElementChild
-        );
-    }
-    let avatar2 = profile_header.querySelector(".avatar");
-    let title_wrap = profile_header.querySelector(".header-title-label-wrap");
-    let sub_wrap = profile_header.querySelector(".header-title-secondary");
-    if (!avatar2) {
-      avatar2 = profile_header.querySelector(".header-avatar-add");
-      new_account = true;
-    }
-    if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
-      title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
-    }
-    let pronouns;
-    if (cache2.aka) pronouns = use_pronouns(cache2.aka);
-    let expander;
-    let redesigned_profile_header = html.node`
-        <section class="redesigned-header redesigned-profile-header no-background">
-            <div class="avatar-side">
-                ${avatar2}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl2(trans.profile)}</div>
-                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
-                ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
-                <p class="header-title-secondary">
-                    ${cache2.aka ? html.node`
-                    <span class="header-title-secondary--pre">
-                        ${pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka)}
-                    </span>
-                    <span class="header-title-display-name">
-                        ${cache2.aka}
-                    </span>
-                    ` : ""}
-                    <span class="header-title-secondary--pre">
-                        ${tl2(trans.account_created)}
-                    </span>
-                    <span class="header-scrobble-since">
-                        ${cache2.created}
-                    </span>
-                </p>
-                ` : ""}
-            </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
-      let current = settings.profile_header_expand;
-      expander.setAttribute("aria-expanded", !current);
-      save_setting("profile_header_expand", !current);
-    }} aria-expanded=${settings.profile_header_expand}>${tl2(trans.expand)}</button>
-            </div>
-        </section>
-    `;
-    const avatar_img = avatar2.querySelector(":scope > img");
-    if (avatar_img) cache2.avatar = avatar_img.src;
-    page.structure.container.insertBefore(
-      redesigned_profile_header,
-      page.structure.container.firstElementChild
-    );
-    profile_header.classList.add("legacy-header");
-    if (!new_account) {
-      const src = avatar_img.src;
-      page.avatar = src;
-      avatar2.addEventListener("click", () => {
-        expand_avatar(src.replace("/avatar170s/", "/ar0/"));
-      });
-    }
-    control_gif_pause(avatar_img);
-    let library_tab = page.structure.nav.querySelector(
-      ".secondary-nav-item--library a"
-    );
-    library_tab.textContent = tl2(trans.library);
-    let is_own_profile = page.name == auth.name;
-    if (is_own_profile)
-      profile_header.setAttribute("data-is-own-profile", "true");
-    let loved_tab = page.structure.nav.querySelector(
-      ".secondary-nav-item--loved a"
-    );
-    if (loved_tab) loved_tab.textContent = tl2(trans.loved);
-    if (!is_subpage) {
-      let is_following = page.structure.container.querySelector(".label.user-follow");
-      profile_recents();
-      profile_artists();
-      profile_albums();
-      profile_tracks();
-      if (is_own_profile && settings.activities) {
-        let recent_activity_section = html.node`
-                <section class="recent-activity-section">
-                    <h2>${tl2(trans.activity)}</h2>
-                    ${render_activity_list()}
-                    <div class="more-link">
-                        <a href="${root}bleh/profile">${tl2(trans.activity_settings)}</a>
-                    </div>
-                </section>
-            `;
-        page.structure.side.appendChild(recent_activity_section);
-      }
-      if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
-        page.structure.container.removeChild(page.structure.nav);
-        page.structure.main.innerHTML = "";
-        page.structure.side.innerHTML = "";
-        page.structure.main.appendChild(html.node`
-                <section class="cta">
-                    <strong>${tl2(trans.sponsor_info)}</strong>
-                </section>
-            `);
-      }
-      let recent_tracks = page.structure.main.querySelector(
-        "#recent-tracks-section"
-      );
-      if (!recent_tracks) {
-        recent_tracks = page.structure.main.querySelector(".no-data-message");
-        if (recent_tracks) {
-          recent_tracks.classList = "recent-tracks-section";
-          recent_tracks.innerHTML = `
-                    <h2>
-                        <a class="text-colour-link" href="${window.location.href}/library">${tl2(trans.recent_tracks)}</a>
-                    </h2>
-                    <div class="loading-data-container">
-                        <div class="loading-data-text private">
-                            ${recent_tracks.textContent}
-                        </div>
-                    </div>
-                `;
-        }
-      }
-      let scrobbles = 0;
-      let average = 0;
-      let artists = 0;
-      let loved = 0;
-      let metadata = profile_header.querySelectorAll(
-        ".header-metadata-display"
-      );
-      metadata.forEach((item, index3) => {
-        if (index3 == 0) {
-          let para = item.querySelector("p");
-          scrobbles = clean_number(para.textContent.trim());
-          average = para.getAttribute("title");
-        } else if (index3 == 1) {
-          artists = clean_number(item.textContent.trim());
-        } else if (index3 == 2) {
-          loved = clean_number(item.textContent.trim());
-        }
-      });
-      page.state.scrobbles = scrobbles;
-      page.state.artists = artists;
-      page.state.loved = loved;
-      let scrobble_text;
-      let listen_container = html.node`
-            <section class="listen-panel listen-profile-panel">
-                <div class="listener-row">
-                    <div class="scrobble-side">
-                        <h3>${tl2(trans.scrobbles)}</h3>
-                        <p ref=${(el) => scrobble_text = el}><a href="${root}user/${page.name}/library">${scrobbles.toLocaleString(lang)}</a></p>
-                    </div>
-                    <div class="artist-side">
-                        <h3>${tl2(trans.artists)}</h3>
-                        <p><a href="${root}user/${page.name}/library/artists">${artists.toLocaleString(lang)}</a></p>
-                    </div>
-                    <div class="loved-side">
-                        <h3>${tl2(trans.loved)}</h3>
-                        <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
-                    </div>
-                </div>
-                ${scrobbles > 0 ? html.node`
-                <div class="scrobble-canvas-container mini">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text">${tl2(trans.loading_count_days).replace("{c}", "90")}</div>
-                    </div>
-                </div>
-                <div class="more-link">
-                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                        ${tl2(trans.explore_in_library)}
-                    </a>
-                </div>
-                ` : auth.name ? html.node`
-                <div class="scrobble-canvas-container mini">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl2(trans.profile_does_not_have_enough_scrobbles)}</div>
-                    </div>
-                </div>
-                ` : html.node``}
-            </section>
-        `;
-      if (scrobbles > 0) {
-        tippy_esm_default(scrobble_text, {
-          content: average
-        });
-      }
-      if (sponsor_list && page.name != sponsor_list.sponsor_account) {
-        if (!page.mobile)
-          page.structure.side.insertBefore(
-            listen_container,
-            page.structure.side.firstChild
-          );
-        else
-          page.structure.main.insertBefore(
-            listen_container,
-            page.structure.main.firstChild
-          );
-        if (scrobbles > 0 && auth.name) bleh_profile_chart();
-      }
-      const profile_sub_text = page.structure.container.querySelector(
-        ".redesigned-profile-header .header-title-secondary"
-      );
-      if (profile_sub_text)
-        parse_sub_text(profile_sub_text, page.name, cache2);
-      let featured_track_panel = profile_header.querySelector(
-        ".header-featured-track"
-      );
-      if (featured_track_panel)
-        bleh_featured_profile_track(featured_track_panel);
-      let about_me_header = about_me_sidebar.querySelector("h2");
-      about_me_header.remove();
-      let profile_note;
-      if (!is_own_profile) {
-        let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-        profile_note = notes[page.name];
-      }
-      let settings_btn;
-      let add_note;
-      let info_tip;
-      about_me_sidebar.insertBefore(
-        html.node`
-            <div class="top-container">
-                <h2>
-                    ${tl2(trans.about)}
-                    <span class="info-tip" ref=${(el) => info_tip = el}>
-                        <span class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
-                    </span>
-                </h2>
-                <div class="view-buttons blend blend-v2">
-                    ${is_own_profile ? html.node`
-                    <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
-                        ${tl2(trans.edit)}
-                    </a>
-                    ` : !profile_note ? html.node`
-                    <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
-          create_profile_note_panel(page.name, profile_note);
-          add_note.remove();
-        }}>
-                        ${tl2(trans.add_note)}
-                    </button>
-                    ` : ""}
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl2(trans.settings)}
-                    </button>
-                </div>
-            </div>
-        `,
-        about_me_sidebar.firstChild
-      );
-      tippy_esm_default(settings_btn, {
-        theme: "window",
-        content: html.node`
-                <div class="dialog-settings">
-                    <div class="setting-group blend">
-                        ${setting({ id: "bio_markdown" })}
-                    </div>
-                </div>
-            `,
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        appendTo: document.body,
-        hideOnClick: "toggle",
-        onClickOutside(instance) {
-          if (instance.popper.querySelector('[aria-expanded="true"]')) {
-            return;
-          }
-          instance.hide();
-        }
-      });
-      if (cache2.banner || cache2.hue || cache2.sat || cache2.lit) {
-        tippy_esm_default(info_tip, {
-          content: html.node`
-                    <div class="profile-items">
-                        ${cache2.banner ? html.node`
-                        <div class="profile-item" data-type="banner">
-                            <span class="bleh-icon" style="--icon: var(--mask)" />
-                            <p>${tl2(trans.profile_banner.name)}</p>
-                        </div>
-                        ` : ""}
-                        ${cache2.hue > -1 && cache2.sat > -1 && cache2.lit > -1 ? html.node`
-                        <div class="profile-item" data-type="accent">
-                            <span class="bleh-icon" style="--icon: var(--mask)" />
-                            <p>${tl2(trans.profile_accent.name)}</p>
-                            <p class="subtle">${cache2.hue}, ${cache2.sat}, ${cache2.lit}</p>
-                        </div>
-                        ` : ""}
-                    </div>
-                `
-        });
-      } else {
-        info_tip.remove();
-      }
-      if (ff("redesigned_profile_header"))
-        redesign_profile_header(is_own_profile, is_following);
-      if (!is_own_profile && profile_note)
-        create_profile_note_panel(page.name, profile_note);
-    } else {
-      load_profile_cache(page.name, cache2, profile_cache);
-      let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
-      if (page.subpage.startsWith("library")) {
-        bleh_user_library();
-      } else if (page.subpage == "events") {
-        convert_to_toolbar();
-        const no_events = page.structure.main.querySelector(
-          ":scope > .no-events"
-        );
-        if (!no_events) bleh_profile_events();
-      } else if (page.subpage.startsWith("listening-report")) {
-        page.structure.content_top.classList.add(
-          "listening-report-navlist"
-        );
-        page.structure.row.classList.add("listening-report");
-        convert_to_toolbar();
-        let report_box_container = document.body.querySelector(
-          ".report-box-container--overview"
-        );
-        if (report_box_container) {
-          document.documentElement.setAttribute(
-            "data-bwaa--theme",
-            "oled"
-          );
-          document.documentElement.setAttribute(
-            "data-bwaa--theme_type",
-            "dark"
-          );
-          page.structure.row.after(report_box_container);
-        } else {
-          let dashboard = page.structure.container.querySelector(".user-dashboard");
-          if (dashboard) {
-            dialog({
-              id: "listening_report_v2",
-              title: "oh no :c",
-              body: html.node`
-                            <div class="alert alert-error">This listening report is too old</div>
-                            <br>
-                            <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                        `
-            });
-          }
-        }
-      } else if (page.subpage == "obsessions_overview") {
-        let section_controls = page.structure.container.querySelector(".section-controls");
-        let buttons;
-        if (section_controls != null) {
-          section_controls.classList.add("legacy-section-controls");
-          buttons = section_controls.querySelectorAll(":is(button, a)");
-          let header = page.structure.container.querySelector(
-            ".content-top-header"
-          );
-          page.structure.content_top.innerHTML = `
-                    <div class="content-top-inner-wrap">
-                        <div class="container content-top-lower">
-                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
-                        </div>
-                    </div>
-                `;
-        }
-        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
-        let chr = count_text.indexOf("(");
-        let count = 0;
-        if (chr != -1)
-          count = count_text.substring(chr).replace("(", "").replace(")", "");
-        page.structure.nav.querySelector(
-          ".secondary-nav-item--obsessions a"
-        ).appendChild(html.node`
-                <div class="new-badge count-badge">${count}</div>
-            `);
-        let new_panel = document.createElement("section");
-        new_panel.classList.add("obsessions-panel");
-        let wrap = document.createElement("div");
-        wrap.classList.add("view-buttons-wrapper");
-        let button_header = document.createElement("div");
-        button_header.classList.add(
-          "view-buttons",
-          "obsession-buttons",
-          "blend"
-        );
-        buttons.forEach((button) => {
-          if (button.classList.contains("btn-sm")) {
-            button.classList = [];
-            button.classList.add("obsession-btn");
-            tippy_esm_default(button, {
-              content: button.textContent
-            });
-            button.textContent = tl2(trans.obsess);
-          }
-          button.classList.add(
-            "btn",
-            "view-item",
-            "interact-item",
-            "obsession-top-item"
-          );
-          button_header.appendChild(button);
-        });
-        wrap.appendChild(button_header);
-        new_panel.appendChild(wrap);
-        page.structure.main.appendChild(new_panel);
-        let grid = document.createElement("ol");
-        grid.classList.add(
-          "grid-items",
-          "grid-items--numbered",
-          "obsessions-grid"
-        );
-        let items = page.structure.container.querySelectorAll(
-          ".obsession-history-item"
-        );
-        items.forEach((item) => {
-          let link = item.querySelector(
-            ".obsession-history-item-heading-link"
-          );
-          let artist = item.querySelector(
-            ".obsession-history-item-artist a"
-          );
-          let artist_link = artist.getAttribute("href");
-          artist = artist.textContent.trim();
-          let title = link.textContent.trim();
-          link = link.getAttribute("href");
-          let date = item.querySelector(".obsession-history-item-date").textContent.trim();
-          let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
-          let cover_substr = bg.indexOf("url");
-          const cover = html.node`
-                    <img
-                    src=${bg.substring(cover_substr).replace('url("', "").replace('")', "").trim()}
-                    alt=${title} loading="lazy">
-                `;
-          hoshino(cover, title, artist);
-          let obsession_is_first = item.querySelector(".obsession-first") != null;
-          const grid_item = html.node`
-                    <li class="grid-items-item obsessions-item ${obsession_is_first ? "first" : ""}">
-                        <div class="grid-items-cover-image">
-                            <div class="grid-items-cover-image-image ${cover.src.endsWith("4128a6eb29f94943c9d206c08e625904.jpg") ? "grid-items-cover-default" : ""}">
-                                ${cover}
-                            </div>
-                            <div class="grid-items-item-details">
-                                <p class="grid-items-item-main-text">
-                                    <a class="link-block-target" href="${link}" title="${title}">
-                                        ${title}
-                                    </a>
-                                </p>
-                                <p class="grid-items-item-aux-text obsessions-item-aux">
-                                    <a class="grid-items-item-aux-block" href="${artist_link}">
-                                        ${artist}
-                                    </a>
-                                    <a class="obsessions-item-date" href="${link}">
-                                        ${date}
-                                    </a>
-                                </p>
-                            </div>
-                            <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
-                        </div>
-                    </li>
-                `;
-          if (obsession_is_first) {
-            tippy_esm_default(grid_item, {
-              content: tl2(trans.obsession_first)
-            });
-          }
-          grid.appendChild(grid_item);
-        });
-        new_panel.appendChild(grid);
-        let no_data = page.structure.container.querySelector(
-          ".no-data-message--obsession-history"
-        );
-        if (no_data) wrap.after(no_data);
-        let pagination = page.structure.container.querySelector(".pagination");
-        if (pagination) new_panel.appendChild(pagination);
-      } else if (page.subpage == "playlists_playlists") {
-        let section_controls = page.structure.container.querySelector(
-          ".section-controls-full-width"
-        );
-        let buttons;
-        if (section_controls) {
-          section_controls.classList.add("legacy-section-controls");
-          buttons = section_controls.querySelectorAll(":is(button, a)");
-          let header = page.structure.container.querySelector(
-            ".content-top-header"
-          );
-          page.structure.content_top.innerHTML = `
-                    <div class="content-top-inner-wrap">
-                        <div class="container content-top-lower">
-                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
-                        </div>
-                    </div>
-                `;
-        }
-        let new_panel = document.createElement("section");
-        new_panel.classList.add("obsessions-panel");
-        page.structure.main.appendChild(new_panel);
-        if (buttons.length > 0) {
-          let wrap = document.createElement("div");
-          wrap.classList.add("view-buttons-wrapper");
-          wrap.innerHTML = `<div class="info"><div class="alert alert-info">Playlists are a work in progress</div></div>`;
-          let button_header = html.node`
-                    <div class="view-buttons playlist-home-buttons blend" />
-                `;
-          buttons.forEach((button) => {
-            if (button.getAttribute("data-analytics-action") == "create") {
-              button.classList.add("primary");
-              button.innerHTML = `${tl2(trans.new)} <div class="new-badge">${tl2(trans.beta)}</div>`;
-            }
-            button.classList.add(
-              "btn",
-              "view-item",
-              "interact-item",
-              "playlist-home-top-item"
-            );
-            button_header.appendChild(button);
-          });
-          wrap.appendChild(button_header);
-          new_panel.appendChild(wrap);
-        }
-        let playlists = page.structure.container.querySelector(
-          ".playlisting-playlists"
-        );
-        if (playlists) {
-          page.structure.container.removeChild(playlists.parentElement);
-          new_panel.appendChild(playlists);
-        } else {
-          let no_data = page.structure.container.querySelector(
-            ".no-data-message--playlists"
-          );
-          page.structure.container.removeChild(no_data.parentElement);
-          new_panel.appendChild(no_data);
-        }
-      } else if (page.subpage == "loved") {
-        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
-        let chr = count_text.indexOf("(");
-        let count = 0;
-        if (chr != -1)
-          count = count_text.substring(chr).replace("(", "").replace(")", "");
-        page.structure.nav.querySelector(".secondary-nav-item--loved a").appendChild(html.node`
-                <div class="new-badge count-badge">${count}</div>
-            `);
-      }
-    }
-    log2("status is", "page", "info", page);
-    update_page();
-    patch_profile_following();
-    log2(`querying badges for ${page.name}`, "profile");
-    let profile_name_obj;
-    profile_name_obj = page.structure.container.querySelector(
-      ".redesigned-profile-header .title-container"
-    );
-    if (ff("badges")) {
-      let stock_badges = profile_name_obj.querySelectorAll(".label");
-      stock_badges.forEach((badge) => {
-        if (badge.classList[1] == "user-status-None") return;
-        badge.classList.add("expand");
-        tippy_esm_default(badge, {
-          theme: "badge",
-          placement: "bottom",
-          content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl2(trans.badges[badge.classList[1]].reason)}</div>
-                `
-        });
-      });
-    }
-    let badges = load_badges(page.name);
-    if (badges) {
-      badges.forEach((badge) => {
-        profile_name_obj.appendChild(create_badge(badge, false, true));
-      });
-    }
-    let badge_elements = profile_name_obj.querySelectorAll(".label");
-    let label_container = document.createElement("div");
-    label_container.classList.add("badges");
-    badge_elements.forEach((badge) => {
-      label_container.appendChild(badge);
-    });
-    profile_name_obj.appendChild(label_container);
-    save_profile_cache(cache2, profile_cache, page.name);
-  }
-  function create_profile_note_panel(username, has_note) {
-    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    let note;
-    about_me_sidebar.after(html.node`
-        <section class="bleh--panel bleh--profile-note-panel">
-            <h2>${tl2(trans.notes)}</h2>
-            <div class="content-form">
-                <textarea id="bleh--profile-note" placeholder=${tl2(trans.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
-            </div>
-            <div class="actions">
-                <button class="see-more cancel" onclick=${() => {
-      let notes = JSON.parse(
-        localStorage.getItem("bleh_profile_notes")
-      ) || {};
-      delete notes[page.name];
-      note.value = "";
-      set_storage("bleh_profile_notes", JSON.stringify(notes));
-    }}>${tl2(trans.clear)}</button>
-                <button class="btn primary icon" data-type="save" onclick=${() => {
-      let notes = JSON.parse(
-        localStorage.getItem("bleh_profile_notes")
-      ) || {};
-      notes[page.name] = note.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-      set_storage("bleh_profile_notes", JSON.stringify(notes));
-    }}>${tl2(trans.save)}</button>
-            </div>
-        </section>
-    `);
-  }
-  function patch_profile_following() {
-    let navlist = page.structure.nav.querySelector(".navlist-items");
-    let following_tab = navlist.querySelector(".secondary-nav-item--following");
-    let link = following_tab.querySelector("a");
-    if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours") {
-      link.href = `${root}user/${page.name}/friends`;
-      link.textContent = tl2(trans.friends);
-      return;
-    }
-    if (page.subpage != "following")
-      link.classList.add("secondary-nav-item-link--active");
-    let followers_tab = navlist.querySelector(".secondary-nav-item--followers");
-    let neighbours_tab = navlist.querySelector(
-      ".secondary-nav-item--neighbours"
-    );
-    navlist.removeChild(followers_tab);
-    navlist.removeChild(neighbours_tab);
-    let friends_nav = html.node`
-        <div class="toolbar">
-            <nav class="navlist secondary-nav redesigned-navigation">
-                <ul class="navlist-items">
-                    ${{ html: following_tab.outerHTML }}
-                    ${{ html: followers_tab.outerHTML }}
-                    ${{ html: neighbours_tab.outerHTML }}
-                </ul>
-            </nav>
-        </div>
-    `;
-    link.href = `${root}user/${page.name}/friends`;
-    link.textContent = tl2(trans.friends);
-    page.structure.row.insertBefore(
-      friends_nav,
-      page.structure.row.firstElementChild
-    );
-    page.structure.row.classList.add("col-main-is-primary");
-    following_tab = friends_nav.querySelector(
-      ".secondary-nav-item--following a"
-    );
-    let highlighted_tab = following_tab;
-    if (page.subpage == "followers")
-      highlighted_tab = friends_nav.querySelector(
-        ".secondary-nav-item--followers a"
-      );
-    else if (page.subpage == "neighbours")
-      highlighted_tab = friends_nav.querySelector(
-        ".secondary-nav-item--neighbours a"
-      );
-    if (page.subpage != "following") {
-      following_tab.classList.remove("secondary-nav-item-link--active");
-    }
-    if (ff("katsune") && page.subpage != "neighbours") {
-      let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
-      let chr = count_text.indexOf("(");
-      let count = 0;
-      if (chr != -1)
-        count = count_text.substring(chr).replace("(", "").replace(")", "");
-      highlighted_tab.appendChild(html.node`
-            <div class="new-badge count-badge">${count}</div>
-        `);
-    }
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons-wrapper");
-    view_buttons.innerHTML = `
-        <div class="view-buttons">
-            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${tl2(trans.grid)}
-            </button>
-            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${tl2(trans.list)}
-            </button>
-        </div>
-    `;
-    const user_panel = html.node`
-        <section class="users">
-            ${view_buttons}
-            ${html.node([page.structure.main.innerHTML])}
-        </section>
-    `;
-    render(page.structure.main, user_panel);
-    refresh_all();
-  }
-  function refresh_tracks(button, { quiet = false }) {
-    let panel = page.structure.main.querySelector("#recent-tracks-section");
-    panel.classList.remove("has-refreshed");
-    button.setAttribute("disabled", "");
-    fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("DOC", doc);
-      let tracklist_panel = doc.querySelector(".chartlist");
-      button.removeAttribute("disabled");
-      if (!tracklist_panel) {
-        if (!quiet) {
-          status({
-            title: tl2(trans.recent_tracks),
-            body: tl2(trans.value_failed_to_load).replace(
-              "{v}",
-              tl2(trans.library)
-            ),
-            type: "error"
-          });
-        }
-        return;
-      }
-      if (!quiet) {
-        status({
-          title: tl2(trans.recent_tracks),
-          body: tl2(trans.refreshed)
-        });
-      }
-      panel.classList.add("has-refreshed");
-      panel.querySelector(".chartlist").outerHTML = tracklist_panel.outerHTML;
-    });
-  }
-  function bleh_featured_profile_track(object) {
-    let art = object.querySelector(".featured-item-art");
-    let details = object.querySelector(".featured-item-details");
-    let form = document.body.querySelector(".header-info-primary form");
-    let heading = details.querySelector(".featured-item-heading");
-    let link = heading.querySelector("a")?.getAttribute("href");
-    details.removeChild(heading);
-    let name_elem = details.querySelector(".featured-item-name");
-    let artist_elem = details.querySelector(".featured-item-artist");
-    name_elem.classList = "";
-    artist_elem.classList = "source-album-artist";
-    let artist_elem_full = artist_elem;
-    const img = art.querySelector(".cover-art");
-    hoshino(
-      img.querySelector(":scope > img"),
-      name_elem.textContent.trim(),
-      artist_elem.textContent.trim()
-    );
-    if (settings.format_guest_features) {
-      let song_title = name_elem.textContent;
-      let formatted_title = name_includes(
-        song_title,
-        artist_elem.textContent
-      );
-      let song_tags = {};
-      if (formatted_title) {
-        song_title = formatted_title[0];
-        song_tags = formatted_title[1];
-      }
-      render(
-        name_elem,
-        html.node`
-            <div class="title">${romanise(song_title.trim())}</div>
-            ${song_tags.map(
-          (tag) => html.node`
-                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</div>
-            `
-        )}
-        `
-      );
-      artist_elem_full = html.node`
-            <div class="source-album-artist">
-                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>
-            </div>
-        `;
-      let song_guests = formatted_title[3];
-      for (let guest in song_guests) {
-        artist_elem_full.innerHTML = `${artist_elem_full.innerHTML},`;
-        let guest_element = document.createElement("a");
-        guest_element.setAttribute(
-          "href",
-          `${root}music/${redirect()}${sanitise(song_guests[guest])}`
-        );
-        guest_element.textContent = romanise(song_guests[guest]);
-        artist_elem_full.appendChild(guest_element);
-      }
-    } else if (settings.corrections) {
-      name_elem.textContent = romanise(
-        correct_item_by_artist(
-          name_elem.textContent.trim(),
-          artist_elem.textContent.trim()
-        )
-      );
-      artist_elem.textContent = romanise(
-        correct_artist(artist_elem.textContent.trim())
-      );
-    }
-    if (form) {
-      let button = form.querySelector("button");
-      button.classList = "featured-item-manage";
-      button.setAttribute("data-type", "delete");
-      button.textContent = tl2(trans.remove);
-    }
-    let panel = html.node`
-        <section class="featured-item-panel">
-            <div class="sub-text">
-                ${form ? html.node`
-                <a class="has-icon" data-type="obsession" href=${link}>
-                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl2(trans.obsession)}
-                </a>
-                ${form}
-                ` : html.node`
-                <div class="has-icon" data-type="track">
-                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl2(trans.top_track)}
-                </div>
-                `}
-            </div>
-            <div class="source-album js-link-block link-block">
-                <div class="source-album-art small">
-                    ${img}
-                </div>
-                <div class="source-album-details">
-                    <h4 class="source-album-name">${name_elem}</h4>
-                    ${artist_elem_full}
-                </div>
-                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute("href")} />
-            </div>
-        </section>
-    `;
-    page.structure.side.insertBefore(
-      panel,
-      page.structure.side.firstElementChild
-    );
-  }
-  function profile_recents() {
-    let panel = page.structure.main.querySelector("#recent-tracks-section");
-    if (!panel) return;
-    let more_link = panel.nextElementSibling;
-    panel.appendChild(more_link);
-    let form = panel.querySelector("#recent-tracks-settings");
-    let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
-    let tooltip;
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "blend", "blend-v2");
-    let header = document.createElement("div");
-    header.classList.add("top-container");
-    let header_text2 = panel.querySelector("h2");
-    header.appendChild(header_text2);
-    let refresh_btn;
-    refresh_btn = html.node`
-        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn, {})}>
-            ${tl2(trans.refresh)}
-        </button>
-    `;
-    view_buttons.appendChild(refresh_btn);
-    header.appendChild(view_buttons);
-    panel.insertBefore(header, panel.firstElementChild);
-    if (!form) return;
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let original_chart_settings = {};
-    let settings_btn = html.node`
-        <button class="left-icon blend-v2-btn" data-type="settings">
-            ${tl2(trans.settings)}
-        </button>
-    `;
-    let count = form.querySelector('[name="chart_length_recent_tracks"]');
-    original_chart_settings = {
-      recent_artwork: form.querySelector("#id_show_recent_tracks_artwork").checked,
-      recent_realtime: form.querySelector("#id_auto_refresh_recent_tracks").checked
-    };
-    form.classList = "";
-    render(
-      form,
-      html`
-            <input
-                type="hidden"
-                name="csrfmiddlewaretoken"
-                value="${page.token}"
-            />
-            <div class="setting-group blend">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.amount_to_display)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(count),
-        count.value,
-        "chart_length_recent_tracks"
-      )}
-                </div>
-                <div
-                    class="setting"
-                    data-type="toggle"
-                    id="container-recent_artwork"
-                    onclick="_update_inbuilt_item('recent_artwork')"
-                >
-                    <div class="heading">
-                        <h5>${tl2(trans.recent_artwork)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input
-                            class="companion-checkbox"
-                            type="checkbox"
-                            name="show_recent_tracks_artwork"
-                            id="inbuilt-companion-checkbox-recent_artwork"
-                        />
-                        <span
-                            class="btn toggle"
-                            id="toggle-recent_artwork"
-                            aria-checked="false"
-                        >
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div
-                    class="setting"
-                    data-type="toggle"
-                    id="container-recent_realtime"
-                    onclick="_update_inbuilt_item('recent_realtime')"
-                >
-                    <div class="heading">
-                        <h5>${tl2(trans.recent_realtime.name)}</h5>
-                        <p>${tl2(trans.recent_realtime.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input
-                            class="companion-checkbox"
-                            type="checkbox"
-                            name="auto_refresh_recent_tracks"
-                            id="inbuilt-companion-checkbox-recent_realtime"
-                        />
-                        <span
-                            class="btn toggle"
-                            id="toggle-recent_realtime"
-                            aria-checked="false"
-                            type="button"
-                        >
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                ${setting({ id: "format_guest_features" })}
-                ${setting({ id: "stacked_chartlist_info" })}
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl2(trans.save)}
-                    </button>
-                    <a
-                        class="btn icon settings not-a-view-button"
-                        href="${root}bleh"
-                    >
-                        ${tl2(trans.settings)}
-                    </a>
-                </div>
-            </div>
-        `
-    );
-    for (let setting2 in original_chart_settings) {
-      update_inbuilt_item(
-        setting2,
-        original_chart_settings[setting2],
-        false,
-        form
-      );
-    }
-    refresh_all(form);
-    tooltip = tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: form,
-      allowHTML: true,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      hideOnClick: "toggle",
-      onClickOutside(instance) {
-        if (instance.popper.querySelector('[aria-expanded="true"]')) {
-          return;
-        }
-        instance.hide();
-      }
-    });
-    view_buttons.appendChild(settings_btn);
-  }
-  function profile_artists() {
-    let panel = page.structure.main.querySelector("#top-artists");
-    if (!panel) return;
-    panel.classList.remove("section-with-settings");
-    let form = panel.querySelector("#artist-chart-settings");
-    let list = panel.querySelector("#artists_range");
-    let collage_btn;
-    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    let settings_btn;
-    panel.insertBefore(
-      html.node`
-        <div class="top-container">
-            ${panel.querySelector("h2")}
-            <div class="accompany view-buttons blend blend-v2">
-                ${() => {
-        select_btn.classList.add(
-          "select-button",
-          "link-select",
-          "blend-v2-btn"
-        );
-        select_btn.classList.remove(
-          "section-control",
-          "dropdown-menu-clickable-button"
-        );
-        return select_btn;
-      }}
-            </div>
-            <div class="view-buttons blend blend-v2">
-                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
-        let btn = list.querySelector(
-          ".dropdown-menu-clickable-item--selected"
-        );
-        let link = new URL(
-          "https://www.last.fm" + btn.getAttribute("href")
-        );
-        let selected = link.searchParams.get("artists_date_preset");
-        window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
-      }}>${tl2(trans.collage)}</button>
-                ${form ? html.node`
-                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl2(trans.settings)}
-                </button>
-                ` : ""}
-            </div>
-        </div>
-    `,
-      panel.firstElementChild
-    );
-    if (!form) return;
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let timeframe = form.querySelector('[name="chart_range_top_artists"]');
-    let style = form.querySelector('[name="chart_style_top_artists"]');
-    let grid_length = form.querySelector('[name="artists_image_grid_length"]');
-    let chartlist_length = form.querySelector(
-      '[name="artists_chartlist_length"]'
-    );
-    form.classList = "";
-    render(
-      form,
-      html`
-            <input
-                type="hidden"
-                name="csrfmiddlewaretoken"
-                value="${page.token}"
-            />
-            <div class="setting-group blend">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(timeframe),
-        timeframe.value,
-        "chart_range_top_artists"
-      )}
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_style)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(style),
-        style.value,
-        "chart_style_top_artists"
-      )}
-                </div>
-                <div class="setting hide-if-artist-list" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_size)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(grid_length),
-        grid_length.value,
-        "artists_image_grid_length"
-      )}
-                </div>
-                <div class="setting hide-if-artist-grid" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_size)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(chartlist_length),
-        chartlist_length.value,
-        "artists_chartlist_length"
-      )}
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl2(trans.save)}
-                    </button>
-                </div>
-            </div>
-        `
-    );
-    tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: form,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      hideOnClick: "toggle",
-      onClickOutside(instance) {
-        if (instance.popper.querySelector('[aria-expanded="true"]')) {
-          return;
-        }
-        instance.hide();
-      }
-    });
-  }
-  function profile_albums() {
-    let panel = page.structure.main.querySelector("#top-albums");
-    if (!panel) return;
-    panel.classList.remove("section-with-settings");
-    let form = panel.querySelector("#albums-chart-settings");
-    let list = panel.querySelector("#albums_range");
-    let collage_btn;
-    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    let settings_btn;
-    panel.insertBefore(
-      html.node`
-        <div class="top-container">
-            ${panel.querySelector("h2")}
-            <div class="accompany view-buttons blend blend-v2">
-                ${() => {
-        select_btn.classList.add(
-          "select-button",
-          "link-select",
-          "blend-v2-btn"
-        );
-        select_btn.classList.remove(
-          "section-control",
-          "dropdown-menu-clickable-button"
-        );
-        return select_btn;
-      }}
-            </div>
-            <div class="view-buttons blend blend-v2">
-                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
-        let btn = list.querySelector(
-          ".dropdown-menu-clickable-item--selected"
-        );
-        let link = new URL(
-          "https://www.last.fm" + btn.getAttribute("href")
-        );
-        let selected = link.searchParams.get("albums_date_preset");
-        window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
-      }}>${tl2(trans.collage)}</button>
-                ${form ? html.node`
-                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl2(trans.settings)}
-                </button>
-                ` : ""}
-            </div>
-        </div>
-    `,
-      panel.firstElementChild
-    );
-    if (!form) return;
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let timeframe = form.querySelector('[name="chart_range_top_albums"]');
-    let style = form.querySelector('[name="chart_style_top_albums"]');
-    let grid_length = form.querySelector('[name="albums_image_grid_length"]');
-    let chartlist_length = form.querySelector(
-      '[name="albums_chartlist_length"]'
-    );
-    form.classList = "";
-    render(
-      form,
-      html`
-            <input
-                type="hidden"
-                name="csrfmiddlewaretoken"
-                value="${page.token}"
-            />
-            <div class="setting-group blend">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(timeframe),
-        timeframe.value,
-        "chart_range_top_albums"
-      )}
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_style)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(style),
-        style.value,
-        "chart_style_top_albums"
-      )}
-                </div>
-                <div class="setting hide-if-album-list" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_size)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(grid_length),
-        grid_length.value,
-        "albums_image_grid_length"
-      )}
-                </div>
-                <div class="setting hide-if-album-grid" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_size)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(chartlist_length),
-        chartlist_length.value,
-        "albums_chartlist_length"
-      )}
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl2(trans.save)}
-                    </button>
-                </div>
-            </div>
-        `
-    );
-    tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: form,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      hideOnClick: "toggle",
-      onClickOutside(instance) {
-        if (instance.popper.querySelector('[aria-expanded="true"]')) {
-          return;
-        }
-        instance.hide();
-      }
-    });
-  }
-  function profile_tracks() {
-    let panel = page.structure.main.querySelector("#top-tracks");
-    if (!panel) return;
-    panel.classList.remove("section-with-settings");
-    let form = panel.querySelector("#track-chart-settings");
-    let list = panel.querySelector("#tracks_range");
-    let collage_btn;
-    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    let settings_btn;
-    panel.insertBefore(
-      html.node`
-        <div class="top-container">
-            ${panel.querySelector("h2")}
-            <div class="accompany view-buttons blend blend-v2">
-                ${() => {
-        select_btn.classList.add(
-          "select-button",
-          "link-select",
-          "blend-v2-btn"
-        );
-        select_btn.classList.remove(
-          "section-control",
-          "dropdown-menu-clickable-button"
-        );
-        return select_btn;
-      }}
-            </div>
-            <div class="view-buttons blend blend-v2">
-                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
-        let btn = list.querySelector(
-          ".dropdown-menu-clickable-item--selected"
-        );
-        let link = new URL(
-          "https://www.last.fm" + btn.getAttribute("href")
-        );
-        let selected = link.searchParams.get("tracks_date_preset");
-        window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
-      }}>${tl2(trans.collage)}</button>
-                ${form ? html.node`
-                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl2(trans.settings)}
-                </button>
-                ` : ""}
-            </div>
-        </div>
-    `,
-      panel.firstElementChild
-    );
-    if (!form) return;
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
-    let chartlist_length = form.querySelector(
-      '[name="chart_length_top_tracks"]'
-    );
-    form.classList = "";
-    render(
-      form,
-      html`
-            <input
-                type="hidden"
-                name="csrfmiddlewaretoken"
-                value="${page.token}"
-            />
-            <div class="setting-group blend">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(timeframe),
-        timeframe.value,
-        "chart_range_top_tracks"
-      )}
-                </div>
-                <div class="setting hide-if-track-grid" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_size)}</h5>
-                    </div>
-                    ${select(
-        select_prepare(chartlist_length),
-        chartlist_length.value,
-        "chart_length_top_tracks"
-      )}
-                </div>
-                <div class="sep" />
-                ${setting({ id: "format_guest_features" })}
-                ${setting({ id: "show_guest_features" })}
-                <div class="more-link">
-                    <a href="${root}bleh/music">${tl2(trans.settings)}</a>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl2(trans.save)}
-                    </button>
-                </div>
-            </div>
-        `
-    );
-    tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: form,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      hideOnClick: "toggle",
-      onClickOutside(instance) {
-        if (instance.popper.querySelector('[aria-expanded="true"]')) {
-          return;
-        }
-        instance.hide();
-      }
-    });
-  }
-  function bio_parse(text3, cache2 = true, take_effect = true) {
-    let temp = document.createElement("div");
-    temp.classList.add("markdown-body");
-    render(
-      temp,
-      markdown(text3.textContent, {
-        allow_headers: true,
-        allow_banners: true,
-        allow_icons: true,
-        allow_hue: true,
-        cache: cache2,
-        take_effect,
-        allow_socials: true,
-        allow_alignment: true
-      })
-    );
-    return temp;
-  }
-  function bleh_profile_chart() {
-    let panel = page.structure.row.querySelector(".listen-panel");
-    let table = panel.querySelector("table");
-    if (table) {
-      bleh_profile_chart_render(panel, table);
-      return;
-    }
-    lazy(
-      panel,
-      () => {
-        fetch(
-          `${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`
-        ).then(function(response) {
-          console.log(
-            "glacier library returned",
-            response,
-            response.text,
-            response.status
-          );
-          if (response.status != 200) throw new Error();
-          return response.text();
-        }).then(function(html3) {
-          let doc = new DOMParser().parseFromString(
-            html3,
-            "text/html"
-          );
-          console.log(
-            "glacier library DOC",
-            doc,
-            doc.querySelector(".table")
-          );
-          log2("received response", "glacier library");
-          table = doc.querySelector(".table");
-          if (table) {
-            panel.appendChild(table);
-            bleh_profile_chart_render(panel, table);
-          } else {
-            log2("table is null?", "glacier library", "error");
-            console.info("glacier library", doc.body.innerHTML);
-            console.info(
-              "glacier library",
-              new DOMParser().parseFromString(
-                doc.body.innerHTML,
-                "text/html"
-              )
-            );
-          }
-        });
-      },
-      { threshold: 0.3, rootMargin: "0px" }
-    );
-  }
-  function bleh_profile_chart_render(panel = page.structure.side?.querySelector(".listen-profile-panel"), table = null) {
-    if (!panel) return;
-    if (!table) table = panel.querySelector("table");
-    if (!table) return;
-    let entries2 = table.querySelectorAll("tbody tr");
-    let labels = [];
-    let links = [];
-    let values = [];
-    page.state.glacier.links = [];
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    let entries2 = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries2.forEach((entry) => {
-      let period = entry.querySelector(".js-period a");
-      let value = entry.querySelector(".js-scrobbles").textContent.trim();
-      labels.push(period.textContent.trim());
-      links.push(period.getAttribute("href"));
-      values.push(value);
-      page.state.glacier.links.push(
-        `${root}user/${page.name}/library` + period.getAttribute("href")
-      );
-    });
-    prep_chart_colours();
-    let scrobble_canvas_container = panel.querySelector(
-      ".scrobble-canvas-container"
-    );
-    scrobble_canvas_container.innerHTML = "";
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-canvas");
-    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-    try {
-      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-    } catch (e) {
-      gradient = page.state.chart_colours.link_bg_col;
-    }
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-      type: "line",
-      data: {
-        labels,
-        datasets: [
-          {
-            data: values,
-            borderWidth: 2,
-            backgroundColor: gradient,
-            borderColor: page.state.chart_colours.link_col,
-            fill: true,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
+      let author = entry.querySelector(".wiki-history-author");
+      let avatar2 = author.querySelector(".wiki-history-author-avatar");
+      let name = author.querySelector(".link-block-target");
+      if (name && avatar2) {
+        let badge = patch_avatar(avatar2, name.textContent, "wiki");
+        if (badge && badge.type) {
+          if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+            name.style.setProperty("--hue-over", badge.hue);
+            name.style.setProperty("--sat-over", badge.sat);
+            name.style.setProperty("--lit-over", badge.lit);
+          } else {
+            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
           }
-        ]
-      },
-      options: page.state.chart_library_line_options
-    });
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-  }
-  function save_profile_cache({ avatar: avatar2, banner, hue: hue2, sat, lit, aka, created } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
-    let profile_cache_o = Object.keys(profile_cache);
-    if (profile_cache_o.length > 400) {
-      const keys2 = Reflect.ownKeys(profile_cache);
-      const protected_users = /* @__PURE__ */ new Set([auth.name, ...settings.friends]);
-      const key_to_delete = keys2.find(
-        (key) => !protected_users.has(profile_cache[key])
-      );
-      if (key_to_delete) delete profile_cache[key_to_delete];
-      delete profile_cache[name];
-    }
-    profile_cache[name] = {
-      avatar: avatar2,
-      banner,
-      hue: hue2,
-      sat,
-      lit,
-      aka,
-      created
-    };
-    log2("saved to cache", "profile", "info", {
-      name,
-      cache: profile_cache[name]
-    });
-    set_storage("bleh_profile_cache", JSON.stringify(profile_cache));
-  }
-  async function checkup_friend_cache(list = settings.friends) {
-    for (const friend of list) {
-      const cache2 = await load_profile_cache_externally(friend);
-      log2(`finalised cache for friend ${friend}`, "profile", "info", {
-        cache: cache2
-      });
-    }
-  }
-  function open_starred_friend_window() {
-    dialog({
-      id: "starred_friend",
-      title: tl2(trans.friends),
-      body: html.node`
-            <div class="setting-group">
-                ${starred = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl2(trans.none) }, ...settings.friends]) })}
-            </div>
-            <div class="alert alert-info">
-                ${tl2(trans.starred_friend.notice)}
-            </div>
-        `
-    });
-  }
-  async function load_profile_cache_externally(name = page.name) {
-    if (!name) return;
-    log2(`requested profile cache for ${name}`, "cache");
-    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache2 = profile_cache[name];
-    if (cache2) {
-      if (cache2.hue || cache2.sat || cache2.lit) {
-        if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name)) {
-          delete cache2.hue;
-          delete cache2.sat;
-          delete cache2.lit;
+        } else if (badge) {
+          name.classList.add(badge.type);
         }
       }
-      log2(`returning pre-cached result for ${name}`, "cache", "info", {
-        cache: cache2
-      });
-      return cache2;
-    }
-    return await request_profile_cache(name);
-  }
-  function load_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
-    if (!name) return;
-    if (!profile_cache)
-      profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (!cache2) cache2 = profile_cache[name] || {};
-    if (cache2) {
-      if (cache2.hue || cache2.sat || cache2.lit) {
-        if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name)) {
-          delete cache2.hue;
-          delete cache2.sat;
-          delete cache2.lit;
-        }
-      }
-      const hue2 = cache2.hue;
-      const sat = cache2.sat;
-      const lit = cache2.lit;
-      const banner = cache2.banner;
-      if (hue2) document.body.style.setProperty("--hue-album", hue2);
-      if (sat) document.body.style.setProperty("--sat-album", sat);
-      if (lit) document.body.style.setProperty("--lit-album", lit);
-      return;
-    }
-    return request_profile_cache(name, cache2, profile_cache);
-  }
-  function request_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
-    log2(`requesting fetch of profile cache for ${name}`, "cache");
-    const will_cache = !cache2 || !profile_cache;
-    if (!profile_cache)
-      profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (!cache2) cache2 = profile_cache[name] || {};
-    return new Promise((resolve2, reject) => {
-      fetch(`${root}user/${name}`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        const about_me_sidebar = doc.querySelector(".about-me-sidebar");
-        if (about_me_sidebar) {
-          let about_me_text = about_me_sidebar.querySelector("p");
-          bio_parse(about_me_text, cache2 ? cache2 : true, false);
-        } else {
-          delete cache2.banner;
-          delete cache2.hue;
-          delete cache2.sat;
-          delete cache2.lit;
-        }
-        const avatar2 = doc.querySelector(".header-avatar .avatar img");
-        if (avatar2) cache2.avatar = avatar2.src;
-        const secondary = doc.querySelector(".header-title-secondary");
-        parse_sub_text(secondary, name, cache2);
-        if (will_cache) save_profile_cache(cache2, profile_cache, name);
-        resolve2(cache2 || {});
-      }).catch(reject);
     });
   }
-  function parse_sub_text(profile_sub_text, name = page.name, cache2) {
-    const display_name = profile_sub_text.querySelector(
-      ".header-title-display-name"
-    );
-    const scrobble_since = profile_sub_text.querySelector(
-      ".header-scrobble-since"
-    );
-    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl2(trans.account_scrobbling_since_replace), "");
-    const pronouns = use_pronouns(display_name.textContent);
-    profile_sub_text.insertBefore(
-      html.node`
-        <span class="header-title-secondary--pre">
-            ${pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka)}
-        </span>
-    `,
-      display_name
-    );
-    profile_sub_text.insertBefore(
-      html.node`
-        <span class="header-title-secondary--pre">
-            ${tl2(trans.account_created)}
-        </span>
-    `,
-      scrobble_since
-    );
-    cache2.aka = display_name.textContent.trim();
-    cache2.created = scrobble_since.textContent.trim();
-  }
-  function bleh_profile_events() {
-    const selected_tab = page.structure.toolbar?.querySelector(
-      ".secondary-nav-item-link--active"
-    );
-    let value_panel = html.node`
-        <section class="value-panel">
-            <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl2(trans.events)}</h2>
-        </section>
-    `;
-    if (page.structure.toolbar) {
-      const tabs = page.structure.toolbar.querySelectorAll(
-        ".secondary-nav-item-link"
-      );
-      tabs.forEach((tab, index3) => {
-        if (index3 < 1) return;
-        tab.classList.add("has-tab-num");
-        const num = tab.firstChild.textContent.trim().slice(-2);
-        tab.appendChild(html.node`
-                <span class="tab-num">
-                    ${num}
-                </span>
-            `);
-      });
+  function bleh_wiki_editor() {
+    let wiki_edit_panel = document.createElement("section");
+    wiki_edit_panel.classList.add("wiki-edit-panel");
+    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_edit_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
+    if (!breadcrumb_name) {
+      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
+      if (breadcrumb_name)
+        page.structure.content_top.style.setProperty("display", "none");
     }
-    let values = page.structure.main.querySelectorAll(".metadata-display");
-    let value_header = html.node`
-        <div class="glacier-library-metadata" />
-    `;
-    values.forEach((value, index3) => {
-      let text3 = tl2(trans.going);
-      if (index3 == 1) text3 = tl2(trans.interested);
-      value_header.appendChild(html.node`
-            <div class="glacier-library-metadata-item">
-                <div class="sub-text">${text3}</div>
-                <div class="glacier-library-metadata-item-value">${value.textContent}</div>
-            </div>
-        `);
-    });
-    value_panel.appendChild(value_header);
-    let total_value = page.structure.side.querySelector(".metadata-display");
-    if (total_value) {
-      value_panel.appendChild(html.node`
-            <h2 class="text-18">${tl2(trans.all_time)}</h2>
-            <div class="glacier-library-metadata">
-                <div class="glacier-library-metadata-item">
-                    <div class="sub-text">${tl2(trans.total)}</div>
-                    <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
-                </div>
-            </div>
-        `);
+    if (!breadcrumb_root) {
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
     }
-    let legacy_metadata = page.structure.main.querySelector(".metadata-list");
-    if (legacy_metadata) page.structure.main.removeChild(legacy_metadata);
+    let sub_text = document.createElement("div");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
+    sub_text.innerHTML = `
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector("a").outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `;
+    breadcrumb_root.style.setProperty("display", "none");
+    breadcrumb_name.style.setProperty("display", "none");
+    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
     page.structure.side.innerHTML = "";
-    page.structure.side.appendChild(value_panel);
-  }
-
-  // src/avatar.js
-  function patch_avatar(avatar2, name, type = "", parent = null, side = "right") {
-    if (avatar2.hasAttribute("data-bwaa-avatar")) return {};
-    avatar2.setAttribute("data-bwaa-avatar", "true");
-    const avatar_img = avatar2.querySelector("img");
-    if (!avatar_img) return {};
-    avatar_img.setAttribute(
-      "src",
-      avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/")
-    );
-    avatar2.setAttribute("title", "");
-    let badges = load_badges(name);
-    let pre_existing_badge = avatar2.querySelector(".avatar-status-dot");
-    if (badges && pre_existing_badge) avatar2.removeChild(pre_existing_badge);
-    if (!parent) avatar2.classList.add("avatar-can-hoverbox");
-    else parent.classList.add("parent-can-hoverbox");
-    let pre_existing_badge_type;
-    if (pre_existing_badge)
-      pre_existing_badge_type = pre_existing_badge.classList[1].replace(
-        "avatar-status-dot--",
-        "user-status-"
-      );
-    if (pre_existing_badge_type == "user-follow") {
-      pre_existing_badge = null;
-      pre_existing_badge_type = null;
-    }
-    if (badges)
-      avatar2.appendChild(create_badge(badges[badges.length - 1], true));
-    let image_header;
-    const popup = tippy_esm_default(parent ? parent : avatar2, {
-      theme: "context-menu",
-      content: html.node`
-            <div class="track-preview user-preview">
-                <div class="image">
-                    <div class="inner-image">
-                        <img src=${avatar_img.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
-                    </div>
-                </div>
-                <div class="info">
-                    <h5 class="title">${name}</h5>
-                    ${badges ? html.node`
-                    <div class="badges">
-                        ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
-                        ${pre_existing_badge ? create_badge({
-        type: pre_existing_badge_type,
-        name: tl2(
-          trans.badges[pre_existing_badge_type].name
-        ),
-        reason: tl2(
-          trans.badges[pre_existing_badge_type].reason
-        ),
-        inbuilt: true
-      }) : ""}
-                    </div>
-                    ` : pre_existing_badge ? html.node`
-                    <div class="badges">
-                        ${create_badge({
-        type: pre_existing_badge_type,
-        name: tl2(
-          trans.badges[pre_existing_badge_type].name
-        ),
-        reason: tl2(
-          trans.badges[pre_existing_badge_type].reason
-        ),
-        inbuilt: true
-      })}
-                    </div>
-                    ` : ""}
-                </div>
-            </div>
-            <a class="dropdown-menu-clickable-item" data-type="profile" href="${root}user/${name}">
-                ${tl2(trans.profile)}
+    const side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl2(trans.view_latest)}
             </a>
-            <a class="dropdown-menu-clickable-item" data-type="library" href="${root}user/${name}/library">
-                ${tl2(trans.library)}
-            </a>
-            <a class="dropdown-menu-clickable-item" data-type="friends" href="${root}user/${name}/friends">
-                ${tl2(trans.friends)}
-            </a>
-            <a class="dropdown-menu-clickable-item" data-type="shouts" href="${root}user/${name}/shoutbox">
-                ${tl2(trans.shouts)}
-            </a>
-        `,
-      placement: side,
-      interactive: true,
-      trigger: "click",
-      appendTo: document.body
-    });
-    register_menu(parent ? parent : avatar2, popup);
-    control_gif_pause(avatar_img);
-    if (badges) return badges[badges.length - 1];
-    else if (pre_existing_badge)
-      return { type: pre_existing_badge.classList[1] };
-    else return { type: "none" };
-  }
-  function return_name_from_avatar(avatar2) {
-    if (!avatar2) return;
-    if (!avatar2.hasAttribute("alt")) return;
-    if (avatar2.getAttribute("alt") == tl2(trans.your_avatar)) return auth;
-    return avatar2.getAttribute("alt").replace(tl2(trans.avatar_for_user), "");
-  }
-  unsafeWindow._expand_avatar = function(src) {
-    expand_avatar(src);
-  };
-  function expand_avatar(src, alt = "") {
-    dialog({
-      id: "avatar",
-      body: html.node`
-            <div class="full-avatar-wrapper">
-                <div class="full-avatar">
-                    <img src=${src} alt=${alt}>
-                    ${alt != "" ? () => {
-        const elem = html.node`
-                            <div class="alt-text">
-                                ALT
-                            </div>
-                        `;
-        tippy_esm_default(elem, {
-          content: alt
-        });
-        return elem;
-      } : ""}
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <div class="button-group">
-                        <a class="btn primary open" href=${src} target="_blank">
-                            ${tl2(trans.open_new_tab)}
-                        </a>
-                    </div>
-                    <div class="fill"></div>
-                </div>
-            </div>
-        `,
-      type: "avatar",
-      has_overlays: false
-    });
-  }
-  function style_name_from_badge(name, badge) {
-    if (!badge) return;
-    if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
-      name.style.setProperty("--hue-over", badge.hue);
-      name.style.setProperty("--sat-over", badge.sat);
-      name.style.setProperty("--lit-over", badge.lit);
-    } else if (badge.type) {
-      name.classList.add(
-        `user-status--bleh-${badge.type}`,
-        `user-status--bleh-user-${badge.user}`
-      );
-    } else {
-      name.classList.add(badge.type);
-    }
-  }
-
-  // src/components/share.js
-  function share(url) {
-    let input2;
-    dialog({
-      id: "share",
-      title: tl2(trans.share),
-      body: html.node`
-            <div class="share-top content-form">
-                <input
-                    type="text"
-                    readonly
-                    value=${url}
-                    class="share-input"
-                    ref=${(el) => input2 = el}
-                />
-                <button
-                    class="btn primary icon copy"
-                    onclick=${() => {
-        input2.select();
-        document.execCommand("copy");
-        notify({
-          title: tl2(trans.copied_to_clipboard),
-          icon: "icon-16-copy"
-        });
-      }}
-                >${tl2(trans.copy)}</button>
-            </div>
-            <div class="share-links">
-                <a
-                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-twitter"
-                >Twitter</a>
-                <a
-                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-facebook"
-                >Facebook</a>
-            </div>
-        `,
-      replace_if_possible: true
-    });
-  }
-
-  // src/pages/gallery.js
-  function bleh_gallery() {
-    if (page.subpage != "image") return;
-    log2("focusing on image", "gallery");
-    let image_sidebar = page.structure.side.querySelector(
-      ".js-gallery-image-details > div"
-    );
-    if (!image_sidebar) return;
-    if (image_sidebar.hasAttribute("data-bwaa-gallery")) return;
-    image_sidebar.setAttribute("data-bwaa-gallery", "true");
-    if (!ff("new_gallery_experience")) {
-      patch_gallery_focused_image(
-        image_sidebar,
-        page.structure.container.querySelector(".gallery-image-buttons")
-      );
-      return;
-    }
-    let image_details;
-    let gallery_section;
-    let first = false;
-    try {
-      gallery_section = page.structure.main.querySelector(".gallery-section");
-      if (gallery_section) {
-        first = true;
-        if (ff("short"))
-          page.structure.row.insertBefore(
-            gallery_section,
-            page.structure.content
-          );
-        else page.structure.nav.after(gallery_section);
-        image_details = html.node`
-                <section class="image-details" />
-            `;
-      } else {
-        image_details = page.structure.main.querySelector(".image-details");
-        image_details.innerHTML = "";
-      }
-    } catch (e) {
-      gallery_section = page.structure.container.querySelector(".gallery-section");
-      image_details = page.structure.main.querySelector(".image-details");
-      image_details.innerHTML = "";
-    }
-    image_details.appendChild(image_sidebar);
-    let image_title = image_details.querySelector(".gallery-image-title");
-    let image_date = image_details.querySelector(".gallery-image-uploaded-by");
-    if (image_title.textContent.trim() == "") {
-      image_title.classList.add("gallery-image-title-empty");
-      image_title.textContent = tl2(trans.no_title);
-    }
-    let breadcrumbs = document.body.querySelector(".content-top-lower-row");
-    let breadcrumb_root = breadcrumbs.querySelector("a");
-    let breadcrumb_name = breadcrumbs.querySelector(".subpage-title");
-    let image_title_container = document.createElement("div");
-    image_title_container.classList.add("image-title-container");
-    image_title_container.innerHTML = `
-        <div class="sub-text">
-            <div class="breadcrumb">
-                ${breadcrumb_root.outerHTML}
-                <div class="breadcrumb-name">
-                    ${breadcrumb_name.textContent}
-                </div>
-            </div>
-            ${image_date.outerHTML}
-        </div>
-        <div class="title-layer">
-            ${image_title.outerHTML}
-            <div class="vote-number" data-side="pos">+0</div>
-        </div>
-    `;
-    image_details.insertBefore(image_title_container, image_sidebar);
-    breadcrumbs.style.setProperty("display", "none");
-    page.structure.main.insertBefore(
-      image_details,
-      page.structure.main.firstElementChild
-    );
-    if (first) image_details.after(html.node`<div class="sep" />`);
-    let description = image_details.querySelector(".gallery-image-description");
-    if (!description) {
-      description = document.createElement("p");
-      description.classList.add(
-        "gallery-image-description",
-        "gallery-image-description-empty"
-      );
-      description.textContent = tl2(trans.no_description);
-      image_details.querySelector("[data-image-url]").appendChild(description);
-    }
-    let buttons = image_details.querySelector(".gallery-image-buttons");
-    let button_container = document.createElement("div");
-    button_container.classList.add("button-container-wrapper");
-    button_container.appendChild(buttons);
-    let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
-    vote_buttons.after(create_divider());
-    const positive_btn = vote_buttons.querySelector(
-      ':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)'
-    ).cloneNode(true);
-    const negative_btn = vote_buttons.querySelector(
-      ':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)'
-    ).cloneNode(true);
-    const positive = parseInt(
-      positive_btn.querySelector(".gallery-image-votes").lastChild.textContent.trim()
-    );
-    const negative = parseInt(
-      negative_btn.querySelector(".gallery-image-votes").lastChild.textContent.trim()
-    );
-    const number = positive - negative;
-    const is_negative = number < 0;
-    let vote_badge = image_title_container.querySelector(".vote-number");
-    vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
-    vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
-    tippy_esm_default(vote_badge, {
-      content: tl2(trans.gallery_sum)
-    });
-    let buttons_extra = document.createElement("div");
-    buttons_extra.classList.add(
-      "gallery-image-buttons",
-      "gallery-image-buttons-extra"
-    );
-    button_container.appendChild(buttons_extra);
-    image_details.appendChild(button_container);
-    let open_button = html.node`
-        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
-            ${tl2(trans.expand)}
-        </button>
-    `;
-    tippy_esm_default(open_button, {
-      content: tl2(trans.expand_to_full_resolution)
-    });
-    buttons_extra.appendChild(open_button);
-    let share_button = html.node`
-        <button class="image-share-button" onclick=${() => share(window.location.href)}>
-            ${tl2(trans.share)}
-        </button>
-    `;
-    buttons_extra.appendChild(share_button);
-    share_button.after(create_divider());
-    let delete_button = image_details.querySelector(".gallery-image-delete");
-    if (delete_button) buttons_extra.appendChild(delete_button);
-    let report_button = image_details.querySelector(
-      ".gallery-image-report-form"
-    );
-    let report_text = report_button.querySelector("button");
-    tippy_esm_default(report_text, {
-      content: report_text.textContent
-    });
-    report_text.textContent = tl2(trans.report);
-    buttons_extra.appendChild(report_button);
-    let star_buttons = image_details.querySelectorAll(
-      ".gallery-image-preferred-button :is(button, a)"
-    );
-    star_buttons.forEach((star_button) => {
-      star_button.removeAttribute("title");
-      let text3 = star_button.querySelector(".gallery-image-preferred-states");
-      text3.textContent = tl2(trans.star);
-    });
-    let view_all_container = page.structure.main.querySelector(
-      ".more-link-fullwidth-right-flush-top"
-    );
-    if (view_all_container) {
-      let side_actions = document.createElement("section");
-      side_actions.classList.add("side-actions");
-      if (!page.mobile) page.structure.side.appendChild(side_actions);
-      else page.structure.main.appendChild(side_actions);
-      let view_all = view_all_container.querySelector("a");
-      view_all.classList.add("btn", "side-action");
-      view_all.setAttribute("data-type", "gallery");
-      side_actions.appendChild(view_all);
-      page.structure.main.removeChild(view_all_container);
-      if (page.type == "artist" || ff("display_album_bookmark")) {
-        let view_saved = document.createElement("a");
-        view_saved.classList.add("btn", "side-action");
-        view_saved.setAttribute(
-          "href",
-          `${view_all.getAttribute("href")}?tab=saved`
-        );
-        view_saved.setAttribute("data-type", "gallery-saved");
-        view_saved.textContent = tl2(trans.view_saved);
-        side_actions.appendChild(view_saved);
-      }
-    }
-    if (page.type == "artist" || ff("display_album_bookmark"))
-      patch_gallery_focused_image(image_sidebar, buttons);
-  }
-  function expand_gallery_image() {
-    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
-    expand_avatar(image_src);
-  }
-  function create_divider() {
-    let divider = document.createElement("div");
-    divider.classList.add("listen-divider");
-    return divider;
-  }
-  function bleh_gallery_upload() {
-    let content_top = document.body.querySelector(".page-content");
-    content_top.innerHTML = "";
-    if (!ff("mesmerizer")) {
-      page.structure.row.insertBefore(
-        html.node`
-            <section class="gallery-section gallery--initialised">
-                <div class="gallery-image-container">
-                    <div class="gallery-slides">
-                        <div class="gallery-image gallery-slide image-preview active-slide">
-                            <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
-                        </div>
-                    </div>
-                </div>
-            </section>
-        `,
-        page.structure.row.firstElementChild
-      );
-      let form2 = page.structure.main.querySelector(".form-horizontal");
-      form2.classList.add("panel-form");
-      let upload_rules_group2 = form2.querySelector(
-        ".form-group--description + .form-group"
-      );
-      let rules2 = upload_rules_group2.querySelector(".gallery-upload-rules");
-      let rules_panel = document.createElement("section");
-      rules_panel.classList.add("rules-panel");
-      rules_panel.innerHTML = rules2.innerHTML;
-      page.structure.side.appendChild(rules_panel);
-      form2.removeChild(upload_rules_group2);
-      return;
-    }
-    const form = page.structure.main.querySelector(":scope > form");
-    const upload_rules_group = form.querySelector(
-      ".form-group--description + .form-group"
-    );
-    const rules = upload_rules_group.querySelector(".gallery-upload-rules");
-    page.structure.side.appendChild(html.node`
-        <section class="rules-panel">
-            ${{ html: rules.innerHTML }}
-        </section>
-    `);
-    form.removeChild(upload_rules_group);
-    const token = form.querySelector(':scope > [name="csrfmiddlewaretoken"]');
-    const title = form.querySelector('[name="title"]');
-    const description = form.querySelector('[name="description"]');
-    const file_input = form.querySelector('input[type="file"]');
-    const formats = form.querySelector(".form-row-help-text");
-    if (page.type == "artist") {
-      title.value = correct_artist(page.name);
-    } else {
-      title.value = correct_item_by_artist(page.name, page.sister);
-    }
-    const panel = html.node`
-        <section class="gallery-upload-panel bleh--panel">
-            <h4>${tl2(trans.image_details)}</h4>
-            <form method="post" action=${form.getAttribute("action")} enctype=${form.getAttribute("enctype")}>
-                ${token}
-                <div style="display: none">
-                    ${file_input}
-                </div>
-                <div class="setting-group">
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl2(trans.title)}</h5>
-                        </div>
-                        <div class="input-container content-form wide">
-                            ${title}
-                        </div>
-                    </div>
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl2(trans.description)}</h5>
-                        </div>
-                        <div class="input-container content-form textarea">
-                            ${description}
-                        </div>
-                    </div>
-                </div>
-                <div class="settings-footer end">
-                    <button class="btn primary icon" data-type="upload" type="submit">
-                        ${tl2(trans.upload)}
-                    </button>
-                </div>
-            </form>
         </section>
     `;
-    page.structure.main.appendChild(panel);
-    let dropzone;
-    let container;
-    page.structure.row.insertBefore(
-      html.node`
-        <section class="gallery-section gallery--initialised">
-            <div class="dropzone" ref=${(el) => dropzone = el} onclick=${() => {
-        file_input.click();
-      }}>
-                <div class="dropzone-message">${tl2(trans.dropzone)}</div>
-                <div class="card-tip">${formats.textContent}</div>
-            </div>
-            <div class="gallery-image-container" ref=${(el) => container = el}>
-                <div class="gallery-slides">
-                    <div class="gallery-image gallery-slide image-preview active-slide">
-                        <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
-                    </div>
-                </div>
-            </div>
-        </section>
-    `,
-      page.structure.row.firstElementChild
-    );
-    ["dragenter", "dragover"].forEach((type) => {
-      dropzone.addEventListener(type, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        container.setAttribute("data-dragging", true);
-        dropzone.setAttribute("data-dragging", true);
-      });
-    });
-    ["dragleave", "drop"].forEach((type) => {
-      dropzone.addEventListener(type, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        container.setAttribute("data-dragging", false);
-        dropzone.setAttribute("data-dragging", false);
-      });
-    });
-    dropzone.addEventListener("drop", (e) => {
-      const files = e.dataTransfer.files;
-      if (files.length) file_input.files = files;
-      file_input.dispatchEvent(new Event("change"));
-    });
-    file_input.addEventListener("change", () => {
-      log2("file input changed", "gallery", "info", {
-        files: file_input.files
-      });
-      if (!file_input.files.length) return;
-      const file = file_input.files[0];
-      const reader = new FileReader();
-      dropzone.setAttribute("data-has-file", true);
-      reader.onload = (event3) => {
-        page.state.image_preview.src = event3.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-    form.style.setProperty("display", "none");
-  }
-  function bleh_gallery_upload_check() {
-    if (page.subpage != "images_image-upload" || !page.state.image_preview)
-      return;
-    if (ff("mesmerizer")) {
-      const artwork_finder = page.structure.main.querySelector(
-        "#lfmmaf-widget:not([data-bleh])"
-      );
-      if (artwork_finder) {
-        artwork_finder.setAttribute("data-bleh", true);
-        const group = page.structure.main.querySelector(".setting-group");
-        const controls = artwork_finder.querySelectorAll(
-          ".form-group-controls > *"
-        );
-        let info;
-        group.insertBefore(
-          html.node`
-                <div class="setting" data-type="info">
-                    <div class="heading">
-                        <h5>${{ html: artwork_finder.querySelector("label").innerHTML }}</h5>
-                    </div>
-                    <div class="info artwork-finder-info" ref=${(el) => info = el} />
-                </div>
-            `,
-          group.firstElementChild
-        );
-        controls.forEach((control) => {
-          info.appendChild(control);
-        });
-      }
-      return;
-    }
-    const image_preview = page.structure.main.querySelector(
-      ".form-image-preview"
-    );
-    if (!image_preview) return;
-    page.state.image_preview.setAttribute(
-      "src",
-      image_preview.getAttribute("src")
-    );
-  }
-  function bleh_gallery_list() {
-    let upload_btn = page.structure.main.querySelector(".btn-add");
-    if (upload_btn) {
-      upload_btn.classList = "btn view-all-button back upload-button";
-      let upload_panel = document.createElement("section");
-      upload_panel.classList.add("view-all-panel", "upload-panel");
-      upload_panel.appendChild(upload_btn);
-      page.structure.side.insertBefore(
-        upload_panel,
-        page.structure.side.firstElementChild
-      );
-    }
-    page.structure.main.classList.add("bleh--gallery");
-    if (page.type == "artist") patch_gallery_image_listing();
-  }
-  function patch_gallery_image_listing() {
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    if (page.requested.tab != "saved" || page.requested.page != null)
-      page.structure.container.setAttribute("data-bwaa--gallery-tab", "all");
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
     else
-      page.structure.container.setAttribute(
-        "data-bwaa--gallery-tab",
-        "saved"
-      );
-    let nav = html.node`
-        <div class="toolbar">
-            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
-                <ul class="navlist-items">
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
-                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
-                            ${tl2(trans.photos)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
-                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("saved")}>
-                            ${tl2(trans.saved)}
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    `;
-    page.structure.row.insertBefore(nav, page.structure.content);
-    let bookmarks_panel;
-    page.structure.main.after(html.node`
-        <div class="col-main bleh--bookmarks not-a-panel">
-            <section class="bookmarks-panel" ref=${(el) => bookmarks_panel = el}>
-                <ul class="image-list" data-kate-processed="true"></ul>
-            </section>
-        </div>
-    `);
-    if (bookmarked_images.hasOwnProperty(page.name)) {
-      bookmarked_images[page.name].forEach((image) => {
-        let image_element = document.createElement("li");
-        image_element.classList.add("image-list-item-wrapper");
-        image_element.setAttribute("data-image-id", image);
-        image_element.innerHTML = `
-                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
-                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
-                </a>
-            `;
-        page.structure.container.querySelector(".bookmarks-panel .image-list").appendChild(image_element);
-        if (ff("remove_bookmark")) {
-          let menu = tippy_esm_default(image_element, {
-            theme: "context-menu",
-            content: html.node`
-                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bwaa--image-is-bookmarked="true">
-                            ${tl2(trans.remove_save)}
-                        </button>
-                    `,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(image_element, menu);
-        }
-      });
-      let image_list = page.structure.main.querySelectorAll(".image-list-item");
-      image_list.forEach((image_list_item) => {
-        let image_id_split = image_list_item.getAttribute("href").split("/");
-        let image_id_length = image_id_split.length;
-        let image_id = image_id_split[image_id_length - 1];
-        if (bookmarked_images[page.name].includes(image_id)) {
-          image_list_item.classList.add("image-list-item-bookmarked");
-        }
-      });
-    } else {
-      render(
-        bookmarks_panel,
-        html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">
-                        ${tl2(trans.no_images_saved)}
-                    </div>
-                </div>
-            `
-      );
-    }
-  }
-  function gallery_tab(id) {
-    page.structure.container.setAttribute("data-bwaa--gallery-tab", id);
-  }
-  function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
-    let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
-    let focused_image_id_length = focused_image_id_split.length - 1;
-    let focused_image_id = focused_image_id_split[focused_image_id_length];
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let image_is_bookmarked = false;
-    if (bookmarked_images.hasOwnProperty(page.name)) {
-      if (bookmarked_images[page.name].includes(focused_image_id)) {
-        image_is_bookmarked = true;
-        log2("focused is bookmarked", "gallery");
-      }
-    }
-    const save_btn = html.node`
-        <button class="bleh--gallery-bookmark-image-btn btn--has-icon" data-bwaa--image-is-bookmarked=${image_is_bookmarked} onclick=${() => update_image_bookmark(save_btn, focused_image_id)}>
-            ${tl2(trans.save)}
-        </button>
-    `;
-    gallery_interactions.appendChild(save_btn);
-  }
-  function update_image_bookmark(button, id) {
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let is_bookmarked = button.getAttribute("data-bwaa--image-is-bookmarked") == "true";
-    if (!bookmarked_images.hasOwnProperty(page.name))
-      bookmarked_images[page.name] = [];
-    if (is_bookmarked) {
-      button.setAttribute("data-bwaa--image-is-bookmarked", "false");
-      let new_artist_bookmarks = [];
-      for (let image in bookmarked_images[page.name]) {
-        if (bookmarked_images[page.name][image] != id) {
-          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
-        }
-      }
-      bookmarked_images[page.name] = new_artist_bookmarks;
-      log2(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
-    } else {
-      button.setAttribute("data-bwaa--image-is-bookmarked", "true");
-      bookmarked_images[page.name].push(id);
-      log2(`image ${id} from ${page.name} added to bookmarks`, "gallery");
-    }
-    set_storage("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
-  }
-
-  // src/components/colourful_counts.js
-  function patch_artist_ranks_in_list_view(track) {
-    let count_bar = track.querySelector(".chartlist-count-bar");
-    if (!count_bar) return;
-    let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
-    if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
-      return;
-    let count = count_bar.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value");
-    if (!count_bar.hasAttribute("data-kate-processed")) {
-      count_bar.setAttribute("data-kate-processed", "true");
-      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
-      count_bar.setAttribute("data-bwaa--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-      count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-      count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-      count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-    }
-  }
-  function parse_scrobbles_as_rank(scrobbles) {
-    let scrobble_milestone = 0;
-    let scrobble_proximity = 0;
-    let max_rank = 15;
-    for (let rank = max_rank; rank >= 0; rank--) {
-      if (scrobbles >= ranks[rank].start) {
-        scrobble_milestone = rank;
-        break;
-      }
-    }
-    let milestone_hue = ranks[scrobble_milestone].hue;
-    let milestone_sat = ranks[scrobble_milestone].sat;
-    let milestone_lit = ranks[scrobble_milestone].lit;
-    if (scrobble_milestone < max_rank) {
-      let current_start = ranks[scrobble_milestone].start;
-      let next_start = ranks[scrobble_milestone + 1].start;
-      scrobble_proximity = (scrobbles - current_start) / (next_start - current_start);
-    }
-    if (scrobble_milestone < max_rank) {
-      let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
-      let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
-      let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
-      milestone_hue = interpolate_hue(milestone_hue, next_milestone_hue, scrobble_proximity);
-      milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
-      milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
-    }
-    log2(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
-    return {
-      milestone: scrobble_milestone,
-      proximity: scrobble_proximity,
-      hue: milestone_hue,
-      sat: milestone_sat,
-      lit: milestone_lit
-    };
-  }
-
-  // src/components/profile_shortcut.js
-  unsafeWindow._open_profile_shortcut_window = function() {
-    open_profile_shortcut_window();
-  };
-  function open_profile_shortcut_window() {
-    let modal = dialog({
-      id: "profile_shortcut",
-      title: tl2(trans.profile_shortcut.name),
-      body: html.node`
-            ${setting({ id: "profile_shortcut", text: false, focus: true, standalone: true })}
-        `
-    });
-    modal.querySelector("#text-profile_shortcut").focus();
-  }
-  unsafeWindow._other_listener = function(id) {
-    other_listener(id);
-  };
-  function other_listener(id) {
-    let input2;
-    let submit;
-    dialog({
-      id: "other_listener",
-      title: tl2(trans.view_others_library),
-      body: html.node`
-        <div class="setting standalone" data-type="text">
-            <div class="avatar-container">
-                <div class="avatar-inner avatar--bleh-missing">
-                    <img>
-                </div>
-            </div>
-            <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl2(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name = input2.value;
-        let link = id;
-        dialog_rm({
-          id: "other_listener"
-        });
-        window.location.href = `${root}user/${name}/library/music/${link}`;
-      }}>${tl2(trans.done)}</button>
-            </div>
-        </div>
-        `
-    });
-    input2.addEventListener("keydown", (event3) => {
-      if (event3.keyCode === 13) {
-        event3.preventDefault();
-        submit.click();
-      }
-    });
-    tippy_esm_default(submit, {
-      content: tl2(trans.save)
-    });
-    input2.focus();
-  }
-  unsafeWindow._save_profile_shortcut = function() {
-    let profile_name = document.getElementById("text-profile_shortcut").value;
-    let profile_img = document.getElementById("avatar-profile_shortcut");
-    if (profile_name == "" || profile_name == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      save_setting("profile_shortcut", "");
-      return;
-    }
-    profile_img.classList.add("requesting");
-    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("DOC", doc);
-      profile_img.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        set_storage("bleh_profile_shortcut_avi", avatar_src);
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl2(trans.profile_shortcut.name),
-          body: tl2(trans.profile_shortcut.linked).replace(
-            "{u}",
-            profile_name
-          ),
-          icon: "icon-16-profile-shortcut"
-        });
-        save_setting("profile_shortcut", profile_name);
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl2(trans.profile_shortcut.name),
-          body: tl2(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      }
-    });
-  };
-
-  // src/components/about_artist.js
-  function bleh_about_artist() {
-    let legacy_container = page.structure.main.querySelector(".about-artist");
-    if (!legacy_container) return;
-    let avatar2 = legacy_container.querySelector(
-      ".gallery-preview-image--0 img"
-    );
-    let listeners = legacy_container.querySelector(".about-artist-listeners");
-    let tags = legacy_container.querySelector(".about-artist-tags");
-    let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
-    if (wiki) wiki.classList.remove("visible-lg");
-    let about_artist_container = legacy_container.parentElement;
-    about_artist_container.classList.add("about-artist-container");
-    render(
-      about_artist_container,
-      html`
-            <div class="about-artist-panel">
-                <div class="avatar-side">
-                    ${avatar2 ? html.node`
-                    <img src=${avatar2.getAttribute("src")}>
-                    <a onclick=${() => expand_avatar(avatar2.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
-                ` : html.node`
-                    <img class="missing-artist">
-                `}
-                </div>
-                <div class="info-side">
-                    <div class="sub-text">${tl2(trans.about)}</div>
-                    <h1>
-                        <a
-                            href="${root}music/${redirect()}${sanitise(
-        page.sister
-      )}"
-                            >${correct_artist(page.sister)}</a
-                        >
-                    </h1>
-                    ${listeners} ${tags} ${wiki}
-                </div>
-            </div>
-            ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl2(trans.others_featured)}</div>` : ""}
-        `
-    );
-    if (page.sister_others.length > 0) {
-      about_artist_container.appendChild(html.node`
-            <div class="about-guest-features-panel">
-                ${page.sister_others.map((guest) => {
-        return html.node`
-                        <a class="about-guest-feature" href="${root}music/${redirect()}${sanitise(guest)}">
-                            ${guest}
-                        </a>
+      page.structure.main.appendChild(side_actions);
+    const presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
+    const standards = [
+      tl2(trans.wiki_standard_tracks),
+      tl2(trans.wiki_standard_artists),
+      tl2(trans.wiki_standard_quotations)
+    ];
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-presets-panel">
+            <h3 class="text-18">${tl2(trans.symbol_presets)}</h3>
+            <div class="presets">
+                ${presets.map((preset) => {
+      let item = html.node`
+                        <div class="preset" onclick=${() => copy(preset)}>
+                            ${preset}
+                        </div>
                     `;
-      })}
+      tippy_esm_default(item, {
+        content: tl2(trans.click_to_copy),
+        delay: [500, 0]
+      });
+      return item;
+    })}
             </div>
-        `);
+            <ul class="wiki-standards generic-list">
+                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
+            </ul>
+        </section>
+    `);
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-syntax-panel bleh--blank-panel">
+            <h3 class="text-18">${tl2(trans.fancy_syntax)}</h3>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[artist]julie[/artist]</div>
+                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`) }}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
+                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`) }}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[track artist=julie]very little effort[/track]</div>
+                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`) }}</div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
+                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`) }}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
+                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`) }}</div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[tag]grunge[/tag]</div>
+                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`) }}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[user]${auth.name}[/user]</div>
+                    <div class="detail-side">${{ html: tl2(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`) }}</div>
+                </div>
+            </div>
+        </section>
+    `);
+    let rules = page.structure.main.querySelector(".wiki-style-rules");
+    rules.removeAttribute("id");
+    let rules_panel = document.createElement("section");
+    rules_panel.classList.add("rules-panel");
+    rules_panel.setAttribute("id", "stylerules");
+    rules_panel.innerHTML = rules.innerHTML;
+    page.structure.side.appendChild(rules_panel);
+  }
+  function patch_wiki() {
+    if (ff("show_wiki_label")) {
+      let wiki_col = page.structure.main.querySelector(".wiki-column");
+      let wiki_empty = false;
+      if (!wiki_col) wiki_col = page.structure.main.querySelector(".wiki-section");
+      if (!wiki_col) return;
+      let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
+      if (!wiki_block) {
+        wiki_block = wiki_col.querySelector(".wiki-block-cta");
+        wiki_empty = true;
+      }
+      let read_more = wiki_block.querySelector("a:last-child");
+      if (read_more) {
+        read_more.classList.add("read-more");
+        read_more.textContent = tl2(trans.read_more).toLowerCase();
+      }
+      wiki_col.insertBefore(html.node`
+            <div class="sub-text">
+                <p>${tl2(trans.about)}</p>
+                <span class="right-links">
+                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl2(trans.edit_wiki).toLowerCase()}</a></p>
+                    ${!wiki_empty && read_more ? html.node`<p>${read_more}</p>` : ""}
+                </span>
+            </div>
+        `, wiki_col.firstElementChild);
+      if (!wiki_empty)
+        patch_wiki_contents(wiki_block);
     }
-    page.structure.side.appendChild(about_artist_container);
+  }
+  function patch_wiki_contents(wiki_block) {
+    let links = wiki_block.querySelectorAll("a");
+    links.forEach((link) => {
+      let href = link.getAttribute("href");
+      let type;
+      let name = link.textContent.trim();
+      let sister;
+      if (!href.startsWith(root)) {
+        if (href && is_link_external(href)) {
+          const url = new URL(href);
+          const scheme = url.protocol;
+          const hostname = url.hostname;
+          const path = url.pathname + url.search + url.hash;
+          let dangerous = false;
+          if (!scheme || !scheme.startsWith("http")) dangerous = true;
+          link.addEventListener("click", (e) => {
+            if (settings.trusted_sites.includes(hostname)) return;
+            e.preventDefault();
+            external_url_prompt(href, dangerous);
+          });
+          if (link.textContent != href) {
+            tippy_esm_default(link, {
+              theme: "name-sister-combo",
+              content: html.node`
+                            <span class="name">
+                                <span class="link">
+                                    ${scheme != "https:" ? html.node`
+                                    <span class="scheme">
+                                        ${scheme}//
+                                    </span>
+                                    ` : ""}
+                                    ${hostname ? html.node`
+                                    <span class="hostname">
+                                        ${hostname}
+                                    </span>
+                                    ` : html.node`
+                                    <span class="hostname">
+                                        ${path}
+                                    </span>
+                                    `}
+                                    ${path != "/" && hostname ? html.node`
+                                    <span class="path">
+                                        ${path}
+                                    </span>
+                                    ` : ""}
+                                </span>
+                            </span>
+                            <span class="sister">${tl2(trans.external)}</span>
+                        `
+            });
+          }
+          return;
+        }
+      }
+      if (href.endsWith("/+wiki")) return;
+      href = href.replace(root, "").replace("music/+noredirect/", "music/").replace("music/", "");
+      if (href.startsWith("user/")) return;
+      if (href.startsWith("tag/")) {
+        type = "tag";
+      } else {
+        let split = href.split("/");
+        if (split.length == 1) {
+          type = "artist";
+        } else if (split.length == 2) {
+          type = "album";
+          name = desanitise(split[1]);
+          sister = desanitise(split[0]);
+        } else if (split.length == 3) {
+          type = "track";
+          name = desanitise(split[2]);
+          sister = desanitise(split[0]);
+        }
+      }
+      if (sister)
+        tippy_esm_default(link, {
+          theme: "name-sister-combo",
+          content: html.node`
+                    <span class="name">${name}</span>
+                    <span class="sister">${sister}</span>
+                `
+        });
+      if (type) link.setAttribute("data-link-type", type);
+    });
   }
 
   // src/pages/tag.js
@@ -28714,7 +27334,6 @@
     }
     if (!is_subpage) {
       show_your_scrobbles();
-      bleh_music_page_charts();
       bleh_about_artist();
       bleh_tags_mini();
       let similar_tracks = page.structure.main.querySelector(
@@ -28805,39 +27424,39 @@
     const info_panel = page.structure.main.firstElementChild;
     let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
     if (!oracle_cache[artist]) oracle_cache[artist] = {};
-    let cache2 = oracle_cache[artist][item] || {
+    let cache3 = oracle_cache[artist][item] || {
       album: {},
       track: {}
     };
     log2("loaded cache", "oracle", "info", {
       oracle_cache,
-      cache: cache2
+      cache: cache3
     });
-    if (!cache2.album?.expire || Date.now() > cache2.album.expire) {
+    if (!cache3.album?.expire || Date.now() > cache3.album.expire) {
       log2("album cache expired", "oracle", "info", {
-        expire: cache2.album?.expire,
+        expire: cache3.album?.expire,
         now: Date.now()
       });
-      cache2.album = {};
+      cache3.album = {};
     }
-    if (!cache2.track?.expire || Date.now() > cache2.track.expire) {
+    if (!cache3.track?.expire || Date.now() > cache3.track.expire) {
       log2("track cache expired", "oracle", "info", {
-        expire: cache2.track?.expire,
+        expire: cache3.track?.expire,
         now: Date.now()
       });
-      cache2.track = {};
+      cache3.track = {};
     }
     function oracle_save_cache(type, bump = true) {
       if (bump) {
         const day = 24 * 60 * 60 * 1e3;
-        cache2[type].expire = Date.now() + day * 7;
-        cache2[type].date = Date.now();
+        cache3[type].expire = Date.now() + day * 7;
+        cache3[type].date = Date.now();
       }
       oracle_cache[artist][item] = {
         ...oracle_cache[artist][item],
-        ...cache2
+        ...cache3
       };
-      log2("saved to cache", "oracle", "info", { oracle_cache, cache: cache2 });
+      log2("saved to cache", "oracle", "info", { oracle_cache, cache: cache3 });
       set_storage("bleh_oracle_cache", JSON.stringify(oracle_cache));
     }
     page.structure.main.insertBefore(
@@ -28958,9 +27577,9 @@
           }
           log2("received artist data", "oracle", "info", { data: data2 });
           artist_data = data2.artists[0];
-          cache2[artist] = artist_data;
-          if (Object.keys(cache2).length > 100) delete cache2[0];
-          set_storage("oracle_artist_ids", JSON.stringify(cache2));
+          cache3[artist] = artist_data;
+          if (Object.keys(cache3).length > 100) delete cache3[0];
+          set_storage("oracle_artist_ids", JSON.stringify(cache3));
           tries = 2;
           oracle_connect();
         },
@@ -29072,7 +27691,7 @@
             data: data2,
             release
           });
-          cache2.album.fetch = data2;
+          cache3.album.fetch = data2;
           oracle_save_cache("album");
           return;
         }
@@ -29237,7 +27856,7 @@
           }
           log2("received connect album data", "oracle", "info", { data: data3 });
           page.state.oracle = data3;
-          cache2.album.fetch = data3;
+          cache3.album.fetch = data3;
           oracle_save_cache("album");
           oracle_album(data3);
         },
@@ -29398,7 +28017,7 @@
     }
     function oracle_track_releases_process(data2) {
       const recording = oracle_pick_recording(data2);
-      if (recording) cache2.track.recording = recording;
+      if (recording) cache3.track.recording = recording;
       oracle_save_cache("track");
       oracle_track_releases(recording);
     }
@@ -29656,9 +28275,9 @@
                                         </div>
                                     `;
               if (index3 == 0) {
-                cache2.track.name = title;
-                cache2.track.sister = artist2;
-                cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
+                cache3.track.name = title;
+                cache3.track.sister = artist2;
+                cache3.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
                 if (artwork) {
                   create_avatar(
                     page.state.avatar_side,
@@ -29834,9 +28453,9 @@
           ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
         );
         if (index3 == 0) {
-          cache2.track.name = title;
-          cache2.track.sister = artist2;
-          cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
+          cache3.track.name = title;
+          cache3.track.sister = artist2;
+          cache3.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
           create_avatar(
             page.state.avatar_side,
             artwork,
@@ -30380,81 +28999,6 @@
       your_listens.listens = clean_number(scrobble_button.textContent.trim());
     }
     create_listen_item(listen_container, your_listens, page.type);
-    if (settings.starred_friend != "") {
-      const cache2 = await load_profile_cache_externally(
-        settings.starred_friend
-      );
-      let shortcut_listens = {
-        name: settings.starred_friend,
-        listens: -1,
-        link: scrobble_page,
-        avi: cache2.avatar,
-        katsune
-      };
-      const listen_item = create_listen_item(
-        listen_container,
-        shortcut_listens
-      );
-      fetch(
-        `${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`
-      ).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        const doc = new DOMParser().parseFromString(dom, "text/html");
-        let first_metadata_item = doc.querySelector(
-          ".metadata-item .metadata-display"
-        );
-        let listens = 0;
-        if (first_metadata_item)
-          listens = clean_number(
-            first_metadata_item.textContent.trim()
-          );
-        let p;
-        listen_item.setAttribute("data-listens", listens);
-        render(
-          listen_item,
-          html`
-                        <img
-                            class="view-item-avatar"
-                            src=${shortcut_listens.avi}
-                            alt=${shortcut_listens.name}
-                        />
-                        <div class="listen-badge star colourful">
-                            <div class="bleh-icon" />
-                        </div>
-                        <div class="info">
-                            <h3>${shortcut_listens.name}</h3>
-                            <p class="colourful" ref=${(el) => p = el}>
-                                ${tl2(trans.listens.count).replace(
-            "{c}",
-            listens.toLocaleString(lang)
-          )}
-                            </p>
-                        </div>
-                    `
-        );
-        if (settings.colourful_counts && page.type == "artist") {
-          let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
-          listen_item.setAttribute(
-            "data-bwaa--scrobble-milestone",
-            parsed_scrobble_as_rank.milestone
-          );
-          p.style.setProperty(
-            "--hue-over",
-            parsed_scrobble_as_rank.hue
-          );
-          p.style.setProperty(
-            "--sat-over",
-            parsed_scrobble_as_rank.sat
-          );
-          p.style.setProperty(
-            "--lit-over",
-            parsed_scrobble_as_rank.lit
-          );
-        }
-      });
-    }
     if (page.type != "artist") listen_container.appendChild(create_divider());
     create_listen_item(
       listen_container,
@@ -31090,29 +29634,6 @@
                 </div>
             `
       );
-      let menu = tippy_esm_default(listen_item, {
-        theme: "context-menu",
-        content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${tl2(trans.profile)}
-                </a>
-                <div class="sep"></div>
-                <button class="dropdown-menu-clickable-item" onclick=${() => open_starred_friend_window()} data-menu-item="settings">
-                    ${tl2(trans.settings)}
-                </button>
-            `,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event3) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(listen_item, menu);
     } else if (listens == -3) {
       listen_item.classList.add("listen-item-other");
       listen_item.removeAttribute("href");
@@ -31318,71 +29839,6 @@
       page.structure.side.firstElementChild
     );
   }
-  function bleh_music_page_charts() {
-    if (!ff("music_page_charts")) return;
-    log2("beginning replacement", "music charts");
-    let panel = page.structure.container.querySelector(".listen-panel");
-    let trend = panel.querySelector(".listener-trend");
-    if (!trend) return;
-    let previous_chart = panel.querySelector(".scrobble-canvas-container");
-    if (previous_chart) panel.removeChild(previous_chart);
-    let table = trend.querySelector("tbody");
-    let days = table.querySelectorAll("tr");
-    let labels = [];
-    let values = [];
-    let has_seen_more_than_0 = false;
-    days.forEach((day, index3) => {
-      if (!day) return;
-      let label = DateTime.fromISO(
-        day.querySelector("time").getAttribute("datetime")
-      );
-      let value = day.querySelector(".js-value");
-      console.log("day", index3, label, day, day.innerHTML);
-      if (!value.getAttribute("data-value")) value = 0;
-      else value = value.getAttribute("data-value");
-      if (value == "0" && index3 < 120 && !has_seen_more_than_0) return;
-      has_seen_more_than_0 = true;
-      labels.push(label);
-      values.push(value);
-    });
-    prep_chart_colours();
-    let scrobble_canvas_container = document.createElement("div");
-    scrobble_canvas_container.classList.add("scrobble-canvas-container");
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-canvas");
-    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-    try {
-      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-    } catch (e) {
-      gradient = page.state.chart_colours.link_bg_col;
-    }
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-      type: "line",
-      data: {
-        labels,
-        datasets: [
-          {
-            data: values,
-            borderWidth: 2,
-            backgroundColor: gradient,
-            borderColor: page.state.chart_colours.link_col,
-            fill: true,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }
-        ]
-      },
-      options: page.state.chart_line_options
-    });
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-    panel.appendChild(scrobble_canvas_container);
-    trend.style.setProperty("display", "none");
-    log2("finished", "music charts");
-  }
   function bleh_top_listeners() {
     if (!ff("unify_top_listeners")) return;
     const panel = page.structure.main.querySelector(
@@ -31556,4591 +30012,6 @@
         host: "instagram.com"
       }
     };
-  }
-
-  // src/pages/glacier.js
-  function bleh_user_library() {
-    let date_items = page.structure.side.querySelectorAll(
-      ":scope > :is(div, figure)"
-    );
-    let date_panel = html.node`
-        <section class="date-panel" data-glacier-graphs=${settings.glacier_library_graphs} />
-    `;
-    date_items.forEach((item, index3) => {
-      date_panel.appendChild(item);
-      if (item.classList.contains("row")) item.classList = "date-selector";
-      if (index3 == 0) page.structure.glacier.selector = item;
-    });
-    if (date_items.length > 0) {
-      if (!page.mobile) page.structure.side.appendChild(date_panel);
-      else
-        page.structure.main.insertBefore(
-          date_panel,
-          page.structure.main.firstChild
-        );
-    }
-    page.structure.glacier.date_panel = date_panel;
-    let search = page.structure.content_top.querySelector(".library-search");
-    let nav = page.structure.content_top.querySelector(".library-controls nav");
-    let tabs = nav.querySelector(".navlist-items");
-    if (page.name == auth.name) {
-      let velocity_tab = document.createElement("li");
-      velocity_tab.classList.add(
-        "navlist-item",
-        "secondary-nav-item",
-        "secondary-nav-item--velocity"
-      );
-      velocity_tab.innerHTML = `
-            <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
-                ${tl2(trans.velocity)}
-            </a>
-        `;
-      tabs.appendChild(velocity_tab);
-    } else {
-      tabs.appendChild(html.node`
-            <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
-                <a class="secondary-nav-item-link" href="${root}bleh/minis/compare?profile=${page.name}">
-                    ${tl2(trans.compare)}
-                </a>
-            </li>
-        `);
-    }
-    let scrobbles = tabs.querySelector(".secondary-nav-item--overview");
-    scrobbles.classList.remove("secondary-nav-item--overview");
-    scrobbles.classList.add("secondary-nav-item--scrobbles");
-    if (ff("mualani")) {
-      let toolbar = html.node`
-            <div class="toolbar">
-                ${search}
-                ${nav}
-            </div>
-        `;
-      nav.classList.add("redesigned-navigation");
-      page.structure.content_top.style.display = "none";
-      page.structure.row.insertBefore(
-        toolbar,
-        page.structure.row.firstElementChild
-      );
-    }
-    if (!ff("glacier_library")) return;
-    if (settings.glacier_library_graphs && date_items.length > 0) {
-      let chart_view_selector = document.createElement("div");
-      chart_view_selector.classList.add(
-        "view-buttons",
-        "chart-view-selector",
-        "view-buttons-middle"
-      );
-      chart_view_selector.innerHTML = `
-            <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
-                ${tl2(trans.line)}
-            </button>
-            <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
-                ${tl2(trans.pie)}
-            </button>
-            <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
-                ${tl2(trans.bar)}
-            </button>
-        `;
-      page.structure.glacier.selector.after(chart_view_selector);
-      let chart_axis_selector = document.createElement("div");
-      chart_axis_selector.classList.add(
-        "view-buttons",
-        "chart-axis-selector",
-        "view-buttons-middle"
-      );
-      chart_axis_selector.innerHTML = `
-            <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
-                ${tl2(trans.horizontal)}
-            </button>
-            <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
-                ${tl2(trans.vertical)}
-            </button>
-        `;
-      chart_view_selector.after(chart_axis_selector);
-      refresh_all(page.structure.glacier.date_panel);
-    }
-    if (date_items.length > 0) bleh_glacier_library_date();
-    if (page.subpage == "library_overview" || page.subpage.endsWith("-search")) {
-      bleh_glacier_library_top(true);
-      const pagination = page.structure.main.querySelector(
-        ":scope > .pagination"
-      );
-      page.structure.main.appendChild(html.node`
-            <section class="pagination-panel">
-                ${pagination}
-            </section>
-        `);
-      page.state.glacier.insights = {
-        artist: {
-          display: false,
-          values: [],
-          labels: [],
-          highest: {
-            value: 0,
-            label: "",
-            link: "",
-            img: ""
-          }
-        },
-        album: {
-          display: false,
-          values: [],
-          labels: [],
-          highest: {
-            value: 0,
-            label: "",
-            link: "",
-            img: ""
-          }
-        },
-        track: {
-          display: false,
-          values: [],
-          labels: [],
-          highest: {
-            value: 0,
-            label: "",
-            link: "",
-            img: ""
-          }
-        }
-      };
-    }
-    if (date_items.length > 0 && (page.subpage == "library_overview" || page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_"))) {
-      log2("refresh is now marked true", "glacier library");
-      page.structure.glacier.refresh = true;
-      bleh_glacier_date_graph(true);
-    }
-    if (page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_")) {
-      bleh_glacier_library_focused();
-    }
-  }
-  function bleh_glacier_library_date() {
-    let button = page.structure.glacier.date_panel.querySelector(
-      ".date-range-picker-button.disclose-trigger:not([data-glacier-library-date])"
-    );
-    if (!button) return;
-    button.setAttribute("data-glacier-library-date", "true");
-    console.info("button", button);
-    let date_picker = page.structure.glacier.date_panel.querySelector(
-      ".library-controls-datepicker"
-    );
-    let old_date_btn = date_picker.querySelector(
-      ".date-range-picker-button:not(.disclose-trigger)"
-    );
-    if (old_date_btn) old_date_btn.remove();
-    let date_btn = html.node`
-        <button class="date-range-picker-button">${button.querySelector(".date-range-picker-button-inner").textContent}</button>
-    `;
-    date_picker.appendChild(date_btn);
-    let picker_content = page.structure.glacier.date_panel.querySelector(
-      ".date-range-picker-content:not([data-glacier-library-date])"
-    );
-    if (!picker_content) return;
-    picker_content.setAttribute("data-glacier-library-date", "true");
-    let picker_presets = picker_content.querySelectorAll(
-      ".date-range-picker-presets-wrap > .date-range-picker-presets"
-    );
-    let params = new URLSearchParams(document.location.search);
-    page.requested.from = params.get("from");
-    page.requested.to = params.get("to");
-    page.requested.rangetype = params.get("rangetype");
-    const current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    const previous_year = current_year - 1;
-    let selected;
-    if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == "year"))
-      selected = "this_year";
-    else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == "year"))
-      selected = "last_year";
-    picker_presets[0].appendChild(html.node`
-        <li class="date-range-picker-preset ${selected == "last_year" ? "date-range-picker-preset--selected" : ""}">
-            <a href="${window.location.href.replace(window.location.search, "")}?from=${previous_year}-01-01&rangetype=year">
-                ${previous_year}
-            </a>
-        </li>
-    `);
-    picker_presets[1].appendChild(html.node`
-        <li class="date-range-picker-preset ${selected == "this_year" ? "date-range-picker-preset--selected" : ""}">
-            <a href="${window.location.href.replace(window.location.search, "")}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}
-            </a>
-        </li>
-    `);
-    picker_content.classList = "date-range-picker-content-inner";
-    const modal = tippy_esm_default(date_btn, {
-      theme: "window",
-      content: picker_content,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      hideOnClick: "toggle",
-      onClickOutside(instance, event3) {
-        console.info(
-          "modal click",
-          instance,
-          instance.popper,
-          instance.popper.querySelector('[aria-expanded="true"]'),
-          instance.popper.querySelectorAll(".date-input")
-        );
-        if (instance.popper.querySelector('[aria-expanded="true"]')) {
-          return;
-        }
-        instance.hide();
-      }
-    });
-    picker_content.querySelectorAll("a, button").forEach((elem) => {
-      elem.addEventListener("click", () => {
-        console.info("modal hide due to inner click", elem);
-        modal.hide();
-      });
-    });
-    let form = picker_content.querySelector(":scope > .date-range-picker-form");
-    let from_group = form.querySelector(".form-group--from");
-    let from_input = from_group.querySelector("input");
-    let to_group = form.querySelector(".form-group--to");
-    let to_input = to_group.querySelector("input");
-    form.insertBefore(
-      html.node`
-        <div class="input-group library-date-group">
-            ${input({
-        type: "date",
-        value: from_input.value,
-        name: from_input.name,
-        min: "2000-01-01",
-        show_time: false
-      })}
-            <div class="bleh-icon" style="--icon: var(--icon-16-arrow-right)" />
-            ${input({
-        type: "date",
-        value: to_input.value,
-        name: to_input.name,
-        min: "2000-01-01",
-        show_time: false
-      })}
-        </div>
-    `,
-      form.firstChild
-    );
-    from_group.remove();
-    to_group.remove();
-  }
-  function bleh_glacier_library() {
-    bleh_glacier_library_table();
-    bleh_glacier_library_top();
-    bleh_glacier_date_graph();
-  }
-  function bleh_glacier_library_table() {
-    if (!ff("glacier_library")) return;
-    let table = page.structure.glacier.date_panel.querySelector(".highcharts-root");
-    if (table == null) return;
-    console.log("glacier library", table);
-    log2("refresh is now marked false (table log)", "glacier library", "log");
-    page.structure.glacier.refresh = false;
-    let current_view = page.structure.glacier.date_panel.querySelector(
-      ".date-range-picker-button-inner"
-    );
-    if (current_view == null) {
-      console.log(
-        "glacier library current view",
-        page.structure.glacier.date_panel.innerHTML
-      );
-      log2("returned as current view is null", "glacier library");
-      log2("refresh is now marked true", "glacier library");
-      page.structure.glacier.refresh = true;
-      return;
-    }
-    if (table.hasAttribute("data-glacier-library-table")) return;
-    table.setAttribute("data-glacier-library-table", "true");
-    page.structure.glacier.table = table;
-    log2("refresh is now marked true (table found)", "glacier library");
-    page.structure.glacier.refresh = true;
-    log2("pending refresh", "glacier library");
-  }
-  function bleh_glacier_library_top(static_page = false) {
-    if (!ff("glacier_library")) return;
-    let legacy_top_header;
-    if (!static_page)
-      legacy_top_header = page.structure.main.querySelector(".library-top");
-    else
-      legacy_top_header = page.structure.main.querySelector(".metadata-list");
-    if (!legacy_top_header) return;
-    legacy_top_header.classList.add("glacier-legacy-top-header");
-    if (!static_page) {
-      if (legacy_top_header.style.getPropertyValue("display")) {
-        legacy_top_header.removeAttribute("data-glacier-library-top");
-        return;
-      }
-      if (legacy_top_header.hasAttribute("data-glacier-library-top")) return;
-      legacy_top_header.setAttribute("data-glacier-library-top", "true");
-    }
-    log2("loading top", "glacier library");
-    let metadata = legacy_top_header.querySelectorAll(".metadata-item");
-    let first_run = false;
-    let glacier_top = page.structure.glacier.top;
-    if (!glacier_top || !page.structure.main.contains(glacier_top))
-      first_run = true;
-    if (first_run) {
-      glacier_top = document.createElement("section");
-      glacier_top.classList.add("glacier-library-top");
-    }
-    let glacier_meta;
-    if (first_run) {
-      glacier_meta = document.createElement("div");
-      glacier_meta.classList.add("glacier-library-metadata");
-    } else {
-      glacier_meta = page.structure.glacier.top.querySelector(
-        ".glacier-library-metadata"
-      );
-      glacier_meta.innerHTML = "";
-    }
-    metadata.forEach((meta, index3) => {
-      let text3 = meta.querySelector(".metadata-title");
-      let value = meta.querySelector(".metadata-display").textContent;
-      if (text3) {
-        text3 = text3.textContent;
-        if (page.subpage == "library_overview") {
-          if (index3 == 1) text3 = tl2(trans.average);
-        } else if (page.subpage == "library_artists") {
-          text3 = tl2(trans.artists);
-        } else if (page.subpage == "library_albums") {
-          text3 = tl2(trans.albums);
-        } else if (page.subpage == "library_tracks") {
-          text3 = tl2(trans.tracks);
-        }
-      } else {
-        text3 = tl2(trans.results_for);
-        value = meta.querySelector(".metadata-display").textContent;
-        let start2 = value.indexOf("\u201C") + 1;
-        let end2 = value.indexOf("\u201D");
-        value = desanitise(value.substring(start2, end2));
-      }
-      glacier_meta.appendChild(html.node`
-            <div class="glacier-library-metadata-item">
-                <div class="sub-text">${text3}</div>
-                <div class="glacier-library-metadata-item-value">${value}</div>
-            </div>
-        `);
-    });
-    if (first_run) glacier_top.appendChild(glacier_meta);
-    if (!first_run) return;
-    let top_wrap = page.structure.main.querySelector(".library-top-wrap");
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "glacier-library-buttons");
-    let add_divider = false;
-    let sort = legacy_top_header.querySelector(".library-sort");
-    if (!static_page) {
-      let sort_button;
-      if (sort) {
-        sort_button = sort.querySelector(".dropdown-menu-clickable-button");
-        add_divider = true;
-        if (sort_button) {
-          sort_button.classList.add(
-            "btn",
-            "view-item",
-            "glacier-library-button"
-          );
-          let sort_menu = sort.querySelector(".dropdown-menu-clickable");
-          view_buttons.appendChild(sort_button);
-          view_buttons.appendChild(sort_menu);
-        }
-      }
-    }
-    if (!static_page && page.subpage != "library_tracks") {
-      let format_button = document.createElement("button");
-      format_button.classList.add(
-        "btn",
-        "view-item",
-        "glacier-library-button",
-        "glacier-view-button"
-      );
-      format_button.setAttribute("onclick", "_update_glacier_view()");
-      page.structure.glacier.format = format_button;
-      add_divider = true;
-      if (top_wrap.getAttribute("data-current-format") == "grid") {
-        format_button.setAttribute("data-glacier-view", "grid");
-        format_button.textContent = tl2(trans.grid);
-      } else {
-        format_button.setAttribute("data-glacier-view", "list");
-        format_button.textContent = tl2(trans.list);
-      }
-      view_buttons.appendChild(format_button);
-    }
-    if (!static_page && add_divider) {
-      let listen_divider = document.createElement("div");
-      listen_divider.classList.add("listen-divider");
-      view_buttons.appendChild(listen_divider);
-    }
-    let configure_button = document.createElement("button");
-    configure_button.classList.add(
-      "btn",
-      "view-item",
-      "glacier-library-button",
-      "glacier-configure-button",
-      "panel-settings-button"
-    );
-    configure_button.textContent = tl2(trans.settings);
-    tippy_esm_default(configure_button, {
-      content: tl2(trans.settings)
-    });
-    tippy_esm_default(configure_button, {
-      theme: "window",
-      content: html.node`
-            <div class="dialog-settings">
-                <div class="setting-group blend">
-                    ${page.subpage == "library_artists" ? setting({ id: "colourful_counts" }) : html.node`
-                                ${setting({ id: "format_guest_features" })}
-                                ${setting({ id: "show_guest_features" })}
-                            `}
-                    ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
-                                ${setting({ id: "grid_glow" })}
-                            ` : ""}
-                    ${setting({ id: "glacier_library_graphs" })}
-                </div>
-            </div>
-        `,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      hideOnClick: "toggle",
-      onClickOutside(instance) {
-        if (instance.popper.querySelector('[aria-expanded="true"]')) {
-          return;
-        }
-        instance.hide();
-      }
-    });
-    view_buttons.appendChild(configure_button);
-    glacier_top.appendChild(view_buttons);
-    page.structure.glacier.top = glacier_top;
-    page.structure.main.insertBefore(
-      glacier_top,
-      page.structure.main.firstElementChild
-    );
-  }
-  unsafeWindow._update_glacier_view = function() {
-    let format = page.structure.main.querySelector(".library-view-button");
-    if (format == null) return;
-    format.click();
-    if (format.getAttribute("href") && format.getAttribute("href").endsWith("reset")) {
-      page.structure.glacier.format.setAttribute("data-glacier-view", "list");
-      page.structure.glacier.format.textContent = tl2(trans.list);
-    } else {
-      page.structure.glacier.format.setAttribute("data-glacier-view", "grid");
-      page.structure.glacier.format.textContent = tl2(trans.grid);
-    }
-  };
-  function bleh_glacier_date_graph(static_page = false, own_table = null) {
-    if (!page.structure.glacier.refresh) return;
-    if (!settings.glacier_library_graphs) return;
-    log2("reviewing graph situation", "glacier library");
-    if (own_table != null) {
-      log2(
-        "table has been passed to function (from network request presumably?)",
-        "glacier library",
-        "info",
-        own_table
-      );
-    } else {
-      log2(
-        "no table has been passed, must source ourselves",
-        "glacier library"
-      );
-    }
-    bleh_glacier_library_date();
-    let current_view = page.structure.glacier.date_panel.querySelector(
-      ".date-range-picker-button-inner"
-    );
-    if (!current_view) return;
-    current_view = current_view.textContent.trim();
-    let tab_matches;
-    if (page.name == page.state.glacier.name && (page.subpage == "library_overview" || page.subpage == "library_artists" || page.subpage == "library_albums" || page.subpage == "library_tracks") && (page.state.glacier.current_tab == "library_overview" || page.state.glacier.current_tab == "library_artists" || page.state.glacier.current_tab == "library_albums" || page.state.glacier.current_tab == "library_tracks"))
-      tab_matches = true;
-    if (page.state.glacier.current_view == current_view && !own_table && tab_matches) {
-      bleh_glacier_date_graph_generate();
-      log2("refresh is now marked false", "glacier library");
-      page.structure.glacier.refresh = false;
-      log2(
-        `returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} (${page.state.glacier.name}) and current tab is ${page.subpage} (${page.name})`,
-        "glacier library"
-      );
-      return;
-    }
-    page.state.glacier.current_view = current_view;
-    let scrobble_chart_content = page.structure.row.querySelector(
-      "#scrobble-chart-content"
-    );
-    if (!scrobble_chart_content) return;
-    if (scrobble_chart_content.getAttribute("data-highcharts-chart") && scrobble_chart_content.getAttribute("data-highcharts-chart") == "0") {
-      log2("highchart registered", "glacier library");
-      log2("refresh is now marked false", "glacier library");
-      page.structure.glacier.refresh = false;
-      return;
-    }
-    let scrobble_chart_wrap = page.structure.row.querySelector(".scrobble-table");
-    if (!scrobble_chart_wrap) return;
-    let scrobble_table;
-    if (own_table) scrobble_table = own_table;
-    else scrobble_table = scrobble_chart_wrap.querySelector(".table");
-    if (!scrobble_table) {
-      let request_url;
-      if (window.location.search == "")
-        request_url = `${window.location.href}/chart?ajax=1`;
-      else
-        request_url = window.location.href.replace(
-          window.location.search,
-          `/chart${window.location.search}&ajax=1`
-        );
-      bleh_glacier_library_request(request_url);
-      return;
-    }
-    let chart_type = scrobble_table.getAttribute("data-bucket-size");
-    let entries2 = scrobble_table.querySelectorAll("tbody tr");
-    page.state.glacier.labels = [];
-    page.state.glacier.links = [];
-    page.state.glacier.values = [];
-    let values_not_empty = 0;
-    entries2.forEach((entry) => {
-      let period = entry.querySelector(".js-period a");
-      let value = entry.querySelector(".js-scrobbles").textContent.trim();
-      page.state.glacier.labels.push(period.textContent.trim());
-      page.state.glacier.links.push(period.getAttribute("href"));
-      page.state.glacier.values.push(value);
-      if (value != "0") values_not_empty += 1;
-    });
-    if (values_not_empty == 0) {
-      log2("graph cancelled as all values are 0", "glacier library");
-      page.structure.glacier.refresh = false;
-      return;
-    }
-    scrobble_table.innerHTML = "";
-    bleh_glacier_date_graph_generate();
-    log2("refresh is now marked false (finished generating)", "glacier library");
-    page.structure.glacier.refresh = false;
-  }
-  function bleh_glacier_insights(insights = null) {
-    if (insights) {
-      if (page.subpage == "library_artists") {
-        page.state.glacier.insights.album.display = false;
-        page.state.glacier.insights.track.display = false;
-      }
-      if (page.subpage == "library_albums") {
-        page.state.glacier.insights.artist.display = false;
-        page.state.glacier.insights.track.display = false;
-      }
-      if (page.subpage == "library_tracks") {
-        page.state.glacier.insights.artist.display = false;
-        page.state.glacier.insights.album.display = false;
-      }
-      for (let item in insights) {
-        log2(
-          `checking insights status of item ${item} - display of ${insights[item].display}`,
-          "glacier library",
-          "log",
-          {
-            checking: insights[item],
-            global: page.state.glacier.insights[item]
-          }
-        );
-        if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
-          log2(
-            `confirmed insights status of item ${item} - is different`,
-            "glacier library"
-          );
-          page.state.glacier.insights[item] = insights[item];
-          bleh_glacier_insights_generate(
-            item,
-            page.state.glacier.insights[item]
-          );
-        }
-      }
-    } else {
-      for (let item in page.state.glacier.insights) {
-        if (page.state.glacier.insights[item].display)
-          bleh_glacier_insights_generate(
-            item,
-            page.state.glacier.insights[item]
-          );
-      }
-    }
-  }
-  function bleh_glacier_insights_generate(type, item) {
-    if (item.highest.value == 0) return;
-    log2(
-      `requesting insights generator for ${type}`,
-      "glacier library",
-      "info",
-      item
-    );
-    let new_run = false;
-    let scrobble_insights_panel = page.structure.side.querySelector(
-      `.scrobble-insights-panel[data-type="${type}"]`
-    );
-    if (!scrobble_insights_panel) {
-      scrobble_insights_panel = html.node`
-            <section class="scrobble-insights-panel" data-type=${type} />
-        `;
-      new_run = true;
-    }
-    render(scrobble_insights_panel, html` <h2>${tl2(trans[`${type}s`])}</h2> `);
-    let scrobble_canvas_container = document.createElement("div");
-    scrobble_canvas_container.classList.add(
-      "scrobble-insights-canvas-container"
-    );
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-insights-canvas");
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    if (settings.chart_insights_view == "line") {
-      let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-      try {
-        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-      } catch (e) {
-        gradient = page.state.chart_colours.link_bg_col;
-      }
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "line",
-        data: {
-          labels: item.labels,
-          datasets: [
-            {
-              data: item.values,
-              borderWidth: 2,
-              backgroundColor: gradient,
-              borderColor: page.state.chart_colours.link_col,
-              fill: true,
-              pointRadius: 0,
-              pointHitRadius: 20,
-              tension: 0.1
-            }
-          ]
-        },
-        options: page.state.chart_library_line_options_no_click
-      });
-    } else if (settings.chart_insights_view == "pie") {
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "pie",
-        data: {
-          labels: item.labels,
-          datasets: [
-            {
-              data: item.values,
-              borderWidth: 2,
-              backgroundColor: [
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-              ],
-              borderColor: page.state.chart_colours.bg_col,
-              pointRadius: 0,
-              pointHitRadius: 20,
-              tension: 0.1
-            }
-          ]
-        },
-        options: page.state.chart_library_pie_options_no_click
-      });
-    } else if (settings.chart_insights_view == "bar") {
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "bar",
-        data: {
-          labels: item.labels,
-          datasets: [
-            {
-              data: item.values,
-              borderWidth: 0,
-              backgroundColor: [
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-              ],
-              borderColor: page.state.chart_colours.bg_col,
-              pointRadius: 0,
-              pointHitRadius: 20,
-              tension: 0.1,
-              borderRadius: 9
-            }
-          ]
-        },
-        options: page.state.chart_library_bar_options_no_click
-      });
-    }
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-    scrobble_insights_panel.appendChild(scrobble_canvas_container);
-    if (new_run) page.structure.side.appendChild(scrobble_insights_panel);
-  }
-  function bleh_glacier_library_open_index(index3) {
-    const link = page.state.glacier.links[index3];
-    log2(`opening link ${link}`, "glacier library");
-    window.location.href = link;
-  }
-  function bleh_glacier_library_request(request_url) {
-    log2(`making our own request with ${request_url}`, "glacier library");
-    console.info(page.structure.glacier.refresh);
-    page.structure.glacier.refresh = false;
-    page.structure.glacier.date_panel.classList.add("data-is-loading");
-    fetch(request_url).then(function(response) {
-      console.log(
-        "glacier library returned",
-        response,
-        response.text,
-        response.status
-      );
-      if (response.status != 200) throw new Error();
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log(
-        "glacier library DOC",
-        doc,
-        doc.querySelector(".table")
-      );
-      log2("received response", "glacier library");
-      log2("refresh is now marked true", "glacier library");
-      page.structure.glacier.refresh = true;
-      let table = doc.querySelector(".table");
-      if (table != null) {
-        bleh_glacier_date_graph(false, table);
-      } else {
-        log2("table is null?", "glacier library", "error");
-        console.info("glacier library", doc.body.innerHTML);
-        console.info(
-          "glacier library",
-          new DOMParser().parseFromString(
-            doc.body.innerHTML,
-            "text/html"
-          )
-        );
-      }
-      page.structure.glacier.date_panel.classList.remove(
-        "data-is-loading"
-      );
-    });
-  }
-  function bleh_glacier_date_graph_generate() {
-    page.state.glacier.current_tab = page.subpage;
-    page.state.glacier.name = page.name;
-    log2("generating", "glacier library", "info", {
-      labels: page.state.glacier.labels,
-      links: page.state.glacier.links,
-      values: page.state.glacier.values
-    });
-    prep_chart_colours();
-    let new_run = false;
-    let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector(
-      ".scrobble-canvas-container"
-    );
-    if (scrobble_canvas_container == null) {
-      scrobble_canvas_container = document.createElement("div");
-      scrobble_canvas_container.classList.add("scrobble-canvas-container");
-      new_run = true;
-    } else {
-      scrobble_canvas_container.innerHTML = "";
-    }
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-canvas");
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    if (settings.chart_view == "line") {
-      let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-      try {
-        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-      } catch (e) {
-        gradient = page.state.chart_colours.link_bg_col;
-      }
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "line",
-        data: {
-          labels: page.state.glacier.labels,
-          datasets: [
-            {
-              data: page.state.glacier.values,
-              borderWidth: 2,
-              backgroundColor: gradient,
-              borderColor: page.state.chart_colours.link_col,
-              fill: true,
-              pointRadius: 0,
-              pointHitRadius: 20,
-              tension: 0.1
-            }
-          ]
-        },
-        options: page.state.chart_library_line_options
-      });
-    } else if (settings.chart_view == "pie") {
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "pie",
-        data: {
-          labels: page.state.glacier.labels,
-          datasets: [
-            {
-              data: page.state.glacier.values,
-              borderWidth: 2,
-              backgroundColor: [
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-              ],
-              borderColor: page.state.chart_colours.bg_col,
-              pointRadius: 0,
-              pointHitRadius: 20,
-              tension: 0.1
-            }
-          ]
-        },
-        options: page.state.chart_library_pie_options
-      });
-    } else if (settings.chart_view == "bar") {
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "bar",
-        data: {
-          labels: page.state.glacier.labels,
-          datasets: [
-            {
-              data: page.state.glacier.values,
-              borderWidth: 0,
-              backgroundColor: [
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-              ],
-              borderColor: page.state.chart_colours.bg_col,
-              pointRadius: 0,
-              pointHitRadius: 20,
-              tension: 0.1,
-              borderRadius: 9
-            }
-          ]
-        },
-        options: settings.chart_bar_axis == "horizontal" ? page.state.chart_library_bar_options : page.state.chart_library_bar_v_options
-      });
-    }
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-    if (new_run)
-      page.structure.glacier.date_panel.appendChild(
-        scrobble_canvas_container
-      );
-  }
-  function bleh_glacier_library_focused() {
-    page.state.glacier.insights.artist = {
-      display: false,
-      values: [],
-      labels: [],
-      highest: {
-        value: 0,
-        label: "",
-        link: "",
-        img: ""
-      }
-    };
-    let legacy_header = page.structure.main.querySelector(".library-header");
-    let type;
-    if (page.subpage.startsWith("library_artist")) type = "artist";
-    else if (page.subpage.startsWith("library_album")) type = "album";
-    else if (page.subpage.startsWith("library_track")) type = "track";
-    let header_title = legacy_header.querySelector(".library-header-crumb");
-    if (!header_title)
-      header_title = legacy_header.querySelector(".library-header-title");
-    let duration = header_title.querySelector(".library-header-title-duration");
-    if (duration) header_title.removeChild(duration);
-    header_title = header_title.textContent.trim();
-    let artist = legacy_header.querySelector(".text-colour-link");
-    if (artist) artist = artist.textContent.trim();
-    let image = legacy_header.querySelector(".library-header-image img");
-    let link = `${root}music/${redirect()}${sanitise(header_title)}`;
-    if (type == "album")
-      link = `${root}music/${redirect()}${sanitise(artist)}/${sanitise(header_title)}`;
-    else if (type == "track")
-      link = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
-    let header = document.createElement("section");
-    header.classList.add(
-      "glacier-library-top",
-      "glacier-library-focused-header"
-    );
-    let upper_wrap = document.createElement("div");
-    upper_wrap.classList.add("glacier-library-top-upper");
-    let current_suffix = window.location.search;
-    let metadata = html.node`
-        <div class="glacier-library-metadata">
-            <div class="glacier-library-metadata-avatar">
-                ${image}
-            </div>
-            <div class="glacier-library-metadata-item">
-                <div class="sub-text">
-                    ${tl2(trans[type])}
-                </div>
-                <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html`${{ html: tl2(trans.by_artist, { a: `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>` }) }}` : ""}
-                </div>
-            </div>
-        </div>
-    `;
-    upper_wrap.appendChild(metadata);
-    header.appendChild(upper_wrap);
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "glacier-library-buttons");
-    let cta = legacy_header.querySelector(".library-header-ctas");
-    let love_form = legacy_header.querySelector(
-      ".library-header-love-form:not(:has(button))"
-    );
-    if (love_form) {
-      let state = love_form.querySelector(":scope > .love-button-toggle").getAttribute("data-ajax-form-state");
-      if (state == "loved") state = 0;
-      else state = 1;
-      let love_form_items = love_form.querySelectorAll(":scope > div > div");
-      love_form_items.forEach((item, index3) => {
-        if (state != index3) item.classList.add("hide");
-        cta.appendChild(item);
-      });
-    }
-    if (cta) {
-      let wrappers = cta.querySelectorAll(":scope > *");
-      wrappers.forEach((wrapper) => {
-        let button;
-        console.info("wrapper", wrapper);
-        if (wrapper.classList[0] == "library-header-cta-item")
-          button = wrapper;
-        else button = wrapper.querySelector("button");
-        if (!button) button = wrapper.querySelector("span");
-        if (!button) return;
-        button.classList.add("btn", "view-item", "glacier-library-button");
-        let tooltips = wrapper.querySelectorAll(
-          ".user-library-controls-tooltip"
-        );
-        tooltips.forEach((tooltip) => {
-          tooltip.parentElement.removeChild(tooltip);
-        });
-        view_buttons.appendChild(wrapper);
-        let action = button.getAttribute("data-analytics-action");
-        if (action) {
-          if (action == "EditScrobbleOpen") {
-            button.textContent = tl2(trans.edit);
-          } else if (action == "UnloveTrack" || action == "LoveTrack") {
-            let listen_divider = document.createElement("div");
-            listen_divider.classList.add("listen-divider");
-            view_buttons.appendChild(listen_divider);
-            button = wrapper.querySelector("button:not(.btn)");
-            if (button)
-              button.classList.add(
-                "btn",
-                "view-item",
-                "glacier-library-button"
-              );
-          }
-        } else {
-          if (button.classList.contains("delete-icon")) {
-            button.textContent = tl2(trans.delete);
-          }
-        }
-      });
-      if (wrappers.length > 0) {
-        let listen_divider = document.createElement("div");
-        listen_divider.classList.add("listen-divider");
-        view_buttons.appendChild(listen_divider);
-      }
-    }
-    if (page.subpage == "library_artist_overview" && auth.pro) {
-      let search = document.createElement("a");
-      search.classList.add(
-        "btn",
-        "view-item",
-        "glacier-library-button",
-        "glacier-search-button"
-      );
-      search.textContent = tl2(trans.search);
-      search.setAttribute(
-        "href",
-        `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`
-      );
-      tippy_esm_default(search, {
-        content: tl2(trans.search_guest)
-      });
-      let divider = view_buttons.querySelector(".listen-divider");
-      if (divider) view_buttons.insertBefore(search, divider);
-    }
-    let configure_button = document.createElement("button");
-    configure_button.classList.add(
-      "btn",
-      "view-item",
-      "glacier-library-button",
-      "glacier-configure-button",
-      "panel-settings-button"
-    );
-    configure_button.textContent = tl2(trans.settings);
-    tippy_esm_default(configure_button, {
-      content: tl2(trans.settings)
-    });
-    tippy_esm_default(configure_button, {
-      theme: "window",
-      content: html.node`
-            <div class="dialog-settings">
-                <div class="setting-group blend">
-                    ${setting({ id: "format_guest_features" })}
-                    ${setting({ id: "show_guest_features" })}
-                    ${setting({ id: "glacier_library_graphs" })}
-                </div>
-            </div>
-        `,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      hideOnClick: "toggle",
-      onClickOutside(instance) {
-        if (instance.popper.querySelector('[aria-expanded="true"]')) {
-          return;
-        }
-        instance.hide();
-      }
-    });
-    view_buttons.appendChild(configure_button);
-    upper_wrap.appendChild(view_buttons);
-    let lower_metadata;
-    let lower_wrap = html.node`
-        <div class="glacier-library-top-lower">
-            <div class="glacier-library-metadata" ref=${(el) => lower_metadata = el} />
-        </div>
-    `;
-    let legacy_meta_wrap = page.structure.main.querySelector(".metadata-list");
-    if (legacy_meta_wrap) {
-      let metadatas = legacy_meta_wrap.querySelectorAll(
-        ".metadata-item:not(.library-header-ctas__wrapper)"
-      );
-      metadatas.forEach((meta) => {
-        let glacier_meta_item = document.createElement("div");
-        glacier_meta_item.classList.add("glacier-library-metadata-item");
-        glacier_meta_item.innerHTML = `
-                <div class="sub-text">${meta.querySelector(".metadata-title").textContent}</div>
-                <div class="glacier-library-metadata-item-value">${meta.querySelector(".metadata-display").textContent}</div>
-            `;
-        lower_metadata.appendChild(glacier_meta_item);
-      });
-      header.appendChild(lower_wrap);
-    }
-    page.structure.main.insertBefore(
-      header,
-      page.structure.main.firstElementChild
-    );
-    let overview_headers = page.structure.main.querySelectorAll(
-      ".library-overview-header"
-    );
-    overview_headers.forEach((top2) => {
-      top2.classList = "top-container";
-      let header2 = top2.querySelector("h2");
-      let select_btn = top2.querySelector(".dropdown-menu-clickable-button");
-      if (!select_btn) {
-        top2.classList.add("spacing");
-        return;
-      }
-      select_btn.classList.add(
-        "select-button",
-        "link-select",
-        "blend-v2-btn"
-      );
-      select_btn.classList.remove("dropdown-menu-list-button");
-      header2.after(html.node`
-            <div class="accompany view-buttons blend blend-v2">
-                ${select_btn}
-            </div>
-        `);
-    });
-    let overview_header = page.structure.main.querySelector(
-      ":scope > .top-container"
-    );
-    if (!overview_header) return;
-    overview_header.nextElementSibling.insertBefore(
-      overview_header,
-      overview_header.nextElementSibling.firstElementChild
-    );
-  }
-  function bleh_glacier_library_bulk_edit() {
-    let library_header = page.structure.main.querySelector(".library-header");
-    let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
-    if (!bulk_edit) return;
-    let view_buttons = page.structure.main.querySelector(
-      ".glacier-library-buttons"
-    );
-    if (!view_buttons) return;
-    let pre_existing_bulk = view_buttons.querySelector(".bulk-edit-button");
-    if (pre_existing_bulk) return;
-    let edit_form = view_buttons.querySelector(
-      ":scope > .library-header-edit-form"
-    );
-    let delete_button = view_buttons.querySelector(":scope > .delete-icon");
-    if (!delete_button) return;
-    bulk_edit.classList.add(
-      "btn",
-      "view-item",
-      "glacier-library-button",
-      "bulk-edit-button"
-    );
-    bulk_edit.textContent = tl2(trans.bulk_edit);
-    if (!edit_form) view_buttons.insertBefore(bulk_edit, delete_button);
-    else view_buttons.insertBefore(bulk_edit, edit_form);
-  }
-
-  // src/chart.js
-  function chart_reflow() {
-    if (!document.body) return;
-    load_chart_colours();
-    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-      bleh_music_page_charts();
-    if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render();
-    if (page.type == "user" && page.subpage.startsWith("library")) {
-      bleh_glacier_date_graph_generate();
-      bleh_glacier_insights();
-    }
-  }
-  function prep_chart_colours() {
-    if (page.state.chart_colours.link_col == "hsl()")
-      load_chart_colours();
-  }
-  function load_chart_colours() {
-    let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--l3-c")})`;
-    let link_h_col = getComputedStyle(document.body).getPropertyValue("--h3-s");
-    let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 30%)`;
-    let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 2%)`;
-    let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c3")})`;
-    let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b4")}, 40%)`;
-    let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c2")})`;
-    let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--b5")})`;
-    let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b6")}, 92%)`;
-    let hue2 = getComputedStyle(document.body).getPropertyValue("--hue");
-    page.state.chart_colours = {
-      link_col,
-      link_h_col,
-      link_bg_col,
-      link_bg_col_2,
-      text_col,
-      axis_col,
-      text_primary_col,
-      bg_col,
-      root_bg_col,
-      hue: hue2,
-      font: getComputedStyle(document.body).getPropertyValue("--font")
-    };
-    console.log("chart colours", page.state.chart_colours);
-    page.state.chart_line_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "month",
-            displayFormats: {
-              month: "LLL"
-            },
-            tooltipFormat: "EEEE, LLLL d yyyy"
-          },
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          display: false,
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      }
-    };
-    page.state.chart_library_line_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          display: true,
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_line_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      }
-    };
-    page.state.chart_library_pie_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_pie_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          padding: 7,
-          cornerRadius: 10,
-          caretSize: 0
-        }
-      }
-    };
-    page.state.chart_library_bar_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_bar_v_options = {
-      indexAxis: "y",
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_bar_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      }
-    };
-  }
-
-  // src/config.js
-  function load_settings(skip2 = false) {
-    if (!skip2) {
-      for (let setting2 in settings_store) {
-        if (settings[setting2] == null)
-          settings[setting2] = settings_store[setting2].default;
-      }
-      if (!settings.version) settings.version = 1e7;
-    }
-    if (!settings.theme_type) {
-      if (settings.theme == "light" || settings.theme == "ink")
-        settings.theme_type = "light";
-      else settings.theme_type = "dark";
-    }
-    for (let setting2 in settings) {
-      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_store.hue.default && settings.sat == settings_store.sat.default && settings.lit == settings_store.lit.default)
-        continue;
-      if (settings_store[setting2] && settings_store[setting2].css)
-        document.body.style.setProperty(
-          `--${settings_store[setting2].css}`,
-          `${settings[setting2]}${settings_store[setting2].suffix || ""}`
-        );
-      document.documentElement.setAttribute(
-        `data-bwaa--${setting2}`,
-        `${settings[setting2]}`
-      );
-    }
-    load_skus();
-    compile_settings();
-    if (document.body.classList.contains("user-dashboard-layout")) {
-      document.documentElement.setAttribute("data-bwaa--theme", "oled");
-      page.state.settings_reload = true;
-    }
-    load_chart_colours();
-  }
-  function refresh_all(search = document) {
-    for (let item in settings_store)
-      update_item(item, settings[item], false, search);
-  }
-  function reset_item(item) {
-    update_item(item, settings_store[item].default);
-  }
-  function update_params(params = {}) {
-    for (let item in params) {
-      update_item(item, params[item]);
-    }
-  }
-  unsafeWindow._reset_all = function() {
-    reset_all();
-  };
-  unsafeWindow._reset_item = function(item) {
-    reset_item(item);
-  };
-  unsafeWindow._update_params = function(params = {}) {
-    update_params(params);
-  };
-  unsafeWindow._update_item = function(item, value) {
-    update_item(item, value);
-  };
-  function update_item(item, value, modify = true, search = document) {
-    let container = search.querySelector(`#container-${item}`);
-    if (container) console.info(container);
-    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
-      return;
-    try {
-      let new_value = false;
-      if (value != settings[item]) new_value = true;
-      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
-        request_reload();
-      if (settings_base[item].type == "slider" && modify)
-        settings[item] = value;
-      if (!modify) console.info(item, value, modify);
-      if (settings_base[item].type == "slider") {
-        try {
-          let slider = search.querySelector(`#slider-${item}`);
-          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
-          slider.value = settings[item];
-          search.querySelector(`#slider-track-${item}`).style.setProperty(
-            "--percent",
-            `${settings[item] / slider.getAttribute("max") * 100}%`
-          );
-        } catch (e) {
-        }
-        document.body.style.setProperty(
-          `--${settings_base[item].css}`,
-          `${value}${settings_base[item].unit}`
-        );
-        document.documentElement.setAttribute(
-          `data-bwaa--${item}`,
-          `${value}`
-        );
-        if (item == "hue" || item == "sat" || item == "lit") {
-          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
-            document.body.style.removeProperty(
-              `--${settings_base.hue.css}`
-            );
-            document.body.style.removeProperty(
-              `--${settings_base.sat.css}`
-            );
-            document.body.style.removeProperty(
-              `--${settings_base.lit.css}`
-            );
-            document.documentElement.setAttribute(
-              "data-bwaa--hsl-override",
-              "true"
-            );
-          } else {
-            document.documentElement.setAttribute(
-              "data-bwaa--hsl-override",
-              "false"
-            );
-          }
-        }
-      } else if (settings_base[item].type == "toggle") {
-        if (settings[item] == settings_base[item].values[0] && modify) {
-          settings[item] = settings_base[item].values[1];
-          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.body.style.setProperty(
-            `--${item}`,
-            settings_base[item].values[1]
-          );
-          document.documentElement.setAttribute(
-            `data-bwaa--${item}`,
-            `${settings_base[item].values[1]}`
-          );
-        } else if (modify) {
-          settings[item] = settings_base[item].values[0];
-          console.log(`toggle-${item}`);
-          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          document.body.style.setProperty(
-            `--${item}`,
-            settings_base[item].values[0]
-          );
-          document.documentElement.setAttribute(
-            `data-bwaa--${item}`,
-            `${settings_base[item].values[0]}`
-          );
-        } else {
-          if (settings[item] == settings_base[item].values[0]) {
-            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          } else {
-            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          }
-        }
-      } else if (settings_base[item].type == "options") {
-        if (modify) {
-          settings[item] = value;
-          document.body.style.setProperty(`--${item}`, value);
-          document.documentElement.setAttribute(
-            `data-bwaa--${item}`,
-            value
-          );
-          let toggle2 = document.getElementById(`toggle-${item}-${value}`);
-          if (toggle2) toggle2.setAttribute("aria-checked", true);
-          let other_toggles = search.querySelectorAll(
-            `[data-toggle="${item}"]`
-          );
-          other_toggles.forEach((toggle3) => {
-            let other_value = toggle3.getAttribute("data-toggle-value");
-            if (other_value == value) return;
-            else toggle3.setAttribute("aria-checked", false);
-          });
-          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
-            bleh_glacier_date_graph_generate();
-        } else {
-          if (settings[item] == value) {
-            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
-          } else {
-            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
-          }
-        }
-      }
-      if (modify) log2(`updated ${item} to ${settings[item]}`, "settings");
-      compile_settings();
-    } catch (e) {
-    }
-    if (container) {
-      if (settings[item] != settings_base[item].value)
-        container.classList.add("modified");
-      else container.classList.remove("modified");
-    }
-    if (item == "hue" || item == "sat" || item == "lit") {
-      update_colour_swatches();
-      load_chart_colours();
-    }
-  }
-  function request_reload() {
-    if (page.type == "bleh_setup") return;
-    log2("requesting reload", "settings");
-    reload_pending.state = true;
-    notify({
-      title: tl2(trans.refresh_pending.name),
-      body: tl2(trans.refresh_pending.body),
-      icon: "icon-16-settings",
-      persist: true,
-      actions: [
-        {
-          action: () => invoke_reload(),
-          text: tl2(trans.refresh),
-          type: "refresh"
-        }
-      ]
-    });
-  }
-  unsafeWindow._invoke_reload = function() {
-    invoke_reload();
-  };
-  function invoke_reload() {
-    window.location.reload();
-  }
-  function update_colour_swatches() {
-    let found = false;
-    let custom = null;
-    let seasonal = null;
-    let swatches = page.structure.main.querySelectorAll(".swatch");
-    swatches.forEach((swatch) => {
-      let h = swatch.style.getPropertyValue("--hue-over");
-      let s2 = swatch.style.getPropertyValue("--sat-over");
-      let l2 = swatch.style.getPropertyValue("--lit-over");
-      let parent = swatch.parentElement;
-      if (swatch.classList[0] == "dropdown-menu-clickable-item")
-        parent = swatch;
-      if (h == settings.hue && s2 == settings.sat && l2 == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
-        parent.setAttribute("aria-checked", "true");
-        if (swatch.classList[0] != "dropdown-menu-clickable-item")
-          found = true;
-      } else {
-        parent.setAttribute("aria-checked", "false");
-      }
-      if (!custom && swatch.getAttribute("data-swatch-type") == "customise")
-        custom = parent;
-      if (!seasonal && swatch.getAttribute("data-swatch-type") == "default")
-        seasonal = parent;
-    });
-    if (found) return;
-    if (custom && settings.accent_type != "season")
-      custom.setAttribute("aria-checked", "true");
-    else if (seasonal) seasonal.setAttribute("aria-checked", "true");
-  }
-  unsafeWindow._reset_inbuilt_item = function(item) {
-    reset_inbuilt_item(item);
-  };
-  unsafeWindow._update_inbuilt_params = function(params = {}) {
-    update_inbuilt_params(params);
-  };
-  unsafeWindow._update_inbuilt_item = function(item, value) {
-    update_inbuilt_item(item, value);
-  };
-  function update_inbuilt_item(item, value, modify = true, element = document.body) {
-    console.warn("update item", item, value, "modify", modify);
-    let test_if_valid = element.querySelector(`#toggle-${item}`);
-    console.warn(test_if_valid, `toggle-${item}`);
-    if (test_if_valid == void 0) return;
-    if (inbuilt_settings[item].type == "toggle") {
-      if (modify) {
-        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
-        log2(`updated (inbuilt) ${item} to ${!value}`, "settings");
-      }
-      if (value == inbuilt_settings[item].values[0] && modify) {
-        element.querySelector(
-          `#inbuilt-companion-checkbox-${item}`
-        ).checked = false;
-        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-        document.documentElement.setAttribute(
-          `data-bwaa--inbuilt-${item}`,
-          inbuilt_settings[item].values[1]
-        );
-      } else if (modify) {
-        element.querySelector(
-          `#inbuilt-companion-checkbox-${item}`
-        ).checked = true;
-        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-        document.documentElement.setAttribute(
-          `data-bwaa--inbuilt-${item}`,
-          inbuilt_settings[item].values[0]
-        );
-      } else {
-        console.warn(
-          item,
-          value,
-          value == true,
-          value == false,
-          typeof value,
-          "boolean"
-        );
-        if (value == true) {
-          console.warn(item, value, "TRUE");
-          element.querySelector(
-            `#inbuilt-companion-checkbox-${item}`
-          ).checked = true;
-          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          document.documentElement.setAttribute(
-            `data-bwaa--inbuilt-${item}`,
-            true
-          );
-        } else if (value == false) {
-          console.warn(item, value, "FALSE");
-          element.querySelector(
-            `#inbuilt-companion-checkbox-${item}`
-          ).checked = false;
-          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.documentElement.setAttribute(
-            `data-bwaa--inbuilt-${item}`,
-            false
-          );
-        }
-      }
-    }
-  }
-
-  // src/seasonal.js
-  function set_season() {
-    if (!settings.seasonal) return;
-    let last_season_seen = localStorage.getItem("bwaa_last_season_seen") || "";
-    let now2 = /* @__PURE__ */ new Date();
-    log2(`it is now ${now2}`, "season", "log");
-    stored_season.offset = calculate_offset(now2);
-    log2(`calculated offset as ${stored_season.offset}`, "season");
-    let current_year = now2.getFullYear();
-    seasonal_events.forEach((season, index3) => {
-      log2(
-        `running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`,
-        "season",
-        "log"
-      );
-      log2(
-        `${now2 >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now2 <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`,
-        "season",
-        "log"
-      );
-      season.days_until = -DateTime.now().diff(
-        DateTime.fromISO(
-          season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)
-        ),
-        "days"
-      ).days;
-      season.is_next_year = false;
-      if (season.days_until < 0) {
-        season.days_until = -DateTime.now().diff(
-          DateTime.fromISO(
-            season.start.replace("y0", current_year + 1).replace("{offset}", stored_season.offset)
-          ),
-          "days"
-        ).days;
-        season.is_next_year = true;
-      }
-      if (now2 >= new Date(
-        season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)
-      ) && now2 <= new Date(
-        season.end.replace("y0", current_year).replace("{offset}", stored_season.offset)
-      )) {
-        stored_season.now = now2;
-        stored_season.year = current_year;
-        update_season_nav();
-        if (stored_season.id == season.id) return;
-        stored_season.id = season.id;
-        stored_season.start = season.start;
-        stored_season.end = season.end;
-        stored_season.snowflakes = season.snowflakes;
-        if (now2.getDate() == 31) {
-          stored_season.new_years_eve = true;
-          stored_season.seasonal_timer = setInterval(
-            update_season_nav,
-            1e3
-          );
-        } else if (stored_season.seasonal_timer) {
-          clearInterval(stored_season.seasonal_timer);
-        }
-        if (seasonal_events[index3 + 1] == null) {
-          stored_season.next_id = seasonal_events[0].id;
-          stored_season.next_start = seasonal_events[0].start;
-          stored_season.next_is_new_year = true;
-        } else {
-          stored_season.next_id = seasonal_events[index3 + 1].id;
-          stored_season.next_start = seasonal_events[index3 + 1].start;
-          stored_season.next_is_new_year = false;
-        }
-        log2(`${season.id} from ${season.start} to ${season.end}`, "season");
-        log2(
-          `next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`,
-          "season"
-        );
-        document.documentElement.setAttribute(
-          "data-bwaa--season",
-          season.id
-        );
-        if (season.snowflakes.state && settings.seasonal_particles != "none") {
-          log2("let the snow start!", "season");
-          prep_snow();
-          let snowflakes_enabled = true;
-          let snowflakes_count = season.snowflakes.count;
-          if (settings.seasonal_particles == "less" && snowflakes_count > 10)
-            snowflakes_count = snowflakes_count * 0.45;
-          begin_snowflakes(snowflakes_enabled, snowflakes_count);
-        }
-        if (last_season_seen != "" && last_season_seen != season.id) {
-          notify({
-            id: "new_season",
-            title: tl2(trans.new_season),
-            body: tl2(trans.value_for_time).replace("{v}", tl2(trans.seasonal.listing[season.id])).replace(
-              "{time}",
-              DateTime.fromISO(
-                season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
-              ).toRelative(DateTime.fromISO(stored_season.now))
-            ),
-            icon: "icon-16-season",
-            persist: true
-          });
-        }
-        set_storage("bwaa_last_season_seen", season.id);
-        load_chart_colours();
-        return;
-      }
-    });
-    let lowest = 400;
-    let next_season = {
-      start: ""
-    };
-    if (stored_season.id == "none") {
-      seasonal_events.forEach((season) => {
-        if (season.days_until < lowest) {
-          lowest = season.days_until;
-          next_season = season;
-        }
-      });
-      stored_season.now = now2;
-      stored_season.year = current_year;
-      stored_season.next_id = next_season.id;
-      stored_season.next_start = next_season.start;
-      stored_season.next_is_new_year = next_season.is_next_year;
-      log2("next season found", "season", "info", {
-        next: next_season,
-        stored: stored_season,
-        date: stored_season.next_start.replace(
-          "y0",
-          stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year
-        ).replace("{offset}", stored_season.offset)
-      });
-    }
-  }
-  function calculate_offset(now2) {
-    let offset3 = now2.getTimezoneOffset();
-    if (offset3 == 0) return "+0000";
-    const sign2 = offset3 < 0 ? "+" : "-";
-    offset3 = Math.abs(offset3);
-    const hours = Math.floor(offset3 / 60);
-    const minutes = offset3 % 60;
-    const formatted_hours = hours < 10 ? `0${hours}` : hours.toString();
-    const formatted_minutes = minutes < 10 ? `0${minutes}` : minutes.toString();
-    return sign2 + formatted_hours + formatted_minutes;
-  }
-  function seasonal_timer_start(bypass = false) {
-    if (stored_season.new_years_eve && !bypass) return;
-    if (seasonal_timer.state) return;
-    seasonal_timer.state = setInterval(set_season, 1e3);
-    log2("started interval", "season", "info");
-    if (!page.header.season_tooltip) return;
-    page.header.season_tooltip.setContent(html.node`
-        <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans.seasonal.listing[stored_season.id])}</span>
-        <span class="season-exclusive">${tl2(trans.seasonal.live)}</span>
-    `);
-    page.header.season.classList.add("live");
-  }
-  function seasonal_timer_end() {
-    if (stored_season.new_years_eve) return;
-    if (!seasonal_timer.state) return;
-    clearInterval(seasonal_timer.state);
-    seasonal_timer.state = null;
-    log2("ended interval", "season", "info");
-    if (!page.header.season_tooltip) return;
-    page.header.season_tooltip.setContent(html.node`
-        <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans.seasonal.listing[stored_season.id])}</span>
-        <span class="season-exclusive">${tl2(trans.seasonal.notice)}</span>
-    `);
-    page.header.season.classList.remove("live");
-  }
-  function update_season_nav() {
-    if (!page.header.season) return;
-    page.header.season.setAttribute("data-season", stored_season.id);
-    if (!stored_season.new_years_eve) {
-      page.header.season.textContent = DateTime.fromISO(
-        stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
-      ).toRelative(DateTime.fromISO(stored_season.now));
-    } else {
-      let next = stored_season.next_start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset);
-      if (stored_season.next_is_new_year)
-        next = stored_season.next_start.replace("y0", stored_season.year + 1).replace("{offset}", stored_season.offset);
-      let time_until = new Date(next) - /* @__PURE__ */ new Date();
-      page.header.season.textContent = countdown_to(time_until);
-      page.header.season_tooltip.setContent(html.node`
-            <span class="season-colour-name">${tl2(trans.seasonal.listing[stored_season.id])}</span>
-            <span class="season-exclusive">${tl2(trans.seasonal.live)}</span>
-        `);
-    }
-  }
-  function countdown_to(time_until) {
-    const duration = Duration.fromMillis(time_until).shiftTo(
-      "days",
-      "hours",
-      "minutes",
-      "seconds"
-    );
-    let { days, hours, minutes, seconds } = duration.toObject();
-    days = Math.floor(days);
-    hours = Math.floor(hours);
-    minutes = Math.floor(minutes);
-    seconds = Math.floor(seconds);
-    hours = String(hours).padStart(2, "0");
-    minutes = String(minutes).padStart(2, "0");
-    seconds = String(seconds).padStart(2, "0");
-    if (days != 0)
-      return DateTime.fromISO(
-        stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
-      ).toRelative(DateTime.fromISO(stored_season.now));
-    if (hours == "00" && minutes == "00" && seconds == "00") set_season();
-    return `${hours}:${minutes}:${seconds}`;
-  }
-  function prep_snow() {
-    let prev_container = document.getElementById("snowflakes");
-    if (prev_container != null) return;
-    document.documentElement.appendChild(html.node`
-        <div class="snow-container" id="snowflakes">
-            <span class="snow snowflake"></span>
-        </div>`);
-  }
-  function begin_snowflakes(enabled, count) {
-    if (!enabled) return;
-    let dynamic_css = "";
-    var snow_html = "";
-    for (let i = 1; i < count; i++) {
-      snow_html += '<i class="snow"></i>';
-      let rndX = snow_rand(0, 1e6) * 1e-4, rndO = snow_rand(-1e5, 1e5) * 1e-4, rndT = (snow_rand(3, 8) * 10).toFixed(2), rndS = (snow_rand(0, 1e4) * 1e-4).toFixed(2);
-      dynamic_css += ".snow:nth-child(" + i + "){opacity:" + (snow_rand(1, 1e4) * 1e-4).toFixed(2) + ";transform:translate(" + rndX.toFixed(2) + "vw,-10px) scale(" + rndS + ");animation:fall-" + i + " " + snow_rand(10, 30) + "s -" + snow_rand(0, 30) + "s linear infinite}@keyframes fall-" + i + "{" + rndT + "%{transform:translate(" + (rndX + rndO).toFixed(2) + "vw," + rndT + "vh) scale(" + rndS + ")}to{transform:translate(" + (rndX + rndO / 2).toFixed(2) + "vw, 105vh) scale(" + rndS + ")}}";
-    }
-    document.getElementById("snowflakes").innerHTML = "<style>" + dynamic_css + "</style>" + snow_html;
-  }
-  function snow_rand(a, b) {
-    return Math.floor(Math.random() * (b - a + 1)) + a;
-  }
-
-  // src/style.js
-  function append_style() {
-    document.documentElement.classList.add("florence-supports-loading");
-    for (var member in settings) delete settings[member];
-    Object.assign(settings, JSON.parse(localStorage.getItem("bwaa")));
-    let cached_style = localStorage.getItem("bwaa_cached_style") || "";
-    const split = window.location.pathname.replace(root, "").split("/");
-    const length = split.length - 1;
-    if (split[length] == "playback" && split[2] == "listening-report" || split[0] == "labs") {
-      log2("disabled loading for special interface", "style");
-      return;
-    }
-    document.documentElement.setAttribute("data-bwaa--theme", settings.theme);
-    if (settings.dev) return;
-    if (cached_style == "") {
-      log2("never cached, fetching", "style");
-      fetch_new_style();
-    } else {
-      log2("requesting cache", "style");
-      load_cached_style(cached_style);
-    }
-  }
-  function load_cached_style(cached_style) {
-    const style = html.node`
-        <style id="bwaa--cached-style">${cached_style}</style>
-    `;
-    document.documentElement.appendChild(style);
-    style.onload = () => {
-      log2("loaded cache", "style");
-      chart_reflow();
-      log2("checking timeout", "style");
-      check_if_style_cache_is_valid();
-    };
-  }
-  function check_if_style_cache_is_valid() {
-    const cached_style_timeout = new Date(
-      localStorage.getItem("bwaa_cached_style_timeout")
-    );
-    const current_time = /* @__PURE__ */ new Date();
-    if (cached_style_timeout < current_time) {
-      log2("fetching new, expired timeout", "style");
-      fetch_new_style();
-    } else {
-      log2(`timeout valid until ${cached_style_timeout}`, "style");
-    }
-  }
-  function fetch_new_style(delete_old_style = false, reload_on_finish = false, allow_incompatible = false) {
-    const url = `https://github.com/katelyynn/bwaa/raw/refs/heads/${settings.branch}/fm/bwaa.css?${Math.random()}`;
-    log2(`making request ${url}`, "style");
-    GM_xmlhttpRequest({
-      method: "GET",
-      url,
-      onload: (res) => {
-        log2(`style responded ${res.status}`, "style");
-        if (res.status != 200) {
-          log2("error fetching", "style", "error", { res });
-          return;
-        }
-        const text3 = res.responseText;
-        const style = html.node`
-                <style>${text3}</style>
-            `;
-        document.documentElement.appendChild(style);
-        style.onload = () => {
-          const theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-          if (!allow_incompatible && theme_version2 != version.build) {
-            log2(
-              "denied loading, incompatible version",
-              "style",
-              "info",
-              {
-                theme: theme_version2,
-                script: version.build
-              }
-            );
-            document.documentElement.removeChild(style);
-            return;
-          }
-          if (delete_old_style)
-            document.documentElement.removeChild(
-              document.getElementById("bwaa--cached-style")
-            );
-          log2("loaded", "style");
-          document.body.classList.add("bwaa");
-          chart_reflow();
-          if (reload_on_finish) invoke_reload();
-        };
-        const expire = /* @__PURE__ */ new Date();
-        expire.setHours(expire.getHours() + 1);
-        localStorage.setItem("bwaa_cached_style", text3);
-        localStorage.setItem("bwaa_cached_style_timeout", expire);
-        log2(`cached until ${expire}`, "style");
-      },
-      onerror: (e) => {
-        log2("error fetching", "style", "error", { e });
-      }
-    });
-  }
-  function parse_version(v) {
-    const parts = v.split(".").map(Number);
-    while (parts.length < 3) parts.push(0);
-    return parts.slice(0, 3);
-  }
-  function compare_versions(a, b) {
-    const [a_maj, a_min, a_patch] = parse_version(a);
-    const [b_maj, b_min, b_patch] = parse_version(b);
-    if (a_maj !== b_maj) return a_maj > b_maj ? 1 : -1;
-    if (a_min !== b_min) return a_min > b_min ? 1 : -1;
-    if (a_patch !== b_patch) return a_patch > b_patch ? 1 : -1;
-    return 0;
-  }
-  function update_comparison(current, latest) {
-    return compare_versions(latest, current) === 1;
-  }
-  function update_check(force = false, btn = null, func = null) {
-    if (!force) {
-      const last_checked = localStorage.getItem("bwaa_update_checked") || null;
-      const next_check = localStorage.getItem("bwaa_update_next_check") || null;
-      const current_time = /* @__PURE__ */ new Date();
-      if (last_checked && next_check && new Date(next_check) > current_time) {
-        log2("update check skipped", "update", "info", {
-          next_in: next_check,
-          current_time
-        });
-        if (func) func();
-        return;
-      }
-    }
-    if (btn) btn.setAttribute("disabled", "");
-    let url = `https://katelyynn.github.io/bwaa/fm/src/build/build.json?${Date.now()}`;
-    download_with_progress(url, (percent) => {
-    }).then(async (blob) => {
-      const text3 = await blob.text();
-      if (btn) btn.removeAttribute("disabled");
-      try {
-        let data2 = JSON.parse(text3);
-        console.log(data2);
-        let update_required = update_comparison(version.build, data2.build);
-        set_storage("bwaa_update_required", update_required.toString());
-        set_storage("bwaa_update_to", data2.build);
-        set_storage("bwaa_update_checked", (/* @__PURE__ */ new Date()).toString());
-        let next = /* @__PURE__ */ new Date();
-        next.setHours(next.getHours() + 2);
-        set_storage("bwaa_update_next_check", next.toString());
-        log2("update check finished", "update", "info", {
-          next_in: next,
-          current_time: /* @__PURE__ */ new Date()
-        });
-        if (func) func();
-      } catch (e) {
-        log2("error parsing", "update", "error", { error: e });
-      }
-    });
-  }
-  function prompt_for_update() {
-    dialog({
-      id: "bwaa_update",
-      title: tl2(trans.update_to_version).replace(
-        "{v}",
-        localStorage.getItem("bwaa_update_to") || "unknown"
-      ),
-      body: html.node`
-            <div class="forms">
-                <div class="form">
-                    <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl2(trans.update_now)}</button>
-                    </div>
-                </div>
-                <div class="form">
-                    <div class="form-group deny">
-                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl2(trans.ignore_for_now)}</button>
-                    </div>
-                </div>
-            </div>
-        `,
-      dismiss: false,
-      type: "update",
-      replace_if_possible: true
-    });
-  }
-  function ignore_update() {
-    dialog_rm({
-      id: "bwaa_update"
-    });
-  }
-  function start_update() {
-    open(
-      `https://github.com/katelyynn/bwaa/raw/${settings.branch}/fm/bwaa.user.js`
-    );
-    dialog({
-      id: "bwaa_update",
-      title: tl2(trans.update_to_version).replace(
-        "{v}",
-        localStorage.getItem("bwaa_update_to") || "unknown"
-      ),
-      body: html.node`
-            <div class="forms">
-                <div class="form">
-                    <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl2(trans.finish)}</button>
-                    </div>
-                </div>
-            </div>
-        `,
-      dismiss: false,
-      type: "update",
-      replace_if_possible: true
-    });
-  }
-  function finish_update() {
-    dialog({
-      id: "bwaa_wait",
-      title: tl2(trans.update_to_version).replace(
-        "{v}",
-        localStorage.getItem("bwaa_update_to") || "unknown"
-      ),
-      body: html.node`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl2(trans.downloading_styles)}</div>
-            </div>
-        `,
-      type: "wait",
-      dismiss: false,
-      replace_if_possible: true
-    });
-    set_storage("bwaa_update_required", "false");
-    set_storage("bwaa_update_checked", (/* @__PURE__ */ new Date()).toString());
-    fetch_new_style(false, true, true);
-  }
-  function force_refresh_style() {
-    localStorage.removeItem("bwaa_cached_style");
-    localStorage.removeItem("bwaa_cached_style_timeout");
-    window.setTimeout(invoke_reload, 400);
-  }
-
-  // src/components/dynamic_theming.js
-  function dynamic_theming() {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    page.state.media = media;
-    match2(media);
-    media.addEventListener("change", match2);
-  }
-  function match2(media = page.state.media) {
-    if (!settings.theme_schedule) return;
-    if (media.matches) apply_theme("night");
-    else apply_theme("day");
-  }
-  function apply_theme(time2) {
-    if (settings.theme == settings[`theme_${time2}`]) return;
-    log2(`applying theme for time ${time2}`, "dynamic theming");
-    save_setting("theme", settings[`theme_${time2}`]);
-  }
-
-  // node_modules/@tealmiku/florence/dist/florence.js
-  function log3(text3, system, type = "info", append = {}) {
-    let system_colour;
-    switch (system) {
-      case "load":
-        system_colour = "#8CB9D9";
-        break;
-      case "lotus":
-        system_colour = "#8CD9A6";
-        break;
-      case "season":
-        system_colour = "#65B6D8";
-        break;
-      case "page":
-        system_colour = "#E4B381";
-        break;
-      case "page structure":
-        system_colour = "#D88A69";
-        break;
-      case "style":
-        system_colour = "#C9C678";
-        break;
-      case "profile":
-        system_colour = "#D56854";
-        break;
-      case "settings":
-        system_colour = "#6D6977";
-        break;
-      case "sponsor":
-        system_colour = "#CE4E88";
-        break;
-      default:
-        system_colour = "#C8DD88";
-        break;
-    }
-    if (Object.keys(append).length > 0)
-      console[type](
-        `%c${system}%c ${text3}`,
-        `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`,
-        "color: unset",
-        append
-      );
-    else
-      console[type](
-        `%c${system}%c ${text3}`,
-        `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`,
-        "color: unset"
-      );
-  }
-  var version2 = "2025.1019";
-  var last_page_type = {
-    state: void 0
-  };
-  var last_page_subpage = {
-    state: void 0
-  };
-  function florence({
-    page: page2,
-    on_head_load,
-    on_body_load,
-    on_mutation,
-    on_page_change,
-    on_subpage_change,
-    on_error
-  }) {
-    log3("starting florence", "load", "info", {
-      page: page2,
-      on_head_load,
-      on_body_load,
-      on_mutation,
-      on_page_change,
-      on_subpage_change,
-      on_error
-    });
-    let head_observer = new MutationObserver(() => {
-      if (document.head) {
-        document.documentElement.classList.add("florence-supports-loading");
-        if (on_head_load) on_head_load();
-        head_observer.disconnect();
-      }
-    });
-    head_observer.observe(document.documentElement, {
-      childList: true
-    });
-    let pre_observer = new MutationObserver((mutations) => {
-      log3("pre", "load", "info", { mutations });
-      if (document.body) {
-        log3(`${JSON.stringify(document.body.classList)}`, "load");
-        document.body.classList.add("florence");
-      }
-      if (document.body && document.body.querySelector(".adaptive-skin-container") && document.body.querySelector(".footer")) {
-        main2();
-        pre_observer.disconnect();
-      } else if (document.body && document.body.querySelector(":scope > .container")) {
-        document.body.classList.add("florence-loaded");
-      }
-    });
-    pre_observer.observe(document.documentElement, {
-      childList: true
-    });
-    function main2() {
-      log3("main thread starting", "page", "log", {
-        document,
-        body: document.body
-      });
-      let performance_start = performance.now();
-      try {
-        if (on_body_load) on_body_load();
-        flow();
-        const observer = new MutationObserver((mutations) => {
-          if (!mutations[0]) return;
-          const nodes = [
-            ...mutations[0].addedNodes,
-            ...mutations[0].removedNodes
-          ];
-          if (nodes.length && nodes.every(
-            (n2) => n2.nodeType == 1 && (n2.hasAttribute("data-tippy-root") || (n2.id || "").startsWith("tippy-"))
-          )) {
-            log3("ignored", "mutation", "log", { mutations });
-            return;
-          }
-          log3("loop", "mutation", "log", { mutations });
-          flow();
-        });
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true
-        });
-        let performance_end = performance.now();
-        log3(
-          `finished in ${(performance_end - performance_start) / 1e3} seconds`,
-          "load"
-        );
-      } catch (e) {
-        log3(`florence ran into an error`, "load", "error", { e });
-        if (on_error) on_error(e);
-      }
-    }
-    function flow() {
-      let performance_start = performance.now();
-      assign_page();
-      if (page2.state.error) return;
-      if (on_mutation) on_mutation();
-      let performance_end = performance.now();
-      log3(
-        `finished in ${(performance_end - performance_start) / 1e3} seconds`,
-        "loop"
-      );
-    }
-    function assign_page() {
-      document.documentElement.classList.add("florence-supports-loading");
-      if (!page2.structure.wrapper)
-        page2.structure.wrapper = document.body.querySelector(".main-content");
-      let main_content = page2.structure.wrapper.querySelector(
-        ":scope > :last-child:not([data-florence])"
-      );
-      if (main_content) {
-        assign_page_type();
-        if (on_page_change) on_page_change(main_content);
-        main_content.setAttribute("data-florence", "true");
-      } else {
-        assign_page_subpage();
-      }
-      document.body.classList.add("florence-loaded");
-    }
-    function assign_page_type() {
-      let page_classes = document.body.classList;
-      page_classes.forEach((page_class, index3) => {
-        if (page_class.startsWith("namespace")) {
-          page2.initial = page_class.replace("namespace--", "");
-          let page_split = page2.initial.split("_");
-          page2.type = page_split[0];
-          if (page2.type == "music") {
-            page2.type = page_split[1];
-          }
-          if (page2.type != last_page_type.state) {
-            last_page_type.state = page2.type;
-            log3(page2.type, "page");
-          }
-          assign_page_subpage();
-          return;
-        }
-        if (index3 > 4) return;
-      });
-    }
-    function assign_page_subpage() {
-      page2.subpage = page2.initial.replace(page2.type, "").replace("_", "").replace("music_", "").replace("festival_", "event_");
-      if (last_page_subpage.state != page2.subpage) {
-        last_page_subpage.state = page2.subpage;
-        log3(`subpage of ${page2.subpage}`, "page");
-        if (on_subpage_change) on_subpage_change();
-      }
-    }
-  }
-
-  // src/pages/bwaa_config.js
-  function bwaa_settings() {
-    page.structure.container = document.body.querySelector(".page-content");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    checkup_page_structure();
-    page.name = auth.name;
-    page.subpage = "";
-    update_page();
-    page.structure.row.removeChild(page.structure.row.firstElementChild);
-    page.structure.row.removeChild(page.structure.row.firstElementChild);
-    let params = new URLSearchParams(document.location.search);
-    page.requested.tab = params.get("tab");
-    page.requested.setting = params.get("setting");
-    let path = window.location.pathname.split("/");
-    let tab = path[path.length - 1];
-    if (tab == "bwaa") tab = null;
-    if (page.requested.tab && !tab) tab = page.requested.tab;
-    const tabs = {
-      home: {
-        name: tl2(trans.home)
-      },
-      interface: {
-        name: tl2(trans.interface)
-      },
-      profile: {
-        name: tl2(trans.profile),
-        icon: "user"
-      },
-      seasonal: {
-        name: tl2(trans.seasonal.name)
-      },
-      performance: {
-        name: tl2(trans.troubleshooting)
-      },
-      sku: {
-        name: tl2(trans.flags),
-        password: settings.hu_tao
-      }
-    };
-    render(page.structure.side, html`
-        <div class="cta first priority sponsor colourful">
-            ${auth.sponsor ? html.node`
-                <strong>${tl2(trans.you_are_a_sponsor)}</strong>
-                <a class="see-more" onclick=${() => sponsor_manage()}>${tl2(trans.manage_sponsor)}</a>
-            ` : html.node`
-                <strong>${tl2(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick=${() => sponsor()}>${tl2(trans.sponsor)}</a>
-            `}
-        </div>
-        <section class="side-actions">
-            <button class="btn side-action" data-type="import" onclick=${() => import_settings10()}>
-                ${tl2(trans.import)}
-            </button>
-            <button class="btn side-action" data-type="export" onclick=${() => export_settings()}>
-                ${tl2(trans.export)}
-            </button>
-            <button class="btn side-action" data-type="reset" onclick=${() => reset_settings()}>
-                ${tl2(trans.reset)}
-            </button>
-        </section>
-        <div class="form-section settings-form">
-            <p class="card-tip">
-                ${version.brand} ${version.build}.${version.sku}
-                <i>(florence ${version2})</i>
-            </p>
-        </div>
-    `);
-    page.state.nav_items = [];
-    render(page.structure.main, html`
-        <nav class="navlist secondary-nav navlist--more">
-            <ul class="navlist-items">
-                ${Object.entries(tabs).map(([id, tab2]) => {
-      if (tab2.hide_if) return html.node``;
-      if (tab2.type && tab2.type == "fill") {
-        return html.node`
-                            <div class="fill" />
-                        `;
-      }
-      let item;
-      const elem = html.node`
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" ref=${(el) => item = el} data-bwaa-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>
-                                ${tab2.label ? tab2.label : tab2.name}
-                            </a>
-                        </li>
-                    `;
-      page.state.nav_items.push(item);
-      return elem;
-    })}
-            </ul>
-        </nav>
-        <div id="bleh-settings-inject" ref=${(el) => page.state.inject = el} />
-    `);
-    if (!tab) change_settings_page("home");
-    else change_settings_page(tab);
-    if (page.requested.setting) scroll_to_setting(page.requested.setting);
-  }
-  function page_loading() {
-    render(page.state.inject, html`
-        <div class="form-section settings-form">
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl2(trans.loading)}</div>
-            </div>
-        </div>
-    `);
-  }
-  async function render_setting_page(page_id) {
-    if (page_id == "home") {
-      if (auth.pro === null) {
-        setTimeout(() => {
-          render_setting_page("home");
-        }, 10);
-        page_loading();
-        return;
-      }
-      register_skip_to([]);
-      let update_btn;
-      let pause_btn;
-      const update_required = localStorage.getItem("bleh_update_required") || "false";
-      const last_checked = localStorage.getItem("bleh_update_checked") || null;
-      const version_to_install = localStorage.getItem("bleh_update_to") || null;
-      let paused = localStorage.getItem("bleh_update_paused") || "false";
-      let paused_until = localStorage.getItem("bleh_update_paused_until") || null;
-      let badge_count = 0;
-      let badges = load_badges(auth.name);
-      if (badges) badge_count = badges.length;
-      if (auth.pro) badge_count++;
-      const auth_key = localStorage.getItem("bleh_auth");
-      const auth_valid = localStorage.getItem("bleh_auth_valid");
-      render(page.state.inject, html`
-            <section class="form-section settings-form">
-                <h2 class="form-header">Welcome to <i style="margin-right: 2px">re:</i>bwaa!</h2>
-                <p>You currently have version 3483249324932432</p>
-                <div class="profile-actions-section standalone">
-                    <div class="options">
-                        <a class="has-icon sponsor" onclick=${() => sponsor()}>${tl2(trans.sponsor)}</a>
-                    </div>
-                </div>
-                <h2 class="tiny">Quick controls</h2>
-                <div class="more-link align-left">
-                    <a onclick=${() => change_settings_page("interface")}>Choose your page style</a>
-                </div>
-                <h2 class="tiny">Customise further</h2>
-                <fieldset>
-                    <legend>Fun</legend>
-                    ${setting({ id: "seasonal" })}
-                    ${setting({ id: "seasonal_accent" })}
-                    ${setting({ id: "seasonal_particles" })}
-                    ${setting({ id: "seasonal_particles_fps" })}
-                    ${setting({ id: "seasonal_overlays" })}
-                </fieldset>
-                <div class="update-center-header">
-                    ${paused === "true" ? html.node`
-                        <div class="update-center-icon">
-                            <div class="update-container">
-                                <div class="bleh-icon" data-type="update" />
-                            </div>
-                            <div class="check-circle paused colourful">
-                                <div class="bleh-icon" data-type="paused" />
-                            </div>
-                        </div>
-                        <div class="update-center-details">
-                            <h2>${tl2(trans.updates_paused)}</h2>
-                            <p class="last-checked">${tl2(trans.paused_until_date).replace("{d}", DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
-                        </div>
-                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl2(trans.check)}</button>
-                    ` : update_required === "false" ? html.node`
-                        <div class="update-center-icon">
-                            <div class="update-container">
-                                <div class="bleh-icon" data-type="update" />
-                            </div>
-                            ${last_checked ? html.node`
-                            <div class="check-circle colourful">
-                                <div class="bleh-icon" data-type="check-thick" />
-                            </div>
-                            ` : ""}
-                        </div>
-                        <div class="update-center-details">
-                            ${last_checked ? html.node`
-                            <h2>${tl2(trans.you_are_up_to_date)}</h2>
-                            <p class="last-checked">${tl2(trans.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
-                            ` : html.node`
-                            <h2>${tl2(trans.missing_updates)}</h2>
-                            <p class="last-checked">${tl2(trans.never_checked)}</p>
-                            `}
-                        </div>
-                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
-        notify({
-          id: "update",
-          title: tl2(trans.updates),
-          body: tl2(trans.checked_for_updates),
-          icon: "icon-16-update"
-        });
-        render_setting_page("general");
-      })}>${tl2(trans.check)}</button>
-                    ` : html.node`
-                        <div class="update-center-icon">
-                            <div class="update-container">
-                                <div class="bleh-icon" data-type="update" />
-                            </div>
-                        </div>
-                        <div class="update-center-details">
-                            <h2>${tl2(trans.update_available_to_install)}</h2>
-                            ${last_checked ? html.node`
-                                <p class="last-checked">${tl2(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
-                            ` : html.node`
-                                <p class="last-checked">${tl2(trans.never_checked)}</p>
-                            `}
-                        </div>
-                        <div class="button-group">
-                            <button class="btn icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
-        notify({
-          id: "update",
-          title: tl2(trans.updates),
-          body: tl2(trans.checked_for_updates),
-          icon: "icon-16-update"
-        });
-        render_setting_page("general");
-      })}>${tl2(trans.check)}</button>
-                            <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl2(trans.install_now)}</button>
-                        </div>
-                    `}
-                </div>
-                ${last_checked && paused === "false" && update_required === "true" ? html.node`
-                    <div class="alert alert-info">${tl2(trans.you_are_installing_version, { v: version_to_install })}</div>
-                ` : html.node`
-                    <div class="alert alert-info">${tl2(trans.you_are_running_version, { v: version.build })}</div>
-                `}
-            </section>
-            <section class="form-section settings-form">
-                <h4>${tl2(trans.profile)}</h4>
-                <div class="setting-group">
-                    ${auth.name ? html.node`
-                        <div class="setting" data-type="info">
-                            <div class="avatar-container">
-                                <div class="avatar-inner">
-                                    <img src=${auth.avatar} alt=${auth.name} />
-                                </div>
-                            </div>
-                            <div class="heading">
-                                <h5>${auth.name}</h5>
-                            </div>
-                            <div class="info">
-                                <p>${tl2(trans.profile_and_badges, { c: badge_count.toString() })}</p>
-                                ${badge_count > 0 ? html.node`
-                                    <button class="see-more" onclick=${() => {
-        dialog({
-          id: "badges",
-          title: auth.name,
-          body: html.node`
-                                                <div class="generic-table-list badge-list">
-                                                    ${badges ? badges.map((badge) => {
-            let style;
-            let classname = "";
-            if (badge.icon && badge.hue && badge.sat && badge.lit) {
-              style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
-            } else {
-              classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
-            }
-            return html.node`
-                                                            <div class="generic-table-list-entry badge-list-entry">
-                                                                <div class="icon-container colourful ${classname}" style=${style}>
-                                                                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                                </div>
-                                                                <div class="name colourful ${classname}" style=${style}>
-                                                                    ${badge.name}
-                                                                </div>
-                                                                <div class="text">
-                                                                    ${badge.reason}
-                                                                </div>
-                                                            </div>
-                                                        `;
-          }) : ""}
-                                                    ${auth.pro ? html.node`
-                                                        <div class="generic-table-list-entry badge-list-entry">
-                                                            <div class="icon-container colourful user-status-subscriber">
-                                                                <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                            </div>
-                                                            <div class="name colourful user-status-subscriber">
-                                                                ${tl2(trans.badges["user-status-subscriber"].name)}
-                                                            </div>
-                                                            <div class="text">
-                                                                ${tl2(trans.badges["user-status-subscriber"].reason)}
-                                                            </div>
-                                                        </div>
-                                                    ` : ""}
-                                                </div>
-                                            `
-        });
-      }}>${tl2(trans.view)}</button>
-                                ` : ""}
-                            </div>
-                        </div>
-                    ` : ""}
-                    ${auth.sponsor ? html.node`
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.you_are_a_sponsor)}</h5>
-                                <p>${tl2(trans.sponsor_get_badge)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
-                                    ${tl2(trans.manage_sponsor)}
-                                </button>
-                            </div>
-                        </div>
-                    ` : html.node`
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.news_sponsor_cta)}</h5>
-                                <p>${tl2(trans.api.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
-                                    ${tl2(trans.sponsor)}
-                                </button>
-                            </div>
-                        </div>
-                    `}
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl2(trans.current_version)}</h5>
-                        </div>
-                        <div class="info">
-                            <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
-                                ${tl2(trans.update_check)}
-                            </button>
-                            <p>${sponsor_list.latest}</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            ${!page.mobile ? html.node`
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.branding)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: "branding_type" })}
-                    </div>
-                </section>
-            ` : ""}
-            ${auth.name ? html.node`
-                <section class="form-section settings-form">
-                    <h4>API</h4>
-                    <div class="setting-group">
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.api.name)}</h5>
-                                <p>${tl2(trans.api.body)}</p>
-                            </div>
-                        </div>
-                        <div class="setting" data-type="info">
-                            <div class="heading">
-                                <h5>${tl2(trans.api_status)}</h5>
-                            </div>
-                            <div class="info">
-                                ${auth_key && auth_valid == "true" ? html.node`
-                                <p>${tl2(trans.connected)}</p>
-                                ` : html.node`
-                                <p>${tl2(trans.not_connected)}</p>
-                                `}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            ` : ""}
-            <section class="form-section settings-form">
-                <h4>${tl2(trans.language)}</h4>
-                <div class="setting-group">
-                    <div class="languages">
-                        ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
-        let date;
-        const row = html.node`
-                                <div class="language-row${lang == key ? " active" : ""}">
-                                    <div class="flag" name=${key} />
-                                    <div class="name">
-                                        <p><strong>${language.name}</strong> ${{ html: tl2(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
-                                    </div>
-                                    ${language.new ? html.node`
-                                        <div class="badges">
-                                            <div class="new-badge">${tl2(trans.new)}</div>
-                                        </div>
-                                    ` : html.node`
-                                        <div class="badges"></div>
-                                    `}
-                                    ${language.percent ? () => {
-          const elem = html.node`
-                                                                <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
-                                                                    ${language.percent}%
-                                                                </div>
-                                                            `;
-          tippy_esm_default(elem, {
-            content: `${tl2(trans.amount_translated, { c: language.translated })}, ${tl2(trans.missing_translated, { c: language.missing })}`
-          });
-          return elem;
-        } : ""}
-                                    <div class="date">
-                                        <p ref=${(el) => date = el}>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
-                                    </div>
-                                </div>
-                            `;
-        if (language.last_updated != "latest") {
-          tippy_esm_default(date, {
-            content: DateTime.fromISO(
-              language.last_updated
-            ).toLocaleString(DateTime.DATE_MED)
-          });
-        }
-        return row;
-      })}
-                    </div>
-                </div>
-                <div class="setting-group">
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl2(trans.submit_language.name)}</h5>
-                            <p>${tl2(trans.submit_language.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
-                                ${tl2(trans.help_contribute)}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        `);
-    } else if (page_id == "interface") {
-      let render_tip = function() {
-        adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
-        render(adaptive_tip, html`
-                ${tl2(trans.adaptive_tip, {
-          day: tl2(trans.themes[settings.theme_day]),
-          night: tl2(trans.themes[settings.theme_night])
-        })}
-                <a onclick=${() => {
-          dialog({
-            id: "auto_theme",
-            title: tl2(trans.themes.name),
-            body: html.node`
-                            <div class="setting-group">
-                                ${theme_day = setting({
-              id: "theme_day",
-              list: [
-                {
-                  value: "light",
-                  text: tl2(trans.themes.light)
-                },
-                {
-                  value: "ink",
-                  text: tl2(trans.themes.ink)
-                },
-                {
-                  value: "dark",
-                  text: tl2(trans.themes.dark)
-                },
-                {
-                  value: "darker",
-                  text: tl2(trans.themes.darker)
-                },
-                {
-                  value: "oled",
-                  text: tl2(trans.themes.oled)
-                }
-              ],
-              func: () => {
-                render_tip();
-                bubbles.re_render();
-                match2();
-              }
-            })}
-                                ${theme_night = setting({
-              id: "theme_night",
-              list: [
-                {
-                  value: "light",
-                  text: tl2(trans.themes.light)
-                },
-                {
-                  value: "ink",
-                  text: tl2(trans.themes.ink)
-                },
-                {
-                  value: "dark",
-                  text: tl2(trans.themes.dark)
-                },
-                {
-                  value: "darker",
-                  text: tl2(trans.themes.darker)
-                },
-                {
-                  value: "oled",
-                  text: tl2(trans.themes.oled)
-                }
-              ],
-              func: () => {
-                render_tip();
-                bubbles.re_render();
-                match2();
-              }
-            })}
-                            </div>
-                            <p class="card-tip">${tl2(trans.theme_schedule)}</p>
-                        `
-          });
-        }}>
-                    ${tl2(trans.change_schedule)}
-                </a>
-            `);
-      };
-      let colourful_active;
-      let colourful_all;
-      let sat_bg2;
-      let adaptive_tip;
-      let bubbles;
-      render(
-        page.state.inject,
-        html`
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.appearance)}</h4>
-                    <div class="setting-group">
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.themes.name)}</h5>
-                            </div>
-                            <div class="info v">
-                                ${bubbles = theme_bubbles(() => {
-          sat_bg2.compat();
-          render_tip();
-          match2();
-        })}
-                                <p
-                                    class="card-tip"
-                                    ref=${(el) => adaptive_tip = el}
-                                />
-                            </div>
-                        </div>
-                        ${setting({ id: "solarium" })}
-                        ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.hue)}</h5>
-                            </div>
-                            <div class="info swatch-info">
-                                <div
-                                    id="colour_custom"
-                                    class="swatch-group palette"
-                                ></div>
-                                <div class="sep swatch-sep" />
-                                <div
-                                    id="colour_palette"
-                                    class="swatch-group palette"
-                                ></div>
-                            </div>
-                        </div>
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans.change_my_colour_when.name)}</h5>
-                                <p>${tl2(trans.change_my_colour_when.body)}</p>
-                            </div>
-                            <div class="primary-selections">
-                                ${setting({
-          id: "hue_from_album",
-          standalone: true
-        })}
-                                ${colourful_active = setting({
-          id: "colourful_tracks",
-          standalone: true,
-          func: () => {
-            colourful_all.compat();
-          }
-        })}
-                                ${colourful_all = setting({
-          id: "colourful_tracks_all",
-          standalone: true,
-          func: () => {
-            colourful_active.compat();
-          }
-        })}
-                            </div>
-                        </div>
-                        ${ff("card_saturation") ? html.node`
-                                ${sat_bg2 = setting({ id: "sat_bg" })}
-                            ` : ""}
-                        ${setting({ id: "noise" })}
-                    </div>
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.fonts)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: "font" })}
-                        ${setting({ id: "font_weight" })}
-                        ${setting({ id: "font_weight_medium" })}
-                        ${setting({ id: "font_weight_bold" })}
-                        ${setting({ id: "font_emoji" })}
-                    </div>
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.artwork)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="palette albums" style="height: fit-content">
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/b897255bf422baa93a42536af293f9f8.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/510546e3b6df7504392274c528c77780.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/49cc807f69d59746b6b04be3434e6637.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/dd76702cea38c838a3090dd9496d92d9.jpg')"
-                            ></div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "gloss" })}
-                        ${setting({ id: "grid_glow" })}
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "avatar_radius" })}
-                    </div>
-                </section>
-            `
-      );
-      render_tip();
-      display_colour_presets();
-      update_colour_swatches();
-    } else if (page_id == "seasonal") {
-      register_skip_to([]);
-      render(
-        page.state.inject,
-        html`
-                <div class="form-section settings-form">
-                    <div class="seasonal-inner">
-                        <div class="sub-text">
-                            ${tl2(trans.seasonal_timeline)}
-                        </div>
-                        <h4>
-                            ${DateTime.fromJSDate(
-          new Date(stored_season.now)
-        ).toLocaleString(DateTime.DATE_FULL)}
-                        </h4>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "seasonal" })}
-                        <div class="setting" data-type="info">
-                            <div class="heading">
-                                <h5>${tl2(trans.current_season)}</h5>
-                            </div>
-                            <div class="info">
-                                <div
-                                    class="icon-combo"
-                                    data-season=${stored_season.id}
-                                >
-                                    <div
-                                        class="bleh-icon bleh-seasonal-icon"
-                                    ></div>
-                                    <p>
-                                        ${tl2(
-          trans.seasonal.listing[stored_season.id]
-        )}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl2(trans.started)}</h5>
-                        </div>
-                        <div class="info">
-                            <p id="current_season_start">${DateTime.fromISO(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
-                        </div>
-                    </div>
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl2(trans.ends_in)}</h5>
-                        </div>
-                        <div class="info">
-                            <p id="current_season">${DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
-                        </div>
-                    </div>
-                    ` : settings.seasonal ? html.node`
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl2(trans.next_in)}</h5>
-                        </div>
-                        <div class="info">
-                            <p id="next_season_start">${DateTime.fromISO(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
-                        </div>
-                    </div>
-                    ` : ""}
-                        ${settings.seasonal ? html.node`
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl2(trans.calculated_offset)}</h5>
-                        </div>
-                        <div class="info">
-                            <p>${stored_season.offset}</p>
-                        </div>
-                    </div>
-                    ` : ""}
-                    </div>
-                    <h4>${tl2(trans.settings)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: "seasonal_particles" })}
-                        ${setting({ id: "seasonal_particles_fps" })}
-                        ${setting({ id: "seasonal_overlays" })}
-                    </div>
-                </div>
-            `
-      );
-    } else if (page_id == "performance") {
-      register_skip_to([]);
-      if (settings.hu_tao != "develop") {
-        dialog({
-          id: "development_only",
-          body: html.node`
-                    <div class="modal-vertical-inner error-inner">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
-                        <h1>${tl2(trans.intended_for_development.name)}</h1>
-                        <p>${tl2(trans.intended_for_development.body)}</p>
-                    </div>
-                `,
-          theme: "error"
-        });
-      }
-      render(
-        page.state.inject,
-        html`
-                <section class="form-section settings-form">
-                    <div class="alert alert-danger">
-                        ${tl2(trans.beware_notice)}
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "dev" })} ${setting({ id: "branch" })}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.force_refresh_style.name)}</h5>
-                                <p>${tl2(trans.force_refresh_style.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button
-                                    class="btn see-more update-check"
-                                    onclick=${() => force_refresh_style()}
-                                >
-                                    ${tl2(trans.refresh)}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sep"></div>
-                    <h4>Debug information</h4>
-                    <ul>
-                        <li>Theme loading is currently ${!settings.dev}</li>
-                        <li>
-                            <span class="lotus lotus-name lotus-name-small"
-                                >lotus</span
-                            >
-                            is currently ${settings.corrections}
-                        </li>
-                        <br />
-                        <li>
-                            Theme will expire at
-                            <span class="time"
-                                >${time(
-          localStorage.getItem(
-            "bleh_cached_style_timeout"
-          )
-        )}</span
-                            >
-                        </li>
-                        <li>
-                            <span class="lotus lotus-name lotus-name-small"
-                                >lotus</span
-                            >
-                            (artist) will expire at
-                            <span class="time"
-                                >${time(
-          localStorage.getItem("lotus_artist_expire")
-        )}</span
-                            >
-                        </li>
-                        <li>
-                            <span class="lotus lotus-name lotus-name-small"
-                                >lotus</span
-                            >
-                            (album_track) will expire at
-                            <span class="time"
-                                >${time(
-          localStorage.getItem(
-            "lotus_album_track_expire"
-          )
-        )}</span
-                            >
-                        </li>
-                        <br />
-                        <li>
-                            It is currently
-                            <span class="time">${time()}</span>
-                        </li>
-                        <br />
-                        <li>
-                            Has the timeout expired?
-                            ${new Date(
-          localStorage.getItem(
-            "bleh_cached_style_timeout"
-          )
-        ) < /* @__PURE__ */ new Date()}
-                        </li>
-                    </ul>
-                    <div class="sep"></div>
-                    <h4>${tl2(trans.development)}</h4>
-                    <button
-                        class="see-more"
-                        onclick=${() => {
-          if (settings.hu_tao == "develop") {
-            change_settings_page("sku");
-          } else {
-            dialog({
-              id: "hu_tao",
-              title: tl2(trans.development),
-              body: html.node`
-                                ${setting({ id: "hu_tao", text: false, focus: true })}
-                            `
-            });
-          }
-        }}
-                    >
-                        ${tl2(trans.manage_feature_flags)}
-                    </button>
-                </section>
-            `
-      );
-    } else if (page_id == "profile") {
-      if (!auth.name) {
-        render(
-          page.state.inject,
-          html`
-                    <div class="form-section settings-form">
-                        <div class="loading-data-container">
-                            <div class="loading-data-text error">
-                                ${tl2(trans.not_logged_in)}
-                            </div>
-                        </div>
-                    </div>
-                `
-        );
-        return;
-      }
-      register_skip_to([]);
-      const cache2 = await load_profile_cache_externally(auth.name);
-      let friends;
-      let starred2;
-      console.info("friends", settings.friends, settings);
-      render(
-        page.state.inject,
-        html`
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.banners)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="profile-mockup">
-                            <div class="mockup-header">
-                                <img
-                                    class="mockup-avatar"
-                                    src="${auth.avatar}"
-                                />
-                                <div class="mockup-info">
-                                    <div class="mockup-subtext"></div>
-                                    <div class="mockup-name"></div>
-                                </div>
-                            </div>
-                            <div class="mockup-container">
-                                <div class="mockup-col-main">
-                                    <div class="mockup-panel main"></div>
-                                </div>
-                                <div class="mockup-col-sidebar">
-                                    <div
-                                        class="mockup-panel mockup-obsession-panel"
-                                    >
-                                        <img
-                                            class="mockup-obsession-art"
-                                            src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg"
-                                        />
-                                        <div
-                                            class="mockup-obsession-name"
-                                        ></div>
-                                    </div>
-                                    <div class="mockup-panel main"></div>
-                                </div>
-                            </div>
-                            <div
-                                class="profile-mockup-background from-avatar"
-                                style="background-image: url(${auth.avatar.replace(
-          "/avatar42s/",
-          "/avatar300s/"
-        )})"
-                            ></div>
-                            ${cache2.banner ? html.node`
-                        <div class="profile-mockup-background from-banner" style="background-image: url(${cache2.banner})"></div>
-                        ` : html.node`
-                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
-                        `}
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans.view_backgrounds_on)}</h5>
-                            </div>
-                            <div class="primary-selections">
-                                ${setting({
-          id: "profile_header_own",
-          standalone: true
-        })}
-                                ${setting({
-          id: "profile_header_others",
-          standalone: true
-        })}
-                            </div>
-                        </div>
-                        ${setting({ id: "profile_avi_background" })}
-                    </div>
-                </section>
-                ${ff("friends") ? html.node`
-            <section class="form-section settings-form">
-                <h4>${tl2(trans.friends)}</h4>
-                <div class="setting-group">
-                    ${friends = setting({
-          id: "friends",
-          list: settings.friends,
-          func: (val) => {
-            if (!val.includes(settings.starred_friend))
-              save_setting("starred_friend", "");
-            checkup_friend_cache(val);
-            render_setting_page("profile");
-          }
-        })}
-                    ${starred2 = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl2(trans.none) }, ...settings.friends]) })}
-                </div>
-                <p class="card-tip">${tl2(trans.friend_difference)}</p>
-            </section>
-            ` : ""}
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.other)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: "bio_markdown" })}
-                        ${setting({ id: "show_your_progress" })}
-                    </div>
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.activity)}</h4>
-                    <p>${tl2(trans.what_are_activities)}</p>
-                    <div class="inner-preview pad">
-                        <div class="preview-card activity-preview" />
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "activities" })}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.clear_history)}</h5>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button
-                                    class="see-more"
-                                    onclick=${() => {
-          localStorage.removeItem(
-            "bwaa_recent_activity"
-          );
-          notify({
-            id: "cleared_history",
-            title: tl2(
-              trans.cleared_activity_history
-            ),
-            type: "success"
-          });
-        }}
-                                >
-                                    ${tl2(trans.clear)}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "activity_shout" })}
-                        ${setting({ id: "activity_image" })}
-                        ${setting({ id: "activity_obsess" })}
-                        ${setting({ id: "activity_love" })}
-                        ${setting({ id: "activity_bookmark" })}
-                        ${setting({ id: "activity_wiki" })}
-                        ${setting({ id: "activity_install" })}
-                    </div>
-                </section>
-            `
-      );
-      activity_preview();
-    } else if (page_id == "accessibility") {
-      register_skip_to([]);
-      render(
-        page.state.inject,
-        html`
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.accessibility)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: "reduced_motion" })}
-                        ${setting({ id: "accessible_name_colours" })}
-                        ${setting({ id: "underline_links" })}
-                    </div>
-                </section>
-                ${ff("static_gifs") ? html.node`
-            <section class="form-section settings-form">
-                <h4>${tl2(trans.images)}</h4>
-                <div class="setting-group">
-                    ${setting({ id: "static_gifs" })}
-                    <div class="setting" data-type="options">
-                        <div class="heading">
-                            <h5>${tl2(trans.apply_to)}<div class="new-badge">${tl2(trans.new)}</div></h5>
-                        </div>
-                        <div class="primary-selections">
-                            ${setting({ id: "static_avatars", standalone: true })}
-                            ${setting({ id: "static_music", standalone: true })}
-                        </div>
-                    </div>
-                    ${setting({ id: "static_banners" })}
-                </div>
-            </section>
-            ` : ""}
-            `
-      );
-    } else if (page_id == "sku") {
-      register_skip_to([]);
-      render(
-        page.state.inject,
-        html`
-                <div class="form-section settings-form">
-                    <div class="panel-intro">
-                        <div class="sub-text">
-                            ${version.build}.${version.sku}
-                        </div>
-                        <h1>☆⌒(>w<)</h1>
-                    </div>
-                    <div class="sep" />
-                    <h4>${tl2(trans.manage_feature_flags)}</h4>
-                    <div class="alert alert-danger">
-                        ${tl2(trans.beware_notice)}
-                    </div>
-                    <div class="setting-group">
-                        ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
-          let value = ff(flag);
-          let checkbox;
-          let state;
-          return html.node`
-                            <div class="setting" data-type="toggle" onclick=${() => {
-            let current = checkbox.checked;
-            checkbox.checked = !current;
-            state.setAttribute("aria-checked", !current);
-            settings.feature_flags[flag] = !current;
-            document.documentElement.setAttribute(
-              `data-ff--${flag}`,
-              (!current).toString()
-            );
-            compile_settings();
-          }}>
-                                <div class="heading">
-                                    <h5>${details.name}</h5>
-                                    ${details.notice ? html.node`<p>${{ html: details.notice }}</p>` : ""}
-                                    <div class="info-row">
-                                        <div class="new-badge flag-${details.default}">${details.default}</div><p class="date">${details.date}</p><p>${flag}</p>
-                                    </div>
-                                </div>
-                                <div class="toggle-wrap">
-                                    <input type="checkbox" ref=${(el) => checkbox = el} value=${value} checked=${value} />
-                                    <button class="toggle" aria-checked=${value} ref=${(el) => state = el}>
-                                        <div class="dot" />
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-        })}
-                    </div>
-                </div>
-            `
-      );
-    } else if (page_id == "music") {
-      register_skip_to([
-        {
-          id: "corrections",
-          name: tl2(trans.correct_titles_with_lotus)
-        },
-        {
-          id: "format_guest_features",
-          name: tl2(trans.format_guest_features.name)
-        },
-        {
-          id: "stacked_chartlist_info",
-          name: tl2(trans.track_column_view)
-        },
-        {
-          id: "colourful_counts",
-          name: tl2(trans.colourful_counts.name)
-        },
-        {
-          id: "travis",
-          name: tl2(trans.redirect_messages.name)
-        },
-        {
-          id: "gloss",
-          type: "slider",
-          name: tl2(trans.gloss.name)
-        },
-        {
-          id: "grid_glow",
-          name: tl2(trans.grid_glow.name)
-        },
-        {
-          id: "gendered_tags",
-          name: tl2(trans.gendered_tags.name)
-        }
-      ]);
-      render(
-        page.state.inject,
-        html`
-                <div class="form-section settings-form">
-                    <h4 class="top-header">${tl2(trans.music)}</h4>
-                    <h4>${tl2(trans.tracklist)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="tracks">
-                            <div class="track realtime">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                            <div class="track">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                            <div class="track">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                            <div class="track">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                            <div class="track">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "stacked_chartlist_info" })}
-                        ${setting({ id: "expand_tracks" })}
-                        ${setting({ id: "glacier_library_graphs" })}
-                    </div>
-                    <div class="inner-preview pad">
-                        <div class="bars" ref=${(el) => bars = el}>
-                            ${() => {
-          let max2 = 3e4;
-          for (let value = 1e3; value <= max2; value += 1e3) {
-            bars.appendChild(chartlist_bar(value, max2));
-          }
-        }}
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "colourful_counts" })}
-                    </div>
-                </div>
-            `
-      );
-    }
-  }
-  function register_skip_to(list = null) {
-    if (!ff("skip_to_setting")) return;
-    if (list == null) return;
-    let panel = page.structure.side.querySelector(".skip-to-list");
-    panel.innerHTML = "";
-    list.forEach((item) => {
-      let button = document.createElement("button");
-      button.classList.add("skip-to-item");
-      button.setAttribute("onclick", `_scroll_to_setting('${item.id}')`);
-      button.textContent = item.name;
-      if (item.type != null) button.setAttribute("data-type", item.type);
-      panel.appendChild(button);
-    });
-  }
-  unsafeWindow._scroll_to_setting = function(id) {
-    scroll_to_setting(id);
-  };
-  function scroll_to_setting(id) {
-    let setting2 = document.body.querySelector(`#container-${id}`);
-    if (setting2 != null) {
-      let y = setting2.getBoundingClientRect().top + window.scrollY - 300;
-      window.scroll({
-        top: y,
-        behavior: "smooth"
-      });
-    }
-  }
-  unsafeWindow._change_settings_page = function(page2, setting2 = null) {
-    change_settings_page(page2, setting2);
-  };
-  function change_settings_page(page_id, setting2 = null) {
-    if (page_id == page.state.settings_page) return;
-    window.history.pushState(page_id, "", `${root}bwaa/${page_id}`);
-    page.state.settings_page = page_id;
-    render(page.state.inject, html``);
-    page.state.nav_items.forEach((item) => {
-      if (item.getAttribute("data-bwaa-page") != page_id) {
-        item.classList.remove("secondary-nav-item-link--active");
-      } else {
-        item.classList.add("secondary-nav-item-link--active");
-      }
-    });
-    if (page_id == "seasonal") seasonal_timer_start();
-    else seasonal_timer_end();
-    try {
-      render_setting_page(page_id);
-    } catch (e) {
-      render(
-        page.state.inject,
-        html`
-                <div class="form-section settings-form">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">
-                            ${tl2(trans.value_failed_to_load).replace(
-          "{v}",
-          tl2(trans.settings)
-        )}
-                        </div>
-                        <pre class="error-info">
-${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</pre
-                        >
-                    </div>
-                </div>
-            `
-      );
-    }
-    if (page_id == "seasonal") {
-      refresh_all();
-    }
-    if (page_id == "seasonal" && settings.seasonal && stored_season.id != "none" && stored_season.start && stored_season.end) {
-      tippy_esm_default(document.getElementById("current_season"), {
-        content: new Date(
-          stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
-        ).toLocaleString(lang)
-      });
-      tippy_esm_default(document.getElementById("current_season_start"), {
-        content: new Date(
-          stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
-        ).toLocaleString(lang)
-      });
-      tippy_esm_default(document.getElementById("next_season_start"), {
-        content: new Date(
-          stored_season.next_start.replace(
-            "y0",
-            stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year
-          ).replace("{offset}", stored_season.offset)
-        ).toLocaleString(lang)
-      });
-    }
-    if (setting2 != null) {
-      let setting_container = page.structure.main.querySelector(
-        `.setting[data-id="${setting2}"]`
-      );
-      if (setting_container != null) {
-        let y = setting_container.getBoundingClientRect().top + window.scrollY - 300;
-        window.scroll({
-          top: y,
-          behavior: "smooth"
-        });
-      }
-    }
-  }
-  function load_skus() {
-    for (let flag in version.feature_flags) {
-      let current_state = version.feature_flags[flag].default;
-      if (settings.feature_flags[flag] != null)
-        current_state = settings.feature_flags[flag];
-      document.documentElement.setAttribute(
-        `data-ff--${flag}`,
-        current_state
-      );
-    }
-  }
-  unsafeWindow._update_flag_toggle = function(flag, container) {
-    update_flag_toggle(flag, container);
-  };
-  function update_flag_toggle(flag, container) {
-    let button = container.querySelector(".toggle");
-    if (!button) return;
-    let current_state = ff(flag);
-    button.setAttribute("aria-checked", !current_state);
-    settings.feature_flags[flag] = !current_state;
-    document.documentElement.setAttribute(
-      `data-ff--${flag}`,
-      `${!current_state}`
-    );
-    compile_settings();
-  }
-  function display_colour_presets() {
-    let colours = {
-      custom: [
-        {
-          type: "default",
-          sets: {
-            hue: 255,
-            sat: 1,
-            lit: 1
-          },
-          displays: {
-            hue: "var(--hue-seasonal, 255)",
-            sat: "var(--sat-seasonal, 1)",
-            lit: "var(--lit-seasonal, 1)"
-          }
-        },
-        {
-          type: "avatar",
-          sets: {
-            hue: auth.sets.hue,
-            sat: auth.sets.sat,
-            lit: auth.sets.lit
-          },
-          requires_flag: "colour_based_on_avatar"
-        },
-        {
-          type: "adaptive",
-          requires_flag: "adaptive_colours"
-        },
-        {
-          type: "customise"
-        }
-      ],
-      palette: [
-        {
-          sets: {
-            hue: 0,
-            sat: 1.2,
-            lit: 0.9
-          },
-          label: trans.red
-        },
-        {
-          sets: {
-            hue: 19,
-            sat: 1.275,
-            lit: 0.95
-          },
-          label: trans.orange
-        },
-        {
-          sets: {
-            hue: 48,
-            sat: 1.5,
-            lit: 1
-          },
-          label: trans.yellow
-        },
-        {
-          sets: {
-            hue: 98,
-            sat: 1.05,
-            lit: 1.025
-          },
-          label: trans.lime
-        },
-        {
-          sets: {
-            hue: 131,
-            sat: 1,
-            lit: 0.925
-          },
-          label: trans.green
-        },
-        {
-          sets: {
-            hue: 188,
-            sat: 1,
-            lit: 1.1
-          },
-          label: trans.aqua
-        },
-        {
-          sets: {
-            hue: 228,
-            sat: 1.3,
-            lit: 0.9
-          },
-          label: trans.blue
-        },
-        {
-          sets: {
-            hue: 254,
-            sat: 1.07,
-            lit: 1
-          },
-          label: trans.purple
-        },
-        {
-          sets: {
-            hue: 317,
-            sat: 1.1,
-            lit: 1
-          },
-          label: trans.pink
-        },
-        {
-          sets: {
-            hue: 0,
-            sat: 0,
-            lit: 1
-          },
-          label: trans.grey
-        }
-      ]
-    };
-    let exclusives = {
-      christmas: [
-        {
-          type: "season",
-          name: tl2(trans.seasonal.presets.nonsense),
-          sets: {
-            hue: 352,
-            sat: 1.8,
-            lit: 0.925
-          }
-        },
-        {
-          type: "season",
-          name: tl2(trans.seasonal.presets.fruitcake),
-          sets: {
-            hue: 24,
-            sat: 0.93,
-            lit: 1
-          }
-        },
-        {
-          type: "season",
-          name: tl2(trans.seasonal.presets.mistletoe),
-          sets: {
-            hue: 130,
-            sat: 0.45,
-            lit: 0.75
-          }
-        },
-        {
-          type: "season",
-          name: tl2(trans.seasonal.presets.festival),
-          sets: {
-            hue: 240,
-            sat: 1.4,
-            lit: 0.875
-          }
-        }
-      ]
-    };
-    exclusives.new_years = exclusives.christmas;
-    let hue_range;
-    let sat_range;
-    let lit_range;
-    for (let type in colours) {
-      const swatch_group = page.structure.main.querySelector(
-        `#colour_${type}`
-      );
-      if (!swatch_group) return;
-      colours[type].forEach((colour2) => {
-        if (colour2.requires_flag && version.feature_flags.hasOwnProperty(colour2.requires_flag)) {
-          if (!ff(colour2.requires_flag)) return;
-        }
-        if (colour2.type == "avatar" && !auth.name) return;
-        let text3;
-        if (colour2.label) text3 = tl2(colour2.label);
-        if (!colour2.type) colour2.type = "colour";
-        if (!colour2.displays && colour2.sets) colour2.displays = colour2.sets;
-        let blob;
-        let text_elem;
-        let swatch = html.node`
-                <button class="swatch-container" onclick=${() => {
-          if (!colour2.sets) return;
-          hue_range.set(colour2.sets.hue);
-          sat_range.set(colour2.sets.sat);
-          lit_range.set(colour2.sets.lit);
-        }}>
-                    <div class="swatch colourful" ref=${(el) => blob = el} data-swatch-type=${colour2.type} />
-                    <strong ref=${(el) => text_elem = el} />
-                </button>
-            `;
-        if (type == "custom") text3 = tl2(trans[colour2.type]);
-        if (colour2.type == "customise") {
-          text3 = tl2(trans.edit);
-          let colour3;
-          tippy_esm_default(swatch, {
-            theme: "window",
-            content: html.node`
-                        <div class="dialog-settings">
-                            <div class="setting-group blend">
-                                ${ff("colour_based_on_hex") ? html.node`
-                                <div class="setting" data-type="text">
-                                    <div class="heading">
-                                        <h5>${tl2(trans.convert_from_hex)}</h5>
-                                    </div>
-                                    <div class="input-container content-form">
-                                        ${colour3 = input({
-              type: "colour",
-              value: "#999999",
-              maxlength: 7,
-              warn_if_empty: true
-            })}
-                                        <button class="btn primary icon convert" onclick=${() => {
-              const value = colour3.value();
-              const hsl = hex_to_hsl(value);
-              hue_range.set(hsl.h);
-              sat_range.set(
-                clamp_sat2(hsl.s / 100 * 3)
-              );
-              lit_range.set(hsl.l / 100 + 0.35);
-            }}>${tl2(trans.convert)}</button>
-                                    </div>
-                                </div>
-                                ` : ""}
-                                ${hue_range = setting({ id: "hue", func: update_colour_swatches })}
-                                ${sat_range = setting({ id: "sat", func: update_colour_swatches })}
-                                ${lit_range = setting({ id: "lit", func: update_colour_swatches })}
-                            </div>
-                        </div>
-                    `,
-            placement: "bottom",
-            interactive: true,
-            interactiveBorder: 10,
-            trigger: "click",
-            appendTo: document.body
-          });
-        }
-        if (colour2.sets) {
-          colour2.sets.accent_type = colour2.type;
-          blob.style.setProperty("--hue-over", colour2.displays.hue);
-          blob.style.setProperty("--sat-over", colour2.displays.sat);
-          blob.style.setProperty("--lit-over", colour2.displays.lit);
-        }
-        if (colour2.type == "default" && stored_season.id != "none") {
-          text3 = tl2(trans.seasonal.name);
-          if (exclusives.hasOwnProperty(stored_season.id)) {
-            delete colour2.sets;
-            exclusives[stored_season.id] = [
-              {
-                type: "default",
-                name: tl2(trans.default),
-                sets: {
-                  hue: 255,
-                  sat: 1,
-                  lit: 1
-                },
-                displays: {
-                  hue: "var(--hue-seasonal, 255)",
-                  sat: "var(--sat-seasonal, 1)",
-                  lit: "var(--lit-seasonal, 1)"
-                }
-              },
-              ...exclusives[stored_season.id]
-            ];
-            tippy_esm_default(swatch, {
-              theme: "menu",
-              content: "",
-              allowHTML: true,
-              placement: "bottom",
-              interactive: true,
-              interactiveBorder: 10,
-              trigger: "click",
-              onShow(instance) {
-                const content = instance.popper.querySelector(".tippy-content");
-                render(
-                  content,
-                  html`
-                                    ${exclusives[stored_season.id].forEach(
-                    (colour3) => {
-                      colour3.sets = {
-                        accent_type: colour3.type,
-                        ...colour3.sets
-                      };
-                      if (!colour3.displays)
-                        colour3.displays = colour3.sets;
-                      return html.node`
-                                        <button class="dropdown-menu-clickable-item" aria-checked=${colour3.displays.hue == settings.hue && colour3.displays.sat == settings.sat && colour3.displays.lit} onclick=${() => {
-                        hue_range.set(colour3.displays.hue);
-                        sat_range.set(colour3.displays.sat);
-                        lit_range.set(colour3.displays.lit);
-                      }} style="--hue-over: ${colour3.displays.hue}; --sat-over: ${colour3.displays.sat}; --lit-over: ${colour3.displays.lit}">
-                                            ${colour3.name}
-                                        </button>
-                                    `;
-                    }
-                  )}
-                                `
-                );
-                display_seasonal_exclusives(
-                  content,
-                  colours,
-                  exclusives
-                );
-              }
-            });
-          }
-        }
-        text_elem.textContent = text3;
-        tippy_esm_default(swatch, {
-          content: text3
-        });
-        swatch_group.appendChild(swatch);
-      });
-    }
-  }
-  function prepare_corrections_page() {
-    let corrections_table_artist = document.getElementById("corrections-artist");
-    for (let artist in artist_corrections) {
-      if (artist == "version") continue;
-      corrections_table_artist.appendChild(html.node`
-        <div class="correction-row">
-                <div class="primary-name pre-transition">
-                    <h5>${artist}</h5>
-                </div>
-                <div class="arrow-divider"></div>
-                <div class="primary-name post-transition">
-                    <h5>${artist_corrections[artist]}</h5>
-                </div>
-        </div>`);
-    }
-    let corrections_table_albums_tracks = document.getElementById(
-      "corrections-albums_tracks"
-    );
-    for (let artist in album_track_corrections) {
-      if (artist == "version") continue;
-      corrections_table_albums_tracks.appendChild(html.node`
-            <div class="artist-row">
-                <h5>${artist}</h5>
-            </div>
-        `);
-      for (let media in album_track_corrections[artist]) {
-        corrections_table_albums_tracks.appendChild(html.node`
-                <div class="correction-row">
-                    <div class="primary-name pre-transition">
-                        <h5>${media}</h5>
-                    </div>
-                    <div class="arrow-divider"></div>
-                    <div class="primary-name post-transition">
-                        <h5>${album_track_corrections[artist][media]}</h5>
-                    </div>
-                </div>
-            `);
-      }
-    }
-  }
-  function import_settings10() {
-    let text3;
-    const modal = dialog({
-      id: "import_settings",
-      title: tl2(trans.import_settings),
-      body: html.node`
-            <p class="big-modal-alert alert-danger">${tl2(trans.import_notice)}</p>
-            <br>
-            <textarea class="modal-text" ref=${(el) => text3 = el} />
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id: 'import_settings'})">
-                    ${tl2(trans.cancel)}
-                </button>
-                <div class="fill"></div>
-                <button class="btn primary download" onclick=${() => {
-        try {
-          const parsed2 = JSON.parse(text3.value);
-          set_storage("bwaa", text3.value);
-          Object.assign(settings, parsed2);
-          load_settings();
-          dialog_rm({
-            id: "import_settings"
-          });
-        } catch (e) {
-          dialog({
-            id: "import_failed",
-            title: tl2(trans.import_failed),
-            body: html.node`
-                                <p class="big-modal-alert alert-error">${tl2(trans.import_failed.notice)}</p>
-                                <div class="modal-footer">
-                                    <div class="fill"></div>
-                                    <button class="btn primary done" onclick=${() => dialog_rm({ id: "import_failed" })}>
-                                        ${tl2(trans.done)}
-                                    </button>
-                                </div>
-                            `
-          });
-          console.error(e);
-        } finally {
-        }
-      }}>
-                    ${tl2(trans.import)}
-                </button>
-            </div>
-        `
-    });
-  }
-  function export_settings() {
-    share(JSON.stringify(compile_settings()));
-  }
-  unsafeWindow._reset_settings = function() {
-    dialog({
-      id: "reset_settings",
-      title: tl2(trans.reset_settings),
-      body: html.node`
-            <div class="big-modal-alert alert-error">
-                <strong>${tl2(trans.reset_notice)}</strong>
-                <a class="see-more" onclick=${() => export_settings()}>${tl2(trans.make_a_backup)}</a>
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">
-                    ${tl2(trans.cancel)}
-                </button>
-                <div class="fill"></div>
-                <button class="btn primary icon" data-type="reset" onclick="_confirm_reset()">
-                    ${tl2(trans.reset)}
-                </button>
-            </div>
-        `
-    });
-  };
-  unsafeWindow._confirm_reset = function() {
-    for (var member in settings) delete settings[member];
-    load_settings(true);
-    dialog_rm({
-      id: "reset_settings"
-    });
-  };
-  function activity_preview() {
-    let preview = page.structure.main.querySelector(".activity-preview");
-    if (!preview) return;
-    let random_types = [
-      "love",
-      "love",
-      "love",
-      "unlove",
-      "bookmark",
-      "unbookmark",
-      "obsess",
-      "image_upload",
-      "shout",
-      "shout",
-      "wiki"
-    ];
-    let random_involved = [
-      {
-        name: "Espresso",
-        type: "track",
-        sister: "Sabrina Carpenter"
-      },
-      {
-        name: "Busy Woman",
-        type: "track",
-        sister: "Sabrina Carpenter"
-      },
-      {
-        name: "I might say something stupid",
-        type: "track",
-        sister: "Charli xcx"
-      },
-      {
-        name: "Seigfried",
-        type: "track",
-        sister: "Frank Ocean"
-      },
-      {
-        name: "OLYMPIAN",
-        type: "track",
-        sister: "Playboi Carti"
-      },
-      {
-        name: "GODSTAINED",
-        type: "track",
-        sister: "Quadeca"
-      },
-      {
-        name: "hypochondriac",
-        type: "album",
-        sister: "brakence"
-      },
-      {
-        name: "my anti-aircraft friend",
-        type: "album",
-        sister: "julie"
-      },
-      {
-        name: "In Utero",
-        type: "album",
-        sister: "Nirvana"
-      },
-      {
-        name: "channel ORANGE",
-        type: "album",
-        sister: "Frank Ocean"
-      },
-      {
-        name: "Future",
-        type: "artist"
-      },
-      {
-        name: "Billie Eilish",
-        type: "artist"
-      },
-      {
-        name: "Swirlies",
-        type: "artist"
-      },
-      {
-        name: "Lucy Bedroque",
-        type: "artist"
-      },
-      {
-        name: "underscores",
-        type: "artist"
-      },
-      {
-        name: "Bladee",
-        type: "artist"
-      },
-      {
-        name: "Charli xcx",
-        type: "artist"
-      },
-      {
-        name: "Dawn FM",
-        type: "album",
-        sister: "The Weeknd"
-      },
-      {
-        name: "Random Access Memories",
-        type: "album",
-        sister: "Daft Punk"
-      },
-      {
-        name: "how i'm feeling now",
-        type: "album",
-        sister: "Charli xcx"
-      },
-      {
-        name: "Revengeseekerz",
-        type: "album",
-        sister: "Jane Remover"
-      },
-      {
-        name: "Around The Fur",
-        type: "album",
-        sister: "Deftones"
-      },
-      {
-        name: "Exmilitary",
-        type: "album",
-        sister: "Death Grips"
-      },
-      {
-        name: "OFFLINE!",
-        type: "album",
-        sister: "JPEGMAFIA"
-      },
-      {
-        name: "TRUST! - OFFLINE",
-        type: "track",
-        sister: "JPEGMAFIA"
-      },
-      {
-        name: "Hotline Bling",
-        type: "track",
-        sister: "Drake"
-      },
-      {
-        name: "All Eyez On Me",
-        type: "track",
-        sister: "2Pac"
-      },
-      {
-        name: "DOGTOOTH",
-        type: "track",
-        sister: "Tyler, The Creator"
-      },
-      {
-        name: "so american",
-        type: "track",
-        sister: "Olivia Rodrigo"
-      },
-      {
-        name: "I KNOW ?",
-        type: "track",
-        sister: "Travis Scott"
-      },
-      {
-        name: "Apple Pie",
-        type: "track",
-        sister: "Travis Scott"
-      },
-      {
-        name: "34+35",
-        type: "track",
-        sister: "Ariana Grande"
-      },
-      {
-        name: "New Again",
-        type: "track",
-        sister: "Kanye West"
-      },
-      {
-        name: "Radio Friendly Unit Shifter",
-        type: "track",
-        sister: "Nirvana"
-      },
-      {
-        name: "Empty Out Your Pockets",
-        type: "track",
-        sister: "Juice WRLD"
-      },
-      {
-        name: "Party By Myself",
-        type: "track",
-        sister: "Juice WRLD"
-      },
-      {
-        name: "Death Race For Love",
-        type: "album",
-        sister: "Juice WRLD"
-      },
-      {
-        name: "Timeless",
-        type: "track",
-        sister: "The Weeknd"
-      },
-      {
-        name: "SKITZO",
-        type: "track",
-        sister: "The Weeknd"
-      },
-      {
-        name: "OPM BABI",
-        type: "track",
-        sister: "Playboi Carti"
-      }
-    ];
-    make_random_activity(preview, random_types, random_involved);
-    make_random_activity(preview, random_types, random_involved);
-    make_random_activity(preview, random_types, random_involved);
-    page.state.activity_preview_timer = setInterval(function() {
-      if (!preview) {
-        clearInterval(page.state.activity_preview_timer);
-        return;
-      }
-      make_random_activity(preview, random_types, random_involved);
-    }, 2300);
-  }
-  function make_random_activity(preview, random_types, random_involved) {
-    activity_preview_new(preview, {
-      type: random_types[Math.floor(Math.random() * random_types.length)],
-      date: /* @__PURE__ */ new Date(),
-      involved: [
-        structuredClone(random_involved)[Math.floor(Math.random() * random_involved.length)]
-      ]
-    });
-  }
-  function activity_preview_new(parent, activity) {
-    parent.insertBefore(render_activity(activity), parent.firstElementChild);
-    if (parent.childElementCount > 3)
-      parent.removeChild(parent.lastElementChild);
-  }
-  function theme_bubbles(func = null) {
-    const themes = [
-      {
-        id: "adaptive",
-        name: tl2(trans.auto),
-        hide: !ff("adaptive_theme"),
-        new_release: true
-      },
-      {
-        id: "glass",
-        type: "light",
-        name: tl2(trans.glass),
-        hide: !ff("glass"),
-        new_release: true
-      },
-      {
-        type: "sep",
-        hide: !ff("adaptive_theme")
-      },
-      {
-        id: "light",
-        type: "light",
-        name: tl2(trans.themes.light)
-      },
-      {
-        id: "ink",
-        type: "light",
-        name: tl2(trans.themes.ink)
-      },
-      {
-        type: "sep"
-      },
-      {
-        id: "dark",
-        formal: "ash",
-        type: "dark",
-        name: tl2(trans.themes.dark)
-      },
-      {
-        id: "darker",
-        formal: "dark",
-        type: "darker",
-        name: tl2(trans.themes.darker)
-      },
-      {
-        id: "oled",
-        formal: "void",
-        type: "oled",
-        name: tl2(trans.themes.oled)
-      }
-    ];
-    let buttons = [];
-    const bubbles = html.node`
-        <div class="theme-bubbles">
-            ${themes.map((theme) => {
-      if (theme.hide) return html.node``;
-      if (theme.type == "sep") {
-        return html.node`
-                        <div class="sep theme-bubble-sep" />
-                    `;
-      }
-      if (!theme.formal) theme.formal = theme.id;
-      const bubble = html.node`
-                    <button class="theme-bubble" data-theme-id=${theme.id} onclick=${() => update_theme_bubble(theme.id)}>
-                        <div class="bubble">
-                            ${theme.id == "adaptive" ? html.node`
-                            <div class="inner theme-preview" data-bwaa--theme=${settings.theme_day} data-bwaa--theme_type=${["light", "ink"].includes(settings.theme_day) ? "light" : "dark"}>
-                                ${theme_preview()}
-                            </div>
-                            <div class="inner theme-preview" data-bwaa--theme=${settings.theme_night} data-bwaa--theme_type=${["light", "ink"].includes(settings.theme_night) ? "light" : "dark"}>
-                                ${theme_preview()}
-                            </div>
-                            ` : html.node`
-                            <div class="inner theme-preview" data-bwaa--theme=${theme.id} data-bwaa--theme_type=${theme.type}>
-                                ${theme_preview()}
-                            </div>
-                            `}
-                        </div>
-                        <strong>
-                            ${theme.name}
-                            ${theme.new_release ? html.node`<div class="new-badge">${tl2(trans.new)}</div>` : ""}
-                        </strong>
-                    </button>
-                `;
-      buttons.push(bubble);
-      return bubble;
-    })}
-        </div>
-    `;
-    bubbles.re_render = () => {
-      const adaptive = buttons.find(
-        (button) => button.getAttribute("data-theme-id") == "adaptive"
-      );
-      const bubble = adaptive.querySelector(":scope > .bubble");
-      render(
-        bubble,
-        html`
-                <div
-                    class="inner theme-preview"
-                    data-bwaa--theme=${settings.theme_day}
-                    data-bwaa--theme_type=${["light", "ink"].includes(
-          settings.theme_day
-        ) ? "light" : "dark"}
-                >
-                    ${theme_preview()}
-                </div>
-                <div
-                    class="inner theme-preview"
-                    data-bwaa--theme=${settings.theme_night}
-                    data-bwaa--theme_type=${["light", "ink"].includes(
-          settings.theme_night
-        ) ? "light" : "dark"}
-                >
-                    ${theme_preview()}
-                </div>
-            `
-      );
-    };
-    update_theme_bubble();
-    return bubbles;
-    function update_theme_bubble(theme = null) {
-      if (theme) {
-        if (theme != "adaptive") {
-          save_setting("theme_schedule", false);
-          save_setting("theme", theme);
-        } else {
-          save_setting("theme_schedule", true);
-        }
-        if (func) func(theme);
-      }
-      buttons.forEach((button) => {
-        const type = button.getAttribute("data-theme-id");
-        if (!settings.theme_schedule) {
-          button.setAttribute("aria-selected", settings.theme == type);
-        } else if (type == "adaptive") {
-          button.setAttribute("aria-selected", true);
-        } else {
-          button.setAttribute("aria-selected", false);
-        }
-      });
-    }
   }
 
   // src/components/lotus.js
@@ -36971,41 +30842,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   var import_color_thief_browser = __toESM(require_color_thief_min(), 1);
   function music_grids(search = page.structure.main, use_colour = true) {
     if (!search) return;
-    let insights = {
-      artist: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      album: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      track: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      }
-    };
     let grids = search.querySelectorAll(
       ".grid-items-item:not([data-bwaa-music-grids])"
     );
@@ -37079,51 +30915,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           ".grid-items-item-aux-text a:last-child"
         );
       }
-      if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
-        let plays = int_from_string(plays_elem.textContent.trim());
-        plays_elem.classList.add("grid-item-plays");
-        if (is_album) {
-          plays_elem.textContent = plays.toLocaleString(lang);
-        } else {
-          plays_elem.textContent = tl2(trans.count_plays, {
-            c: plays.toLocaleString(lang)
-          });
-        }
-        if (!is_album) {
-          insights.artist.display = true;
-          insights.artist.values.push(plays);
-          if (plays > insights.artist.highest.value)
-            insights.artist.highest.value = plays;
-        } else {
-          insights.album.display = true;
-          insights.album.values.push(plays);
-          if (plays > insights.album.highest.value)
-            insights.album.highest.value = plays;
-        }
-        if (page.type == "search" || page.type == "tag")
-          plays_elem.classList.add("grid-item-listeners");
-        if (!is_album && settings.colourful_counts && page.type == "user") {
-          if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
-            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
-            plays_elem.setAttribute(
-              "data-bwaa--scrobble-milestone",
-              parsed_scrobble_as_rank.milestone
-            );
-            plays_elem.style.setProperty(
-              "--hue-over",
-              parsed_scrobble_as_rank.hue
-            );
-            plays_elem.style.setProperty(
-              "--sat-over",
-              parsed_scrobble_as_rank.sat
-            );
-            plays_elem.style.setProperty(
-              "--lit-over",
-              parsed_scrobble_as_rank.lit
-            );
-          }
-        }
-      }
       let name = grid.querySelector(".grid-items-item-main-text a");
       if (!name) return;
       let artist;
@@ -37131,7 +30922,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         name.textContent = romanise(
           correct_artist(name.textContent.trim())
         );
-        insights.artist.labels.push(name.textContent);
       } else {
         artist = grid.querySelector(".grid-items-item-aux-block");
         if (!artist)
@@ -37142,43 +30932,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           name.textContent.trim(),
           artist.textContent.trim()
         );
-        if (settings.format_guest_features) {
-          let name_elem = name;
-          let artist_elem = artist;
-          let song_title = name_elem.getAttribute("title");
-          let formatted_title = name_includes(
-            song_title,
-            artist_elem.textContent.trim()
-          );
-          let song_tags = {};
-          if (formatted_title) {
-            song_title = romanise(formatted_title[0].trim());
-            insights.album.labels.push(song_title);
-            song_tags = formatted_title[1];
-            artist.textContent = romanise(formatted_title[2]);
-          }
-          render(
-            name_elem,
-            html.node`
-                    <span class="title">${song_title}</span>
-                    ${song_tags.map(
-              (tag) => html.node`
-                        <span class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</span>
-                    `
-            )}
-                `
-          );
-        } else {
-          artist.textContent = romanise(
-            correct_artist(artist.textContent.trim())
-          );
-          name.textContent = romanise(
-            correct_item_by_artist(
-              name.textContent.trim(),
-              artist.textContent.trim()
-            )
-          );
-        }
+        artist.textContent = romanise(
+          correct_artist(artist.textContent.trim())
+        );
+        name.textContent = romanise(
+          correct_item_by_artist(
+            name.textContent.trim(),
+            artist.textContent.trim()
+          )
+        );
       }
       const menu = tippy_esm_default(grid, {
         theme: "context-menu",
@@ -37300,7 +31062,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       });
       register_menu(grid, menu);
     });
-    if (page.subpage.startsWith("library")) bleh_glacier_insights(insights);
   }
 
   // src/components/nag_bar.js
@@ -37610,180 +31371,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   unsafeWindow._update_local_changelog_cache = function(json) {
     set_storage("bleh_changelog", JSON.stringify(json));
   };
-
-  // src/components/notifications.js
-  function bleh_notification_list(list, mini = false) {
-    list.classList = "notification-list";
-    if (mini) list.classList.add("mini");
-    let notifications = list.querySelectorAll(".inbox-notifications__item");
-    notifications.forEach((notification, index3) => {
-      if (mini && index3 > 4) notification.style.display = "none";
-      const link = notification.querySelector(
-        ".inbox-notifications__item-link"
-      );
-      const href = link.getAttribute("href");
-      const active = link.classList.contains(
-        "inbox-notifications__item--highlight"
-      );
-      notification.classList = "notification";
-      if (active) notification.classList.add("active");
-      if (mini) notification.classList.add("mini");
-      let type = "shoutbox";
-      let context = {
-        name: null,
-        sister: null
-      };
-      let involved = [];
-      const strongs = link.querySelectorAll("strong");
-      let split = href.replace(root, "").split("/");
-      const avatar2 = notification.querySelector(".avatar");
-      avatar2.classList = "avatar";
-      const time2 = notification.querySelector("time");
-      let is_reply = false;
-      let others_included = 0;
-      if (href.endsWith("/obsessions/set")) {
-        type = "obsession";
-        involved.push(split[1]);
-        const desc = strongs[0].textContent;
-        const desc_split = desc.split(" \u2014 ");
-        context.type = "track";
-        context.sister = correct_artist(desc_split[0]);
-        context.name = correct_item_by_artist(
-          desc_split[1],
-          context.sister
-        );
-      } else if (href.endsWith("/listening-report/month")) {
-        type = "listening-report";
-        involved.push(strongs[0].textContent);
-        let img = avatar2.querySelector("img");
-        img.src = auth.avatar;
-        img.alt = auth.name;
-        let label = avatar2.querySelector(".avatar-status-dot");
-        if (auth.pro) {
-          label.classList = "avatar-status-dot avatar-status-dot--subscriber";
-        } else {
-          label.remove();
-        }
-        context.type = "profile";
-        context.name = split[1];
-      } else if (href.startsWith(`${root}user/`)) {
-        context.type = "profile";
-        context.name = split[1];
-        strongs.forEach((strong, index4) => {
-          if (index4 == strongs.length - 1 && strongs.length > 1) {
-            obtain_additional_info(
-              strong.previousSibling.textContent,
-              strong.nextSibling.textContent
-            );
-            return;
-          } else if (index4 == strongs.length - 1 && strongs.length == 1) {
-            obtain_additional_info(strong.nextSibling.textContent);
-          }
-          involved.push(strong.textContent);
-        });
-      } else if (href.startsWith(`${root}music/`)) {
-        if (split[2].startsWith("+")) {
-          context.type = "artist";
-          context.name = correct_artist(desanitise(split[1]));
-        } else if (split[2] == "_") {
-          context.type = "track";
-          context.sister = correct_artist(desanitise(split[1]));
-          context.name = correct_item_by_artist(
-            desanitise(split[3]),
-            context.sister
-          );
-        } else {
-          context.type = "album";
-          context.sister = correct_artist(desanitise(split[1]));
-          context.name = correct_item_by_artist(
-            desanitise(split[2]),
-            context.sister
-          );
-        }
-        strongs.forEach((strong, index4) => {
-          if (index4 == strongs.length - 1) {
-            obtain_additional_info(
-              strong.previousSibling.textContent,
-              strong.nextSibling.textContent
-            );
-            return;
-          }
-          involved.push(strong.textContent);
-        });
-      } else if (href.startsWith(`${root}tag/`)) {
-        context.type = "tag";
-        context.name = split[1];
-        strongs.forEach((strong, index4) => {
-          if (index4 == strongs.length - 1) {
-            obtain_additional_info(
-              strong.previousSibling.textContent,
-              strong.nextSibling.textContent
-            );
-            return;
-          }
-          involved.push(strong.textContent);
-        });
-      }
-      console.info(split, context, type, involved);
-      patch_avatar(avatar2, involved[0]);
-      render(
-        notification,
-        html`
-                <div class="notification-avatar">${avatar2}</div>
-                <div
-                    class="bleh-icon"
-                    data-type=${type}
-                    style="--icon: var(--mask)"
-                />
-                <div class="notification-content">
-                    <div class="notification-title">
-                        ${type == "shoutbox" ? html.node`
-                    ${others_included == 0 ? html.node`
-                        ${is_reply ? tl2(trans.user_replied).replace("{u}", involved.join(", ")) : tl2(trans.user_commented).replace("{u}", involved.join(", "))}
-                    ` : html.node`
-                        ${is_reply ? tl2(trans.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl2(trans.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
-                    `}
-                    ` : type == "obsession" ? tl2(trans.obsession_expired) : type == "listening-report" ? tl2(trans.listening_report_available).replace(
-          "{m}",
-          involved[0]
-        ) : ""}
-                    </div>
-                    <div class="notification-context">
-                        <span
-                            class="bleh-icon"
-                            style="--icon: var(--icon-16-indent)"
-                        />
-                        <span
-                            class="notification-type"
-                            data-type=${context.type}
-                        >
-                            <span
-                                class="bleh-icon"
-                                style="--icon: var(--mask)"
-                            />
-                            <span
-                                >${context.sister ? `${context.name} ${tl2(trans.by)} ${context.sister}` : context.name}</span
-                            >
-                        </span>
-                    </div>
-                </div>
-                <div class="notification-time">${time2}</div>
-                <a
-                    class="link-block-cover-link"
-                    href=${link.getAttribute("href")}
-                />
-            `
-      );
-      function obtain_additional_info(text3, backup_text = null) {
-        const match3 = text3.match(/\d+/);
-        if (match3) others_included = parseInt(match3[0]);
-        if (text3.includes(tl2(trans.notification_replied_ctx)))
-          is_reply = true;
-        else if (backup_text && backup_text.trim().includes(tl2(trans.notification_replied_ctx)))
-          is_reply = true;
-      }
-    });
-  }
 
   // src/navigation.js
   function patch_masthead() {
@@ -38147,12 +31734,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let position = album_header.querySelector(
         ".header-new-chart-position-number"
       );
-      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
+      const avatar_img2 = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
       const listeners = document.body.querySelector(
         ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
       );
       save_hoshino_artwork(
-        avatar_img,
+        avatar_img2,
         page.name,
         page.sister,
         clean_number(listeners?.title)
@@ -38245,14 +31832,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           `sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${sat}, ${lit})`,
           "hue from album"
         );
-        load_chart_colours();
       } catch (e) {
         log2("no cover present", "hue from album");
       }
     }
     if (!is_subpage) {
       show_your_scrobbles();
-      bleh_music_page_charts();
       album_missing_a_tracklist();
       bleh_about_artist();
       bleh_tags_mini();
@@ -38586,7 +32171,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     if (!is_subpage) {
       show_your_scrobbles();
-      bleh_music_page_charts();
       bleh_tags_mini();
       let top_tracks = page.structure.main.querySelector("#top-tracks");
       if (top_tracks) {
@@ -39592,6 +33176,1860 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     );
   }
 
+  // src/components/auto_edit.js
+  function bleh_auto_edits() {
+    let corrections_panel = document.body.querySelector("#subscription-corrections");
+    page.structure.main.appendChild(corrections_panel);
+    let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
+    nav.insertBefore(html.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
+            <a class="secondary-nav-item-link" href="${root}settings/subscription">
+                ${tl2(trans.back)}
+            </a>
+        </li>
+    `, nav.firstElementChild);
+  }
+
+  // src/pages/lastfm_settings.js
+  var import_cropperjs = __toESM(require_cropper(), 1);
+
+  // src/components/radio_toggle.js
+  function radio({ name, value, values = {} }) {
+    let buttons = [];
+    let elem = html.node`
+        <div class="primary-selections">
+        ${Object.entries(values).map(([key, val]) => {
+      const icon = val.icon;
+      let input2;
+      const button = html.node`
+                <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
+        update_radio(key);
+      }}>
+                    <div class="radio-cont">
+                        <input type="radio" name=${name} value=${key} required ref=${(el) => input2 = el}>
+                        <div class="radio" aria-checked=${value == key} />
+                    </div>
+                    ${icon ? html.node`
+                                <div class="icon">
+                                    <div class="bleh-icon" style="--icon: var(--${icon})" />
+                                </div>
+                            ` : ""}
+                    <div class="heading">
+                        <h5>${typeof val.name == "object" ? tl(val.name) : val.name}</h5>
+                    </div>
+                </div>
+            `;
+      input2.checked = value == key;
+      buttons.push(button);
+      return button;
+    })}
+        </div>
+    `;
+    function update_radio(val) {
+      buttons.forEach((btn) => {
+        btn.querySelector("input").checked = btn.getAttribute("data-value") == val;
+        btn.querySelector(".radio").setAttribute(
+          "aria-checked",
+          btn.getAttribute("data-value") == val
+        );
+      });
+    }
+    return elem;
+  }
+  function radio_convert(existing) {
+    if (!existing) return {};
+    let values = {};
+    existing.forEach((item) => {
+      const input2 = item.querySelector("input");
+      const label = item.querySelector("label");
+      values[input2.value] = {
+        name: label.textContent.trim()
+      };
+    });
+    return values;
+  }
+
+  // src/pages/lastfm_settings.js
+  var cropper;
+  function bleh_native_settings() {
+    let no_data = page.structure.container.querySelector(
+      ":scope > .no-data-message"
+    );
+    if (no_data) {
+      page.structure.main.appendChild(no_data);
+    }
+    if (page.subpage == "overview") {
+      patch_settings_profile_tab();
+    } else if (page.subpage == "privacy") {
+      patch_settings_privacy_tab();
+    } else if (page.subpage == "subscription_overview") {
+      let panel = page.structure.container.querySelector(".row + div");
+      let subscription = panel.querySelector("#current-subscription");
+      let edits = panel.querySelector("#automatic-edits");
+      let merch_h = panel.querySelector(":scope > h2");
+      let merch = panel.querySelector("#mechandise-discount");
+      let history = panel.querySelector("#pro-history");
+      merch.insertBefore(merch_h, merch.firstElementChild);
+      page.structure.main.appendChild(subscription);
+      page.structure.main.appendChild(edits);
+      page.structure.main.appendChild(merch);
+      page.structure.main.appendChild(history);
+      let button = subscription.querySelector(".btn-primary");
+      if (button)
+        button.classList.add("subscription-button", "icon", "primary");
+      let more_link_wrap = edits.querySelector(".more-link");
+      if (more_link_wrap) {
+        more_link_wrap.classList = "";
+        let edit_buttons = more_link_wrap.querySelectorAll("a");
+        edit_buttons.forEach((edit_button, index3) => {
+          edit_button.classList.add(
+            "btn",
+            "edit-lead-button",
+            "icon",
+            "primary"
+          );
+          if (index3 == 0) edit_button.classList.add("edit-album");
+          else edit_button.classList.add("edit-track");
+        });
+      }
+    } else if (page.subpage.startsWith("subscription_automatic-edits")) {
+      bleh_auto_edits();
+    } else if (page.subpage == "account_overview") {
+      bleh_accounts();
+    } else if (page.subpage == "website") {
+      bleh_website();
+    } else if (page.subpage == "change-username_overview") {
+      bleh_name_change();
+    } else if (page.subpage == "applications_overview") {
+      bleh_applications();
+    }
+    if (ff("katsune")) return;
+    let edit_header = document.createElement("section");
+    edit_header.classList.add(
+      "redesigned-header",
+      "edit-header",
+      "no-background"
+    );
+    edit_header.innerHTML = `
+        <div class="tag-side">
+            <div class="tag-icon cog-icon"></div>
+        </div>
+        <div class="info-side">
+            <div class="sub-text">${tl2(trans.settings)}</div>
+            <h1>${header_text}</h1>
+        </div>
+    `;
+    page.structure.container.insertBefore(
+      edit_header,
+      page.structure.container.firstElementChild
+    );
+  }
+  function patch_settings_profile_tab() {
+    let update_picture = page.structure.main.querySelector("#update-picture");
+    if (!update_picture) return;
+    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    patch_settings_profile_panel(token, update_picture);
+    patch_settings_charts_panel(token);
+  }
+  function patch_settings_charts_panel(token) {
+    let charts_panel = document.getElementById("update-chart");
+    if (charts_panel.hasAttribute("data-kate-processed")) return;
+    charts_panel.setAttribute("data-kate-processed", "true");
+    charts_panel.classList.add("bleh--panel");
+    let original_chart_settings = {
+      recent: {
+        recent_artwork: document.getElementById(
+          "id_show_recent_tracks_artwork"
+        ).checked,
+        count: document.getElementById("id_chart_length_recent_tracks").outerHTML,
+        recent_realtime: document.getElementById(
+          "id_auto_refresh_recent_tracks"
+        ).checked
+      },
+      artists: {
+        timeframe: document.getElementById("id_chart_range_top_artists").outerHTML,
+        style: document.getElementById(
+          "id_chart_style_and_length_top_artists"
+        ).outerHTML
+      },
+      albums: {
+        timeframe: document.getElementById("id_chart_range_top_albums").outerHTML,
+        style: document.getElementById(
+          "id_chart_style_and_length_top_albums"
+        ).outerHTML
+      },
+      tracks: {
+        count: document.getElementById("id_chart_length_top_tracks").outerHTML,
+        timeframe: document.getElementById("id_chart_range_top_tracks").outerHTML
+      }
+    };
+    charts_panel.innerHTML = `
+        <h4>${tl2(trans.recent_tracks)}</h4>
+        <form action="${root}settings#update-chart" name="chart-form" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="inner-preview pad">
+                <div class="tracks recent">
+                    <div class="track realtime">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.amount_to_display)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
+                        ${original_chart_settings.recent.count}
+                    </div>
+                </div>
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl2(trans.recent_artwork)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                        <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl2(trans.recent_realtime.name)}</h5>
+                        <p>${tl2(trans.recent_realtime.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                        <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <h4>${tl2(trans.top_artists)}</h4>
+            <div class="inner-preview pad">
+                <div class="item-grid artist">
+                    <div class="grid-primary artist">
+                        <div class="grid-item"></div>
+                    </div>
+                    <div class="grid-mains">
+                        <div class="grid-main artist">
+                            <div class="grid-item grid-item--extra artist"></div>
+                            <div class="grid-item grid-item--extra artist"></div>
+                            <div class="grid-item"></div>
+                            <div class="grid-item"></div>
+                        </div>
+                        <div class="grid-main artist">
+                            <div class="grid-item grid-item--extra artist"></div>
+                            <div class="grid-item grid-item--extra artist"></div>
+                            <div class="grid-item"></div>
+                            <div class="grid-item"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tracks artist">
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
+                        ${original_chart_settings.artists.timeframe}
+                    </div>
+                </div>
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_style)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
+                        ${original_chart_settings.artists.style}
+                    </div>
+                </div>
+            </div>
+            <h4>${tl2(trans.top_albums)}</h4>
+            <div class="inner-preview pad">
+                <div class="item-grid album">
+                    <div class="grid-primary album">
+                        <div class="grid-item"></div>
+                    </div>
+                    <div class="grid-mains">
+                        <div class="grid-main album">
+                            <div class="grid-item"></div>
+                            <div class="grid-item"></div>
+                            <div class="grid-item grid-item--extra album"></div>
+                            <div class="grid-item grid-item--extra album"></div>
+                        </div>
+                        <div class="grid-main album">
+                            <div class="grid-item"></div>
+                            <div class="grid-item"></div>
+                            <div class="grid-item grid-item--extra album"></div>
+                            <div class="grid-item grid-item--extra album"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tracks album">
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
+                        ${original_chart_settings.albums.timeframe}
+                    </div>
+                </div>
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_style)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
+                        ${original_chart_settings.albums.style}
+                    </div>
+                </div>
+            </div>
+            <h4>${tl2(trans.top_tracks)}</h4>
+            <div class="inner-preview pad">
+                <div class="tracks">
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
+                        ${original_chart_settings.tracks.timeframe}
+                    </div>
+                </div>
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.amount_to_display)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
+                        ${original_chart_settings.tracks.count}
+                    </div>
+                </div>
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl2(trans.save)}
+                </button>
+                <input type="hidden" value="chart" name="submit">
+            </div>
+        </form>
+    `;
+    custom_select(
+      charts_panel.querySelector("#id_chart_length_recent_tracks"),
+      charts_panel.querySelector("#id_chart_length_recent_tracks_select")
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_range_top_artists"),
+      charts_panel.querySelector("#id_chart_range_top_artists_select")
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_style_and_length_top_artists"),
+      charts_panel.querySelector(
+        "#id_chart_style_and_length_top_artists_select"
+      )
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_range_top_albums"),
+      charts_panel.querySelector("#id_chart_range_top_albums_select")
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_style_and_length_top_albums"),
+      charts_panel.querySelector(
+        "#id_chart_style_and_length_top_albums_select"
+      )
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_range_top_tracks"),
+      charts_panel.querySelector("#id_chart_range_top_tracks_select")
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_length_top_tracks"),
+      charts_panel.querySelector("#id_chart_length_top_tracks_select")
+    );
+    for (let category in original_chart_settings) {
+      for (let setting2 in original_chart_settings[category]) {
+        update_inbuilt_item(
+          setting2,
+          original_chart_settings[category][setting2],
+          false
+        );
+      }
+    }
+    let selects = document.body.querySelectorAll("select");
+    selects.forEach((select2) => {
+      select2.setAttribute(
+        "onchange",
+        `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`
+      );
+      update_inbuilt_select(select2.getAttribute("id"), select2.value);
+    });
+  }
+  function patch_settings_profile_panel(token, update_picture) {
+    update_picture.classList.add("bleh--panel");
+    const upload_form = update_picture.querySelector(".avatar-upload-form");
+    const avatar_url = update_picture.querySelector(".image-upload-preview img").getAttribute("src");
+    const upload_finished = update_picture.querySelector(".alert-success");
+    if (page.state.avatar_changer && upload_finished) {
+      const id = page.state.avatar_changer.getAttribute("data-modal-id");
+      dialog_rm({ id });
+    }
+    let form_display_name = document.getElementById("id_full_name").value;
+    let form_website = document.getElementById("id_homepage").value;
+    let form_country = document.getElementById("id_country");
+    let form_about_me = document.getElementById("id_about_me").textContent;
+    let chars;
+    let about;
+    let preview;
+    const markdown_settings = {
+      allow_headers: true,
+      allow_banners: true,
+      allow_icons: true,
+      allow_hue: true,
+      cache: true,
+      take_effect: false,
+      allow_socials: true,
+      allow_alignment: true
+    };
+    let banner_setting;
+    let accent_setting;
+    render(
+      update_picture,
+      html`
+            <h4>${tl2(trans.profile)}</h4>
+            <div class="banner-preview"></div>
+            <div class="profile-container">
+                <div class="avatar-side">
+                    <div
+                        class="avatar image-upload-preview"
+                        onclick=${() => avatar(token)}
+                    >
+                        <img
+                            src=${avatar_url}
+                            alt=${tl2(trans.your_avatar)}
+                            loading="lazy"
+                        />
+                        <div class="avatar-overlay"></div>
+                    </div>
+                </div>
+                <div class="info-side">
+                    <div class="header-info">
+                        <div class="header">
+                            <h1>${auth.name}</h1>
+                        </div>
+                        <div class="header-title-secondary">
+                            <span
+                                class="header-title-secondary--pre"
+                                id="header-title-display-name--pre"
+                            ></span>
+                            <span
+                                class="header-title-display-name"
+                                id="header-title-display-name"
+                            ></span>
+                            <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
+                        <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
+                        </div>
+                    </div>
+                    <div class="sub-info">
+                        <form
+                            action="${root}settings#update-profile"
+                            name="profile-form"
+                            data-form-type="identity"
+                            method="post"
+                        >
+                            <input
+                                type="hidden"
+                                name="csrfmiddlewaretoken"
+                                value="${token}"
+                            />
+                            <div class="info-grid">
+                                <div class="info-row">
+                                    <div class="title">
+                                        ${tl2(trans.subtitle)}
+                                    </div>
+                                    <div class="input">
+                                        <input
+                                            type="text"
+                                            name="full_name"
+                                            value=${form_display_name}
+                                            maxlength="36"
+                                            id="id_full_name"
+                                            oninput="_update_display_name(this.value)"
+                                            data-form-type="other"
+                                        />
+                                        <div class="tip">
+                                            ${tl2(trans.pronoun_tip)}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="title">
+                                        ${tl2(trans.country)}
+                                    </div>
+                                    ${select(
+        select_prepare(form_country),
+        form_country.value,
+        "country"
+      )}
+                                </div>
+                                <div class="info-row">
+                                    <div class="title">${tl2(trans.about)}</div>
+                                    <div class="input about-me" id="about_me">
+                                        <textarea
+                                            name="about_me"
+                                            placeholder=${tl2(
+        trans.anything_you_can_imagine
+      )}
+                                            cols="40"
+                                            rows="10"
+                                            class="textarea--s"
+                                            maxlength="500"
+                                            id="id_about_me"
+                                            oninput=${() => update_about()}
+                                            ref=${(el) => about = el}
+                                            data-form-type="other"
+                                        >
+                                            ${form_about_me}
+                                        </textarea
+                                        >
+                                        <div class="dual-tip">
+                                            <div
+                                                class="tip markdown-enabled"
+                                                onclick=${() => markdown_prompt(
+        markdown_settings
+      )}
+                                            >
+                                                ${tl2(trans.supports_markdown)}
+                                            </div>
+                                            <div
+                                                class="tip characters"
+                                                ref=${(el) => chars = el}
+                                            >
+                                                ${tl2(
+        trans.value_characters_max,
+        { v: "500" }
+      )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="title">
+                                        ${tl2(trans.about_me_preview)}
+                                    </div>
+                                    <span
+                                        class="bleh--about-me-preview markdown-body"
+                                        ref=${(el) => preview = el}
+                                    ></span>
+                                </div>
+                                <div class="info-row" style="display: none">
+                                    <div class="title">
+                                        ${tl2(trans.website)}
+                                    </div>
+                                    <div class="input">
+                                        <input
+                                            type="url"
+                                            name="homepage"
+                                            value="${form_website}"
+                                            id="id_homepage"
+                                            data-form-type="website"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="save-row">
+                                <div class="form-submit">
+                                    <button
+                                        type="submit"
+                                        class="btn-primary save"
+                                        data-form-type="action"
+                                    >
+                                        ${tl2(trans.save)}
+                                    </button>
+                                    <input
+                                        type="hidden"
+                                        value="profile"
+                                        name="submit"
+                                    />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-group">
+                <div
+                    class="setting"
+                    data-type="info"
+                    ref=${(el) => banner_setting = el}
+                />
+                <div
+                    class="setting"
+                    data-type="info"
+                    disabled=${!auth.sponsor}
+                    ref=${(el) => accent_setting = el}
+                />
+                ${setting({ id: "avatar_radius" })}
+            </div>
+        `
+    );
+    page.structure.main.removeChild(
+      page.structure.main.querySelector("#update-profile")
+    );
+    update_about();
+    function update_about() {
+      log2("re-rendering", "about", "log");
+      const value = about.value;
+      chars.textContent = tl2(trans.value_characters_max, {
+        v: `${value.length}/500`
+      });
+      chars.setAttribute("data-exceeded", value.length >= 500);
+      render(preview, markdown(value, markdown_settings));
+      let profile_cache2 = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+      let cache3 = profile_cache2[auth.name];
+      console.info("cache", cache3);
+      render(
+        banner_setting,
+        html`
+                <div class="heading">
+                    <h5>${tl2(trans.profile_banner.name)}</h5>
+                    <p>${tl2(trans.profile_banner.body)}</p>
+                    ${cache3.banner ? html.node`
+                <p>${tl2(trans.current_banner_value).replace("{v}", cache3.banner)}</p>
+                ` : ""}
+                </div>
+                ${() => {
+          if (!cache3.banner)
+            return html.node`
+                        <div class="info">
+                            <p>${tl2(trans.none)}</p>
+                        </div>
+                    `;
+          let banner_image = html.node`
+                    <div class="banner-image" style="background-image: url(${cache3.banner})" />
+                `;
+          tippy_esm_default(banner_image, {
+            content: cache3.banner
+          });
+          return banner_image;
+        }}
+            `
+      );
+      const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+      console.info(
+        "cache update",
+        about.value,
+        cache3.hue,
+        cache3.sat,
+        cache3.lit
+      );
+      let edit;
+      render(
+        accent_setting,
+        html`
+                <div class="heading">
+                    <h5>
+                        ${tl2(trans.profile_accent.name)}<span
+                            class="new-badge sponsor-related"
+                            >${tl2(trans.sponsors_only)}</span
+                        ><span class="new-badge beta">${tl2(trans.new)}</span>
+                    </h5>
+                    <p>${tl2(trans.profile_accent.body)}</p>
+                </div>
+                <div class="info">
+                    <div
+                        class="colour-tile colourful"
+                        style="--hue-over: ${cache3.hue}; --sat-over: ${cache3.sat}; --lit-over: ${cache3.lit}"
+                    />
+                    <div class="swatch-group palette">
+                        <button
+                            class="swatch-container"
+                            ref=${(el) => edit = el}
+                            onclick=${() => {
+          let hue_range;
+          let sat_range;
+          let lit_range;
+          const match3 = about.value.match(accent_regex);
+          console.info(match3);
+          if (match3) {
+            save_setting(
+              "profile_hue",
+              parseInt(match3[1], 10)
+            );
+            save_setting(
+              "profile_sat",
+              parseFloat(match3[2])
+            );
+            save_setting(
+              "profile_lit",
+              parseFloat(match3[3])
+            );
+            settings_store.profile_hue.default = settings.hue;
+            settings_store.profile_sat.default = settings.sat;
+            settings_store.profile_lit.default = settings.lit;
+          }
+          let accent_preview;
+          dialog({
+            id: "profile_accent",
+            title: tl2(trans.profile_accent.name),
+            body: html.node`
+                                <div class="setting-group">
+                                    <div class="setting" data-type="info">
+                                        <div class="heading">
+                                            <h5>${tl2(trans.preview)}</h5>
+                                        </div>
+                                        <div class="info">
+                                            <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
+                                        </div>
+                                    </div>
+                                    ${ff("colour_based_on_hex") ? html.node`
+                                    <div class="setting" data-type="text">
+                                        <div class="heading">
+                                            <h5>${tl2(trans.convert_from_hex)}</h5>
+                                        </div>
+                                        <div class="input-container content-form">
+                                            ${colour = input({
+              type: "colour",
+              value: "#999999",
+              maxlength: 7,
+              warn_if_empty: true
+            })}
+                                            <button class="btn primary icon convert" onclick=${() => {
+              const value2 = colour.value();
+              const hsl = hex_to_hsl(value2);
+              hue_range.set(hsl.h);
+              sat_range.set(
+                clamp_sat(hsl.s / 100 * 3)
+              );
+              lit_range.set(
+                hsl.l / 100 + 0.35
+              );
+            }}>${tl2(trans.convert)}</button>
+                                        </div>
+                                    </div>
+                                    ` : ""}
+                                    ${hue_range = setting({ id: "profile_hue", func: update_colour_preview })}
+                                    ${sat_range = setting({ id: "profile_sat", func: update_colour_preview })}
+                                    ${lit_range = setting({ id: "profile_lit", func: update_colour_preview })}
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
+                                        ${tl2(trans.back)}
+                                    </button>
+                                    <div class="fill"></div>
+                                    <button class="btn primary continue" onclick=${() => {
+              const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
+              if (match3) {
+                about.value = about.value.replace(
+                  accent_regex,
+                  new_accent
+                );
+              } else {
+                const trimmed = about.value.trimEnd();
+                if (trimmed.length == 0) {
+                  about.value = new_accent;
+                } else {
+                  about.value = trimmed + "\n\n" + new_accent;
+                }
+              }
+              about.dispatchEvent(
+                new InputEvent("input", {
+                  bubbles: true,
+                  cancelable: true
+                })
+              );
+              dialog_rm({ id: "profile_accent" });
+              status({
+                title: tl2(
+                  trans.profile_accent.reminder
+                )
+              });
+            }}>
+                                        ${tl2(trans.change)}
+                                    </button>
+                                </div>
+                            `
+          });
+          function update_colour_preview() {
+            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+          }
+        }}
+                        >
+                            <div
+                                class="swatch colourful"
+                                data-swatch-type="customise"
+                            />
+                        </button>
+                    </div>
+                </div>
+            `
+      );
+      tippy_esm_default(edit, {
+        content: tl2(trans.edit)
+      });
+    }
+    update_display_name(form_display_name);
+  }
+  unsafeWindow._update_display_name = function(value) {
+    update_display_name(value);
+  };
+  function update_display_name(value) {
+    document.getElementById("header-title-display-name").textContent = value;
+    let pronouns2 = use_pronouns(value);
+    document.getElementById("header-title-display-name--pre").textContent = pronouns2 ? tl2(trans.account_pronouns) : tl2(trans.aka);
+  }
+  function use_pronouns(value) {
+    value = value.replaceAll(" ", "");
+    if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/"))
+      return true;
+    return false;
+  }
+  function avatar(token = "") {
+    if (!token) token = page.token;
+    else page.token = token;
+    page.state.avatar_changer = dialog({
+      id: "edit_avatar",
+      title: tl2(trans.change_avatar),
+      body: html.node`
+            <div class="forms">
+                <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                    <div class="form-group form-group--avatar js-form-group upload-avatar">
+                        <div class="js-form-group-controls form-group-controls">
+                            <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
+                                ${tl2(trans.upload)}
+                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl2(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                            </span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary save" id="avatar_saver">
+                        ${tl2(trans.save)}
+                    </button>
+                    <input type="hidden" value="avatar" name="submit">
+                </form>
+                <form action="${root}settings/avatar/delete" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                    <div class="form-group delete-avatar">
+                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl2(trans.delete)}</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl2(trans.cancel)}</button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl2(trans.save)}</button>
+            </div>
+        `
+    });
+    page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
+    const file_button = page.state.avatar_changer.querySelector(".btn-file");
+    const save_button = page.state.avatar_changer.querySelector(
+      ".modal-footer .primary"
+    );
+    let form;
+    function update_avatar(e) {
+      console.info(e);
+      if (!e.target.files || !e.target.files[0]) return;
+      form = page.state.avatar_changer.querySelector(".bleh-modal-body");
+      if (e.target.files[0].type == "image/gif") {
+        save_avatar();
+        finish_saving_avatar();
+        return;
+      }
+      let reader = new FileReader();
+      reader.onload = function() {
+        crop(reader.result);
+        save_button.removeAttribute("disabled");
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    function save_avatar() {
+      page.state.avatar_changer.querySelector("#avatar_saver").click();
+    }
+    function finish_saving_avatar() {
+      page.state.avatar_changer.setAttribute("data-loading", "true");
+      page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
+        button.setAttribute("disabled", "true");
+        button.removeAttribute("onclick");
+      });
+    }
+    function crop(file) {
+      let crop_image;
+      let save;
+      const crop_dialog = dialog({
+        id: "crop",
+        title: tl2(trans.crop_avatar),
+        body: html.node`
+                <div class="crop">
+                    <img src=${file} ref=${(el) => crop_image = el}>
+                </div>
+                <div class="alert alert-info">
+                    ${tl2(trans.crop_notice)}
+                </div>
+                <div class="modal-footer">
+                    <button class="see-more cancel" onclick=${() => {
+          if (cropper && cropper.destroy) cropper.destroy();
+          cropper = null;
+          avatar();
+        }}>${tl2(trans.cancel)}</button>
+                    <div class="fill"></div>
+                    <button class="btn primary save" onclick=${() => {
+          if (!cropper) return;
+          crop_dialog.querySelectorAll(".bleh-modal-body button").forEach((button) => {
+            button.setAttribute("disabled", "true");
+            button.removeAttribute("onclick");
+          });
+          const canvas = cropper.getCroppedCanvas();
+          canvas.toBlob((blob) => {
+            const cropped_file = new File(
+              [blob],
+              "avatar.png",
+              { type: "image/png" }
+            );
+            const inner_form = form.querySelector("form");
+            inner_form.style.display = "none";
+            crop_dialog.querySelector(".bleh-modal-body").appendChild(inner_form);
+            const file_input = inner_form.querySelector('input[type="file"]');
+            const data_transfer = new DataTransfer();
+            data_transfer.items.add(cropped_file);
+            file_input.files = data_transfer.files;
+            inner_form.querySelector("#avatar_saver").click();
+          }, "image/png");
+        }} ref=${(el) => save = el} disabled>${tl2(trans.save)}</button>
+                </div>
+            `
+      });
+      page.state.avatar_changer = crop_dialog;
+      crop_image.onload = () => {
+        if (cropper && cropper.destroy) cropper.destroy();
+        crop_image.style.maxWidth = "none";
+        crop_image.style.width = crop_image.naturalWidth + "px";
+        crop_image.style.height = crop_image.naturalHeight + "px";
+        cropper = new import_cropperjs.default(crop_image, {
+          viewMode: 3,
+          dragMode: "crop",
+          movable: true,
+          zoomable: true,
+          scalable: false,
+          cropBoxMovable: true,
+          cropBoxResizable: true,
+          background: false,
+          guides: true,
+          autoCropArea: 1
+        });
+        save.removeAttribute("disabled");
+      };
+    }
+  }
+  function patch_settings_privacy_tab() {
+    let privacy_panel = document.getElementById("privacy");
+    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    bleh_communication_panel(token);
+    patch_settings_privacy_panel(token, privacy_panel);
+  }
+  function bleh_communication_panel(token) {
+    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+    let panel = page.structure.main.querySelector("#ignorelist");
+    panel.classList.add("bleh--panel");
+    let list = panel.querySelectorAll(".ignore-list tr");
+    let new_list = document.createElement("div");
+    new_list.classList.add(
+      "generic-table-list",
+      "user-vertical-list",
+      "take-space"
+    );
+    let exceeded = false;
+    let exceed_amount = 10;
+    let amount = 0;
+    list.forEach((item, index3) => {
+      let name = item.querySelector("td").textContent.trim();
+      let form2 = item.querySelector("form");
+      let button = form2.querySelector("button");
+      button.classList.add("icon", "chibi", "danger-subtle");
+      button.setAttribute("data-type", "trash");
+      let entry = html.node`
+            <div class="generic-table-list-entry user-vertical-list-item">
+                <div class="name">
+                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
+                </div>
+                <div class="text preview">
+                    ${profile_notes.hasOwnProperty(name) ? html.node`
+                        <p id="profile-note-row-preview--${name}">${{ html: profile_notes[name] }}</p>
+                    ` : ""}
+                </div>
+                <div class="actions">
+                    ${form2}
+                </div>
+            </div>
+        `;
+      if (index3 > exceed_amount && !exceeded) exceeded = true;
+      if (exceeded) entry.classList.add("entry-is-exceeded");
+      new_list.appendChild(entry);
+      amount += 1;
+    });
+    if (exceeded) {
+      let remainder = amount - exceed_amount;
+      new_list.classList.add("list-is-exceeded");
+      new_list.setAttribute("data-expanded", "false");
+      let expand = html.node`
+            <button class="see-more expand-down" onclick=${() => {
+        expand.style.display = "none";
+        new_list.setAttribute("data-expanded", "true");
+      }}>
+                ${tl2(trans.view_count_more).replace("{c}", remainder.toString())}
+            </button>
+        `;
+      new_list.appendChild(expand);
+    }
+    let form = page.structure.main.querySelector('[name="ignorelist"]');
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    render(
+      panel,
+      html`
+            <h4>${tl2(trans.block_list)}</h4>
+            <div class="user-top-panel">
+                <div class="user-top-avatar user-top-avatar-side-left">
+                    <div class="bleh-icon"></div>
+                </div>
+                <img
+                    class="user-top-avatar user-top-avatar-main"
+                    src=${auth.avatar.replace("avatar42s", "avatar300s")}
+                    alt=${auth.name}
+                />
+                <div class="user-top-avatar user-top-avatar-side-right">
+                    <div class="bleh-icon"></div>
+                </div>
+            </div>
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl2(trans.profile)}</h5>
+                    <form
+                        action="${root}settings/privacy#ignorelist"
+                        name="ignorelist"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="csrfmiddlewaretoken"
+                            value=${page.token}
+                        />
+                        <div class="input-container">
+                            <input
+                                type="text"
+                                maxlength="80"
+                                id="id_user"
+                                name="user"
+                                placeholder=${tl2(trans.enter_username)}
+                            />
+                            <input
+                                type="hidden"
+                                name="listaction"
+                                value="add"
+                            />
+                            <input
+                                type="hidden"
+                                name="submit"
+                                value="ignorelist"
+                            />
+                            <button
+                                class="bleh--btn primary icon block"
+                                type="submit"
+                            >
+                                ${tl2(trans.block)}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="alert alert-info">
+                ${tl2(trans.blocked_count).replace("{c}", amount)}
+            </div>
+            ${new_list}
+            <div class="sep" />
+            <h5>${tl2(trans.when_blocked)}</h5>
+            <div class="to-consider">
+                <ul class="to-consider-good">
+                    <li>${tl2(trans.blocked_user_public)}</li>
+                    <li>${tl2(trans.blocked_user_message)}</li>
+                    <li>${tl2(trans.blocked_user_new_shouts)}</li>
+                </ul>
+                <ul class="to-consider-bad">
+                    <li>${tl2(trans.blocked_user_old_shouts)}</li>
+                    <li>${tl2(trans.blocked_user_view_profile)}</li>
+                </ul>
+            </div>
+        `
+    );
+  }
+  function patch_settings_privacy_panel(token, privacy_panel) {
+    privacy_panel.classList.add("bleh--panel");
+    let original_privacy_settings = {
+      recent_listening: document.getElementById("id_hide_realtime").checked,
+      receiving_msgs: document.getElementById("id_message_privacy").outerHTML,
+      disable_shoutbox: document.getElementById("id_shoutbox_disabled").checked
+    };
+    privacy_panel.innerHTML = `
+        <h4>${tl2(trans.privacy)}</h4>
+        <form action="${root}settings/privacy" name="privacy" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="inner-preview pad">
+                <div class="tracks recent_listening">
+                    <div class="track realtime">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-group">
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl2(trans.recent_listening.name)}</h5>
+                        <p>${tl2(trans.recent_listening.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
+                        <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="setting" data-type="options">
+                    <div class="heading">
+                        <h5>${tl2(trans.allow_messages_from)}</h5>
+                    </div>
+                    <div class="primary-selections">
+                        ${original_privacy_settings.receiving_msgs}
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
+                            <h5>${tl2(trans.everyone)}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
+                            <h5>${tl2(trans.following_and_neighbours)}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
+                            <h5>${tl2(trans.following)}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inner-preview pad">
+                <div class="shouts">
+                    <div class="shout-preview">
+                        <div class="avatar-side">
+                            <div class="shout-avatar-placeholder"></div>
+                        </div>
+                        <div class="info-side">
+                            <div class="header">
+                                <div class="shout-username"></div>
+                                <div class="shout-time"></div>
+                            </div>
+                            <div class="shout-contents"></div>
+                            <div class="shout-contents"></div>
+                        </div>
+                    </div>
+                    <div class="shout-preview">
+                        <div class="avatar-side">
+                            <div class="shout-avatar-placeholder"></div>
+                        </div>
+                        <div class="info-side">
+                            <div class="header">
+                                <div class="shout-username"></div>
+                                <div class="shout-time"></div>
+                            </div>
+                            <div class="shout-contents"></div>
+                            <div class="shout-contents"></div>
+                        </div>
+                    </div>
+                    <div class="shout-preview">
+                        <div class="avatar-side">
+                            <div class="shout-avatar-placeholder"></div>
+                        </div>
+                        <div class="info-side">
+                            <div class="header">
+                                <div class="shout-username"></div>
+                                <div class="shout-time"></div>
+                            </div>
+                            <div class="shout-contents"></div>
+                            <div class="shout-contents"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-group">
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl2(trans.close_shouts.name)}</h5>
+                        <p>${tl2(trans.close_shouts.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
+                        <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl2(trans.save)}
+                </button>
+                <input type="hidden" value="privacy" name="submit">
+            </div>
+        </form>
+    `;
+    for (let setting2 in original_privacy_settings) {
+      update_inbuilt_item(setting2, original_privacy_settings[setting2], false);
+    }
+    let selects = document.body.querySelectorAll("select");
+    selects.forEach((select2) => {
+      select2.setAttribute(
+        "onchange",
+        `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`
+      );
+      update_inbuilt_select(select2.getAttribute("id"), select2.value);
+    });
+  }
+  function bleh_accounts() {
+    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let original_settings = {
+      email_language: page.structure.main.querySelector('[name="language"]'),
+      marketing_emails: page.structure.main.querySelector(
+        '[name="opt_in_marketing"]'
+      ),
+      email: page.structure.main.querySelector('[name="email"]').value,
+      captcha: page.structure.main.querySelector(".lfm-recaptcha")
+    };
+    render(
+      page.structure.main,
+      html`
+            <section class="bleh--panel">
+                <h4>${tl2(trans.information)}</h4>
+                <div class="setting-group">
+                    <form
+                        action="${root}settings/change-username/send-email"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="csrfmiddlewaretoken"
+                            value="${token}"
+                        />
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl2(trans.username.name)}</h5>
+                                <p>
+                                    ${{
+        html: tl2(trans.username.body).replace(
+          "{a}",
+          `<a href="https://support.last.fm/" target="_blank">`
+        ).replace("{/a}", "</a>")
+      }}
+                                </p>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_current_username"
+                                    type="text"
+                                    name="current_username"
+                                    value="${auth.name}"
+                                    disabled
+                                    required
+                                />
+                                <button class="btn chibi icon primary submit">
+                                    ${tl2(trans.send)}
+                                </button>
+                                <input
+                                    type="hidden"
+                                    value="change_username"
+                                    name="submit"
+                                />
+                            </div>
+                        </div>
+                    </form>
+                    <form
+                        action="${root}settings/account"
+                        name="change-email"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="csrfmiddlewaretoken"
+                            value="${token}"
+                        />
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl2(trans.email)}</h5>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_email"
+                                    type="text"
+                                    name="email"
+                                    value="${original_settings.email}"
+                                    required
+                                />
+                                <button class="btn chibi icon primary submit">
+                                    ${tl2(trans.save)}
+                                </button>
+                                <input
+                                    type="hidden"
+                                    value="email_update"
+                                    name="submit"
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <form
+                    class="password-container"
+                    action="${root}settings/account/password#change-password"
+                    name="change-password"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="csrfmiddlewaretoken"
+                        value="${token}"
+                    />
+                    <div class="setting-group">
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl2(trans.password)}</h5>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_password"
+                                    type="password"
+                                    name="password"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl2(trans.new_password)}</h5>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_new_password"
+                                    type="password"
+                                    name="new_password"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl2(trans.confirm_password)}</h5>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_new_password_confirmation"
+                                    type="password"
+                                    name="new_password_confirmation"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        ${original_settings.captcha}
+                    </div>
+                    <div class="settings-footer end">
+                        <button class="btn-primary save" type="submit">
+                            ${tl2(trans.change)}
+                        </button>
+                    </div>
+                </form>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl2(trans.communication)}</h4>
+                <form
+                    action="${root}settings/account"
+                    name="email-settings"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="csrfmiddlewaretoken"
+                        value="${token}"
+                    />
+                    <div class="setting-group">
+                        <div class="setting" data-type="select">
+                            <div class="heading">
+                                <h5>${tl2(trans.email_language)}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector">
+                                ${select(
+        select_prepare(
+          original_settings.email_language
+        ),
+        original_settings.email_language.value,
+        original_settings.email_language.name
+      )}
+                            </div>
+                        </div>
+                        ${toggle({
+        value: original_settings.marketing_emails.checked,
+        name: original_settings.marketing_emails.name,
+        title: tl2(trans.marketing_emails.name),
+        body: tl2(trans.marketing_emails.body),
+        standalone: false
+      })}
+                    </div>
+                    <div class="settings-footer end">
+                        <button class="btn-primary save" type="submit">
+                            ${tl2(trans.save)}
+                        </button>
+                        <input
+                            type="hidden"
+                            value="email_settings"
+                            name="submit"
+                        />
+                    </div>
+                </form>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl2(trans.security)}</h4>
+                <form
+                    action="${root}settings/account"
+                    name="email-settings"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="csrfmiddlewaretoken"
+                        value="${token}"
+                    />
+                    <div class="setting-group">
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.logout_everywhere)}</h5>
+                            </div>
+                            <div class="toggle-wrap">
+                                <a
+                                    class="see-more danger logout"
+                                    href="${root}settings/account/logout-everywhere"
+                                >
+                                    ${tl2(trans.logout)}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.delete_account.name)}</h5>
+                                <p>${tl2(trans.delete_account.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <a
+                                    class="see-more danger delete-account"
+                                    href="${root}settings/account/delete"
+                                >
+                                    ${tl2(
+        trans.delete_account_permanently
+      ).replace("{u}", auth.name)}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        `
+    );
+    for (let setting2 in original_settings) {
+      update_inbuilt_item(setting2, original_settings[setting2], false);
+    }
+  }
+  function bleh_name_change() {
+    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    return;
+  }
+  function bleh_website() {
+    const token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    const auto_correct = page.structure.main.querySelector(
+      '[name="corrections_enabled"]:checked'
+    );
+    const preferred_affiliate = page.structure.main.querySelector(
+      '[name="preferred_affiliate"]:checked'
+    );
+    const timezone = page.structure.main.querySelector('[name="timezone"]');
+    const help_text = page.structure.main.querySelector(".js-field-help-text");
+    const location = page.structure.main.querySelector(
+      '[data-require="components/location-form-field-v2"]'
+    );
+    const radius = page.structure.main.querySelector('[name="event_radius"]');
+    let timezone_text;
+    page.structure.main.insertBefore(
+      html.node`
+            <form class="dont-move" action="${root}settings/website" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <section class="bleh--panel">
+                    <h4>${tl2(trans.website)}</h4>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="options">
+                            <div class="heading">
+                                <h5>${tl2(trans.auto_correct_scrobbles.name)}</h5>
+                                <p>${tl2(trans.auto_correct_scrobbles.body)}</p>
+                            </div>
+                            ${radio({
+        name: auto_correct.name,
+        value: auto_correct.value,
+        values: {
+          False: {
+            name: tl2(
+              trans.auto_correct_scrobbles.false
+            )
+          },
+          True: {
+            name: tl2(
+              trans.auto_correct_scrobbles.true
+            )
+          }
+        }
+      })}
+                        </div>
+                    </div>
+                    <div class="alert alert-danger">
+                        ${tl2(trans.auto_correct_scrobbles.warning)}
+                    </div>
+                </section>
+                <section class="bleh--panel">
+                    <h4>${tl2(trans.events)}</h4>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="select">
+                            <div class="heading">
+                                <h5>${tl2(trans.timezone)}</h5>
+                                <p ref=${(el) => timezone_text = el}>${help_text.textContent.trim()}</p>
+                            </div>
+                            ${select(
+        select_prepare(timezone),
+        timezone.value,
+        timezone.name,
+        (val) => {
+          fetch(
+            `${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`
+          ).then((res) => res.text()).then((dom) => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(
+              dom,
+              "text/html"
+            );
+            const text3 = doc.querySelector("p");
+            if (!text3) return;
+            timezone_text.textContent = text3.textContent;
+          }).catch(
+            (e) => log2(
+              "unable to get text",
+              "timezone",
+              "error",
+              { e }
+            )
+          );
+        }
+      )}
+                        </div>
+                        <div class="setting v2" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.location.name)}</h5>
+                                <p>${tl2(trans.location.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                ${location}
+                            </div>
+                        </div>
+                        <div class="setting v2" data-type="select">
+                            <div class="heading">
+                                <h5>${tl2(trans.event_radius)}</h5>
+                            </div>
+                            ${select(select_prepare(radius), radius.value, radius.name)}
+                        </div>
+                    </div>
+                    <div class="settings-footer end">
+                        <button type="submit" class="btn-primary save">
+                            ${tl2(trans.save)}
+                        </button>
+                        <input type="hidden" value="website" name="submit">
+                    </div>
+                </section>
+            </form>
+            <section class="bleh--panel">
+                <h4>${tl2(trans.playback)}</h4>
+                <form action="${root}settings/website" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${token}>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="options">
+                            <div class="heading">
+                                <h5>${tl2(trans.preferred_affiliate.name)}</h5>
+                                <p>${tl2(trans.preferred_affiliate.body)}</p>
+                            </div>
+                            ${radio({
+        name: preferred_affiliate.name,
+        value: preferred_affiliate.value,
+        values: radio_convert(
+          page.structure.main.querySelectorAll(
+            "#id_preferred_affiliate > .lfm-form-radio"
+          )
+        )
+      })}
+                        </div>
+                    </div>
+                    <div class="settings-footer end">
+                        <button type="submit" class="btn-primary save">
+                            ${tl2(trans.save)}
+                        </button>
+                        <input type="hidden" value="playback" name="submit">
+                    </div>
+                </form>
+            </section>
+        `,
+      page.structure.main.firstElementChild
+    );
+    const website = page.structure.main.querySelector("#website");
+    website.remove();
+    const playback = page.structure.main.querySelector("#playback");
+    playback.remove();
+  }
+  function bleh_applications() {
+    let session_types = page.structure.main.querySelectorAll(".api-sessions");
+    let suggested;
+    let connected;
+    if (session_types.length > 1) {
+      suggested = session_types[0];
+      connected = session_types[1];
+    } else {
+      connected = session_types[0];
+    }
+    render(
+      page.structure.main,
+      html`
+            <section class="applications">
+                <div class="section-intro">
+                    <h3>${tl2(trans.applications)}</h3>
+                    <p>${tl2(trans.applications_intro)}</p>
+                </div>
+                ${suggested ? html`
+                        <h2>${tl2(trans.suggested)}</h2>
+                        ${suggested}
+                    ` : ""}
+                <h2>${tl2(trans.connected)}</h2>
+                ${connected}
+            </section>
+        `
+    );
+    session_types.forEach((session_type) => {
+      let sessions = session_type.querySelectorAll(".api-session");
+      sessions.forEach((session) => {
+        const details = session.querySelector(".api-session-details");
+        const form = session.querySelector("form");
+        const button = form.querySelector("button");
+        button.classList.add("chibi");
+        tippy_esm_default(button, {
+          content: button.textContent
+        });
+        const name = details.querySelector(".api-session-app-name");
+        const desc = details.querySelector(".api-session-app-description");
+        const status2 = details.querySelector(".api-session-status");
+        const image = details.querySelector(".api-session-app-image");
+        image.classList = "";
+        const default_image = image.src.endsWith(
+          "14d19fbdca555c1782176cd789e81af7.png"
+        );
+        render(
+          session,
+          html`
+                    <div class="session-header">
+                        <div
+                            class="session-image"
+                            data-default-image=${default_image}
+                        >
+                            ${image}
+                        </div>
+                        <div class="session-details">${name} ${desc}</div>
+                        ${form}
+                    </div>
+                    ${status2 ? html.node`
+                <div class="session-footer">
+                    ${status2}
+                </div>
+                ` : ""}
+                `
+        );
+      });
+    });
+  }
+
   // src/pages/home.js
   async function bleh_home() {
     page.structure.container = document.body.querySelector(".page-content");
@@ -39607,10 +35045,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page);
     update_page();
-    let cache2;
-    if (auth.name) {
-      cache2 = await load_profile_cache_externally(auth.name);
-    }
     let hour = (/* @__PURE__ */ new Date()).getHours();
     let time2;
     if (hour >= 22 || hour <= 6)
@@ -40040,6 +35474,180 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     `;
   }
 
+  // src/components/notifications.js
+  function bleh_notification_list(list, mini = false) {
+    list.classList = "notification-list";
+    if (mini) list.classList.add("mini");
+    let notifications = list.querySelectorAll(".inbox-notifications__item");
+    notifications.forEach((notification, index3) => {
+      if (mini && index3 > 4) notification.style.display = "none";
+      const link = notification.querySelector(
+        ".inbox-notifications__item-link"
+      );
+      const href = link.getAttribute("href");
+      const active = link.classList.contains(
+        "inbox-notifications__item--highlight"
+      );
+      notification.classList = "notification";
+      if (active) notification.classList.add("active");
+      if (mini) notification.classList.add("mini");
+      let type = "shoutbox";
+      let context = {
+        name: null,
+        sister: null
+      };
+      let involved = [];
+      const strongs = link.querySelectorAll("strong");
+      let split = href.replace(root, "").split("/");
+      const avatar2 = notification.querySelector(".avatar");
+      avatar2.classList = "avatar";
+      const time2 = notification.querySelector("time");
+      let is_reply = false;
+      let others_included = 0;
+      if (href.endsWith("/obsessions/set")) {
+        type = "obsession";
+        involved.push(split[1]);
+        const desc = strongs[0].textContent;
+        const desc_split = desc.split(" \u2014 ");
+        context.type = "track";
+        context.sister = correct_artist(desc_split[0]);
+        context.name = correct_item_by_artist(
+          desc_split[1],
+          context.sister
+        );
+      } else if (href.endsWith("/listening-report/month")) {
+        type = "listening-report";
+        involved.push(strongs[0].textContent);
+        let img = avatar2.querySelector("img");
+        img.src = auth.avatar;
+        img.alt = auth.name;
+        let label = avatar2.querySelector(".avatar-status-dot");
+        if (auth.pro) {
+          label.classList = "avatar-status-dot avatar-status-dot--subscriber";
+        } else {
+          label.remove();
+        }
+        context.type = "profile";
+        context.name = split[1];
+      } else if (href.startsWith(`${root}user/`)) {
+        context.type = "profile";
+        context.name = split[1];
+        strongs.forEach((strong, index4) => {
+          if (index4 == strongs.length - 1 && strongs.length > 1) {
+            obtain_additional_info(
+              strong.previousSibling.textContent,
+              strong.nextSibling.textContent
+            );
+            return;
+          } else if (index4 == strongs.length - 1 && strongs.length == 1) {
+            obtain_additional_info(strong.nextSibling.textContent);
+          }
+          involved.push(strong.textContent);
+        });
+      } else if (href.startsWith(`${root}music/`)) {
+        if (split[2].startsWith("+")) {
+          context.type = "artist";
+          context.name = correct_artist(desanitise(split[1]));
+        } else if (split[2] == "_") {
+          context.type = "track";
+          context.sister = correct_artist(desanitise(split[1]));
+          context.name = correct_item_by_artist(
+            desanitise(split[3]),
+            context.sister
+          );
+        } else {
+          context.type = "album";
+          context.sister = correct_artist(desanitise(split[1]));
+          context.name = correct_item_by_artist(
+            desanitise(split[2]),
+            context.sister
+          );
+        }
+        strongs.forEach((strong, index4) => {
+          if (index4 == strongs.length - 1) {
+            obtain_additional_info(
+              strong.previousSibling.textContent,
+              strong.nextSibling.textContent
+            );
+            return;
+          }
+          involved.push(strong.textContent);
+        });
+      } else if (href.startsWith(`${root}tag/`)) {
+        context.type = "tag";
+        context.name = split[1];
+        strongs.forEach((strong, index4) => {
+          if (index4 == strongs.length - 1) {
+            obtain_additional_info(
+              strong.previousSibling.textContent,
+              strong.nextSibling.textContent
+            );
+            return;
+          }
+          involved.push(strong.textContent);
+        });
+      }
+      console.info(split, context, type, involved);
+      patch_avatar(avatar2, involved[0]);
+      render(
+        notification,
+        html`
+                <div class="notification-avatar">${avatar2}</div>
+                <div
+                    class="bleh-icon"
+                    data-type=${type}
+                    style="--icon: var(--mask)"
+                />
+                <div class="notification-content">
+                    <div class="notification-title">
+                        ${type == "shoutbox" ? html.node`
+                    ${others_included == 0 ? html.node`
+                        ${is_reply ? tl2(trans.user_replied).replace("{u}", involved.join(", ")) : tl2(trans.user_commented).replace("{u}", involved.join(", "))}
+                    ` : html.node`
+                        ${is_reply ? tl2(trans.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl2(trans.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
+                    `}
+                    ` : type == "obsession" ? tl2(trans.obsession_expired) : type == "listening-report" ? tl2(trans.listening_report_available).replace(
+          "{m}",
+          involved[0]
+        ) : ""}
+                    </div>
+                    <div class="notification-context">
+                        <span
+                            class="bleh-icon"
+                            style="--icon: var(--icon-16-indent)"
+                        />
+                        <span
+                            class="notification-type"
+                            data-type=${context.type}
+                        >
+                            <span
+                                class="bleh-icon"
+                                style="--icon: var(--mask)"
+                            />
+                            <span
+                                >${context.sister ? `${context.name} ${tl2(trans.by)} ${context.sister}` : context.name}</span
+                            >
+                        </span>
+                    </div>
+                </div>
+                <div class="notification-time">${time2}</div>
+                <a
+                    class="link-block-cover-link"
+                    href=${link.getAttribute("href")}
+                />
+            `
+      );
+      function obtain_additional_info(text3, backup_text = null) {
+        const match3 = text3.match(/\d+/);
+        if (match3) others_included = parseInt(match3[0]);
+        if (text3.includes(tl2(trans.notification_replied_ctx)))
+          is_reply = true;
+        else if (backup_text && backup_text.trim().includes(tl2(trans.notification_replied_ctx)))
+          is_reply = true;
+      }
+    });
+  }
+
   // src/pages/inbox.js
   function bleh_inbox() {
     page.structure.container = document.body.querySelector(".page-content");
@@ -40102,6 +35710,2082 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let inbox = page.structure.container.querySelector(".inbox");
       page.structure.main.appendChild(inbox);
     }
+  }
+
+  // src/components/profile_header.js
+  function redesign_profile_header(is_own_profile, is_following) {
+    let base_header = document.body.querySelector(".header-info-secondary");
+    if (!base_header) return;
+    let katsune = ff("katsune");
+    let taste = "";
+    let taste_percentage = "";
+    let taste_artists = [];
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
+      let taste_meter = base_header.querySelector(".tasteometer");
+      if (taste_meter) {
+        taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
+        let artists = taste_meter.querySelectorAll("a");
+        artists.forEach((artist) => {
+          taste_artists.push(
+            correct_artist(artist.getAttribute("title"))
+          );
+        });
+        taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
+        if (taste_percentage == "99%") taste_percentage = "100%";
+      }
+    }
+    let about_me = page.structure.container.querySelector(".about-me-sidebar");
+    let profile_header = html.node`
+        <section class="side-actions" />
+    `;
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && auth.name) {
+      let follow_wrap = document.body.querySelector(
+        ".header-avatar .class > div"
+      );
+      if (follow_wrap) {
+        let follow_btn = follow_wrap.querySelector("button");
+        follow_btn.classList.add("btn", "side-action");
+        follow_btn.classList.remove("toggle-button", "header-follower-btn");
+        follow_btn.setAttribute("data-type", "follow");
+        profile_header.appendChild(follow_wrap);
+        if (is_following) follow_btn.setAttribute("data-followed", "true");
+        let mutual_text = document.createElement("i");
+        mutual_text.textContent = tl2(trans.following_mutuals);
+        follow_btn.appendChild(mutual_text);
+        if (!katsune)
+          tippy_esm_default(follow_btn, {
+            content: follow_btn.textContent
+          });
+        follow_btn.addEventListener("click", () => {
+          window.setTimeout(() => {
+            follow_btn._tippy.setContent(follow_btn.textContent);
+          }, 50);
+        });
+      } else {
+        let follow_placeholder = document.createElement("button");
+        follow_placeholder.classList.add("btn", "side-action");
+        follow_placeholder.setAttribute("data-type", "follow");
+        follow_placeholder.textContent = tl2(trans.blocked);
+        follow_placeholder.setAttribute("disabled", "true");
+        follow_placeholder.setAttribute("data-ignored", "true");
+        profile_header.appendChild(follow_placeholder);
+      }
+    }
+    if (!is_own_profile) {
+      let msg_button = document.body.querySelector(".header-message-user");
+      if (msg_button) {
+        if (page.name != sponsor_list.sponsor_account) {
+          friends_button(profile_header);
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "message",
+            link: msg_button.getAttribute("href")
+          });
+          if (page.name == sponsor_list.special[0]) {
+            create_profile_top_item(profile_header, {
+              name: page.name,
+              type: "sponsor",
+              link: () => sponsor(),
+              action: "button"
+            });
+          }
+        } else {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "sponsor",
+            link: () => sponsor(),
+            action: "button"
+          });
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "message_sponsor",
+            link: msg_button.getAttribute("href"),
+            full: true
+          });
+        }
+      }
+      if (page.name != sponsor_list.sponsor_account) {
+        if (ff("compare")) {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "compare",
+            link: `${root}bleh/minis/compare?profile=${page.name}`
+          });
+        }
+      }
+      if (page.structure.container.querySelector(".user-status-staff")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "support",
+          link: "https://support.last.fm"
+        });
+      }
+    } else {
+      create_profile_top_item(profile_header, {
+        name: page.name,
+        type: "edit",
+        link: `${root}settings`
+      });
+      if (ff("minis")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "minis",
+          link: `${root}bleh/minis`
+        });
+      } else {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "labs",
+          link: `${root}labs`,
+          tooltip: `
+                    <strong>${tl2(trans.labs_by_last)}</strong>
+                    <p>${tl2(trans.labs_by_last.tagline)}</p>
+                `,
+          tooltip_style: "stack",
+          allow_html: true
+        });
+      }
+      create_profile_top_item(profile_header, {
+        name: page.name,
+        type: "obsession",
+        link: `${root}user/${page.name}/obsessions/set`
+      });
+      if (ff("charts")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "collage",
+          link: `${root}bleh/minis/collage`,
+          text: tl2(trans.collage)
+        });
+      }
+    }
+    if (!page.mobile)
+      page.structure.side.insertBefore(
+        profile_header,
+        page.structure.side.firstElementChild
+      );
+    else
+      page.structure.main.insertBefore(
+        profile_header,
+        page.structure.main.firstElementChild
+      );
+    let listen_container = page.structure.row.querySelector(".listen-panel");
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune && auth.name) {
+      if (taste == "") {
+        listen_container.appendChild(html.node`
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl2(trans.missing_component)}</div>
+                </div>
+            `);
+        return;
+      }
+      let taste_wrap = html.node`
+            <div class="btn listen-item ${taste != "super" && taste != "very_low" ? "icon" : ""} taste">
+                <div class="taste-icon colourful" data-taste=${taste}>
+                    <div class="bleh-icon" />
+                </div>
+                <div class="span">
+                    <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
+                    <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
+                    <div class="info">
+                        <h3>${html.node([
+        tl2(trans.you_share_count_with).replace(
+          "{c}",
+          `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`
+        )
+      ])}</h3>
+                        <p>
+                            ${taste_artists.length == 1 ? taste_artists[0] : ""}
+                            ${taste_artists.length == 2 ? tl2(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
+                            ${taste_artists.length == 3 ? tl2(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+      tippy_esm_default(taste_wrap, {
+        theme: "stack",
+        content: html.node`
+                <span>
+                    ${tl2(trans.taste_similarity)}
+                </span>
+                <div class="hint">${tl2(trans.click_for_more_options)}</div>
+            `
+      });
+      if (taste_artists.length > 1) {
+        tippy_esm_default(taste_wrap, {
+          theme: "context-menu",
+          content: html.node`
+                    <h4 class="menu-header">${tl2(trans.compare_plays)}</h4>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
+                    </a>
+                    ${taste_artists.length >= 2 ? html.node`
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
+                    </a>
+                    ` : ""}
+                    ${taste_artists.length >= 3 ? html.node`
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
+                    </a>
+                    ` : ""}
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl2(trans.compare)}</a>
+                `,
+          trigger: "click",
+          placement: "bottom",
+          interactive: true,
+          interactiveBorder: 10,
+          offset: [0, 0]
+        });
+      }
+      const row = listen_container.querySelector(".listener-row");
+      row.after(taste_wrap);
+    }
+  }
+  function create_profile_top_item(parent, {
+    name,
+    link,
+    text: text3 = "",
+    type,
+    new_release = false,
+    updated = false,
+    action = "",
+    tooltip = "",
+    allow_html = false,
+    tooltip_theme = ""
+  }) {
+    log2(`creating top item of ${name}, ${link}, ${text3}`, "profile");
+    let side_action;
+    if (action === "button") {
+      side_action = html.node`
+            <button
+                class="btn side-action"
+                data-type=${type}
+                onclick=${link}
+            >
+                ${tl2(trans[type])}
+                ${new_release ? html.node`<div class="new-badge">${tl2(trans.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl2(trans.updated)}</div>` : ""}
+            </button>
+        `;
+    } else {
+      side_action = html.node`
+            <a
+                class="btn side-action"
+                data-type=${type}
+                href=${link}
+            >
+                ${tl2(trans[type])}
+                ${new_release ? html.node`<div class="new-badge">${tl2(trans.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl2(trans.updated)}</div>` : ""}
+            </a>
+        `;
+    }
+    parent.appendChild(side_action);
+    return side_action;
+  }
+  function friends_button(parent) {
+    return;
+    let friend_state = settings.friends.includes(page.name);
+    let star_state = settings.starred_friend == page.name;
+    if (!friend_state && star_state) {
+      star_state = false;
+      save_setting("starred_friend", "");
+    }
+    const elem = html.node`
+        <button class="btn side-action" data-type="friends" onclick=${() => {
+      if (friend_state) {
+        dialog({
+          id: "remove_friend",
+          title: tl2(trans.remove_friend.name),
+          body: html.node`
+                        <p>${tl2(trans.remove_friend.body).replace("{u}", page.name)}</p>
+                        <div class="modal-footer">
+                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: "remove_friend" })}>
+                                ${tl2(trans.cancel)}
+                            </button>
+                            <div class="fill"></div>
+                            <button class="btn primary icon danger" data-type="minus" onclick=${() => {
+            friend_state = false;
+            star_state = false;
+            const new_list = settings.friends.filter(
+              (item) => item != page.name
+            );
+            save_setting("friends", new_list);
+            save_setting("starred_friend", "");
+            dialog_rm({ id: "remove_friend" });
+            update_visual();
+            notify({
+              id: "friends",
+              title: tl2(trans.removed_friend),
+              body: page.name,
+              icon: "icon-16-minus",
+              type: "error"
+            });
+          }}>
+                                ${tl2(trans.remove)}
+                            </button>
+                        </div>
+                    `
+        });
+      } else {
+        friend_state = true;
+        const new_list = [...settings.friends, page.name];
+        save_setting("friends", new_list);
+        update_visual();
+        notify({
+          id: "friends",
+          title: tl2(trans.added_as_friend),
+          body: page.name,
+          icon: "icon-16-users",
+          type: "success"
+        });
+      }
+    }} />
+    `;
+    tippy_esm_default(elem, {
+      content: tl2(trans.friend_difference)
+    });
+    const menu = tippy_esm_default(elem, {
+      theme: "context-menu",
+      content: html.node``,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+        instance.setContent(html.node`
+                <button class="dropdown-menu-clickable-item" data-type="starred_friend" data-is-shortcut=${star_state} onclick=${() => {
+          if (star_state) {
+            star_state = false;
+            save_setting("starred_friend", "");
+            update_visual();
+            notify({
+              id: "friends",
+              title: tl2(trans.removed_star),
+              body: page.name,
+              icon: "icon-16-minus",
+              type: "error"
+            });
+          } else {
+            star_state = true;
+            save_setting("starred_friend", page.name);
+            update_visual();
+            notify({
+              id: "friends",
+              title: tl2(trans.added_star),
+              body: page.name,
+              icon: "icon-16-starred-friend"
+            });
+          }
+        }}>
+                    ${star_state ? tl2(trans.remove_as_star_friend) : tl2(trans.add_as_starred_friend)}
+                </button>
+            `);
+      }
+    });
+    register_menu(elem, menu);
+    update_visual();
+    function update_visual() {
+      elem.setAttribute("data-friends", friend_state);
+      elem.setAttribute("data-starred", star_state);
+      if (star_state) {
+        elem.textContent = tl2(trans.starred_friend.name);
+      } else if (friend_state) {
+        elem.textContent = tl2(trans.friends);
+      } else {
+        elem.textContent = tl2(trans.add_as_friend);
+      }
+    }
+    parent.appendChild(elem);
+  }
+
+  // src/pages/obsession.js
+  function bleh_obsession() {
+    let obsession_container = document.querySelector(".obsession-container");
+    if (!obsession_container) return;
+    page.structure.container = document.body.querySelector(
+      ".page-content:not(.obsession-container .page-content)"
+    );
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log2("unable to find elements", "page structure");
+    }
+    let content_top = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top);
+    log2("status is", "page", "info", page);
+    update_page();
+    page.structure.container.setAttribute("data-beret", "false");
+    page.structure.container.setAttribute("data-short", "false");
+    let background = obsession_container.querySelector(
+      ".obsession-background-inner"
+    );
+    background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
+    if (!background.endsWith("/4128a6eb29f94943c9d206c08e625904.jpg")) {
+      try {
+        let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
+        let hsl = rgb_to_hsl(
+          parseInt(bg[0]),
+          parseInt(bg[1]),
+          parseInt(bg[2])
+        );
+        document.body.style.setProperty("--hue-album", hsl.h);
+        document.body.style.setProperty(
+          "--sat-album",
+          clamp_sat2(hsl.s / 100 * 3)
+        );
+        document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
+        log2(
+          `sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat2(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`,
+          "hue from album"
+        );
+      } catch (e) {
+        console.error(e);
+        log2("no cover present", "hue from album");
+      }
+    }
+    let track_title = obsession_container.querySelector(
+      ".obsession-meta-track"
+    );
+    let track_artist = obsession_container.querySelector(
+      ".obsession-meta-artist"
+    );
+    let scrobbles = obsession_container.querySelector(
+      ".obsession-meta-scrobbles"
+    );
+    let link = track_title.querySelector("a").getAttribute("href");
+    let by = track_artist.querySelector(".obsession-meta-artist-by");
+    track_artist.removeChild(by);
+    let artist_name = track_artist.querySelector("a");
+    if (artist_corrections.hasOwnProperty(artist_name.textContent)) {
+      let corrected_artist = artist_corrections[artist_name.textContent];
+      log2(
+        `corrected ${artist_name.textContent} as ${corrected_artist}`,
+        "lotus"
+      );
+      artist_name.textContent = corrected_artist;
+    }
+    artist_name.classList.add("header-new-crumb");
+    if (settings.format_guest_features) {
+      let formatted_title = name_includes(
+        track_title.textContent.trim(),
+        artist_name.textContent
+      );
+      let song_title = formatted_title[0];
+      let song_tags = formatted_title[1];
+      page.corrected = formatted_title[4];
+      render(
+        track_title,
+        html.node`
+            <div class="title">${song_title.trim()}</div>
+            ${song_tags.map(
+          (tag) => html.node`
+                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${tag.text}</div>
+            `
+        )}
+        `
+      );
+      let song_guests = formatted_title[3];
+      page.sister_others = formatted_title[3];
+      for (let guest in song_guests) {
+        track_artist.innerHTML = `${track_artist.innerHTML},`;
+        let guest_element = document.createElement("a");
+        guest_element.classList.add("header-new-crumb");
+        guest_element.setAttribute(
+          "href",
+          `${root}music/${redirect()}${sanitise(song_guests[guest])}`
+        );
+        guest_element.textContent = song_guests[guest];
+        track_artist.appendChild(guest_element);
+      }
+    } else {
+      if (!track_title.hasAttribute("data-kate-processed")) {
+        track_title.setAttribute("data-kate-processed", "true");
+        let corrected_title = correct_item_by_artist(
+          track_title.textContent.trim(),
+          artist_name.textContent
+        );
+        log2(
+          `corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`,
+          "lotus"
+        );
+        if (corrected_title != track_title.textContent)
+          page.corrected = true;
+        track_title.textContent = corrected_title;
+      }
+    }
+    track_title.classList.remove("obsession-meta-track");
+    let track_header = html.node`
+        <section class="redesigned-header redesigned-track-header no-background obsession-track-header">
+            <div class="info-side">
+                <div class="sub-text">${tl2(trans.obsession)}</div>
+                <div class="title-container">
+                    <h1><a href="${link}">${track_title}</a></h1>
+                </div>
+                <h2>${html.node([track_artist.innerHTML])}</h2>
+            </div>
+        </section>
+    `;
+    page.structure.container.insertBefore(
+      track_header,
+      page.structure.container.firstElementChild
+    );
+    let video = obsession_container.querySelector(".obsession-video-container");
+    if (video) track_header.after(video);
+    let obsession_reason = obsession_container.querySelector(".obsession-reason");
+    if (obsession_reason) {
+      let obsession_reason_text = obsession_reason.textContent;
+      obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
+    }
+    let obsession_author = document.querySelector(
+      ".obsession-details-intro a"
+    ).textContent;
+    let obsession_avatar = document.querySelector(
+      ".obsession-details-intro-avatar-wrap .avatar"
+    );
+    page.name = obsession_author;
+    let date = obsession_container.querySelector(
+      ".obsession-details-date-short"
+    );
+    let quote = html.node`
+        <section class="obsession-quote sour">
+            ${obsession_reason ? html.node`
+            <div class="quote">
+                ${obsession_reason.textContent}
+            </div>
+            ` : html.node`
+            <div class="quote no-quote">
+                ...
+            </div>
+            `}
+            <div class="sub-text">
+                <div class="obsession-author">
+                    ${obsession_avatar}
+                    <strong class="name">${obsession_author}</strong>
+                    <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+                </div>
+                ${scrobbles ? html.node`
+                <div class="obsession-listens">
+                    ${html.node([scrobbles.innerHTML])}
+                </div>
+                ` : ""}
+                <div class="obsession-date">
+                    ${date.textContent}
+                </div>
+            </div>
+        </section>
+    `;
+    let manage = obsession_container.querySelector("form");
+    if (manage) {
+      quote.appendChild(manage);
+      quote.querySelector("button").textContent = tl2(trans.delete);
+    }
+    page.structure.main.insertBefore(
+      quote,
+      page.structure.main.firstElementChild
+    );
+    let author = quote.querySelector(".obsession-author");
+    let badge = patch_avatar(
+      obsession_avatar,
+      obsession_author,
+      "",
+      author,
+      "bottom"
+    );
+    if (badge.type) {
+      author.classList.add("colourful");
+      author.classList.add(
+        `user-status--bleh-${badge.type}`,
+        `user-status--bleh-user-${obsession_author}`
+      );
+    }
+    let related = html.node`
+        <section class="obsession-related sour" />
+    `;
+    let other_tracks = document.body.querySelector(".other-obsessions");
+    if (other_tracks) {
+      let header = document.createElement("h2");
+      header.textContent = tl2(trans.others_from_profile).replace(
+        "{user}",
+        obsession_author
+      );
+      related.appendChild(header);
+      let see_more = other_tracks.nextElementSibling;
+      related.appendChild(other_tracks);
+      if (see_more) {
+        let more = document.createElement("div");
+        more.classList.add("more-link-fullwidth-right");
+        more.appendChild(see_more.querySelector("a"));
+        related.appendChild(more);
+      }
+    }
+    let shared_users = document.body.querySelector(".fellow-obsessors");
+    if (shared_users) {
+      if (other_tracks) {
+        let sep = document.createElement("div");
+        sep.classList.add("sep");
+        related.appendChild(sep);
+      }
+      let header = document.createElement("h2");
+      header.textContent = tl2(trans.shared_with_others);
+      related.appendChild(header);
+      let users = shared_users.querySelectorAll(".avatar");
+      users.forEach((user) => {
+        let name = user.querySelector("img").getAttribute("alt");
+        patch_avatar(user, name);
+      });
+      related.appendChild(shared_users);
+    }
+    quote.after(related);
+    let pages = obsession_container.querySelector(".obsession-pagination");
+    if (pages) page.structure.container.appendChild(pages);
+  }
+
+  // src/pages/profile.js
+  async function bleh_profiles() {
+    if (page.subpage == "obsessions_obsession") {
+      bleh_obsession();
+      return;
+    }
+    let profile_header = document.body.querySelector(".header--user");
+    if (!profile_header) return;
+    page.name = profile_header.querySelector(".header-title a").textContent;
+    let is_subpage = page.subpage != "overview";
+    page.structure.container = document.body.querySelector(
+      ".page-content:not(.profile-cards-container, .report-box-container .page-content)"
+    );
+    try {
+      page.structure.row = page.structure.container.querySelector(".row:not(._buffer)");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log2("unable to find elements", "page structure");
+    }
+    checkup_page_structure(is_subpage, profile_header);
+    page.supports_shoutbox = page.structure.nav.querySelector(
+      ".secondary-nav-item--shoutbox"
+    );
+    let new_account = false;
+    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
+    let avatar2 = profile_header.querySelector(".avatar");
+    let title_wrap = profile_header.querySelector(".header-title-label-wrap");
+    let sub_wrap = profile_header.querySelector(".header-title-secondary");
+    if (!avatar2) {
+      avatar2 = profile_header.querySelector(".header-avatar-add");
+      new_account = true;
+    }
+    if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
+      title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
+    }
+    let expander;
+    let redesigned_profile_header = html.node`
+        <section class="redesigned-header redesigned-profile-header no-background">
+            <div class="avatar-side">
+                ${avatar2}
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${tl2(trans.profile)}</div>
+                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
+                ${sub_wrap ? sub_wrap : cache.aka || cache.created ? html.node`
+                <p class="header-title-secondary">
+                    ${cache.aka ? html.node`
+                    <span class="header-title-secondary--pre">
+                        ${pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka)}
+                    </span>
+                    <span class="header-title-display-name">
+                        ${cache.aka}
+                    </span>
+                    ` : ""}
+                    <span class="header-title-secondary--pre">
+                        ${tl2(trans.account_created)}
+                    </span>
+                    <span class="header-scrobble-since">
+                        ${cache.created}
+                    </span>
+                </p>
+                ` : ""}
+            </div>
+            <div class="expand-side">
+                <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
+      let current = settings.profile_header_expand;
+      expander.setAttribute("aria-expanded", !current);
+      save_setting("profile_header_expand", !current);
+    }} aria-expanded=${settings.profile_header_expand}>${tl2(trans.expand)}</button>
+            </div>
+        </section>
+    `;
+    page.structure.container.insertBefore(
+      redesigned_profile_header,
+      page.structure.container.firstElementChild
+    );
+    profile_header.classList.add("legacy-header");
+    if (!new_account) {
+      const src = avatar_img.src;
+      page.avatar = src;
+      avatar2.addEventListener("click", () => {
+        expand_avatar(src.replace("/avatar170s/", "/ar0/"));
+      });
+    }
+    let library_tab = page.structure.nav.querySelector(
+      ".secondary-nav-item--library a"
+    );
+    library_tab.textContent = tl2(trans.library);
+    let is_own_profile = page.name == auth.name;
+    if (is_own_profile)
+      profile_header.setAttribute("data-is-own-profile", "true");
+    let loved_tab = page.structure.nav.querySelector(
+      ".secondary-nav-item--loved a"
+    );
+    if (loved_tab) loved_tab.textContent = tl2(trans.loved);
+    if (!is_subpage) {
+      let is_following = page.structure.container.querySelector(".label.user-follow");
+      profile_recents();
+      profile_artists();
+      profile_albums();
+      profile_tracks();
+      if (is_own_profile && settings.activities) {
+        let recent_activity_section = html.node`
+                <section class="recent-activity-section">
+                    <h2>${tl2(trans.activity)}</h2>
+                    ${render_activity_list()}
+                    <div class="more-link">
+                        <a href="${root}bleh/profile">${tl2(trans.activity_settings)}</a>
+                    </div>
+                </section>
+            `;
+        page.structure.side.appendChild(recent_activity_section);
+      }
+      if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
+        page.structure.container.removeChild(page.structure.nav);
+        page.structure.main.innerHTML = "";
+        page.structure.side.innerHTML = "";
+        page.structure.main.appendChild(html.node`
+                <section class="cta">
+                    <strong>${tl2(trans.sponsor_info)}</strong>
+                </section>
+            `);
+      }
+      let recent_tracks = page.structure.main.querySelector(
+        "#recent-tracks-section"
+      );
+      if (!recent_tracks) {
+        recent_tracks = page.structure.main.querySelector(".no-data-message");
+        if (recent_tracks) {
+          recent_tracks.classList = "recent-tracks-section";
+          recent_tracks.innerHTML = `
+                    <h2>
+                        <a class="text-colour-link" href="${window.location.href}/library">${tl2(trans.recent_tracks)}</a>
+                    </h2>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text private">
+                            ${recent_tracks.textContent}
+                        </div>
+                    </div>
+                `;
+        }
+      }
+      let scrobbles = 0;
+      let average = 0;
+      let artists = 0;
+      let loved = 0;
+      let metadata = profile_header.querySelectorAll(
+        ".header-metadata-display"
+      );
+      metadata.forEach((item, index3) => {
+        if (index3 == 0) {
+          let para = item.querySelector("p");
+          scrobbles = clean_number(para.textContent.trim());
+          average = para.getAttribute("title");
+        } else if (index3 == 1) {
+          artists = clean_number(item.textContent.trim());
+        } else if (index3 == 2) {
+          loved = clean_number(item.textContent.trim());
+        }
+      });
+      page.state.scrobbles = scrobbles;
+      page.state.artists = artists;
+      page.state.loved = loved;
+      let scrobble_text;
+      let listen_container = html.node`
+            <section class="listen-panel listen-profile-panel">
+                <div class="listener-row">
+                    <div class="scrobble-side">
+                        <h3>${tl2(trans.scrobbles)}</h3>
+                        <p ref=${(el) => scrobble_text = el}><a href="${root}user/${page.name}/library">${scrobbles.toLocaleString(lang)}</a></p>
+                    </div>
+                    <div class="artist-side">
+                        <h3>${tl2(trans.artists)}</h3>
+                        <p><a href="${root}user/${page.name}/library/artists">${artists.toLocaleString(lang)}</a></p>
+                    </div>
+                    <div class="loved-side">
+                        <h3>${tl2(trans.loved)}</h3>
+                        <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
+                    </div>
+                </div>
+                ${scrobbles > 0 ? html.node`
+                <div class="scrobble-canvas-container mini">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">${tl2(trans.loading_count_days).replace("{c}", "90")}</div>
+                    </div>
+                </div>
+                <div class="more-link">
+                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                        ${tl2(trans.explore_in_library)}
+                    </a>
+                </div>
+                ` : auth.name ? html.node`
+                <div class="scrobble-canvas-container mini">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl2(trans.profile_does_not_have_enough_scrobbles)}</div>
+                    </div>
+                </div>
+                ` : html.node``}
+            </section>
+        `;
+      if (scrobbles > 0) {
+        tippy_esm_default(scrobble_text, {
+          content: average
+        });
+      }
+      if (sponsor_list && page.name != sponsor_list.sponsor_account) {
+        if (!page.mobile)
+          page.structure.side.insertBefore(
+            listen_container,
+            page.structure.side.firstChild
+          );
+        else
+          page.structure.main.insertBefore(
+            listen_container,
+            page.structure.main.firstChild
+          );
+      }
+      const profile_sub_text = page.structure.container.querySelector(
+        ".redesigned-profile-header .header-title-secondary"
+      );
+      if (profile_sub_text)
+        parse_sub_text(profile_sub_text, page.name, cache);
+      let featured_track_panel = profile_header.querySelector(
+        ".header-featured-track"
+      );
+      if (featured_track_panel)
+        bleh_featured_profile_track(featured_track_panel);
+      let about_me_header = about_me_sidebar.querySelector("h2");
+      about_me_header.remove();
+      let profile_note;
+      if (!is_own_profile) {
+        let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+        profile_note = notes[page.name];
+      }
+      let settings_btn;
+      let add_note;
+      let info_tip;
+      about_me_sidebar.insertBefore(
+        html.node`
+            <div class="top-container">
+                <h2>
+                    ${tl2(trans.about)}
+                    <span class="info-tip" ref=${(el) => info_tip = el}>
+                        <span class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
+                    </span>
+                </h2>
+                <div class="view-buttons blend blend-v2">
+                    ${is_own_profile ? html.node`
+                    <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
+                        ${tl2(trans.edit)}
+                    </a>
+                    ` : !profile_note ? html.node`
+                    <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
+          create_profile_note_panel(page.name, profile_note);
+          add_note.remove();
+        }}>
+                        ${tl2(trans.add_note)}
+                    </button>
+                    ` : ""}
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl2(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `,
+        about_me_sidebar.firstChild
+      );
+      tippy_esm_default(settings_btn, {
+        theme: "window",
+        content: html.node`
+                <div class="dialog-settings">
+                    <div class="setting-group blend">
+                        ${setting({ id: "bio_markdown" })}
+                    </div>
+                </div>
+            `,
+        placement: "bottom",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        appendTo: document.body,
+        hideOnClick: "toggle",
+        onClickOutside(instance) {
+          if (instance.popper.querySelector('[aria-expanded="true"]')) {
+            return;
+          }
+          instance.hide();
+        }
+      });
+      if (cache.banner || cache.hue || cache.sat || cache.lit) {
+        tippy_esm_default(info_tip, {
+          content: html.node`
+                    <div class="profile-items">
+                        ${cache.banner ? html.node`
+                        <div class="profile-item" data-type="banner">
+                            <span class="bleh-icon" style="--icon: var(--mask)" />
+                            <p>${tl2(trans.profile_banner.name)}</p>
+                        </div>
+                        ` : ""}
+                        ${cache.hue > -1 && cache.sat > -1 && cache.lit > -1 ? html.node`
+                        <div class="profile-item" data-type="accent">
+                            <span class="bleh-icon" style="--icon: var(--mask)" />
+                            <p>${tl2(trans.profile_accent.name)}</p>
+                            <p class="subtle">${cache.hue}, ${cache.sat}, ${cache.lit}</p>
+                        </div>
+                        ` : ""}
+                    </div>
+                `
+        });
+      } else {
+        info_tip.remove();
+      }
+      if (ff("redesigned_profile_header"))
+        redesign_profile_header(is_own_profile, is_following);
+      if (!is_own_profile && profile_note)
+        create_profile_note_panel(page.name, profile_note);
+    } else {
+      load_profile_cache(page.name, cache, profile_cache);
+      let btn_add = page.structure.side.querySelector(".add-button");
+      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage == "events") {
+        convert_to_toolbar();
+        const no_events = page.structure.main.querySelector(
+          ":scope > .no-events"
+        );
+        if (!no_events) bleh_profile_events();
+      } else if (page.subpage.startsWith("listening-report")) {
+        page.structure.content_top.classList.add(
+          "listening-report-navlist"
+        );
+        page.structure.row.classList.add("listening-report");
+        convert_to_toolbar();
+        let report_box_container = document.body.querySelector(
+          ".report-box-container--overview"
+        );
+        if (report_box_container) {
+          document.documentElement.setAttribute(
+            "data-bwaa--theme",
+            "oled"
+          );
+          document.documentElement.setAttribute(
+            "data-bwaa--theme_type",
+            "dark"
+          );
+          page.structure.row.after(report_box_container);
+        } else {
+          let dashboard = page.structure.container.querySelector(".user-dashboard");
+          if (dashboard) {
+            dialog({
+              id: "listening_report_v2",
+              title: "oh no :c",
+              body: html.node`
+                            <div class="alert alert-error">This listening report is too old</div>
+                            <br>
+                            <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
+                        `
+            });
+          }
+        }
+      } else if (page.subpage == "obsessions_overview") {
+        let section_controls = page.structure.container.querySelector(".section-controls");
+        let buttons;
+        if (section_controls != null) {
+          section_controls.classList.add("legacy-section-controls");
+          buttons = section_controls.querySelectorAll(":is(button, a)");
+          let header = page.structure.container.querySelector(
+            ".content-top-header"
+          );
+          page.structure.content_top.innerHTML = `
+                    <div class="content-top-inner-wrap">
+                        <div class="container content-top-lower">
+                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
+                        </div>
+                    </div>
+                `;
+        }
+        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
+        let chr = count_text.indexOf("(");
+        let count = 0;
+        if (chr != -1)
+          count = count_text.substring(chr).replace("(", "").replace(")", "");
+        page.structure.nav.querySelector(
+          ".secondary-nav-item--obsessions a"
+        ).appendChild(html.node`
+                <div class="new-badge count-badge">${count}</div>
+            `);
+        let new_panel = document.createElement("section");
+        new_panel.classList.add("obsessions-panel");
+        let wrap = document.createElement("div");
+        wrap.classList.add("view-buttons-wrapper");
+        let button_header = document.createElement("div");
+        button_header.classList.add(
+          "view-buttons",
+          "obsession-buttons",
+          "blend"
+        );
+        buttons.forEach((button) => {
+          if (button.classList.contains("btn-sm")) {
+            button.classList = [];
+            button.classList.add("obsession-btn");
+            tippy_esm_default(button, {
+              content: button.textContent
+            });
+            button.textContent = tl2(trans.obsess);
+          }
+          button.classList.add(
+            "btn",
+            "view-item",
+            "interact-item",
+            "obsession-top-item"
+          );
+          button_header.appendChild(button);
+        });
+        wrap.appendChild(button_header);
+        new_panel.appendChild(wrap);
+        page.structure.main.appendChild(new_panel);
+        let grid = document.createElement("ol");
+        grid.classList.add(
+          "grid-items",
+          "grid-items--numbered",
+          "obsessions-grid"
+        );
+        let items = page.structure.container.querySelectorAll(
+          ".obsession-history-item"
+        );
+        items.forEach((item) => {
+          let link = item.querySelector(
+            ".obsession-history-item-heading-link"
+          );
+          let artist = item.querySelector(
+            ".obsession-history-item-artist a"
+          );
+          let artist_link = artist.getAttribute("href");
+          artist = artist.textContent.trim();
+          let title = link.textContent.trim();
+          link = link.getAttribute("href");
+          let date = item.querySelector(".obsession-history-item-date").textContent.trim();
+          let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
+          let cover_substr = bg.indexOf("url");
+          const cover = html.node`
+                    <img
+                    src=${bg.substring(cover_substr).replace('url("', "").replace('")', "").trim()}
+                    alt=${title} loading="lazy">
+                `;
+          hoshino(cover, title, artist);
+          let obsession_is_first = item.querySelector(".obsession-first") != null;
+          const grid_item = html.node`
+                    <li class="grid-items-item obsessions-item ${obsession_is_first ? "first" : ""}">
+                        <div class="grid-items-cover-image">
+                            <div class="grid-items-cover-image-image ${cover.src.endsWith("4128a6eb29f94943c9d206c08e625904.jpg") ? "grid-items-cover-default" : ""}">
+                                ${cover}
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${link}" title="${title}">
+                                        ${title}
+                                    </a>
+                                </p>
+                                <p class="grid-items-item-aux-text obsessions-item-aux">
+                                    <a class="grid-items-item-aux-block" href="${artist_link}">
+                                        ${artist}
+                                    </a>
+                                    <a class="obsessions-item-date" href="${link}">
+                                        ${date}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
+                        </div>
+                    </li>
+                `;
+          if (obsession_is_first) {
+            tippy_esm_default(grid_item, {
+              content: tl2(trans.obsession_first)
+            });
+          }
+          grid.appendChild(grid_item);
+        });
+        new_panel.appendChild(grid);
+        let no_data = page.structure.container.querySelector(
+          ".no-data-message--obsession-history"
+        );
+        if (no_data) wrap.after(no_data);
+        let pagination = page.structure.container.querySelector(".pagination");
+        if (pagination) new_panel.appendChild(pagination);
+      } else if (page.subpage == "playlists_playlists") {
+        let section_controls = page.structure.container.querySelector(
+          ".section-controls-full-width"
+        );
+        let buttons;
+        if (section_controls) {
+          section_controls.classList.add("legacy-section-controls");
+          buttons = section_controls.querySelectorAll(":is(button, a)");
+          let header = page.structure.container.querySelector(
+            ".content-top-header"
+          );
+          page.structure.content_top.innerHTML = `
+                    <div class="content-top-inner-wrap">
+                        <div class="container content-top-lower">
+                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
+                        </div>
+                    </div>
+                `;
+        }
+        let new_panel = document.createElement("section");
+        new_panel.classList.add("obsessions-panel");
+        page.structure.main.appendChild(new_panel);
+        if (buttons.length > 0) {
+          let wrap = document.createElement("div");
+          wrap.classList.add("view-buttons-wrapper");
+          wrap.innerHTML = `<div class="info"><div class="alert alert-info">Playlists are a work in progress</div></div>`;
+          let button_header = html.node`
+                    <div class="view-buttons playlist-home-buttons blend" />
+                `;
+          buttons.forEach((button) => {
+            if (button.getAttribute("data-analytics-action") == "create") {
+              button.classList.add("primary");
+              button.innerHTML = `${tl2(trans.new)} <div class="new-badge">${tl2(trans.beta)}</div>`;
+            }
+            button.classList.add(
+              "btn",
+              "view-item",
+              "interact-item",
+              "playlist-home-top-item"
+            );
+            button_header.appendChild(button);
+          });
+          wrap.appendChild(button_header);
+          new_panel.appendChild(wrap);
+        }
+        let playlists = page.structure.container.querySelector(
+          ".playlisting-playlists"
+        );
+        if (playlists) {
+          page.structure.container.removeChild(playlists.parentElement);
+          new_panel.appendChild(playlists);
+        } else {
+          let no_data = page.structure.container.querySelector(
+            ".no-data-message--playlists"
+          );
+          page.structure.container.removeChild(no_data.parentElement);
+          new_panel.appendChild(no_data);
+        }
+      } else if (page.subpage == "loved") {
+        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
+        let chr = count_text.indexOf("(");
+        let count = 0;
+        if (chr != -1)
+          count = count_text.substring(chr).replace("(", "").replace(")", "");
+        page.structure.nav.querySelector(".secondary-nav-item--loved a").appendChild(html.node`
+                <div class="new-badge count-badge">${count}</div>
+            `);
+      }
+    }
+    log2("status is", "page", "info", page);
+    update_page();
+    patch_profile_following();
+    log2(`querying badges for ${page.name}`, "profile");
+    let profile_name_obj;
+    profile_name_obj = page.structure.container.querySelector(
+      ".redesigned-profile-header .title-container"
+    );
+    if (ff("badges")) {
+      let stock_badges = profile_name_obj.querySelectorAll(".label");
+      stock_badges.forEach((badge) => {
+        if (badge.classList[1] == "user-status-None") return;
+        badge.classList.add("expand");
+        tippy_esm_default(badge, {
+          theme: "badge",
+          placement: "bottom",
+          content: html.node`
+                    <div class="badge-name">${badge.textContent}</div>
+                    <div class="badge-reason">${tl2(trans.badges[badge.classList[1]].reason)}</div>
+                `
+        });
+      });
+    }
+    let badges = load_badges(page.name);
+    if (badges) {
+      badges.forEach((badge) => {
+        profile_name_obj.appendChild(create_badge(badge, false, true));
+      });
+    }
+    let badge_elements = profile_name_obj.querySelectorAll(".label");
+    let label_container = document.createElement("div");
+    label_container.classList.add("badges");
+    badge_elements.forEach((badge) => {
+      label_container.appendChild(badge);
+    });
+    profile_name_obj.appendChild(label_container);
+    save_profile_cache(cache, profile_cache, page.name);
+  }
+  function create_profile_note_panel(username, has_note) {
+    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
+    let note;
+    about_me_sidebar.after(html.node`
+        <section class="bleh--panel bleh--profile-note-panel">
+            <h2>${tl2(trans.notes)}</h2>
+            <div class="content-form">
+                <textarea id="bleh--profile-note" placeholder=${tl2(trans.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
+            </div>
+            <div class="actions">
+                <button class="see-more cancel" onclick=${() => {
+      let notes = JSON.parse(
+        localStorage.getItem("bleh_profile_notes")
+      ) || {};
+      delete notes[page.name];
+      note.value = "";
+      set_storage("bleh_profile_notes", JSON.stringify(notes));
+    }}>${tl2(trans.clear)}</button>
+                <button class="btn primary icon" data-type="save" onclick=${() => {
+      let notes = JSON.parse(
+        localStorage.getItem("bleh_profile_notes")
+      ) || {};
+      notes[page.name] = note.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      set_storage("bleh_profile_notes", JSON.stringify(notes));
+    }}>${tl2(trans.save)}</button>
+            </div>
+        </section>
+    `);
+  }
+  function patch_profile_following() {
+    let navlist = page.structure.nav.querySelector(".navlist-items");
+    let following_tab = navlist.querySelector(".secondary-nav-item--following");
+    let link = following_tab.querySelector("a");
+    if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours") {
+      link.href = `${root}user/${page.name}/friends`;
+      link.textContent = tl2(trans.friends);
+      return;
+    }
+    if (page.subpage != "following")
+      link.classList.add("secondary-nav-item-link--active");
+    let followers_tab = navlist.querySelector(".secondary-nav-item--followers");
+    let neighbours_tab = navlist.querySelector(
+      ".secondary-nav-item--neighbours"
+    );
+    navlist.removeChild(followers_tab);
+    navlist.removeChild(neighbours_tab);
+    let friends_nav = html.node`
+        <div class="toolbar">
+            <nav class="navlist secondary-nav redesigned-navigation">
+                <ul class="navlist-items">
+                    ${{ html: following_tab.outerHTML }}
+                    ${{ html: followers_tab.outerHTML }}
+                    ${{ html: neighbours_tab.outerHTML }}
+                </ul>
+            </nav>
+        </div>
+    `;
+    link.href = `${root}user/${page.name}/friends`;
+    link.textContent = tl2(trans.friends);
+    page.structure.row.insertBefore(
+      friends_nav,
+      page.structure.row.firstElementChild
+    );
+    page.structure.row.classList.add("col-main-is-primary");
+    following_tab = friends_nav.querySelector(
+      ".secondary-nav-item--following a"
+    );
+    let highlighted_tab = following_tab;
+    if (page.subpage == "followers")
+      highlighted_tab = friends_nav.querySelector(
+        ".secondary-nav-item--followers a"
+      );
+    else if (page.subpage == "neighbours")
+      highlighted_tab = friends_nav.querySelector(
+        ".secondary-nav-item--neighbours a"
+      );
+    if (page.subpage != "following") {
+      following_tab.classList.remove("secondary-nav-item-link--active");
+    }
+    if (ff("katsune") && page.subpage != "neighbours") {
+      let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
+      let chr = count_text.indexOf("(");
+      let count = 0;
+      if (chr != -1)
+        count = count_text.substring(chr).replace("(", "").replace(")", "");
+      highlighted_tab.appendChild(html.node`
+            <div class="new-badge count-badge">${count}</div>
+        `);
+    }
+    let view_buttons = document.createElement("div");
+    view_buttons.classList.add("view-buttons-wrapper");
+    view_buttons.innerHTML = `
+        <div class="view-buttons">
+            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
+                ${tl2(trans.grid)}
+            </button>
+            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
+                ${tl2(trans.list)}
+            </button>
+        </div>
+    `;
+    const user_panel = html.node`
+        <section class="users">
+            ${view_buttons}
+            ${html.node([page.structure.main.innerHTML])}
+        </section>
+    `;
+    render(page.structure.main, user_panel);
+    refresh_all();
+  }
+  function bleh_featured_profile_track(object) {
+    let art = object.querySelector(".featured-item-art");
+    let details = object.querySelector(".featured-item-details");
+    let form = document.body.querySelector(".header-info-primary form");
+    let heading = details.querySelector(".featured-item-heading");
+    let link = heading.querySelector("a")?.getAttribute("href");
+    details.removeChild(heading);
+    let name_elem = details.querySelector(".featured-item-name");
+    let artist_elem = details.querySelector(".featured-item-artist");
+    name_elem.classList = "";
+    artist_elem.classList = "source-album-artist";
+    let artist_elem_full = artist_elem;
+    const img = art.querySelector(".cover-art");
+    hoshino(
+      img.querySelector(":scope > img"),
+      name_elem.textContent.trim(),
+      artist_elem.textContent.trim()
+    );
+    if (settings.format_guest_features) {
+      let song_title = name_elem.textContent;
+      let formatted_title = name_includes(
+        song_title,
+        artist_elem.textContent
+      );
+      let song_tags = {};
+      if (formatted_title) {
+        song_title = formatted_title[0];
+        song_tags = formatted_title[1];
+      }
+      render(
+        name_elem,
+        html.node`
+            <div class="title">${romanise(song_title.trim())}</div>
+            ${song_tags.map(
+          (tag) => html.node`
+                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</div>
+            `
+        )}
+        `
+      );
+      artist_elem_full = html.node`
+            <div class="source-album-artist">
+                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>
+            </div>
+        `;
+      let song_guests = formatted_title[3];
+      for (let guest in song_guests) {
+        artist_elem_full.innerHTML = `${artist_elem_full.innerHTML},`;
+        let guest_element = document.createElement("a");
+        guest_element.setAttribute(
+          "href",
+          `${root}music/${redirect()}${sanitise(song_guests[guest])}`
+        );
+        guest_element.textContent = romanise(song_guests[guest]);
+        artist_elem_full.appendChild(guest_element);
+      }
+    } else if (settings.corrections) {
+      name_elem.textContent = romanise(
+        correct_item_by_artist(
+          name_elem.textContent.trim(),
+          artist_elem.textContent.trim()
+        )
+      );
+      artist_elem.textContent = romanise(
+        correct_artist(artist_elem.textContent.trim())
+      );
+    }
+    if (form) {
+      let button = form.querySelector("button");
+      button.classList = "featured-item-manage";
+      button.setAttribute("data-type", "delete");
+      button.textContent = tl2(trans.remove);
+    }
+    let panel = html.node`
+        <section class="featured-item-panel">
+            <div class="sub-text">
+                ${form ? html.node`
+                <a class="has-icon" data-type="obsession" href=${link}>
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl2(trans.obsession)}
+                </a>
+                ${form}
+                ` : html.node`
+                <div class="has-icon" data-type="track">
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl2(trans.top_track)}
+                </div>
+                `}
+            </div>
+            <div class="source-album js-link-block link-block">
+                <div class="source-album-art small">
+                    ${img}
+                </div>
+                <div class="source-album-details">
+                    <h4 class="source-album-name">${name_elem}</h4>
+                    ${artist_elem_full}
+                </div>
+                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute("href")} />
+            </div>
+        </section>
+    `;
+    page.structure.side.insertBefore(
+      panel,
+      page.structure.side.firstElementChild
+    );
+  }
+  function profile_recents() {
+    let panel = page.structure.main.querySelector("#recent-tracks-section");
+    if (!panel) return;
+    let more_link = panel.nextElementSibling;
+    panel.appendChild(more_link);
+    let form = panel.querySelector("#recent-tracks-settings");
+    let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
+    let tooltip;
+    let view_buttons = document.createElement("div");
+    view_buttons.classList.add("view-buttons", "blend", "blend-v2");
+    let header = document.createElement("div");
+    header.classList.add("top-container");
+    let header_text2 = panel.querySelector("h2");
+    header.appendChild(header_text2);
+    let refresh_btn;
+    refresh_btn = html.node`
+        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn, {})}>
+            ${tl2(trans.refresh)}
+        </button>
+    `;
+    view_buttons.appendChild(refresh_btn);
+    header.appendChild(view_buttons);
+    panel.insertBefore(header, panel.firstElementChild);
+    if (!form) return;
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let original_chart_settings = {};
+    let settings_btn = html.node`
+        <button class="left-icon blend-v2-btn" data-type="settings">
+            ${tl2(trans.settings)}
+        </button>
+    `;
+    let count = form.querySelector('[name="chart_length_recent_tracks"]');
+    original_chart_settings = {
+      recent_artwork: form.querySelector("#id_show_recent_tracks_artwork").checked,
+      recent_realtime: form.querySelector("#id_auto_refresh_recent_tracks").checked
+    };
+    form.classList = "";
+    render(
+      form,
+      html`
+            <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value="${page.token}"
+            />
+            <div class="setting-group blend">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.amount_to_display)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(count),
+        count.value,
+        "chart_length_recent_tracks"
+      )}
+                </div>
+                <div
+                    class="setting"
+                    data-type="toggle"
+                    id="container-recent_artwork"
+                    onclick="_update_inbuilt_item('recent_artwork')"
+                >
+                    <div class="heading">
+                        <h5>${tl2(trans.recent_artwork)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input
+                            class="companion-checkbox"
+                            type="checkbox"
+                            name="show_recent_tracks_artwork"
+                            id="inbuilt-companion-checkbox-recent_artwork"
+                        />
+                        <span
+                            class="btn toggle"
+                            id="toggle-recent_artwork"
+                            aria-checked="false"
+                        >
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+                <div
+                    class="setting"
+                    data-type="toggle"
+                    id="container-recent_realtime"
+                    onclick="_update_inbuilt_item('recent_realtime')"
+                >
+                    <div class="heading">
+                        <h5>${tl2(trans.recent_realtime.name)}</h5>
+                        <p>${tl2(trans.recent_realtime.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input
+                            class="companion-checkbox"
+                            type="checkbox"
+                            name="auto_refresh_recent_tracks"
+                            id="inbuilt-companion-checkbox-recent_realtime"
+                        />
+                        <span
+                            class="btn toggle"
+                            id="toggle-recent_realtime"
+                            aria-checked="false"
+                            type="button"
+                        >
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+                ${setting({ id: "format_guest_features" })}
+                ${setting({ id: "stacked_chartlist_info" })}
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary save">
+                        ${tl2(trans.save)}
+                    </button>
+                    <a
+                        class="btn icon settings not-a-view-button"
+                        href="${root}bleh"
+                    >
+                        ${tl2(trans.settings)}
+                    </a>
+                </div>
+            </div>
+        `
+    );
+    for (let setting2 in original_chart_settings) {
+      update_inbuilt_item(
+        setting2,
+        original_chart_settings[setting2],
+        false,
+        form
+      );
+    }
+    refresh_all(form);
+    tooltip = tippy_esm_default(settings_btn, {
+      theme: "window",
+      content: form,
+      allowHTML: true,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      appendTo: document.body,
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
+    });
+    view_buttons.appendChild(settings_btn);
+  }
+  function profile_artists() {
+    let panel = page.structure.main.querySelector("#top-artists");
+    if (!panel) return;
+    panel.classList.remove("section-with-settings");
+    let form = panel.querySelector("#artist-chart-settings");
+    let list = panel.querySelector("#artists_range");
+    let collage_btn;
+    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+    let settings_btn;
+    panel.insertBefore(
+      html.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+        select_btn.classList.add(
+          "select-button",
+          "link-select",
+          "blend-v2-btn"
+        );
+        select_btn.classList.remove(
+          "section-control",
+          "dropdown-menu-clickable-button"
+        );
+        return select_btn;
+      }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+        let btn = list.querySelector(
+          ".dropdown-menu-clickable-item--selected"
+        );
+        let link = new URL(
+          "https://www.last.fm" + btn.getAttribute("href")
+        );
+        let selected = link.searchParams.get("artists_date_preset");
+        window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
+      }}>${tl2(trans.collage)}</button>
+                ${form ? html.node`
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl2(trans.settings)}
+                </button>
+                ` : ""}
+            </div>
+        </div>
+    `,
+      panel.firstElementChild
+    );
+    if (!form) return;
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let timeframe = form.querySelector('[name="chart_range_top_artists"]');
+    let style = form.querySelector('[name="chart_style_top_artists"]');
+    let grid_length = form.querySelector('[name="artists_image_grid_length"]');
+    let chartlist_length = form.querySelector(
+      '[name="artists_chartlist_length"]'
+    );
+    form.classList = "";
+    render(
+      form,
+      html`
+            <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value="${page.token}"
+            />
+            <div class="setting-group blend">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.default_timeframe)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(timeframe),
+        timeframe.value,
+        "chart_range_top_artists"
+      )}
+                </div>
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_style)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(style),
+        style.value,
+        "chart_style_top_artists"
+      )}
+                </div>
+                <div class="setting hide-if-artist-list" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_size)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(grid_length),
+        grid_length.value,
+        "artists_image_grid_length"
+      )}
+                </div>
+                <div class="setting hide-if-artist-grid" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_size)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(chartlist_length),
+        chartlist_length.value,
+        "artists_chartlist_length"
+      )}
+                </div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary save">
+                        ${tl2(trans.save)}
+                    </button>
+                </div>
+            </div>
+        `
+    );
+    tippy_esm_default(settings_btn, {
+      theme: "window",
+      content: form,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      appendTo: document.body,
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
+    });
+  }
+  function profile_albums() {
+    let panel = page.structure.main.querySelector("#top-albums");
+    if (!panel) return;
+    panel.classList.remove("section-with-settings");
+    let form = panel.querySelector("#albums-chart-settings");
+    let list = panel.querySelector("#albums_range");
+    let collage_btn;
+    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+    let settings_btn;
+    panel.insertBefore(
+      html.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+        select_btn.classList.add(
+          "select-button",
+          "link-select",
+          "blend-v2-btn"
+        );
+        select_btn.classList.remove(
+          "section-control",
+          "dropdown-menu-clickable-button"
+        );
+        return select_btn;
+      }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+        let btn = list.querySelector(
+          ".dropdown-menu-clickable-item--selected"
+        );
+        let link = new URL(
+          "https://www.last.fm" + btn.getAttribute("href")
+        );
+        let selected = link.searchParams.get("albums_date_preset");
+        window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
+      }}>${tl2(trans.collage)}</button>
+                ${form ? html.node`
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl2(trans.settings)}
+                </button>
+                ` : ""}
+            </div>
+        </div>
+    `,
+      panel.firstElementChild
+    );
+    if (!form) return;
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let timeframe = form.querySelector('[name="chart_range_top_albums"]');
+    let style = form.querySelector('[name="chart_style_top_albums"]');
+    let grid_length = form.querySelector('[name="albums_image_grid_length"]');
+    let chartlist_length = form.querySelector(
+      '[name="albums_chartlist_length"]'
+    );
+    form.classList = "";
+    render(
+      form,
+      html`
+            <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value="${page.token}"
+            />
+            <div class="setting-group blend">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.default_timeframe)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(timeframe),
+        timeframe.value,
+        "chart_range_top_albums"
+      )}
+                </div>
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_style)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(style),
+        style.value,
+        "chart_style_top_albums"
+      )}
+                </div>
+                <div class="setting hide-if-album-list" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_size)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(grid_length),
+        grid_length.value,
+        "albums_image_grid_length"
+      )}
+                </div>
+                <div class="setting hide-if-album-grid" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_size)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(chartlist_length),
+        chartlist_length.value,
+        "albums_chartlist_length"
+      )}
+                </div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary save">
+                        ${tl2(trans.save)}
+                    </button>
+                </div>
+            </div>
+        `
+    );
+    tippy_esm_default(settings_btn, {
+      theme: "window",
+      content: form,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      appendTo: document.body,
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
+    });
+  }
+  function profile_tracks() {
+    let panel = page.structure.main.querySelector("#top-tracks");
+    if (!panel) return;
+    panel.classList.remove("section-with-settings");
+    let form = panel.querySelector("#track-chart-settings");
+    let list = panel.querySelector("#tracks_range");
+    let collage_btn;
+    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+    let settings_btn;
+    panel.insertBefore(
+      html.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+        select_btn.classList.add(
+          "select-button",
+          "link-select",
+          "blend-v2-btn"
+        );
+        select_btn.classList.remove(
+          "section-control",
+          "dropdown-menu-clickable-button"
+        );
+        return select_btn;
+      }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+        let btn = list.querySelector(
+          ".dropdown-menu-clickable-item--selected"
+        );
+        let link = new URL(
+          "https://www.last.fm" + btn.getAttribute("href")
+        );
+        let selected = link.searchParams.get("tracks_date_preset");
+        window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
+      }}>${tl2(trans.collage)}</button>
+                ${form ? html.node`
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl2(trans.settings)}
+                </button>
+                ` : ""}
+            </div>
+        </div>
+    `,
+      panel.firstElementChild
+    );
+    if (!form) return;
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
+    let chartlist_length = form.querySelector(
+      '[name="chart_length_top_tracks"]'
+    );
+    form.classList = "";
+    render(
+      form,
+      html`
+            <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value="${page.token}"
+            />
+            <div class="setting-group blend">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.default_timeframe)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(timeframe),
+        timeframe.value,
+        "chart_range_top_tracks"
+      )}
+                </div>
+                <div class="setting hide-if-track-grid" data-type="select">
+                    <div class="heading">
+                        <h5>${tl2(trans.chart_size)}</h5>
+                    </div>
+                    ${select(
+        select_prepare(chartlist_length),
+        chartlist_length.value,
+        "chart_length_top_tracks"
+      )}
+                </div>
+                <div class="sep" />
+                ${setting({ id: "format_guest_features" })}
+                ${setting({ id: "show_guest_features" })}
+                <div class="more-link">
+                    <a href="${root}bleh/music">${tl2(trans.settings)}</a>
+                </div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary save">
+                        ${tl2(trans.save)}
+                    </button>
+                </div>
+            </div>
+        `
+    );
+    tippy_esm_default(settings_btn, {
+      theme: "window",
+      content: form,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      appendTo: document.body,
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
+    });
+  }
+  function parse_sub_text(profile_sub_text, name = page.name, cache3) {
+    const display_name = profile_sub_text.querySelector(
+      ".header-title-display-name"
+    );
+    const scrobble_since = profile_sub_text.querySelector(
+      ".header-scrobble-since"
+    );
+    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl2(trans.account_scrobbling_since_replace), "");
+    const pronouns2 = use_pronouns(display_name.textContent);
+    profile_sub_text.insertBefore(
+      html.node`
+        <span class="header-title-secondary--pre">
+            ${pronouns2 ? tl2(trans.account_pronouns) : tl2(trans.aka)}
+        </span>
+    `,
+      display_name
+    );
+    profile_sub_text.insertBefore(
+      html.node`
+        <span class="header-title-secondary--pre">
+            ${tl2(trans.account_created)}
+        </span>
+    `,
+      scrobble_since
+    );
+    cache3.aka = display_name.textContent.trim();
+    cache3.created = scrobble_since.textContent.trim();
+  }
+  function bleh_profile_events() {
+    const selected_tab = page.structure.toolbar?.querySelector(
+      ".secondary-nav-item-link--active"
+    );
+    let value_panel = html.node`
+        <section class="value-panel">
+            <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl2(trans.events)}</h2>
+        </section>
+    `;
+    if (page.structure.toolbar) {
+      const tabs = page.structure.toolbar.querySelectorAll(
+        ".secondary-nav-item-link"
+      );
+      tabs.forEach((tab, index3) => {
+        if (index3 < 1) return;
+        tab.classList.add("has-tab-num");
+        const num = tab.firstChild.textContent.trim().slice(-2);
+        tab.appendChild(html.node`
+                <span class="tab-num">
+                    ${num}
+                </span>
+            `);
+      });
+    }
+    let values = page.structure.main.querySelectorAll(".metadata-display");
+    let value_header = html.node`
+        <div class="glacier-library-metadata" />
+    `;
+    values.forEach((value, index3) => {
+      let text3 = tl2(trans.going);
+      if (index3 == 1) text3 = tl2(trans.interested);
+      value_header.appendChild(html.node`
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">${text3}</div>
+                <div class="glacier-library-metadata-item-value">${value.textContent}</div>
+            </div>
+        `);
+    });
+    value_panel.appendChild(value_header);
+    let total_value = page.structure.side.querySelector(".metadata-display");
+    if (total_value) {
+      value_panel.appendChild(html.node`
+            <h2 class="text-18">${tl2(trans.all_time)}</h2>
+            <div class="glacier-library-metadata">
+                <div class="glacier-library-metadata-item">
+                    <div class="sub-text">${tl2(trans.total)}</div>
+                    <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                </div>
+            </div>
+        `);
+    }
+    let legacy_metadata = page.structure.main.querySelector(".metadata-list");
+    if (legacy_metadata) page.structure.main.removeChild(legacy_metadata);
+    page.structure.side.innerHTML = "";
+    page.structure.side.appendChild(value_panel);
   }
 
   // src/pages/search.js
@@ -40173,7 +37857,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </div>
         </section>
     `, page.structure.container.firstElementChild);
-    let cache2;
+    let cache3;
     if (auth.name) {
     }
     if (!auth.pro) return;
@@ -40959,7 +38643,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         patch_masthead();
         load_notifications();
         load_status();
-        checkup_friend_cache();
         set_season();
         start_rain();
         load_activities();
@@ -41064,11 +38747,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "festival" || page.type == "tag") {
       patch_shouts();
       if (shout_parse_queue.length > 0) parse_shout_queue();
-    }
-    if (page.type == "user" && page.subpage.startsWith("library") && page.subpage != "library_overview" && !page.subpage.startsWith("library_artist_") && !page.subpage.startsWith("library_album_") && !page.subpage.startsWith("library_track_"))
-      bleh_glacier_library();
-    if (auth.pro && page.type == "user" && page.name == auth.name && page.subpage == "library_artist_overview" || page.subpage == "library_album_overview" || page.subpage == "library_track_overview") {
-      bleh_glacier_library_bulk_edit();
     }
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "events" || page.type == "festival" || page.type == "tag" || page.type == "overview" || page.type == "bookmarks") {
       patch_titles();
@@ -48852,14 +46530,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     return longest;
   }
-  function _longestText(ctx, font, arrayOfThings, cache2) {
-    cache2 = cache2 || {};
-    let data2 = cache2.data = cache2.data || {};
-    let gc = cache2.garbageCollect = cache2.garbageCollect || [];
-    if (cache2.font !== font) {
-      data2 = cache2.data = {};
-      gc = cache2.garbageCollect = [];
-      cache2.font = font;
+  function _longestText(ctx, font, arrayOfThings, cache3) {
+    cache3 = cache3 || {};
+    let data2 = cache3.data = cache3.data || {};
+    let gc = cache3.garbageCollect = cache3.garbageCollect || [];
+    if (cache3.font !== font) {
+      data2 = cache3.data = {};
+      gc = cache3.garbageCollect = [];
+      cache3.font = font;
     }
     ctx.save();
     ctx.font = font;
@@ -49260,7 +46938,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (typeof fallback === "undefined") {
       fallback = _resolve("_fallback", scopes);
     }
-    const cache2 = {
+    const cache3 = {
       [Symbol.toStringTag]: "Object",
       _cacheable: true,
       _scopes: scopes,
@@ -49272,7 +46950,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         ...scopes
       ], prefixes, finalRootScopes, fallback)
     };
-    return new Proxy(cache2, {
+    return new Proxy(cache3, {
       /**
       * A trap for the delete operator.
       */
@@ -49325,7 +47003,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
   }
   function _attachContext(proxy, context, subProxy, descriptorDefaults) {
-    const cache2 = {
+    const cache3 = {
       _cacheable: false,
       _proxy: proxy,
       _context: context,
@@ -49335,7 +47013,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       setContext: (ctx) => _attachContext(proxy, ctx, subProxy, descriptorDefaults),
       override: (scope) => _attachContext(proxy.override(scope), context, subProxy, descriptorDefaults)
     };
-    return new Proxy(cache2, {
+    return new Proxy(cache3, {
       /**
       * A trap for the delete operator.
       */
@@ -50260,15 +47938,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (!prevStyle) {
       return false;
     }
-    const cache2 = [];
+    const cache3 = [];
     const replacer = function(key, value) {
       if (!isPatternOrGradient(value)) {
         return value;
       }
-      if (!cache2.includes(value)) {
-        cache2.push(value);
+      if (!cache3.includes(value)) {
+        cache3.push(value);
       }
-      return cache2.indexOf(value);
+      return cache3.indexOf(value);
     };
     return JSON.stringify(style, replacer) !== JSON.stringify(prevStyle, replacer);
   }
@@ -51240,9 +48918,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     _resolveElementOptions(elementType, mode = "default", index3) {
       const active = mode === "active";
-      const cache2 = this._cachedDataOpts;
+      const cache3 = this._cachedDataOpts;
       const cacheKey = elementType + "-" + mode;
-      const cached = cache2[cacheKey];
+      const cached = cache3[cacheKey];
       const sharing = this.enableOptionSharing && defined(index3);
       if (cached) {
         return cloneIfNotShared(cached, sharing);
@@ -51264,15 +48942,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const values = config.resolveNamedOptions(scopes, names2, context, prefixes);
       if (values.$shared) {
         values.$shared = sharing;
-        cache2[cacheKey] = Object.freeze(cloneIfNotShared(values, sharing));
+        cache3[cacheKey] = Object.freeze(cloneIfNotShared(values, sharing));
       }
       return values;
     }
     _resolveAnimations(index3, transition, active) {
       const chart = this.chart;
-      const cache2 = this._cachedDataOpts;
+      const cache3 = this._cachedDataOpts;
       const cacheKey = `animation-${transition}`;
-      const cached = cache2[cacheKey];
+      const cached = cache3[cacheKey];
       if (cached) {
         return cached;
       }
@@ -51285,7 +48963,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       const animations = new Animations(chart, options && options.animations);
       if (options && options._cacheable) {
-        cache2[cacheKey] = Object.freeze(animations);
+        cache3[cacheKey] = Object.freeze(animations);
       }
       return animations;
     }
@@ -53961,13 +51639,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     return lineValue;
   }
   function garbageCollect(caches, length) {
-    each(caches, (cache2) => {
-      const gc = cache2.gc;
+    each(caches, (cache3) => {
+      const gc = cache3.gc;
       const gcLen = gc.length / 2;
       let i;
       if (gcLen > length) {
         for (i = 0; i < gcLen; ++i) {
-          delete cache2.data[gc[i]];
+          delete cache3.data[gc[i]];
         }
         gc.splice(0, gcLen);
       }
@@ -54492,25 +52170,25 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const increment = Math.floor(length / getTicksLimit(length, maxTicksLimit));
       let widestLabelSize = 0;
       let highestLabelSize = 0;
-      let i, j, jlen, label, tickFont, fontString, cache2, lineHeight, width, height, nestedLabel;
+      let i, j, jlen, label, tickFont, fontString, cache3, lineHeight, width, height, nestedLabel;
       for (i = 0; i < length; i += increment) {
         label = ticks[i].label;
         tickFont = this._resolveTickFontOptions(i);
         ctx.font = fontString = tickFont.string;
-        cache2 = caches[fontString] = caches[fontString] || {
+        cache3 = caches[fontString] = caches[fontString] || {
           data: {},
           gc: []
         };
         lineHeight = tickFont.lineHeight;
         width = height = 0;
         if (!isNullOrUndef(label) && !isArray2(label)) {
-          width = _measureText(ctx, cache2.data, cache2.gc, width, label);
+          width = _measureText(ctx, cache3.data, cache3.gc, width, label);
           height = lineHeight;
         } else if (isArray2(label)) {
           for (j = 0, jlen = label.length; j < jlen; ++j) {
             nestedLabel = label[j];
             if (!isNullOrUndef(nestedLabel) && !isArray2(nestedLabel)) {
-              width = _measureText(ctx, cache2.data, cache2.gc, width, nestedLabel);
+              width = _measureText(ctx, cache3.data, cache3.gc, width, nestedLabel);
               height += lineHeight;
             }
           }
@@ -55725,17 +53403,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     _cachedScopes(mainScope, resetCache) {
       const _scopeCache = this._scopeCache;
-      let cache2 = _scopeCache.get(mainScope);
-      if (!cache2 || resetCache) {
-        cache2 = /* @__PURE__ */ new Map();
-        _scopeCache.set(mainScope, cache2);
+      let cache3 = _scopeCache.get(mainScope);
+      if (!cache3 || resetCache) {
+        cache3 = /* @__PURE__ */ new Map();
+        _scopeCache.set(mainScope, cache3);
       }
-      return cache2;
+      return cache3;
     }
     getOptionScopes(mainScope, keyLists, resetCache) {
       const { options, type } = this;
-      const cache2 = this._cachedScopes(mainScope, resetCache);
-      const cached = cache2.get(keyLists);
+      const cache3 = this._cachedScopes(mainScope, resetCache);
+      const cached = cache3.get(keyLists);
       if (cached) {
         return cached;
       }
@@ -55755,7 +53433,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         array.push(/* @__PURE__ */ Object.create(null));
       }
       if (keysCached.has(keyLists)) {
-        cache2.set(keyLists, array);
+        cache3.set(keyLists, array);
       }
       return array;
     }
@@ -55799,20 +53477,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
   };
   function getResolver(resolverCache, scopes, prefixes) {
-    let cache2 = resolverCache.get(scopes);
-    if (!cache2) {
-      cache2 = /* @__PURE__ */ new Map();
-      resolverCache.set(scopes, cache2);
+    let cache3 = resolverCache.get(scopes);
+    if (!cache3) {
+      cache3 = /* @__PURE__ */ new Map();
+      resolverCache.set(scopes, cache3);
     }
     const cacheKey = prefixes.join();
-    let cached = cache2.get(cacheKey);
+    let cached = cache3.get(cacheKey);
     if (!cached) {
       const resolver = _createResolver(scopes, prefixes);
       cached = {
         resolver,
         subPrefixes: prefixes.filter((p) => !p.toLowerCase().includes("hover"))
       };
-      cache2.set(cacheKey, cached);
+      cache3.set(cacheKey, cached);
     }
     return cached;
   }
@@ -61896,17 +59574,6 @@ hangul-romanization/dist/index.js:
 showdown/dist/showdown.js:
   (*! showdown v 2.1.0 - 21-04-2022 *)
 
-cropperjs/dist/cropper.js:
-  (*!
-   * Cropper.js v1.6.2
-   * https://fengyuanchen.github.io/cropperjs
-   *
-   * Copyright 2015-present Chen Fengyuan
-   * Released under the MIT license
-   *
-   * Date: 2024-04-21T07:43:05.335Z
-   *)
-
 color-thief-browser/dist/color-thief.min.js:
   (*!
    * Color Thief v2.0
@@ -61933,6 +59600,17 @@ color-thief-browser/dist/color-thief.min.js:
    * Block below copied from Protovis: http://mbostock.github.com/protovis/
    * Copyright 2010 Stanford Visualization Group
    * Licensed under the BSD License: http://www.opensource.org/licenses/bsd-license.php
+   *)
+
+cropperjs/dist/cropper.js:
+  (*!
+   * Cropper.js v1.6.2
+   * https://fengyuanchen.github.io/cropperjs
+   *
+   * Copyright 2015-present Chen Fengyuan
+   * Released under the MIT license
+   *
+   * Date: 2024-04-21T07:43:05.335Z
    *)
 
 @ungap/weakmap/esm/index.js:

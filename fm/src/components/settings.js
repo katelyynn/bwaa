@@ -18,7 +18,6 @@ import { version } from '../main.js';
 import { select } from './select.js';
 import { input } from './input.js';
 import { status } from './status.js';
-import { chart_reflow } from '../chart.js';
 import { set_storage } from '../build/tools.js';
 
 export function setting({
@@ -1057,7 +1056,6 @@ export function save_setting(id, value) {
             `data-bwaa--theme_type`,
             settings.theme_type
         );
-        chart_reflow();
     }
 
     // if using a seasonal default,

@@ -42,13 +42,9 @@ import { bleh_setup, notify_if_new_update } from './pages/bleh_setup';
 import { bleh_error } from './pages/error';
 import { bleh_events } from './pages/event';
 import { bleh_gallery, bleh_gallery_upload_check } from './pages/gallery';
-import {
-    bleh_glacier_library,
-    bleh_glacier_library_bulk_edit
-} from './pages/glacier';
 import { bleh_home, bleh_home_legacy } from './pages/home';
 import { bleh_inbox } from './pages/inbox';
-import { bleh_profiles, checkup_friend_cache } from './pages/profile';
+import { bleh_profiles } from './pages/profile';
 import { bleh_search } from './pages/search';
 import { bleh_tags } from './pages/tag';
 import { bleh_tracks } from './pages/track';
@@ -122,8 +118,6 @@ export function bleh() {
 
             load_notifications();
             load_status();
-
-            checkup_friend_cache();
 
             // load seasonal data
             set_season();
@@ -260,28 +254,6 @@ function main_flow() {
         patch_shouts();
 
         if (shout_parse_queue.length > 0) parse_shout_queue();
-    }
-
-    if (
-        page.type == 'user' &&
-        page.subpage.startsWith('library') &&
-        page.subpage != 'library_overview' &&
-        !page.subpage.startsWith('library_artist_') &&
-        !page.subpage.startsWith('library_album_') &&
-        !page.subpage.startsWith('library_track_')
-    )
-        bleh_glacier_library();
-
-    // bulk edit check
-    if (
-        (auth.pro &&
-            page.type == 'user' &&
-            page.name == auth.name &&
-            page.subpage == 'library_artist_overview') ||
-        page.subpage == 'library_album_overview' ||
-        page.subpage == 'library_track_overview'
-    ) {
-        bleh_glacier_library_bulk_edit();
     }
 
     if (

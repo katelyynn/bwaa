@@ -11,7 +11,6 @@ import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
 import { clean_number, romanise, sanitise } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
-import { prep_chart_colours } from '../chart';
 import { refresh_all } from '../config';
 import { create_divider } from '../pages/gallery';
 import { ff } from '../sku';
@@ -27,10 +26,6 @@ import { other_listener } from './profile_shortcut';
 import tippy from 'tippy.js';
 import { Chart } from '../main.js';
 import { DateTime } from 'luxon';
-import {
-    load_profile_cache_externally,
-    open_starred_friend_window
-} from '../pages/profile.js';
 import { oracle_credits } from './oracle.js';
 
 unsafeWindow._other_listener = function (id) {
@@ -272,99 +267,6 @@ export async function show_your_scrobbles() {
     create_listen_item(listen_container, your_listens, page.type);
 
     // profile shortcut :3
-    if (settings.starred_friend != '') {
-        const cache = await load_profile_cache_externally(
-            settings.starred_friend
-        );
-
-        let shortcut_listens = {
-            name: settings.starred_friend,
-            listens: -1,
-            link: scrobble_page,
-            avi: cache.avatar,
-            katsune: katsune
-        };
-        // create child for them
-        const listen_item = create_listen_item(
-            listen_container,
-            shortcut_listens
-        );
-
-        fetch(
-            `${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`
-        )
-            .then(function (response) {
-                console.log('returned', response, response.text);
-
-                return response.text();
-            })
-            .then(function (dom) {
-                const doc = new DOMParser().parseFromString(dom, 'text/html');
-
-                let first_metadata_item = doc.querySelector(
-                    '.metadata-item .metadata-display'
-                );
-
-                let listens = 0;
-
-                // sometimes this fails even thou they do have plays, this is just a last.fm bug
-                // i dont feel comfortable displaying 0 here as it may not be true
-                // but i guess i should?
-                if (first_metadata_item)
-                    listens = clean_number(
-                        first_metadata_item.textContent.trim()
-                    );
-
-                let p;
-                listen_item.setAttribute('data-listens', listens);
-
-                render(
-                    listen_item,
-                    html`
-                        <img
-                            class="view-item-avatar"
-                            src=${shortcut_listens.avi}
-                            alt=${shortcut_listens.name}
-                        />
-                        <div class="listen-badge star colourful">
-                            <div class="bleh-icon" />
-                        </div>
-                        <div class="info">
-                            <h3>${shortcut_listens.name}</h3>
-                            <p class="colourful" ref=${(el) => (p = el)}>
-                                ${tl(trans.listens.count).replace(
-                                    '{c}',
-                                    listens.toLocaleString(lang)
-                                )}
-                            </p>
-                        </div>
-                    `
-                );
-
-                // colourful counts
-                if (settings.colourful_counts && page.type == 'artist') {
-                    let parsed_scrobble_as_rank =
-                        parse_scrobbles_as_rank(listens);
-
-                    listen_item.setAttribute(
-                        'data-bwaa--scrobble-milestone',
-                        parsed_scrobble_as_rank.milestone
-                    );
-                    p.style.setProperty(
-                        '--hue-over',
-                        parsed_scrobble_as_rank.hue
-                    );
-                    p.style.setProperty(
-                        '--sat-over',
-                        parsed_scrobble_as_rank.sat
-                    );
-                    p.style.setProperty(
-                        '--lit-over',
-                        parsed_scrobble_as_rank.lit
-                    );
-                }
-            });
-    }
 
     // other user
     if (page.type != 'artist') listen_container.appendChild(create_divider());
@@ -1174,32 +1076,6 @@ function create_listen_item(
                 </div>
             `
         );
-
-        let menu = tippy(listen_item, {
-            theme: 'context-menu',
-            content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${tl(trans.profile)}
-                </a>
-                <div class="sep"></div>
-                <button class="dropdown-menu-clickable-item" onclick=${() => open_starred_friend_window()} data-menu-item="settings">
-                    ${tl(trans.settings)}
-                </button>
-            `,
-            placement: 'right-start',
-            trigger: 'manual',
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-
-            onShow(instance) {
-                instance.popper.addEventListener('click', (event) => {
-                    instance.hide();
-                });
-            }
-        });
-
-        register_menu(listen_item, menu);
     } else if (listens == -3) {
         listen_item.classList.add('listen-item-other');
 
@@ -1465,96 +1341,6 @@ function video_unavailable(video_col = null) {
     `,
         page.structure.side.firstElementChild
     );
-}
-
-export function bleh_music_page_charts() {
-    if (!ff('music_page_charts')) return;
-
-    log('beginning replacement', 'music charts');
-
-    let panel = page.structure.container.querySelector('.listen-panel'); // page.structure.side fails without pro
-    let trend = panel.querySelector('.listener-trend');
-
-    if (!trend) return;
-
-    // is this a chart reflow due to style loading?
-    let previous_chart = panel.querySelector('.scrobble-canvas-container');
-    if (previous_chart) panel.removeChild(previous_chart);
-
-    let table = trend.querySelector('tbody');
-    let days = table.querySelectorAll('tr');
-
-    let labels = [];
-    let values = [];
-
-    let has_seen_more_than_0 = false;
-    days.forEach((day, index) => {
-        if (!day) return;
-
-        //let label = day.querySelector('time').textContent.trim();
-        let label = DateTime.fromISO(
-            day.querySelector('time').getAttribute('datetime')
-        );
-        let value = day.querySelector('.js-value');
-
-        console.log('day', index, label, day, day.innerHTML);
-
-        if (!value.getAttribute('data-value')) value = 0;
-        else value = value.getAttribute('data-value');
-
-        if (value == '0' && index < 120 && !has_seen_more_than_0) return;
-        has_seen_more_than_0 = true;
-
-        labels.push(label);
-        values.push(value);
-    });
-
-    prep_chart_colours();
-
-    let scrobble_canvas_container = document.createElement('div');
-    scrobble_canvas_container.classList.add('scrobble-canvas-container');
-
-    let scrobble_canvas = document.createElement('canvas');
-    scrobble_canvas.classList.add('scrobble-canvas');
-
-    let gradient = scrobble_canvas
-        .getContext('2d')
-        .createLinearGradient(0, 0, 0, 160);
-    try {
-        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-    } catch (e) {
-        gradient = page.state.chart_colours.link_bg_col;
-    }
-
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    data: values,
-                    borderWidth: 2,
-                    backgroundColor: gradient,
-                    borderColor: page.state.chart_colours.link_col,
-                    fill: true,
-                    pointRadius: 0,
-                    pointHitRadius: 20,
-                    tension: 0.1
-                }
-            ]
-        },
-        options: page.state.chart_line_options
-    });
-
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-    panel.appendChild(scrobble_canvas_container);
-
-    trend.style.setProperty('display', 'none');
-
-    log('finished', 'music charts');
 }
 
 export function bleh_top_listeners() {

@@ -6,7 +6,6 @@
 
 import { log } from '../build/log';
 import { page, root } from '../build/page';
-import { load_chart_colours } from '../chart';
 import { ff } from '../sku';
 import { html, render } from 'lighterhtml';
 import { tl, trans } from '../build/trans.js';
@@ -30,13 +29,6 @@ export function basic_page_structure() {
  * @param {HTMLObjectElement|null} header legacy header from last.fm to extract data from
  */
 export function checkup_page_structure(is_subpage = false, header = null) {
-    if (document.body.style.getPropertyValue('--hue-album')) {
-        document.body.style.removeProperty('--hue-album');
-        document.body.style.removeProperty('--sat-album');
-        document.body.style.removeProperty('--lit-album');
-        load_chart_colours();
-    }
-
     let params = new URLSearchParams(document.location.search);
     page.requested = {
         tab: params.get('tab'),
@@ -121,26 +113,15 @@ export function checkup_page_structure(is_subpage = false, header = null) {
         }
     }
 
-    if (ff('short')) {
-        page.structure.content = html.node`
-            <main class="content">
-                ${page.structure.main}
-                ${page.structure.side}
-            </main>
-        `;
-        page.structure.row.appendChild(page.structure.content);
-    }
-
     log('finished', 'page structure');
 
-    if (ff('refreshed_music_nav') && header) {
+    if (header) {
         let navlist = header.querySelector('.navlist');
 
         if (navlist) {
-            navlist.classList.add('redesigned-navigation');
-            page.structure.container.insertBefore(
+            page.structure.row.insertBefore(
                 navlist,
-                page.structure.container.firstElementChild
+                page.structure.row.firstElementChild
             );
             page.structure.nav = navlist;
 
@@ -157,168 +138,10 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                     overview = null;
             }
 
-            if (overview) overview.textContent = tl(trans.home);
-        }
+            let text = tl(trans[page.type]);
+            if (page.type == 'user') text = tl(trans.profile);
 
-        if (is_subpage) {
-            let content_top = document.body.querySelector('.content-top');
-
-            if (content_top) {
-                content_top.classList.add('redesigned-content-top');
-                page.structure.content_top = content_top;
-
-                // should be covered by bleh
-                if (content_top.querySelector('.content-top-back-link'))
-                    content_top.style.setProperty('display', 'none');
-
-                let content_top_nav = content_top.querySelector('.navlist');
-                if (!content_top_nav && ff('beret'))
-                    content_top.style.setProperty('display', 'none');
-
-                if (ff('short')) {
-                    if (!content_top.style.hasOwnProperty('display'))
-                        page.structure.row.insertBefore(
-                            content_top,
-                            page.structure.content
-                        );
-                    else page.structure.row.appendChild(content_top);
-                } else {
-                    if (navlist) navlist.after(content_top);
-                    else
-                        page.structure.container.insertBefore(
-                            content_top,
-                            page.structure.container.firstElementChild
-                        );
-                }
-            } else {
-                let subpage_title = page.structure.main.querySelector(
-                    ':scope > .subpage-title'
-                );
-                if (!subpage_title)
-                    subpage_title = page.structure.main.querySelector(
-                        ':scope > .section-controls > .subpage-title'
-                    );
-                if (!subpage_title)
-                    subpage_title = page.structure.main.querySelector(
-                        ':scope > section:first-child .section-controls > .subpage-title'
-                    );
-
-                if (subpage_title) {
-                    content_top = html.node`
-                        <div class="content-top redesigned-content-top">
-                            <div class="content-top-inner-wrap">
-                                <div class="container content-top-lower">
-                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    page.structure.content_top = content_top;
-                    content_top.style.setProperty('display', 'none');
-
-                    if (ff('short'))
-                        page.structure.row.appendChild(content_top);
-                    else navlist.after(content_top);
-
-                    try {
-                        page.structure.main.removeChild(subpage_title);
-                    } catch (e) {}
-                }
-
-                // is there another navlist?
-                navlist = page.structure.main.querySelector('.navlist');
-
-                if (navlist) {
-                    navlist.classList.add('redesigned-navigation');
-
-                    if (ff('mualani')) {
-                        let toolbar = html.node`
-                            <div class="toolbar">
-                                ${navlist}
-                            </div>
-                        `;
-
-                        page.structure.row.insertBefore(
-                            toolbar,
-                            page.structure.row.firstElementChild
-                        );
-                    } else {
-                        page.structure.row.insertBefore(
-                            navlist,
-                            page.structure.content
-                        );
-                    }
-                }
-
-                // is there a btn-add?
-                let btn_add =
-                    page.structure.main.querySelector(':scope > .btn-add');
-                if (!btn_add)
-                    btn_add = page.structure.main.querySelector(
-                        ':scope > section:first-child .btn-add'
-                    );
-
-                if (btn_add) {
-                    let side_actions = document.createElement('section');
-                    side_actions.classList.add('side-actions');
-
-                    if (!page.mobile)
-                        page.structure.side.appendChild(side_actions);
-                    else page.structure.main.appendChild(side_actions);
-
-                    btn_add.classList = 'btn side-action';
-                    btn_add.setAttribute('data-type', 'add');
-                    btn_add.textContent = tl(trans.add);
-
-                    side_actions.appendChild(btn_add);
-                }
-
-                // is there a playlink?
-                let radio = page.structure.main.querySelector(
-                    ':scope > .section-controls > .section-playlink'
-                );
-
-                if (radio) {
-                    let side_actions = document.createElement('section');
-                    side_actions.classList.add('side-actions');
-
-                    if (!page.mobile)
-                        page.structure.side.appendChild(side_actions);
-                    else page.structure.main.appendChild(side_actions);
-
-                    radio.classList =
-                        'btn stationlink js-playlink-station radio-button';
-
-                    let type = radio.getAttribute('data-analytics-label');
-
-                    render(
-                        radio,
-                        html`
-                            <h3 class="sub-text">${tl(trans.radio)}</h3>
-                            <h4>${tl(trans[type])}</h4>
-                        `
-                    );
-
-                    radio.removeAttribute('title');
-
-                    side_actions.appendChild(radio);
-                }
-            }
-
-            let similar_artists = page.structure.side.querySelector(
-                '.similar-items-sidebar'
-            );
-            if (similar_artists) {
-                similar_artists.parentElement.classList.add(
-                    'similar-artists-panel'
-                );
-                page.structure.side.removeChild(similar_artists.parentElement);
-            }
-        } else {
-            let content_top = document.body.querySelector('.content-top');
-
-            if (content_top) content_top.classList.add('legacy-content-top');
+            if (overview) overview.textContent = text;
         }
     }
 }

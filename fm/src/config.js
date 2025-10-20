@@ -13,10 +13,8 @@ import { log } from './build/log';
 import { page, reload_pending } from './build/page';
 import { stored_season } from './build/seasonal';
 import { tl, trans } from './build/trans';
-import { chart_reflow, load_chart_colours } from './chart';
 import { notify } from './components/notify';
 import { load_skus } from './pages/bwaa_config';
-import { bleh_glacier_date_graph_generate } from './pages/glacier';
 import { compile_settings, save_setting } from './components/settings.js';
 
 // load settings
@@ -68,8 +66,6 @@ export function load_settings(skip = false) {
         document.documentElement.setAttribute('data-bwaa--theme', 'oled');
         page.state.settings_reload = true;
     }
-
-    load_chart_colours();
 }
 
 // theme
@@ -87,8 +83,6 @@ export function toggle_theme() {
 
     // save value
     save_setting('theme', current_theme);
-
-    chart_reflow();
 }
 
 export function refresh_all(search = document) {
@@ -267,14 +261,6 @@ function update_item(item, value, modify = true, search = document) {
                     if (other_value == value) return;
                     else toggle.setAttribute('aria-checked', false);
                 });
-
-                // re-flow chart
-                if (
-                    (item == 'chart_view' || item == 'chart_bar_axis') &&
-                    page.type == 'user' &&
-                    page.subpage.startsWith('library')
-                )
-                    bleh_glacier_date_graph_generate();
             } else {
                 // dont modify, just show
                 if (settings[item] == value) {
@@ -308,7 +294,6 @@ function update_item(item, value, modify = true, search = document) {
 
     if (item == 'hue' || item == 'sat' || item == 'lit') {
         update_colour_swatches();
-        load_chart_colours();
     }
 }
 

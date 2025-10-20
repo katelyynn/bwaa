@@ -11,7 +11,6 @@ import { create_badge, load_badges } from './components/badge';
 import { dialog } from './components/dialog';
 import tippy from 'tippy.js';
 import { control_gif_pause } from './build/tools';
-import { load_profile_cache_externally } from './pages/profile';
 import { register_menu } from './components/menu';
 
 export function patch_avatar(

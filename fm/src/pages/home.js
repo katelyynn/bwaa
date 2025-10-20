@@ -14,7 +14,6 @@ import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
 import {ff} from "../sku.js";
-import { load_profile_cache_externally } from './profile.js';
 
 export async function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -33,11 +32,6 @@ export async function bleh_home() {
     checkup_page_structure(false, content_top);
     log('status is', 'page', 'info', page);
     update_page();
-
-    let cache;
-    if (auth.name) {
-        cache = await load_profile_cache_externally(auth.name);
-    }
 
 
     let hour = new Date().getHours();

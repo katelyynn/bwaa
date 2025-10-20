@@ -7,35 +7,18 @@
 import { settings } from './build/config';
 import { auth, discord, page, root } from './build/page';
 import { stored_season } from './build/seasonal';
-import { lang, lang_info, tl, trans } from './build/trans';
+import { tl, trans } from './build/trans';
 import { create_badge, load_badges } from './components/badge';
 import { version } from './main';
 import { ff } from './sku';
 import { html, render } from 'lighterhtml';
 import { news } from './news.js';
-import { toggle_theme } from './config.js';
 import { save_setting, setting } from './components/settings.js';
 import { prompt_for_update } from './style.js';
-import { log } from './build/log.js';
-import {
-    correct_artist,
-    correct_item_by_artist,
-    name_includes,
-    smart_artists,
-    smart_title
-} from './components/lotus.js';
-import { bleh_notification_list } from './components/notifications.js';
 import tippy from 'tippy.js';
-import {
-    load_profile_cache_externally,
-    open_starred_friend_window
-} from './pages/profile.js';
 import { sponsor } from './sponsor.js';
 import { register_menu } from './components/menu.js';
-import { copy, romanise } from './build/tools.js';
-import { match } from './components/dynamic_theming.js';
 import { DateTime } from 'luxon';
-import { input } from './components/input.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');

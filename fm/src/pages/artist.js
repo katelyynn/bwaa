@@ -19,7 +19,6 @@ import {
 } from '../components/lotus';
 import { register_menu } from '../components/menu';
 import {
-    bleh_music_page_charts,
     bleh_top_listeners,
     convert_top_listener,
     redirect,
@@ -264,8 +263,6 @@ export function bleh_artists() {
 
     if (!is_subpage) {
         show_your_scrobbles();
-
-        bleh_music_page_charts();
 
         bleh_tags_mini();
 

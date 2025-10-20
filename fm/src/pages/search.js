@@ -13,7 +13,6 @@ import {checkup_page_structure} from "../components/structure";
 import {patch_titles} from "../components/track";
 import {update_page} from "../page";
 import { tl, trans } from '../build/trans';
-import { load_profile_cache_externally } from './profile';
 import { sanitise } from '../build/tools';
 import tippy from 'tippy.js';
 

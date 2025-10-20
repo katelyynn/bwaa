@@ -12,13 +12,11 @@ import { sponsor_list } from '../build/sponsor';
 import {
     clean_number,
     control_gif_pause,
-    lazy,
     romanise,
     sanitise,
     set_storage
 } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
-import { prep_chart_colours } from '../chart';
 import { create_badge, load_badges } from '../components/badge';
 import { dialog } from '../components/dialog';
 import {
@@ -27,12 +25,10 @@ import {
     name_includes
 } from '../components/lotus';
 import { markdown } from '../components/markdown';
-import { notify } from '../components/notify';
 import { redesign_profile_header } from '../components/profile_header';
 import {
     select,
-    select_prepare,
-    select_prepare_list
+    select_prepare
 } from '../components/select';
 import {
     checkup_page_structure,
@@ -41,16 +37,13 @@ import {
 import { refresh_all, update_inbuilt_item } from '../config';
 import { update_page } from '../page';
 import { ff } from '../sku';
-import { bleh_user_library } from './glacier';
 import { use_pronouns } from './lastfm_settings';
 import { bleh_obsession } from './obsession';
 import { html, render } from 'lighterhtml';
 import { save_setting, setting } from '../components/settings.js';
 import { redirect } from '../components/music.js';
 import tippy from 'tippy.js';
-import { Chart } from '../main.js';
 import { expand_avatar } from '../avatar.js';
-import { status } from '../components/status.js';
 import { hoshino } from '../components/hoshino.js';
 
 export async function bleh_profiles() {
@@ -72,8 +65,7 @@ export async function bleh_profiles() {
         '.page-content:not(.profile-cards-container, .report-box-container .page-content)'
     );
     try {
-        page.structure.row =
-            page.structure.container.querySelector('.row:not(._buffer)');
+        page.structure.row = page.structure.container.querySelector('.row:not(._buffer)');
         page.structure.main = page.structure.row.querySelector('.col-main');
         page.structure.side = page.structure.row.querySelector('.col-sidebar');
     } catch (e) {
@@ -88,47 +80,7 @@ export async function bleh_profiles() {
 
     let new_account = false;
 
-    let profile_cache =
-        JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    let cache = profile_cache[page.name] || {};
-
-    let about_me_sidebar =
-        page.structure.row.querySelector('.about-me-sidebar');
-
-    if (page.subpage == 'overview') {
-        if (!about_me_sidebar) {
-            delete cache.banner;
-            delete cache.hue;
-            delete cache.sat;
-            delete cache.lit;
-
-            about_me_sidebar = html.node`
-                <section class="about-me-sidebar">
-                    <h2>${tl(trans.about)}</h2>
-                    <p class="subtle">${tl(trans.no_about).replace('{u}', page.name)}</p>
-                </section>
-            `;
-            page.structure.side.insertBefore(
-                about_me_sidebar,
-                page.structure.side.firstElementChild
-            );
-        } else {
-            if (settings.bio_markdown) {
-                // parse body
-                let about_me_text = about_me_sidebar.querySelector('p');
-                let result = bio_parse(about_me_text, cache);
-
-                about_me_text.after(result);
-                about_me_text.remove();
-            }
-        }
-
-        if (page.mobile)
-            page.structure.main.insertBefore(
-                about_me_sidebar,
-                page.structure.main.firstElementChild
-            );
-    }
+    let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
     let avatar = profile_header.querySelector('.avatar');
     let title_wrap = profile_header.querySelector('.header-title-label-wrap');
@@ -150,9 +102,6 @@ export async function bleh_profiles() {
             .querySelector('.header-title a')
             .classList.add('bleh--name-is-cute');
     }
-
-    let pronouns;
-    if (cache.aka) pronouns = use_pronouns(cache.aka);
 
     let expander;
     let redesigned_profile_header = html.node`
@@ -201,10 +150,6 @@ export async function bleh_profiles() {
         </section>
     `;
 
-    const avatar_img = avatar.querySelector(':scope > img');
-
-    if (avatar_img) cache.avatar = avatar_img.src;
-
     page.structure.container.insertBefore(
         redesigned_profile_header,
         page.structure.container.firstElementChild
@@ -220,8 +165,6 @@ export async function bleh_profiles() {
             expand_avatar(src.replace('/avatar170s/', '/ar0/'));
         });
     }
-
-    control_gif_pause(avatar_img);
 
     // translations in other languages
     let library_tab = page.structure.nav.querySelector(
@@ -384,8 +327,6 @@ export async function bleh_profiles() {
                     listen_container,
                     page.structure.main.firstChild
                 );
-
-            if (scrobbles > 0 && auth.name) bleh_profile_chart();
         }
 
         // secondary text
@@ -521,9 +462,7 @@ export async function bleh_profiles() {
         let btn_add = page.structure.side.querySelector('.add-button');
         if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
 
-        if (page.subpage.startsWith('library')) {
-            bleh_user_library();
-        } else if (page.subpage == 'events') {
+        if (page.subpage == 'events') {
             convert_to_toolbar();
 
             const no_events = page.structure.main.querySelector(
@@ -1032,55 +971,6 @@ function patch_profile_following() {
     render(page.structure.main, user_panel);
 
     refresh_all();
-}
-
-function refresh_tracks(button, { quiet = false }) {
-    let panel = page.structure.main.querySelector('#recent-tracks-section');
-    panel.classList.remove('has-refreshed');
-    button.setAttribute('disabled', '');
-
-    // we need to fetch the tracklist, this function presumes that
-    // the user has a tracklist to begin with, as that is the only
-    // way to call the function on the frontend
-    fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`)
-        .then(function (response) {
-            console.log('returned', response, response.text);
-
-            return response.text();
-        })
-        .then(function (html) {
-            let doc = new DOMParser().parseFromString(html, 'text/html');
-            console.log('DOC', doc);
-
-            let tracklist_panel = doc.querySelector('.chartlist');
-
-            button.removeAttribute('disabled');
-
-            if (!tracklist_panel) {
-                if (!quiet) {
-                    status({
-                        title: tl(trans.recent_tracks),
-                        body: tl(trans.value_failed_to_load).replace(
-                            '{v}',
-                            tl(trans.library)
-                        ),
-                        type: 'error'
-                    });
-                }
-                return;
-            }
-
-            if (!quiet) {
-                status({
-                    title: tl(trans.recent_tracks),
-                    body: tl(trans.refreshed)
-                });
-            }
-            panel.classList.add('has-refreshed');
-
-            panel.querySelector('.chartlist').outerHTML =
-                tracklist_panel.outerHTML;
-        });
 }
 
 function bleh_featured_profile_track(object) {
@@ -1851,326 +1741,6 @@ function bio_parse(text, cache = true, take_effect = true) {
     );
 
     return temp;
-}
-
-function bleh_profile_chart() {
-    let panel = page.structure.row.querySelector('.listen-panel');
-    let table = panel.querySelector('table');
-
-    if (table) {
-        bleh_profile_chart_render(panel, table);
-        return;
-    }
-
-    lazy(
-        panel,
-        () => {
-            fetch(
-                `${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`
-            )
-                .then(function (response) {
-                    console.log(
-                        'glacier library returned',
-                        response,
-                        response.text,
-                        response.status
-                    );
-
-                    if (response.status != 200) throw new Error();
-
-                    return response.text();
-                })
-                .then(function (html) {
-                    let doc = new DOMParser().parseFromString(
-                        html,
-                        'text/html'
-                    );
-                    console.log(
-                        'glacier library DOC',
-                        doc,
-                        doc.querySelector('.table')
-                    );
-
-                    log('received response', 'glacier library');
-
-                    table = doc.querySelector('.table');
-
-                    if (table) {
-                        panel.appendChild(table);
-                        bleh_profile_chart_render(panel, table);
-                    } else {
-                        log('table is null?', 'glacier library', 'error');
-                        console.info('glacier library', doc.body.innerHTML);
-                        console.info(
-                            'glacier library',
-                            new DOMParser().parseFromString(
-                                doc.body.innerHTML,
-                                'text/html'
-                            )
-                        );
-                    }
-                });
-        },
-        { threshold: 0.3, rootMargin: '0px' }
-    );
-}
-
-export function bleh_profile_chart_render(
-    panel = page.structure.side?.querySelector('.listen-profile-panel'),
-    table = null
-) {
-    if (!panel) return;
-
-    if (!table) table = panel.querySelector('table');
-    if (!table) return;
-
-    let entries = table.querySelectorAll('tbody tr');
-
-    let labels = [];
-    let links = [];
-    let values = [];
-
-    page.state.glacier.links = [];
-    entries.forEach((entry) => {
-        let period = entry.querySelector('.js-period a');
-        let value = entry.querySelector('.js-scrobbles').textContent.trim();
-
-        labels.push(period.textContent.trim());
-        links.push(period.getAttribute('href'));
-        values.push(value);
-
-        page.state.glacier.links.push(
-            `${root}user/${page.name}/library` + period.getAttribute('href')
-        );
-    });
-
-    prep_chart_colours();
-
-    let scrobble_canvas_container = panel.querySelector(
-        '.scrobble-canvas-container'
-    );
-    scrobble_canvas_container.innerHTML = '';
-
-    let scrobble_canvas = document.createElement('canvas');
-    scrobble_canvas.classList.add('scrobble-canvas');
-
-    let gradient = scrobble_canvas
-        .getContext('2d')
-        .createLinearGradient(0, 0, 0, 160);
-    try {
-        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-    } catch (e) {
-        gradient = page.state.chart_colours.link_bg_col;
-    }
-
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    data: values,
-                    borderWidth: 2,
-                    backgroundColor: gradient,
-                    borderColor: page.state.chart_colours.link_col,
-                    fill: true,
-                    pointRadius: 0,
-                    pointHitRadius: 20,
-                    tension: 0.1
-                }
-            ]
-        },
-        options: page.state.chart_library_line_options
-    });
-
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-}
-
-export function save_profile_cache(
-    { avatar, banner, hue, sat, lit, aka, created } = {},
-    profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) ||
-        {},
-    name = page.name
-) {
-    let profile_cache_o = Object.keys(profile_cache);
-
-    if (profile_cache_o.length > 400) {
-        // remove first available item of object
-        const keys = Reflect.ownKeys(profile_cache);
-
-        // we dont delete logged in user or users on local friends list
-        const protected_users = new Set([auth.name, ...settings.friends]);
-        const key_to_delete = keys.find(
-            (key) => !protected_users.has(profile_cache[key])
-        );
-
-        if (key_to_delete) delete profile_cache[key_to_delete];
-
-        // them move this to the bottom
-        delete profile_cache[name];
-    }
-
-    profile_cache[name] = {
-        avatar,
-        banner,
-        hue,
-        sat,
-        lit,
-        aka,
-        created
-    };
-
-    log('saved to cache', 'profile', 'info', {
-        name,
-        cache: profile_cache[name]
-    });
-    set_storage('bleh_profile_cache', JSON.stringify(profile_cache));
-}
-
-export async function checkup_friend_cache(list = settings.friends) {
-    for (const friend of list) {
-        const cache = await load_profile_cache_externally(friend);
-        log(`finalised cache for friend ${friend}`, 'profile', 'info', {
-            cache: cache
-        });
-    }
-}
-
-export function open_starred_friend_window() {
-    dialog({
-        id: 'starred_friend',
-        title: tl(trans.friends),
-        body: html.node`
-            <div class="setting-group">
-                ${(starred = setting({ id: 'starred_friend', list: select_prepare_list([{ value: '', text: tl(trans.none) }, ...settings.friends]) }))}
-            </div>
-            <div class="alert alert-info">
-                ${tl(trans.starred_friend.notice)}
-            </div>
-        `
-    });
-}
-
-export async function load_profile_cache_externally(name = page.name) {
-    if (!name) return;
-
-    log(`requested profile cache for ${name}`, 'cache');
-
-    let profile_cache =
-        JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    let cache = profile_cache[name];
-
-    if (cache) {
-        if (cache.hue || cache.sat || cache.lit) {
-            if (
-                !sponsor_list ||
-                (sponsor_list && !sponsor_list.sponsors.includes(name))
-            ) {
-                delete cache.hue;
-                delete cache.sat;
-                delete cache.lit;
-            }
-        }
-
-        log(`returning pre-cached result for ${name}`, 'cache', 'info', {
-            cache
-        });
-        return cache;
-    }
-
-    return await request_profile_cache(name);
-}
-
-function load_profile_cache(
-    name = page.name,
-    cache = null,
-    profile_cache = null
-) {
-    if (!name) return;
-
-    if (!profile_cache)
-        profile_cache =
-            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    if (!cache) cache = profile_cache[name] || {};
-
-    if (cache) {
-        if (cache.hue || cache.sat || cache.lit) {
-            if (
-                !sponsor_list ||
-                (sponsor_list && !sponsor_list.sponsors.includes(name))
-            ) {
-                delete cache.hue;
-                delete cache.sat;
-                delete cache.lit;
-            }
-        }
-
-        const hue = cache.hue;
-        const sat = cache.sat;
-        const lit = cache.lit;
-        const banner = cache.banner;
-
-        if (hue) document.body.style.setProperty('--hue-album', hue);
-        if (sat) document.body.style.setProperty('--sat-album', sat);
-        if (lit) document.body.style.setProperty('--lit-album', lit);
-
-        return;
-    }
-
-    return request_profile_cache(name, cache, profile_cache);
-}
-
-function request_profile_cache(
-    name = page.name,
-    cache = null,
-    profile_cache = null
-) {
-    log(`requesting fetch of profile cache for ${name}`, 'cache');
-
-    const will_cache = !cache || !profile_cache;
-
-    if (!profile_cache)
-        profile_cache =
-            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    if (!cache) cache = profile_cache[name] || {};
-
-    return new Promise((resolve, reject) => {
-        fetch(`${root}user/${name}`)
-            .then(function (response) {
-                console.log('returned', response, response.text);
-
-                return response.text();
-            })
-            .then(function (dom) {
-                let doc = new DOMParser().parseFromString(dom, 'text/html');
-                console.log('DOC', doc);
-
-                const about_me_sidebar = doc.querySelector('.about-me-sidebar');
-                if (about_me_sidebar) {
-                    let about_me_text = about_me_sidebar.querySelector('p');
-                    bio_parse(about_me_text, cache ? cache : true, false);
-                } else {
-                    delete cache.banner;
-                    delete cache.hue;
-                    delete cache.sat;
-                    delete cache.lit;
-                }
-
-                const avatar = doc.querySelector('.header-avatar .avatar img');
-                if (avatar) cache.avatar = avatar.src;
-
-                const secondary = doc.querySelector('.header-title-secondary');
-                parse_sub_text(secondary, name, cache);
-
-                if (will_cache) save_profile_cache(cache, profile_cache, name);
-
-                resolve(cache || {});
-            })
-            .catch(reject);
-    });
 }
 
 function parse_sub_text(profile_sub_text, name = page.name, cache) {

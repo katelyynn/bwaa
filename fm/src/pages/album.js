@@ -16,12 +16,10 @@ import {
     sanitise
 } from '../build/tools';
 import { tl, trans } from '../build/trans';
-import { load_chart_colours } from '../chart';
 import { bleh_about_artist } from '../components/about_artist';
 import { patch_header_title } from '../components/lotus';
 import { register_menu } from '../components/menu';
 import {
-    bleh_music_page_charts,
     redirect,
     show_your_scrobbles
 } from '../components/music';
@@ -238,8 +236,6 @@ export function bleh_albums() {
                 `sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${sat}, ${lit})`,
                 'hue from album'
             );
-
-            load_chart_colours();
         } catch (e) {
             log('no cover present', 'hue from album');
         }
@@ -247,8 +243,6 @@ export function bleh_albums() {
 
     if (!is_subpage) {
         show_your_scrobbles();
-
-        bleh_music_page_charts();
 
         album_missing_a_tracklist();
 

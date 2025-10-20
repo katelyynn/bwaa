@@ -34,11 +34,6 @@ import { input } from '../components/input.js';
 import { share } from '../components/share.js';
 import { force_refresh_style, start_update, update_check } from '../style.js';
 import tippy from 'tippy.js';
-import {
-    checkup_friend_cache,
-    load_profile_cache_externally
-} from './profile.js';
-import { select_prepare_list } from '../components/select.js';
 import { match } from '../components/dynamic_theming.js';
 import { render_activity } from '../activity.js';
 import { DateTime } from 'luxon';
@@ -989,8 +984,6 @@ export async function render_setting_page(page_id) {
 
         register_skip_to([]);
 
-        const cache = await load_profile_cache_externally(auth.name);
-
         let friends;
         let starred;
 
@@ -1067,29 +1060,6 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'profile_avi_background' })}
                     </div>
                 </section>
-                ${ff('friends')
-                    ? html.node`
-            <section class="form-section settings-form">
-                <h4>${tl(trans.friends)}</h4>
-                <div class="setting-group">
-                    ${(friends = setting({
-                        id: 'friends',
-                        list: settings.friends,
-                        func: (val) => {
-                            if (!val.includes(settings.starred_friend))
-                                save_setting('starred_friend', '');
-
-                            checkup_friend_cache(val);
-
-                            render_setting_page('profile');
-                        }
-                    }))}
-                    ${(starred = setting({ id: 'starred_friend', list: select_prepare_list([{ value: '', text: tl(trans.none) }, ...settings.friends]) }))}
-                </div>
-                <p class="card-tip">${tl(trans.friend_difference)}</p>
-            </section>
-            `
-                    : ''}
                 <section class="form-section settings-form">
                     <h4>${tl(trans.other)}</h4>
                     <div class="setting-group">

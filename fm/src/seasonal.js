@@ -14,7 +14,6 @@ import {
 } from './build/seasonal';
 import { set_storage } from './build/tools';
 import { tl, trans } from './build/trans';
-import { load_chart_colours } from './chart';
 import { notify } from './components/notify';
 import { html } from 'lighterhtml';
 import { DateTime, Duration } from 'luxon';
@@ -163,8 +162,6 @@ export function set_season() {
                 });
             }
             set_storage('bwaa_last_season_seen', season.id);
-
-            load_chart_colours();
 
             return;
         }

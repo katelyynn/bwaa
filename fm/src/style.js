@@ -8,7 +8,6 @@ import { html } from 'lighterhtml';
 import { settings } from './build/config';
 import { log } from './build/log';
 import { tl, trans } from './build/trans';
-import { chart_reflow } from './chart';
 import { dialog, dialog_rm } from './components/dialog';
 import { invoke_reload } from './config';
 import { version } from './main';
@@ -59,7 +58,6 @@ function load_cached_style(cached_style) {
 
     style.onload = () => {
         log('loaded cache', 'style');
-        chart_reflow();
 
         // now, analyse if we should fetch a new one
         log('checking timeout', 'style');
@@ -136,7 +134,6 @@ function fetch_new_style(
                 log('loaded', 'style');
                 document.body.classList.add('bwaa');
 
-                chart_reflow();
 
                 if (reload_on_finish) invoke_reload();
             };

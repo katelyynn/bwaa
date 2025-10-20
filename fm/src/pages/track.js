@@ -12,7 +12,6 @@ import { bleh_about_artist } from '../components/about_artist';
 import { patch_header_title } from '../components/lotus';
 import { register_menu } from '../components/menu';
 import {
-    bleh_music_page_charts,
     show_your_scrobbles
 } from '../components/music';
 import { checkup_page_structure } from '../components/structure';
@@ -164,8 +163,6 @@ export function bleh_tracks() {
 
     if (!is_subpage) {
         show_your_scrobbles();
-
-        bleh_music_page_charts();
 
         bleh_about_artist();
 
