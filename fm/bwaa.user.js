@@ -21459,37 +21459,6 @@
       }
     });
   }
-  function prompt_for_update() {
-    dialog({
-      id: "bwaa_update",
-      title: tl2(trans.update_to_version).replace(
-        "{v}",
-        localStorage.getItem("bwaa_update_to") || "unknown"
-      ),
-      body: html.node`
-            <div class="forms">
-                <div class="form">
-                    <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl2(trans.update_now)}</button>
-                    </div>
-                </div>
-                <div class="form">
-                    <div class="form-group deny">
-                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl2(trans.ignore_for_now)}</button>
-                    </div>
-                </div>
-            </div>
-        `,
-      dismiss: false,
-      type: "update",
-      replace_if_possible: true
-    });
-  }
-  function ignore_update() {
-    dialog_rm({
-      id: "bwaa_update"
-    });
-  }
   function start_update() {
     open(
       `https://github.com/katelyynn/bwaa/raw/${settings.branch}/fm/bwaa.user.js`
@@ -31284,114 +31253,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   };
 
   // src/navigation.js
-  function patch_masthead() {
-    let masthead_logo = document.body.querySelector(".masthead-logo");
-    if (!masthead_logo) return;
-    if (!masthead_logo.hasAttribute("data-kate-processed")) {
-      masthead_logo.setAttribute("data-kate-processed", "true");
-      update_masthead(masthead_logo);
-    }
-  }
-  function update_masthead(masthead_logo = document.body.querySelector(".masthead-logo")) {
-    const update_required = localStorage.getItem("bleh_update_required") || "false";
-    let home_link;
-    render(masthead_logo, html``);
-    render(
-      masthead_logo,
-      html`
-            <a href="/">Last.fm</a>
-            <a
-                class="home-link"
-                href="${root}music"
-                ref=${(el) => home_link = el}
-            >
-                <div class="bleh-logo">${version.brand}</div>
-                <div class="lastfm-logo">Last.fm</div>
-            </a>
-        `
-    );
-    const head_menu = tippy_esm_default(home_link, {
-      theme: "window",
-      content: html.node`
-            <div class="setting-group blend">
-                ${setting({ id: "branding_type" })}
-            </div>
-        `,
-      placement: "right-start",
-      trigger: "manual",
-      interactive: true,
-      interactiveBorder: 10,
-      offset: [0, 0],
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-      }
-    });
-    register_menu(home_link, head_menu);
-    let link;
-    if (update_required === "false") {
-      link = html.node`
-            <a class="bleh--version" href="${root}bleh">
-                ${version.build}
-                <div class="new-badge sku spacing">
-                    ${version.sku}
-                    ${settings.dev ? html.node`
-                    <span class="bleh-icon-container">
-                        <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
-                    </span>
-                    ` : ""}
-                </div>
-            </a>
-        `;
-    } else {
-      link = html.node`
-            <a class="bleh--version" onclick=${() => prompt_for_update()}>
-                <div class="update-container">
-                    <div class="bleh-icon" style="--icon: var(--icon-16-update)" />
-                </div>
-                ${version.build}
-                <div class="new-badge sku spacing">
-                    ${version.sku}
-                    ${settings.dev ? html.node`
-                    <span class="bleh-icon-container">
-                        <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
-                    </span>
-                    ` : ""}
-                </div>
-            </a>
-        `;
-      tippy_esm_default(link, {
-        content: tl2(trans.update_available_to_install)
-      });
-    }
-    const last_checked = localStorage.getItem("bleh_update_checked") || null;
-    const link_menu = tippy_esm_default(link, {
-      theme: "context-menu",
-      content: html.node`
-            <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
-                ${last_checked ? tl2(trans.last_checked_date).replace(
-        "{d}",
-        DateTime.fromJSDate(
-          new Date(last_checked)
-        ).toRelative()
-      ) : tl2(trans.never_checked)}
-            </a>
-        `,
-      placement: "right-start",
-      trigger: "manual",
-      interactive: true,
-      interactiveBorder: 10,
-      offset: [0, 0],
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-      }
-    });
-    register_menu(link, link_menu);
-    masthead_logo.appendChild(link);
-  }
   function append_nav() {
     if (ff("developer") && !page.structure.indicator) {
       let page_indicator2 = document.createElement("div");
@@ -36299,7 +36160,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let new_account = false;
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
     let avatar2 = profile_header.querySelector(".avatar");
-    let title_wrap = profile_header.querySelector(".header-title-label-wrap");
+    const profile_name_obj = profile_header.querySelector(".header-title-label-wrap");
     const profile_sub_text = profile_header.querySelector(".header-title-secondary");
     if (!avatar2) {
       avatar2 = profile_header.querySelector(".header-avatar-add");
@@ -36320,6 +36181,28 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     );
     if (loved_tab) loved_tab.textContent = tl2(trans.loved);
     if (!is_subpage) {
+      profile_recents();
+      let scrobbles = 0;
+      let average = 0;
+      let artists = 0;
+      let loved = 0;
+      let metadata = profile_header.querySelectorAll(
+        ".header-metadata-display"
+      );
+      metadata.forEach((item, index3) => {
+        if (index3 == 0) {
+          let para = item.querySelector("p");
+          scrobbles = clean_number(para.textContent.trim());
+          average = para.getAttribute("title");
+        } else if (index3 == 1) {
+          artists = clean_number(item.textContent.trim());
+        } else if (index3 == 2) {
+          loved = clean_number(item.textContent.trim());
+        }
+      });
+      page.state.scrobbles = scrobbles;
+      page.state.artists = artists;
+      page.state.loved = loved;
       const display_name = profile_sub_text.querySelector(
         ".header-title-display-name"
       );
@@ -36339,21 +36222,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             <strong>${display_name.textContent.trim()}</strong>
                         </div>
                         <div class="bottom user-last-seen">
-
+                            ${tl2(trans.last_seen, { v: page.state.active_now ? tl2(trans.last_seen.now) : page.state.active_now })}
                         </div>
                     </div>
                     <div class="user-data">
                         <div class="user-plays">
                             <div class="count">
-
+                                ${{ html: tl2(trans.count_plays, { c: scrobble_flip(scrobbles, average) }) }}
                             </div>
                             <div class="since">
-
+                                ${tl2(trans.since, { v: scrobble_since.textContent })}
                             </div>
                         </div>
                     </div>
                     <div class="user-activity">
-
+                        <a href="${root}user/${page.name}/loved">${tl2(trans.count_loved, { c: loved })}</a> |
+                         <a href="${root}user/${page.name}/library/artists">${tl2(trans.count_artists, { c: artists })}</a> |
+                         <a href="${root}user/${page.name}/shoutbox">${tl2(trans.shouts)}</a>
                     </div>
                 </div>
             </section>
@@ -36365,7 +36250,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         about_me_text.after(result);
         about_me_text.remove();
       }
-      profile_recents();
       profile_artists();
       profile_albums();
       profile_tracks();
@@ -36410,27 +36294,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 `;
         }
       }
-      let scrobbles = 0;
-      let average = 0;
-      let artists = 0;
-      let loved = 0;
-      let metadata = profile_header.querySelectorAll(
-        ".header-metadata-display"
-      );
-      metadata.forEach((item, index3) => {
-        if (index3 == 0) {
-          let para = item.querySelector("p");
-          scrobbles = clean_number(para.textContent.trim());
-          average = para.getAttribute("title");
-        } else if (index3 == 1) {
-          artists = clean_number(item.textContent.trim());
-        } else if (index3 == 2) {
-          loved = clean_number(item.textContent.trim());
-        }
-      });
-      page.state.scrobbles = scrobbles;
-      page.state.artists = artists;
-      page.state.loved = loved;
       let scrobble_text;
       let listen_container = html.node`
             <section class="listen-panel listen-profile-panel">
@@ -36733,10 +36596,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     update_page();
     patch_profile_following();
     log2(`querying badges for ${page.name}`, "profile");
-    let profile_name_obj;
-    profile_name_obj = page.structure.container.querySelector(
-      ".redesigned-profile-header .title-container"
-    );
     if (ff("badges")) {
       let stock_badges = profile_name_obj.querySelectorAll(".label");
       stock_badges.forEach((badge) => {
@@ -36964,6 +36823,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (settings_btn) settings_btn.textContent = tl2(trans.settings);
     const header = panel.querySelector("h2 > a");
     if (header) header.textContent = tl2(trans.recently_listened_tracks);
+    page.state.active_now = panel.querySelector(".chartlist-timestamp > span");
   }
   function profile_artists() {
     let panel = page.structure.main.querySelector("#top-artists");
@@ -37060,6 +36920,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (legacy_metadata) page.structure.main.removeChild(legacy_metadata);
     page.structure.side.innerHTML = "";
     page.structure.side.appendChild(value_panel);
+  }
+  function scrobble_flip(scrobbles, average) {
+    const scrobbles_split = scrobbles.toString().split("");
+    return html.node`
+        <div class="flipper-wrap" title=${average}>
+            ${scrobbles_split.map((split) => html.node`
+                <div class="flip">
+                    ${split}
+                </div>
+            `)}
+        </div>
+    `.outerHTML;
   }
 
   // src/pages/search.js
@@ -37913,8 +37785,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         load_dialogs();
         lookup_lang();
         theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        update_check(false, null, update_masthead);
-        patch_masthead();
+        update_check(false, null);
         load_notifications();
         load_status();
         set_season();
@@ -38010,7 +37881,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
   function main_flow() {
     lookup_lang();
-    patch_masthead(document.body);
     if (page.state.error) return;
     if (page.type == "artist" || page.type == "album") {
       bleh_gallery();
@@ -40109,6 +39979,21 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Top-Song",
       pt: "Top Faixa",
       sv: "Toppl\xE5t"
+    },
+    last_seen: {
+      en: "Last seen: {v}",
+      now: {
+        en: "active now"
+      }
+    },
+    since: {
+      en: "since {v}"
+    },
+    count_loved: {
+      en: "{c} Loved Tracks"
+    },
+    count_artists: {
+      en: "{c} Artists"
     },
     you_share_count_with: {
       // as in your musical taste % between you and someone else

@@ -1754,6 +1754,21 @@ export const trans = {
         pt: 'Top Faixa',
         sv: 'Topplåt'
     },
+    last_seen: {
+        en: 'Last seen: {v}',
+        now: {
+            en: 'active now'
+        }
+    },
+    since: {
+        en: 'since {v}'
+    },
+    count_loved: {
+        en: '{c} Loved Tracks'
+    },
+    count_artists: {
+        en: '{c} Artists'
+    },
     you_share_count_with: {
         // as in your musical taste % between you and someone else
         // you are {percentage%} compatible (in taste) {list of artists}

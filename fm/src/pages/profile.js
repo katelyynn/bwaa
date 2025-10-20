@@ -82,7 +82,7 @@ export async function bleh_profiles() {
     let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
     let avatar = profile_header.querySelector('.avatar');
-    let title_wrap = profile_header.querySelector('.header-title-label-wrap');
+    const profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
     const profile_sub_text = profile_header.querySelector('.header-title-secondary');
 
     // new account
@@ -111,6 +111,34 @@ export async function bleh_profiles() {
     if (loved_tab) loved_tab.textContent = tl(trans.loved);
 
     if (!is_subpage) {
+        profile_recents();
+
+        // acquire info
+        let scrobbles = 0;
+        let average = 0;
+        let artists = 0;
+        let loved = 0;
+
+        let metadata = profile_header.querySelectorAll(
+            '.header-metadata-display'
+        );
+        metadata.forEach((item, index) => {
+            if (index == 0) {
+                let para = item.querySelector('p');
+
+                scrobbles = clean_number(para.textContent.trim());
+                average = para.getAttribute('title');
+            } else if (index == 1) {
+                artists = clean_number(item.textContent.trim());
+            } else if (index == 2) {
+                loved = clean_number(item.textContent.trim());
+            }
+        });
+
+        page.state.scrobbles = scrobbles;
+        page.state.artists = artists;
+        page.state.loved = loved;
+
         const display_name = profile_sub_text.querySelector(
             '.header-title-display-name'
         );
@@ -133,21 +161,23 @@ export async function bleh_profiles() {
                             <strong>${display_name.textContent.trim()}</strong>
                         </div>
                         <div class="bottom user-last-seen">
-
+                            ${tl(trans.last_seen, {v: (page.state.active_now) ? tl(trans.last_seen.now) : page.state.active_now})}
                         </div>
                     </div>
                     <div class="user-data">
                         <div class="user-plays">
                             <div class="count">
-
+                                ${{ html: tl(trans.count_plays, {c: scrobble_flip(scrobbles, average)}) }}
                             </div>
                             <div class="since">
-
+                                ${tl(trans.since, {v: scrobble_since.textContent})}
                             </div>
                         </div>
                     </div>
                     <div class="user-activity">
-
+                        <a href="${root}user/${page.name}/loved">${tl(trans.count_loved, {c: loved})}</a> |
+                         <a href="${root}user/${page.name}/library/artists">${tl(trans.count_artists, {c: artists})}</a> |
+                         <a href="${root}user/${page.name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 </div>
             </section>
@@ -167,7 +197,6 @@ export async function bleh_profiles() {
 
         //
 
-        profile_recents();
         profile_artists();
         profile_albums();
         profile_tracks();
@@ -219,32 +248,6 @@ export async function bleh_profiles() {
                 `;
             }
         }
-
-        // acquire info
-        let scrobbles = 0;
-        let average = 0;
-        let artists = 0;
-        let loved = 0;
-
-        let metadata = profile_header.querySelectorAll(
-            '.header-metadata-display'
-        );
-        metadata.forEach((item, index) => {
-            if (index == 0) {
-                let para = item.querySelector('p');
-
-                scrobbles = clean_number(para.textContent.trim());
-                average = para.getAttribute('title');
-            } else if (index == 1) {
-                artists = clean_number(item.textContent.trim());
-            } else if (index == 2) {
-                loved = clean_number(item.textContent.trim());
-            }
-        });
-
-        page.state.scrobbles = scrobbles;
-        page.state.artists = artists;
-        page.state.loved = loved;
 
         let scrobble_text;
         let listen_container = html.node`
@@ -637,11 +640,6 @@ export async function bleh_profiles() {
     // badges
     log(`querying badges for ${page.name}`, 'profile');
 
-    let profile_name_obj;
-    profile_name_obj = page.structure.container.querySelector(
-        '.redesigned-profile-header .title-container'
-    );
-
     if (ff('badges')) {
         let stock_badges = profile_name_obj.querySelectorAll('.label');
         stock_badges.forEach((badge) => {
@@ -976,6 +974,8 @@ function profile_recents() {
 
     const header = panel.querySelector('h2 > a');
     if (header) header.textContent = tl(trans.recently_listened_tracks);
+
+    page.state.active_now = panel.querySelector('.chartlist-timestamp > span');
 }
 
 function profile_artists() {
@@ -1097,4 +1097,18 @@ function bleh_profile_events() {
 
     page.structure.side.innerHTML = '';
     page.structure.side.appendChild(value_panel);
+}
+
+function scrobble_flip(scrobbles, average) {
+    const scrobbles_split = scrobbles.toString().split('');
+
+    return html.node`
+        <div class="flipper-wrap" title=${average}>
+            ${scrobbles_split.map(split => html.node`
+                <div class="flip">
+                    ${split}
+                </div>
+            `)}
+        </div>
+    `.outerHTML;
 }
