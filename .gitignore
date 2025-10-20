@@ -1,1 +1,6 @@
-fm/node_modules
+gen/
+node_modules
+*.bun
+bun.lock
+.idea
+.DS_Store

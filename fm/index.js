@@ -4,8 +4,9 @@
 // Licensed under GPLv3
 //
 
-import esbuild from "esbuild"
-import build from "./src/build/build.json" with {type: "json"};
+import esbuild from 'esbuild';
+import fs from 'fs';
+import build from './src/build/build.json' with { type: 'json' };
 
 const banner = `// ==UserScript==
 // @name         ${build.brand}
@@ -14,38 +15,89 @@ const banner = `// ==UserScript==
 // @description  ${build.bio}
 // @author       ${build.author}
 // @match        https://www.last.fm/*
-// @icon         https://katelyynn.github.io/bwaa/fm/res/favicon.2.ico
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=last.fm
 // @updateURL    ${build.url}
 // @downloadURL  ${build.url}
 // @run-at       document-start
+// @grant        GM_xmlhttpRequest
+// @connect      musicbrainz.org
+// @connect      raw.githubusercontent.com
+// @connect      github.com
 // ==/UserScript==`;
 
-
 (async () => {
-    const buildOptions = {
-        entryPoints: ["./src/main.js"],
+    const userscript = {
+        entryPoints: ['./src/main.js'],
         bundle: true,
         logLimit: 0,
-        outfile: "bwaa.user.js",
+        outfile: 'bleh.user.js',
         minify: false,
         banner: {
             js: banner
         },
-        platform: "browser",
+        platform: 'browser',
         loader: {
-            ".css": "text"
+            '.css': 'text'
         }
     };
-    if (process.argv[2] == "dev") {
-        const context = await esbuild.context(buildOptions);
-        const serve = await context.serve()
-        await context.watch()
 
-        console.log("Serving on: ")
-        for(const host of serve.hosts) {
-            console.log(` \u001b[32mhttp://${host}:${serve.port}`)
+    const extension = {
+        entryPoints: ['./src/main.js'],
+        bundle: true,
+        logLimit: 0,
+        outfile: 'ext/bleh.js',
+        minify: true,
+        banner: {
+            js: banner
+        },
+        platform: 'browser',
+        loader: {
+            '.css': 'text'
+        }
+    };
+
+    function normalise_version(version) {
+        return version
+            .split('.')
+            .map((part) => String(parseInt(part, 10)))
+            .join('.');
+    }
+
+    const manifest = {
+        manifest_version: 3,
+        name: build.brand,
+        version: normalise_version(build.build),
+        description: build.bio,
+        icons: {
+            16: 'icon-16.png',
+            32: 'icon-32.png',
+            48: 'icon-48.png',
+            128: 'icon-128.png'
+        },
+        content_scripts: [
+            {
+                matches: ['https://www.last.fm/*'],
+                js: ['bleh.js'],
+                run_at: 'document_start'
+            }
+        ],
+        host_permissions: ['https://katelyynn.github.io/*']
+    };
+
+    if (process.argv[2] == 'dev') {
+        const context = await esbuild.context(userscript);
+        const serve = await context.serve();
+        await context.watch();
+
+        console.log('serving on: ');
+        for (const host of serve.hosts) {
+            console.log(` \u001b[32mhttp://${host}:${serve.port}`);
         }
     } else {
-        await esbuild.build(buildOptions);
+        await esbuild.build(userscript);
+
+        await esbuild.build(extension);
+        fs.mkdirSync('ext/', { recursive: true });
+        fs.writeFileSync('ext/manifest.json', JSON.stringify(manifest));
     }
 })();
