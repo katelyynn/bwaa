@@ -341,6 +341,10 @@
             background-position: unset !important;
         }
 
+        &:before {
+            display: none;
+        }
+
         &:after {
             content: '';
             position: absolute;
@@ -5157,35 +5161,12 @@
 
 
     .about-me-sidebar {
-        & > p {
+        & > .markdown-body {
             margin-top: 15px;
         }
 
         p {
             overflow: hidden !important;
-        }
-
-        img {
-            max-width: 100%;
-
-            /* bleh compatibility */
-            &[alt="banner"] {
-                display: none;
-            }
-        }
-    }
-    .bio {
-        p {
-            overflow: hidden !important;
-        }
-
-        img {
-            max-width: 100%;
-
-            /* bleh compatibility */
-            &[alt="banner"] {
-                display: none;
-            }
         }
     }
 
@@ -8535,6 +8516,11 @@
 
         img {
             width: 100%;
+
+            /* bleh compatibility */
+            &[alt="banner"] {
+                display: none;
+            }
         }
 
         h5 {
@@ -8896,5 +8882,9 @@
                 color: #aaa;
             }
         }
+    }
+
+    .legacy-header {
+        display: none;
     }
 }

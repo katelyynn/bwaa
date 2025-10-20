@@ -36300,31 +36300,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
     let avatar2 = profile_header.querySelector(".avatar");
     let title_wrap = profile_header.querySelector(".header-title-label-wrap");
-    let sub_wrap = profile_header.querySelector(".header-title-secondary");
+    const profile_sub_text = profile_header.querySelector(".header-title-secondary");
     if (!avatar2) {
       avatar2 = profile_header.querySelector(".header-avatar-add");
       new_account = true;
+    } else {
+      avatar2 = avatar2.querySelector("img");
     }
-    if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
-      title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
-    }
-    let expander;
-    let redesigned_profile_header = html.node`
-        <section class="redesigned-header redesigned-profile-header no-background">
-            <div class="avatar-side">
-                ${avatar2}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl2(trans.profile)}</div>
-                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
-                ${sub_wrap}
-            </div>
-        </section>
-    `;
-    page.structure.container.insertBefore(
-      redesigned_profile_header,
-      page.structure.container.firstElementChild
-    );
     profile_header.classList.add("legacy-header");
     let library_tab = page.structure.nav.querySelector(
       ".secondary-nav-item--library a"
@@ -36338,6 +36320,44 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     );
     if (loved_tab) loved_tab.textContent = tl2(trans.loved);
     if (!is_subpage) {
+      const display_name = profile_sub_text.querySelector(
+        ".header-title-display-name"
+      );
+      const scrobble_since = profile_sub_text.querySelector(
+        ".header-scrobble-since"
+      );
+      scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl2(trans.account_scrobbling_since_replace), "");
+      page.structure.main.insertBefore(html.node`
+            <section class="profile-header-section" data-page-style=${settings.page_style}>
+                <div class="badge-avatar">
+                    ${avatar2}
+                </div>
+                <div class="badge-info">
+                    <h1>${page.name}</h1>
+                    <div class="user-info" data-page-style=${settings.page_style}>
+                        <div class="top">
+                            <strong>${display_name.textContent.trim()}</strong>
+                        </div>
+                        <div class="bottom user-last-seen">
+
+                        </div>
+                    </div>
+                    <div class="user-data">
+                        <div class="user-plays">
+                            <div class="count">
+
+                            </div>
+                            <div class="since">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-activity">
+
+                    </div>
+                </div>
+            </section>
+        `, page.structure.main.firstElementChild);
       let is_following = page.structure.container.querySelector(".label.user-follow");
       if (settings.bio_markdown) {
         let about_me_text = about_me_sidebar.querySelector("p");
@@ -36465,56 +36485,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             page.structure.main.firstChild
           );
       }
-      const profile_sub_text = page.structure.container.querySelector(
-        ".redesigned-profile-header .header-title-secondary"
-      );
-      if (profile_sub_text)
-        parse_sub_text(profile_sub_text, page.name);
       let featured_track_panel = profile_header.querySelector(
         ".header-featured-track"
       );
       if (featured_track_panel)
         bleh_featured_profile_track(featured_track_panel);
-      let about_me_header = about_me_sidebar.querySelector("h2");
-      about_me_header.remove();
-      let profile_note;
-      if (!is_own_profile) {
-        let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-        profile_note = notes[page.name];
-      }
-      let settings_btn;
-      let add_note;
-      let info_tip;
-      about_me_sidebar.insertBefore(
-        html.node`
-            <div class="top-container">
-                <h2>
-                    ${tl2(trans.about)}
-                    <span class="info-tip" ref=${(el) => info_tip = el}>
-                        <span class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
-                    </span>
-                </h2>
-                <div class="view-buttons blend blend-v2">
-                    ${is_own_profile ? html.node`
-                    <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
-                        ${tl2(trans.edit)}
-                    </a>
-                    ` : !profile_note ? html.node`
-                    <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
-          create_profile_note_panel(page.name, profile_note);
-          add_note.remove();
-        }}>
-                        ${tl2(trans.add_note)}
-                    </button>
-                    ` : ""}
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl2(trans.settings)}
-                    </button>
-                </div>
-            </div>
-        `,
-        about_me_sidebar.firstChild
-      );
       if (ff("redesigned_profile_header"))
         redesign_profile_header(is_own_profile, is_following);
     } else {
@@ -36791,35 +36766,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
     profile_name_obj.appendChild(label_container);
   }
-  function create_profile_note_panel(username, has_note) {
-    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    let note;
-    about_me_sidebar.after(html.node`
-        <section class="bleh--panel bleh--profile-note-panel">
-            <h2>${tl2(trans.notes)}</h2>
-            <div class="content-form">
-                <textarea id="bleh--profile-note" placeholder=${tl2(trans.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
-            </div>
-            <div class="actions">
-                <button class="see-more cancel" onclick=${() => {
-      let notes = JSON.parse(
-        localStorage.getItem("bleh_profile_notes")
-      ) || {};
-      delete notes[page.name];
-      note.value = "";
-      set_storage("bleh_profile_notes", JSON.stringify(notes));
-    }}>${tl2(trans.clear)}</button>
-                <button class="btn primary icon" data-type="save" onclick=${() => {
-      let notes = JSON.parse(
-        localStorage.getItem("bleh_profile_notes")
-      ) || {};
-      notes[page.name] = note.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-      set_storage("bleh_profile_notes", JSON.stringify(notes));
-    }}>${tl2(trans.save)}</button>
-            </div>
-        </section>
-    `);
-  }
   function patch_profile_following() {
     let navlist = page.structure.nav.querySelector(".navlist-items");
     let following_tab = navlist.querySelector(".secondary-nav-item--following");
@@ -37058,31 +37004,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       })
     );
     return temp;
-  }
-  function parse_sub_text(profile_sub_text, name = page.name) {
-    const display_name = profile_sub_text.querySelector(
-      ".header-title-display-name"
-    );
-    const scrobble_since = profile_sub_text.querySelector(
-      ".header-scrobble-since"
-    );
-    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl2(trans.account_scrobbling_since_replace), "");
-    profile_sub_text.insertBefore(
-      html.node`
-        <span class="header-title-secondary--pre">
-            ${tl2(trans.aka)}
-        </span>
-    `,
-      display_name
-    );
-    profile_sub_text.insertBefore(
-      html.node`
-        <span class="header-title-secondary--pre">
-            ${tl2(trans.account_created)}
-        </span>
-    `,
-      scrobble_since
-    );
   }
   function bleh_profile_events() {
     const selected_tab = page.structure.toolbar?.querySelector(
