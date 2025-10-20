@@ -728,10 +728,6 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'avatar_radius' })}
                     </div>
                 </section>
-                <section class="form-section settings-form">
-                    <h4>${tl(trans.other)}</h4>
-                    <div class="setting-group">${setting({ id: 'rain' })}</div>
-                </section>
             `
         );
 

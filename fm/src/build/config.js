@@ -84,178 +84,24 @@ export let settings_store = {
         incompatible: { theme_schedule: false },
         hide_if_incompatible: true
     },
-    high_contrast: {
-        default: false,
-        type: 'checkbox',
-        title: trans.high_contrast
-    },
-    accent_type: {
-        default: 'colour',
-        type: 'radio'
-    },
-    hue: {
-        css: 'hue-user',
-        default: 255,
-        type: 'range',
-        min: 0,
-        max: 360,
-        step: 1,
-        title: trans.hue,
-        vertical: true
-    },
-    sat: {
-        css: 'sat-user',
-        default: 1,
-        type: 'range',
-        min: 0,
-        max: 2,
-        step: 0.01,
-        title: trans.sat,
-        vertical: true
-    },
-    sat_bg: {
-        css: 'sat-bg',
-        default: 1,
-        type: 'range',
-        min: 0,
-        max: 5,
-        step: 0.2,
-        title: trans.card_background_saturation.name,
-        body: trans.card_background_saturation.body,
-        incompatible: { theme: 'light' }
-    },
-    lit: {
-        css: 'lit-user',
-        default: 1,
-        type: 'range',
-        min: 0,
-        max: 1.5,
-        step: 0.01,
-        title: trans.lit,
-        vertical: true
-    },
-    solarium: {
-        default: true,
-        title: trans.solarium.name,
-        body: trans.solarium.body,
-        new_release: true
-    },
-    noise: {
-        css: 'noise-opacity',
-        default: 0.5,
-        type: 'range',
-        min: 0,
-        max: 1,
-        step: 0.05,
-        title: trans.noise.name,
-        body: trans.noise.body,
-        new_release: true
-    },
-    gloss: {
-        css: 'gloss',
-        default: 0,
-        type: 'range',
-        min: 0,
-        max: 1,
-        step: 0.05,
-        title: trans.gloss.name,
-        body: trans.gloss.body
-    },
-    gendered_tags: {
-        default: true,
-        title: trans.gendered_tags.name,
-        body: trans.gendered_tags.body
+    page_style: {
+        default: 2012,
+        type: 'radio',
+        values: {
+            2012: {
+                name: '2012'
+            }
+        }
     },
     dev: {
         default: false,
         title: trans.theme_loading.name,
         body: trans.theme_loading.body
     },
-    profile_header_expand: {
-        default: true
-    },
-    accessible_name_colours: {
-        default: false,
-        title: trans.accessible_name_colours.name,
-        body: trans.accessible_name_colours.body
-    },
-    reduced_motion: {
-        default: false,
-        title: trans.reduced_motion.name,
-        body: trans.reduced_motion.body
-    },
     underline_links: {
         default: false,
         title: trans.underline_links.name,
         body: trans.underline_links.body
-    },
-    format_guest_features: {
-        default: true,
-        title: trans.format_guest_features.name,
-        body: trans.format_guest_features.body,
-        require_reload: 'partial'
-    },
-    show_guest_features: {
-        default: false,
-        title: trans.show_guest_features.name,
-        body: trans.show_guest_features.body
-    },
-    track_layout: {
-        default: 'column',
-        type: 'radio',
-        title: trans.track_layout.name,
-        body: trans.track_layout.body,
-        values: {
-            column: {
-                name: trans.track_layout.column
-            },
-            row: {
-                name: trans.track_layout.row
-            }
-        }
-    },
-    expand_tracks: {
-        default: 'active',
-        type: 'radio',
-        title: trans.expand_tracks.name,
-        body: trans.expand_tracks.body,
-        values: {
-            always: {
-                name: trans.expand_tracks_always
-            },
-            active: {
-                name: trans.expand_tracks_when_active
-            },
-            never: {
-                name: trans.never
-            }
-        },
-        incompatible: { track_layout: 'row' }
-    },
-    track_album_name_location: {
-        default: 'column',
-        type: 'radio',
-        title: trans.track_album_name_location.name,
-        body: trans.track_album_name_location.body,
-        values: {
-            column: {
-                name: trans.track_album_name_location.column
-            },
-            row: {
-                name: trans.track_album_name_location.row
-            }
-        },
-        incompatible: { track_layout: 'row' }
-    },
-    glacier_library_graphs: {
-        default: true,
-        title: trans.glacier_graphs.name,
-        body: trans.glacier_graphs.body
-    },
-    show_remaster_tags: {
-        default: true,
-        title: trans.show_remaster_tags,
-        beta: true
     },
     corrections: {
         default: true,
@@ -263,52 +109,9 @@ export let settings_store = {
         body: trans.correct_titles_with_lotus.body,
         require_reload: true
     },
-    colourful_counts: {
-        default: true,
-        title: trans.colourful_counts.name,
-        body: trans.colourful_counts.body
-    },
-    colourful_tracks: {
-        default: true,
-        type: 'checkbox',
-        title: trans.colourful_active,
-        incompatible: { colourful_tracks_all: true }
-    },
-    colourful_tracks_all: {
-        default: false,
-        type: 'checkbox',
-        title: trans.colourful_all,
-        new_release: true
-    },
     feature_flags: {
         default: {},
         type: 'other'
-    },
-    show_your_progress: {
-        default: true,
-        title: trans.show_your_progress.name,
-        body: trans.show_your_progress.body
-    },
-    travis: {
-        default: true,
-        title: trans.redirect_messages.name,
-        body: trans.redirect_messages.body
-    },
-    list_view: {
-        default: 1,
-        type: 'radio'
-    },
-    chart_view: {
-        default: 'line',
-        type: 'radio'
-    },
-    chart_bar_axis: {
-        default: 'horizontal',
-        type: 'radio'
-    },
-    chart_insights_view: {
-        default: 'pie',
-        type: 'radio'
     },
     shout_markdown: {
         default: true,
@@ -321,22 +124,6 @@ export let settings_store = {
         require_reload: 'partial',
         title: trans.markdown_profiles.name,
         body: trans.markdown_profiles.body
-    },
-    avatar_radius: {
-        default: 50,
-        min: 0,
-        max: 50,
-        step: 25,
-        type: 'range',
-        css: 'avatar-radius',
-        suffix: '%',
-        title: trans.avatar_radius.name,
-        body: trans.avatar_radius.body
-    },
-    hue_from_album: {
-        default: true,
-        type: 'checkbox',
-        title: trans.hue_from_album
     },
     seasonal: {
         default: true,
@@ -376,114 +163,6 @@ export let settings_store = {
         type: 'checkbox',
         title: trans.seasonal_overlays.name,
         body: trans.seasonal_overlays.body
-    },
-    profile_header_own: {
-        default: true,
-        type: 'checkbox',
-        title: trans.own_profile
-    },
-    profile_header_others: {
-        default: true,
-        type: 'checkbox',
-        title: trans.other_profiles
-    },
-    profile_avi_background: {
-        default: false,
-        title: trans.profile_avi_background.name,
-        body: trans.profile_avi_background.body
-    },
-    profile_shortcut: {
-        default: '',
-        type: 'text',
-        avatar: true,
-        wait: true,
-        max: 40,
-        title: trans.profile_shortcut.name,
-        body: trans.profile_shortcut.body,
-        placeholder: trans.enter_username,
-        warn_if_matches_auth: true
-    },
-    font: {
-        css: 'custom_font',
-        default: '',
-        type: 'text',
-        max: 120,
-        title: trans.font.name,
-        body: trans.font.body,
-        placeholder: trans.enter_font_names
-    },
-    font_weight: {
-        css: 'custom_font_weight',
-        default: 400,
-        min: 100,
-        max: 600,
-        step: 10,
-        type: 'range',
-        title: trans.font_weight.name,
-        body: trans.font_weight.body
-    },
-    font_weight_medium: {
-        css: 'custom_font_weight_medium',
-        default: 500,
-        min: 400,
-        max: 750,
-        step: 10,
-        type: 'range',
-        title: trans.font_weight_medium.name,
-        body: trans.font_weight_medium.body
-    },
-    font_weight_bold: {
-        css: 'custom_font_weight_bold',
-        default: 600,
-        min: 500,
-        max: 900,
-        step: 10,
-        type: 'range',
-        title: trans.font_weight_bold.name,
-        body: trans.font_weight_bold.body
-    },
-    font_emoji: {
-        default: true,
-        title: trans.font_emoji.name,
-        body: trans.font_emoji.body,
-        platforms: ['win32', 'linux', 'android', 'other']
-    },
-    grid_glow: {
-        default: true,
-        title: trans.grid_glow.name,
-        body: trans.grid_glow.body
-    },
-    default_avatar_action: {
-        default: 'expand',
-        type: 'radio',
-        title: trans.default_avatar_action.name,
-        body: trans.default_avatar_action.body,
-        values: {
-            expand: {
-                name: trans.expand
-            },
-            gallery: {
-                name: trans.photos
-            }
-        }
-    },
-    collage_title: {
-        default: true,
-        title: trans.collage_title.name,
-        body: trans.collage_title.body
-    },
-    collage_grid_text: {
-        default: true,
-        title: trans.collage_grid_text
-    },
-    collage_grid_plays: {
-        default: true,
-        title: trans.collage_grid_plays
-    },
-    collage_grid_gap: {
-        default: true,
-        title: trans.collage_grid_gap.name,
-        body: trans.collage_grid_gap.body
     },
     hu_tao: {
         default: '',
@@ -552,72 +231,6 @@ export let settings_store = {
         icon: 'icon-16-download',
         horizontal: true
     },
-    simulate_scroll: {
-        default: true,
-        title: trans.simulate_scroll.name,
-        body: trans.simulate_scroll.body,
-        require_reload: 'partial'
-    },
-    rabbit: {
-        default: true,
-        title: trans.use_quick_switcher.name,
-        body: trans.use_quick_switcher.body
-    },
-    rabbit_search: {
-        default: 'd',
-        title: trans.search,
-        type: 'text',
-        min: 1,
-        max: 1,
-        icon: 'icon-16-search',
-        placeholder: 'none',
-        keybind: ['⌘', 'D'],
-        warn_if_empty: true
-    },
-    rabbit_primary: {
-        default: 'k',
-        title: trans.open,
-        type: 'text',
-        min: 1,
-        max: 1,
-        icon: 'icon-16-rabbit',
-        placeholder: 'none',
-        keybind: ['⌘', 'K'],
-        warn_if_empty: true
-    },
-    rabbit_profile: {
-        default: 'p',
-        title: trans.profile,
-        type: 'text',
-        min: 1,
-        max: 1,
-        icon: 'icon-16-user',
-        placeholder: 'none',
-        keybind: ['⌘', 'P'],
-        warn_if_empty: true
-    },
-    rabbit_shortcut: {
-        default: 's',
-        title: trans.starred_friend.name,
-        type: 'text',
-        min: 1,
-        max: 1,
-        icon: 'icon-16-starred-friend',
-        placeholder: 'none',
-        keybind: ['⌘', 'S'],
-        warn_if_empty: true
-    },
-    rabbit_bleh_settings: {
-        default: 'b',
-        title: trans.settings,
-        type: 'text',
-        min: 1,
-        max: 1,
-        icon: 'icon-16-bleh',
-        placeholder: 'none',
-        keybind: ['⌘', 'B'],
-        warn_if_empty: true
-    },
     prefer_no_redirect: {
         default: true,
         title: trans.prefer_no_redirect.name,
@@ -661,81 +274,9 @@ export let settings_store = {
             }
         }
     },
-    rain: {
-        default: false,
-        title: trans.rain.name,
-        body: trans.rain.body,
-        require_reload: true
-    },
-    collage_centered: {
-        default: true,
-        title: trans.collage_centered.name,
-        body: trans.collage_centered.body
-    },
-    static_gifs: {
-        default: 'always',
-        type: 'radio',
-        title: trans.static_gifs,
-        values: {
-            always: {
-                name: trans.always_animate
-            },
-            hover: {
-                name: trans.only_on_hover
-            },
-            never: {
-                name: trans.never
-            }
-        },
-        new_release: true,
-        beta: true
-    },
-    static_avatars: {
-        default: false,
-        type: 'checkbox',
-        title: trans.static_avatars
-    },
-    static_music: {
-        default: true,
-        type: 'checkbox',
-        title: trans.static_music
-    },
-    static_banners: {
-        default: true,
-        type: 'checkbox',
-        title: trans.static_banners,
-        new_release: true
-    },
     trusted_sites: {
         default: [],
         type: 'list'
-    },
-    profile_hue: {
-        default: 255,
-        type: 'range',
-        min: 0,
-        max: 360,
-        step: 1,
-        title: trans.hue,
-        vertical: true
-    },
-    profile_sat: {
-        default: 1,
-        type: 'range',
-        min: 0,
-        max: 2,
-        step: 0.01,
-        title: trans.sat,
-        vertical: true
-    },
-    profile_lit: {
-        default: 1,
-        type: 'range',
-        min: 0,
-        max: 1.5,
-        step: 0.01,
-        title: trans.lit,
-        vertical: true
     },
     friends: {
         default: [],
@@ -778,31 +319,6 @@ export let settings_store = {
         title: trans.romanise_ko,
         new_release: true,
         incompatible: { format_guest_features: false, corrections: false }
-    },
-    music_links: {
-        default: [
-            'spotify',
-            'itunes',
-            'youtube',
-            'tidal',
-            'rym',
-            'genius',
-            'website',
-            'twitter',
-            'soundcloud',
-            'instagram'
-        ],
-        type: 'list',
-        title: trans.music_links.name,
-        body: trans.music_links.body,
-        new_release: true,
-        predefined: true
-    },
-    inverse_compare: {
-        default: false,
-        title: trans.inverse_compare.name,
-        body: trans.inverse_compare.body,
-        new_release: true
     },
     branch: {
         default: 'uwu',
