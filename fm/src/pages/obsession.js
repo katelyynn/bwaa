@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -13,7 +13,7 @@ import { clamp_sat, rgb_to_hsl, sanitise } from '../build/tools';
 import { tl, trans } from '../build/trans';
 import { correct_item_by_artist, name_includes } from '../components/lotus';
 import { checkup_page_structure } from '../components/structure';
-import { register_background, update_page } from '../page';
+import { update_page } from '../page';
 import { html, render } from 'lighterhtml';
 import { redirect } from '../components/music.js';
 
@@ -50,7 +50,7 @@ export function bleh_obsession() {
         .replace('")', '');
 
     if (!background.endsWith('/4128a6eb29f94943c9d206c08e625904.jpg')) {
-        register_background(background);
+
 
         try {
             let bg = obsession_container.style
@@ -78,8 +78,6 @@ export function bleh_obsession() {
             console.error(e);
             log('no cover present', 'hue from album');
         }
-    } else {
-        register_background('');
     }
 
     let track_title = obsession_container.querySelector(

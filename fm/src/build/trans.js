@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -3566,10 +3566,10 @@ export const trans = {
     },
     welcome_to_bleh: {
         // <br> is a line break
-        en: 'Welcome to bleh, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3',
-        de: 'Willkommen bei bleh, danke für die Installation!<br>Du kannst diesen schnellen Einrichtungsassistenten durchlaufen, um loszulegen, oder direkt zu deinem Profil springen und alles selbst herausfinden <3',
-        pt: 'Bem-vindo ao bleh, obrigado por instalar!<br>Você pode seguir este rápido guia de configuração para começar, ou pular direto para seu perfil e descobrir tudo por conta própria <3',
-        sv: 'Välkommen till bleh, tack för att du har installerat!<br>Du kan fortsätta genom den här snabba setupen för att starta eller hoppa rakt till din profil och klura ut det helt själv <3'
+        en: 'Welcome to bwaa, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3',
+        de: 'Willkommen bei bwaa, danke für die Installation!<br>Du kannst diesen schnellen Einrichtungsassistenten durchlaufen, um loszulegen, oder direkt zu deinem Profil springen und alles selbst herausfinden <3',
+        pt: 'Bem-vindo ao bwaa, obrigado por instalar!<br>Você pode seguir este rápido guia de configuração para começar, ou pular direto para seu perfil e descobrir tudo por conta própria <3',
+        sv: 'Välkommen till bwaa, tack för att du har installerat!<br>Du kan fortsätta genom den här snabba setupen för att starta eller hoppa rakt till din profil och klura ut det helt själv <3'
     },
     next: {
         en: 'Next',

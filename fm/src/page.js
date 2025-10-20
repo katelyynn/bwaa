@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -8,12 +8,9 @@ import { load_activities, subscribe_to_events } from './activity';
 import { settings } from './build/config';
 import { log } from './build/log';
 import {
-    api_url,
     auth,
     auth_link,
-    bleh_url,
-    minis_url,
-    mualani_url,
+    bwaa_url,
     page,
     root,
     setup_url,
@@ -68,16 +65,11 @@ import { ff } from './sku';
 import { bleh_sponsor_page, sponsors } from './sponsor';
 import { append_style, update_check } from './style';
 import { bleh_radio } from './components/radio';
-import { bleh_api } from './pages/api';
 import { bleh_users } from './pages/users';
 import { html, render } from 'lighterhtml';
 import { bleh_footer } from './footer.js';
-import { register_rabbit } from './components/rabbit.js';
 import { dialog_extender } from './components/dialog_extender.js';
-import { bleh_auth } from './pages/auth.js';
 import { bleh_labs } from './pages/labs.js';
-import { bleh_minis } from './pages/minis.js';
-import { mualani } from './pages/mualani.js';
 import { load_status } from './components/status.js';
 import { load_dismissed } from './components/dismissed.js';
 import { oracle_data } from './components/oracle.js';
@@ -117,7 +109,6 @@ export function bleh() {
 
             // messaging
             load_dialogs();
-            register_rabbit();
 
             lookup_lang();
 
@@ -383,31 +374,11 @@ function load_page(main_content = null) {
     detect_mobile();
     page.platform = detect_platform();
 
-    if (
-        window.location.pathname.startsWith(setup_url.replace('{root}', root))
-    ) {
+    if (window.location.pathname.startsWith(setup_url.replace('{root}', root))) {
         bleh_setup();
-    } else if (
-        window.location.pathname.startsWith(sponsor_url.replace('{root}', root))
-    ) {
+    } else if (window.location.pathname.startsWith(sponsor_url.replace('{root}', root))) {
         bleh_sponsor_page();
-    } else if (
-        window.location.pathname.startsWith(api_url.replace('{root}', root))
-    ) {
-        bleh_auth();
-    } else if (
-        window.location.pathname.startsWith(mualani_url.replace('{root}', root))
-    ) {
-        mualani();
-    } else if (
-        window.location.pathname.startsWith(minis_url.replace('{root}', root))
-    ) {
-        page.type = 'minis';
-        bleh_home();
-        bleh_minis();
-    } else if (
-        window.location.pathname.startsWith(bleh_url.replace('{root}', root))
-    ) {
+    } else if (window.location.pathname.startsWith(bwaa_url.replace('{root}', root))) {
         page.type = 'bleh_settings';
         bleh_home();
         bleh_settings();
@@ -456,7 +427,6 @@ function load_page(main_content = null) {
             page.type == 'settings'
         )
             bleh_home();
-        else if (page.type == 'api') bleh_api();
         else if (page.type == 'labs') bleh_labs();
 
         if (page.type == 'user' || page.type == 'events') {
@@ -768,65 +738,6 @@ export function update_page() {
     page.structure.container.setAttribute('data-page-subpage', page.subpage);
     page.structure.container.setAttribute('data-beret', ff('beret'));
     page.structure.container.setAttribute('data-short', ff('short'));
-}
-
-export async function register_background(url, origin = null) {
-    log(`requested register of ${url} from ${origin}`, 'background', 'log');
-    let background = page.structure.container.querySelector(
-        ':scope > .bleh-background'
-    );
-
-    if (!background) {
-        background = html.node`
-            <div class="bleh-background katsune-bleh-background" />
-        `;
-
-        page.structure.container.insertBefore(
-            background,
-            page.structure.container.firstElementChild
-        );
-    }
-
-    /*
-    if (settings.static_banners) {
-        try {
-            url = await convert_gif_to_png(url);
-        } catch(e) {
-            log('could not convert banner image to static', 'banner', 'error', {e});
-        }
-    }
-    */
-
-    background.setAttribute('data-page-type', page.type);
-    background.setAttribute('data-page-subpage', page.subpage);
-    background.setAttribute('data-background-origin', origin);
-    background.setAttribute(
-        'data-background-coloured',
-        settings.hue_from_album
-    );
-
-    background.removeAttribute('data-accent-based');
-    background.style.removeProperty('background-image');
-
-    if (url) {
-        if (url == 'accent') {
-            background.setAttribute('data-accent-based', true);
-        } else {
-            background.style.setProperty('background-image', `url(${url})`);
-        }
-    }
-
-    if (page.type == 'user') {
-        if (page.name == auth.name) {
-            background.setAttribute('data-page-user-is-self', 'true');
-        } else {
-            background.setAttribute('data-page-user-is-self', 'false');
-        }
-    }
-
-    log(`registered ${url} from ${origin}`, 'background');
-
-    return background;
 }
 
 function favi() {

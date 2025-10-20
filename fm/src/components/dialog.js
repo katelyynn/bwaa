@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -10,7 +10,7 @@ import { dialogs, page } from '../build/page';
 
 export function load_dialogs() {
     let dialogs = document.createElement('div');
-    dialogs.classList.add('bleh-modals');
+    dialogs.classList.add('bwaa-modals');
 
     document.body.appendChild(dialogs);
 
@@ -46,8 +46,6 @@ export function dialog({
     replace_if_possible = true,
     replace_id = '',
     allow_scroll = false,
-    colourful = false,
-    colourful_bg = false,
     handle_escape_manually = false
 }) {
     log(`creating ${id}`, 'window', 'info', {
@@ -61,8 +59,6 @@ export function dialog({
         replace: replace,
         replace_id: replace_id,
         allow_scroll: allow_scroll,
-        colourful: colourful,
-        colourful_bg: colourful_bg,
         handle_escape_manually: handle_escape_manually
     });
 
@@ -79,11 +75,7 @@ export function dialog({
 
     let modal = html.node`
         <div
-        class=${[
-            'bleh-modal',
-            colourful ? 'colorful' : '',
-            colourful_bg ? 'colourful-bg' : ''
-        ].join(' ')}
+        class="bwaa-modal"
         role="dialog"
         data-modal-id=${id}
         data-modal-has-overlays=${has_overlays}
@@ -94,9 +86,9 @@ export function dialog({
     if (title) {
         modal.setAttribute('aria-labelledby', 'modal_title');
         modal.appendChild(html.node`
-            <div class="bleh-modal-title" id="modal_title">
+            <div class="bwaa-modal-title" id="modal_title">
                 <h1>${title}</h1>
-                ${subtitle ? html.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
+                ${subtitle ? html.node`<p class="bwaa-modal-subtitle">${subtitle}</p>` : ''}
             </div>
         `);
     }
@@ -126,7 +118,7 @@ export function dialog({
     }
 
     let modal_body = document.createElement('div');
-    modal_body.classList.add('bleh-modal-body');
+    modal_body.classList.add('bwaa-modal-body');
     modal_body.setAttribute('data-allow-scroll', allow_scroll);
 
     modal_body.appendChild(body);
@@ -165,7 +157,7 @@ export function dialog_rm({ id, all = false, modal_bg = false }) {
         // prevents clicks inside modal being broken
         if (modal_bg) {
             console.log(event);
-            if (event.target.classList[0] != 'bleh-modals') return;
+            if (event.target.classList[0] != 'bwaa-modals') return;
         }
 
         log('requested kill all', 'window');

@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -13,16 +13,15 @@ import { dialog, dialog_rm } from './components/dialog';
 import { invoke_reload } from './config';
 import { version } from './main';
 import { download_with_progress, set_storage } from './build/tools.js';
-import cropper_css from 'cropperjs/dist/cropper.min.css';
 import { root } from './build/page.js';
 
 export function append_style() {
     document.documentElement.classList.add('florence-supports-loading');
 
     for (var member in settings) delete settings[member];
-    Object.assign(settings, JSON.parse(localStorage.getItem('bleh')));
+    Object.assign(settings, JSON.parse(localStorage.getItem('bwaa')));
 
-    let cached_style = localStorage.getItem('bleh_cached_style') || '';
+    let cached_style = localStorage.getItem('bwaa_cached_style') || '';
 
     const split = window.location.pathname.replace(root, '').split('/');
     const length = split.length - 1;
@@ -36,10 +35,7 @@ export function append_style() {
         return;
     }
 
-    document.documentElement.setAttribute('data-bleh--theme', settings.theme);
-    document.documentElement.appendChild(
-        html.node`<style>${cropper_css}</style>`
-    );
+    document.documentElement.setAttribute('data-bwaa--theme', settings.theme);
 
     if (settings.dev) return;
 
@@ -57,7 +53,7 @@ export function append_style() {
 
 function load_cached_style(cached_style) {
     const style = html.node`
-        <style id="bleh--cached-style">${cached_style}</style>
+        <style id="bwaa--cached-style">${cached_style}</style>
     `;
     document.documentElement.appendChild(style);
 
@@ -73,7 +69,7 @@ function load_cached_style(cached_style) {
 
 function check_if_style_cache_is_valid() {
     const cached_style_timeout = new Date(
-        localStorage.getItem('bleh_cached_style_timeout')
+        localStorage.getItem('bwaa_cached_style_timeout')
     );
     const current_time = new Date();
 
@@ -91,7 +87,7 @@ function fetch_new_style(
     reload_on_finish = false,
     allow_incompatible = false
 ) {
-    const url = `https://github.com/katelyynn/bleh/raw/refs/heads/${settings.branch}/fm/bleh.css?${Math.random()}`;
+    const url = `https://github.com/katelyynn/bwaa/raw/refs/heads/${settings.branch}/fm/bwaa.css?${Math.random()}`;
     log(`making request ${url}`, 'style');
 
     GM_xmlhttpRequest({
@@ -134,11 +130,11 @@ function fetch_new_style(
                 // remove the old style, if needed
                 if (delete_old_style)
                     document.documentElement.removeChild(
-                        document.getElementById('bleh--cached-style')
+                        document.getElementById('bwaa--cached-style')
                     );
 
                 log('loaded', 'style');
-                document.body.classList.add('bleh');
+                document.body.classList.add('bwaa');
 
                 chart_reflow();
 
@@ -147,8 +143,8 @@ function fetch_new_style(
 
             const expire = new Date();
             expire.setHours(expire.getHours() + 1);
-            localStorage.setItem('bleh_cached_style', text);
-            localStorage.setItem('bleh_cached_style_timeout', expire);
+            localStorage.setItem('bwaa_cached_style', text);
+            localStorage.setItem('bwaa_cached_style_timeout', expire);
             log(`cached until ${expire}`, 'style');
         },
         onerror: (e) => {
@@ -183,9 +179,9 @@ export function update_comparison(current, latest) {
 export function update_check(force = false, btn = null, func = null) {
     if (!force) {
         const last_checked =
-            localStorage.getItem('bleh_update_checked') || null;
+            localStorage.getItem('bwaa_update_checked') || null;
         const next_check =
-            localStorage.getItem('bleh_update_next_check') || null;
+            localStorage.getItem('bwaa_update_next_check') || null;
         const current_time = new Date();
 
         if (last_checked && next_check && new Date(next_check) > current_time) {
@@ -201,7 +197,7 @@ export function update_check(force = false, btn = null, func = null) {
 
     if (btn) btn.setAttribute('disabled', '');
 
-    let url = `https://katelyynn.github.io/bleh/fm/src/build/build.json?${Date.now()}`;
+    let url = `https://katelyynn.github.io/bwaa/fm/src/build/build.json?${Date.now()}`;
 
     /*let notification = notify({
         id: 'updater',
@@ -224,14 +220,14 @@ export function update_check(force = false, btn = null, func = null) {
             console.log(data);
 
             let update_required = update_comparison(version.build, data.build);
-            set_storage('bleh_update_required', update_required.toString());
-            set_storage('bleh_update_to', data.build);
-            set_storage('bleh_update_checked', new Date().toString());
+            set_storage('bwaa_update_required', update_required.toString());
+            set_storage('bwaa_update_to', data.build);
+            set_storage('bwaa_update_checked', new Date().toString());
 
             let next = new Date();
             next.setHours(next.getHours() + 2);
 
-            set_storage('bleh_update_next_check', next.toString());
+            set_storage('bwaa_update_next_check', next.toString());
             log('update check finished', 'update', 'info', {
                 next_in: next,
                 current_time: new Date()
@@ -247,10 +243,10 @@ export function update_check(force = false, btn = null, func = null) {
 export function prompt_for_update() {
     // prompt the user
     dialog({
-        id: 'bleh_update',
+        id: 'bwaa_update',
         title: tl(trans.update_to_version).replace(
             '{v}',
-            localStorage.getItem('bleh_update_to') || 'unknown'
+            localStorage.getItem('bwaa_update_to') || 'unknown'
         ),
         body: html.node`
             <div class="forms">
@@ -274,20 +270,20 @@ export function prompt_for_update() {
 
 function ignore_update() {
     dialog_rm({
-        id: 'bleh_update'
+        id: 'bwaa_update'
     });
 }
 
 export function start_update() {
     open(
-        `https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`
+        `https://github.com/katelyynn/bwaa/raw/${settings.branch}/fm/bwaa.user.js`
     );
 
     dialog({
-        id: 'bleh_update',
+        id: 'bwaa_update',
         title: tl(trans.update_to_version).replace(
             '{v}',
-            localStorage.getItem('bleh_update_to') || 'unknown'
+            localStorage.getItem('bwaa_update_to') || 'unknown'
         ),
         body: html.node`
             <div class="forms">
@@ -306,10 +302,10 @@ export function start_update() {
 
 function finish_update() {
     dialog({
-        id: 'bleh_wait',
+        id: 'bwaa_wait',
         title: tl(trans.update_to_version).replace(
             '{v}',
-            localStorage.getItem('bleh_update_to') || 'unknown'
+            localStorage.getItem('bwaa_update_to') || 'unknown'
         ),
         body: html.node`
             <div class="loading-data-container">
@@ -322,15 +318,15 @@ function finish_update() {
     });
 
     // reset update status
-    set_storage('bleh_update_required', 'false');
-    set_storage('bleh_update_checked', new Date().toString());
+    set_storage('bwaa_update_required', 'false');
+    set_storage('bwaa_update_checked', new Date().toString());
 
     fetch_new_style(false, true, true);
 }
 
 export function force_refresh_style() {
-    localStorage.removeItem('bleh_cached_style');
-    localStorage.removeItem('bleh_cached_style_timeout');
+    localStorage.removeItem('bwaa_cached_style');
+    localStorage.removeItem('bwaa_cached_style_timeout');
 
     window.setTimeout(invoke_reload, 400);
 }

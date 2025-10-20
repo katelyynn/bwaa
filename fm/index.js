@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -30,7 +30,7 @@ const banner = `// ==UserScript==
         entryPoints: ['./src/main.js'],
         bundle: true,
         logLimit: 0,
-        outfile: 'bleh.user.js',
+        outfile: 'bwaa.user.js',
         minify: false,
         banner: {
             js: banner
@@ -45,7 +45,7 @@ const banner = `// ==UserScript==
         entryPoints: ['./src/main.js'],
         bundle: true,
         logLimit: 0,
-        outfile: 'ext/bleh.js',
+        outfile: 'ext/bwaa.js',
         minify: true,
         banner: {
             js: banner
@@ -77,7 +77,7 @@ const banner = `// ==UserScript==
         content_scripts: [
             {
                 matches: ['https://www.last.fm/*'],
-                js: ['bleh.js'],
+                js: ['bwaa.js'],
                 run_at: 'document_start'
             }
         ],

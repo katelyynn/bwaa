@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -8,7 +8,6 @@ import { html } from 'lighterhtml';
 import { tl, trans } from '../build/trans.js';
 import { log } from '../build/log.js';
 import tippy from 'tippy.js';
-import { calendar } from './calendar.js';
 import { auth } from '../build/page.js';
 
 export function input({
@@ -28,17 +27,6 @@ export function input({
     func,
     func_esc
 }) {
-    if (type == 'date') {
-        return calendar({
-            value,
-            min,
-            max,
-            disabled,
-            show_time,
-            name
-        });
-    }
-
     let input_box;
     let error_tooltip;
 

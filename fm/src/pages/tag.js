@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -10,7 +10,7 @@ import {desanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {patch_header_title} from "../components/lotus";
 import {checkup_page_structure} from "../components/structure";
-import {register_background, update_page} from "../page";
+import {update_page} from "../page";
 import {ff} from "../sku";
 import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 import tippy from "tippy.js";
@@ -62,11 +62,7 @@ export function bleh_tags() {
             </div>
         `);
 
-        let background = document.body.querySelector('.header-background--has-image');
-        if (background)
-            register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
-        else
-            register_background();
+
 
         page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
         tag_header.classList.add('legacy-header');

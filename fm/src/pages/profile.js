@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -39,14 +39,13 @@ import {
     convert_to_toolbar
 } from '../components/structure';
 import { refresh_all, update_inbuilt_item } from '../config';
-import { register_background, update_page } from '../page';
+import { update_page } from '../page';
 import { ff } from '../sku';
 import { bleh_user_library } from './glacier';
 import { use_pronouns } from './lastfm_settings';
 import { bleh_obsession } from './obsession';
 import { html, render } from 'lighterhtml';
 import { save_setting, setting } from '../components/settings.js';
-import { submit_scrobble } from '../components/scrobble.js';
 import { redirect } from '../components/music.js';
 import tippy from 'tippy.js';
 import { Chart } from '../main.js';
@@ -205,35 +204,6 @@ export async function bleh_profiles() {
     const avatar_img = avatar.querySelector(':scope > img');
 
     if (avatar_img) cache.avatar = avatar_img.src;
-
-    if (page.name == auth.name && !settings.profile_header_own) {
-        register_background(null, 'hidden');
-    } else if (page.name != auth.name && !settings.profile_header_others) {
-        register_background(null, 'hidden');
-    } else if (cache.banner) {
-        register_background(cache.banner, 'bio');
-    } else {
-        if (settings.profile_avi_background) {
-            if (avatar_img)
-                register_background(
-                    avatar_img.src.replace('/avatar170s/', '/ar0/'),
-                    'avatar'
-                );
-            else register_background(null, 'none');
-        } else {
-            let background = document.body.querySelector(
-                '.header-background--has-image'
-            );
-            if (background)
-                register_background(
-                    background.style.backgroundImage
-                        .replace('url("', '')
-                        .replace('")', ''),
-                    'artist'
-                );
-            else register_background(null, 'none');
-        }
-    }
 
     page.structure.container.insertBefore(
         redesigned_profile_header,
@@ -1264,33 +1234,6 @@ function profile_recents() {
     header.appendChild(header_text);
 
     let refresh_btn;
-    if (ff('submit_scrobble') && page.name == auth.name) {
-        const can_api =
-            localStorage.getItem('bleh_auth') &&
-            localStorage.getItem('bleh_auth_valid') === 'true';
-
-        let submit_btn = html.node`
-            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() =>
-                submit_scrobble({
-                    refresh_btn,
-                    can_api,
-                    func: () => {
-                        setTimeout(() => {
-                            refresh_tracks(refresh_btn, { quiet: true });
-                        }, 200);
-                    }
-                })}>
-                ${tl(trans.new)}
-            </button>
-        `;
-        view_buttons.appendChild(submit_btn);
-
-        if (!can_api) {
-            tippy(submit_btn, {
-                content: tl(trans.requires_api_in_settings)
-            });
-        }
-    }
 
     // refresh
     refresh_btn = html.node`
@@ -2173,7 +2116,6 @@ function load_profile_cache(
         if (hue) document.body.style.setProperty('--hue-album', hue);
         if (sat) document.body.style.setProperty('--sat-album', sat);
         if (lit) document.body.style.setProperty('--lit-album', lit);
-        if (banner) register_background(banner, 'bio');
 
         return;
     }

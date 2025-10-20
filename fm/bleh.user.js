@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         bleh
+// @name         bwaa
 // @namespace    https://last.fm/
-// @version      2025.1016
-// @description  bleh!!! ^-^
+// @version      2025.1020
+// @description  bwaa!!! ^-^
 // @author       katelyn
 // @match        https://www.last.fm/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=last.fm
-// @updateURL    https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
-// @downloadURL  https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
+// @updateURL    https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js
+// @downloadURL  https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
 // @connect      musicbrainz.org
@@ -30808,7 +30808,7 @@
                     class="share-input"
                     ref=${(el) => input2 = el}
                 />
-                <button 
+                <button
                     class="btn primary icon copy"
                     onclick=${() => {
         input2.select();
@@ -30821,12 +30821,12 @@
                 >${tl2(trans.copy)}</button>
             </div>
             <div class="share-links">
-                <a 
+                <a
                     href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
                     target="_blank"
                     class="share-link share-link-twitter"
                 >Twitter</a>
-                <a 
+                <a
                     href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
                     target="_blank"
                     class="share-link share-link-facebook"
@@ -61078,10 +61078,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     welcome_to_bleh: {
       // <br> is a line break
-      en: "Welcome to bleh, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3",
-      de: "Willkommen bei bleh, danke f\xFCr die Installation!<br>Du kannst diesen schnellen Einrichtungsassistenten durchlaufen, um loszulegen, oder direkt zu deinem Profil springen und alles selbst herausfinden <3",
-      pt: "Bem-vindo ao bleh, obrigado por instalar!<br>Voc\xEA pode seguir este r\xE1pido guia de configura\xE7\xE3o para come\xE7ar, ou pular direto para seu perfil e descobrir tudo por conta pr\xF3pria <3",
-      sv: "V\xE4lkommen till bleh, tack f\xF6r att du har installerat!<br>Du kan forts\xE4tta genom den h\xE4r snabba setupen f\xF6r att starta eller hoppa rakt till din profil och klura ut det helt sj\xE4lv <3"
+      en: "Welcome to bwaa, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3",
+      de: "Willkommen bei bwaa, danke f\xFCr die Installation!<br>Du kannst diesen schnellen Einrichtungsassistenten durchlaufen, um loszulegen, oder direkt zu deinem Profil springen und alles selbst herausfinden <3",
+      pt: "Bem-vindo ao bwaa, obrigado por instalar!<br>Voc\xEA pode seguir este r\xE1pido guia de configura\xE7\xE3o para come\xE7ar, ou pular direto para seu perfil e descobrir tudo por conta pr\xF3pria <3",
+      sv: "V\xE4lkommen till bwaa, tack f\xF6r att du har installerat!<br>Du kan forts\xE4tta genom den h\xE4r snabba setupen f\xF6r att starta eller hoppa rakt till din profil och klura ut det helt sj\xE4lv <3"
     },
     next: {
       en: "Next",
@@ -64359,348 +64359,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
 
   // src/build/build.json
   var build_default = {
-    brand: "bleh",
-    build: "2025.1016",
+    brand: "bwaa",
+    build: "2025.1020",
     sku: "parfait",
-    bio: "bleh!!! ^-^",
+    bio: "bwaa!!! ^-^",
     author: "katelyn",
-    url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
-    feature_flags: {
-      bleh_settings_tabs: {
-        default: true,
-        name: "Utilise new bleh settings tabs",
-        date: "2024-07-09"
-      },
-      high_contrast: {
-        default: false,
-        name: "Enable visibility of high contrast (experimental)",
-        date: "2024-10-04"
-      },
-      redesigned_profile_header: {
-        default: true,
-        name: "Redesigned profile header info",
-        date: "2024-10-09"
-      },
-      show_wiki_label: {
-        default: true,
-        name: "Show 'About' label above wikis",
-        date: "2024-10-11"
-      },
-      music_page_charts: {
-        default: true,
-        name: "Music page charts",
-        date: "2024-11-05"
-      },
-      chartlist_highlight_shadow: {
-        default: false,
-        name: "Chartlist row highlight side shadow",
-        date: "2024-11-05"
-      },
-      new_gallery_experience: {
-        default: true,
-        name: "New gallery experience",
-        date: "2024-11-06"
-      },
-      display_album_bookmark: {
-        default: false,
-        name: "Display album bookmark button in gallery refresh",
-        date: "2024-11-06"
-      },
-      changelogs: {
-        default: true,
-        name: "Enable changelog system",
-        date: "2024-11-07"
-      },
-      refreshed_nav: {
-        default: true,
-        name: "Refreshed nav structure, reducing a lot of jank",
-        date: "2024-11-09"
-      },
-      refreshed_music_nav: {
-        default: true,
-        name: "Refreshed music nav structure",
-        date: "2024-11-10"
-      },
-      card_saturation: {
-        default: true,
-        name: "Enable card saturation slider",
-        date: "2024-11-10"
-      },
-      show_album_cover_always: {
-        default: true,
-        name: "Show album cover in header overview",
-        date: "2024-11-11"
-      },
-      new_auth_menu: {
-        default: true,
-        name: "New custom-built auth menu to reduce lag",
-        date: "2024-11-11"
-      },
-      unify_top_listeners: {
-        default: true,
-        name: "Unify top listeners",
-        date: "2024-11-15"
-      },
-      hide_chartlist_more: {
-        default: false,
-        name: "Hide chartlist more button, accessible the same with right-clicking",
-        date: "2024-12-03"
-      },
-      glacier_library: {
-        default: true,
-        name: "Glacier library (new library beta)",
-        date: "2024-12-04"
-      },
-      shout_popover: {
-        default: true,
-        name: "Redesigned shout action popover",
-        date: "2024-12-23"
-      },
-      sponsor: {
-        default: true,
-        name: "Sponsor link",
-        date: "2024-12-24"
-      },
-      skip_to_setting: {
-        default: false,
-        name: "Skip to... in settings",
-        date: "2024-12-24"
-      },
-      page_title: {
-        default: true,
-        name: "Dynamic tab title",
-        date: "2024-12-26"
-      },
-      view_button_nav: {
-        default: true,
-        name: "Match view button colouring to new nav",
-        date: "2024-12-28"
-      },
-      remove_bookmark: {
-        default: true,
-        name: "Context menu to remove inaccessible artist bookmark",
-        date: "2024-12-28"
-      },
-      badges: {
-        default: true,
-        name: "New badge tooltip",
-        date: "2024-12-28"
-      },
-      astra: {
-        default: false,
-        name: "astrablooms font",
-        date: "2025-01-01",
-        notice: "This is a test of a new 'default' font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610"
-      },
-      developer: {
-        default: false,
-        name: "Developer mode",
-        date: "2025-01-03",
-        notice: "Enable developer-specific features used for debugging purposes"
-      },
-      api: {
-        default: false,
-        name: "Allow user to enter API key for newer features",
-        date: "2025-01-19"
-      },
-      colour_based_on_avatar: {
-        default: true,
-        name: "Set colour based on avatar",
-        date: "2025-01-23"
-      },
-      katsune: {
-        default: true,
-        name: "katsune redesign",
-        date: "2025-01-25",
-        notice: "This is very, very experimental ~w~"
-      },
-      beret: {
-        default: true,
-        name: "beret redesign",
-        date: "2025-04-03",
-        notice: "Removes individual card styles and instead styles the entire container, much like old bleh"
-      },
-      colour_based_on_hex: {
-        default: true,
-        name: "Set colour based on hex",
-        date: "2025-04-26"
-      },
-      compare: {
-        default: true,
-        name: "Profile comparison",
-        date: "2025-05-19"
-      },
-      charts: {
-        default: true,
-        name: "Profile chart creation",
-        date: "2025-06-05"
-      },
-      refreshed_auth_menu: {
-        default: true,
-        name: "Refreshed auth menu",
-        date: "2025-06-07"
-      },
-      menu_like_side_actions: {
-        default: true,
-        name: "Menu-like side actions",
-        date: "2025-06-11"
-      },
-      menu_like_side_actions_v2: {
-        default: false,
-        name: "Menu-like side actions v2",
-        date: "2025-06-11"
-      },
-      menu_like_side_actions_v3: {
-        default: false,
-        name: "Menu-like side actions v3",
-        date: "2025-06-12"
-      },
-      menu_like_side_actions_gap: {
-        default: false,
-        name: "Menu-like side actions separator",
-        date: "2025-06-12"
-      },
-      sweet: {
-        default: true,
-        name: "Readable count bars",
-        date: "2025-06-20"
-      },
-      short: {
-        default: true,
-        name: "Extends beret redesign to turn all content into a single card",
-        date: "2025-06-24"
-      },
-      auto_theme: {
-        default: false,
-        name: "Support inheriting theme from system",
-        date: "2025-06-25"
-      },
-      theme_bubbles: {
-        default: true,
-        name: "Simplify theme preview symmetry",
-        date: "2025-06-25"
-      },
-      glass: {
-        default: false,
-        name: "Support experimental glass theme",
-        date: "2025-06-25"
-      },
-      update_center: {
-        default: true,
-        name: "Update center",
-        date: "2025-07-02"
-      },
-      submit_scrobble: {
-        default: true,
-        name: "Submit new scrobble from profile",
-        date: "2025-07-08"
-      },
-      jufufu: {
-        default: true,
-        name: "Connect via the Last.fm API",
-        date: "2025-07-08"
-      },
-      minis: {
-        default: true,
-        name: "Minis replacement for Labs",
-        date: "2025-07-17"
-      },
-      mualani: {
-        default: true,
-        name: "Experimental redesigned tab toolbar",
-        date: "2025-07-26"
-      },
-      unlock_minis: {
-        default: false,
-        name: "Unlock work-in-progress minis",
-        date: "2025-07-29"
-      },
-      status_in_menu: {
-        default: true,
-        name: "Show current listening status in profile menu",
-        date: "2025-07-29"
-      },
-      static_gifs: {
-        default: false,
-        name: "Convert GIFs to static images",
-        date: "2025-08-15"
-      },
-      friends: {
-        default: true,
-        name: "Friends system",
-        date: "2025-08-18"
-      },
-      adaptive_theme: {
-        default: true,
-        name: "Adaptive theme controls",
-        date: "2025-08-29"
-      },
-      adaptive_colours: {
-        default: false,
-        name: "Adaptive colour controls",
-        date: "2025-08-29"
-      },
-      oracle: {
-        default: true,
-        name: "Experimental new music page features",
-        date: "2025-09-11"
-      },
-      oracle_connect: {
-        default: true,
-        name: "Experimental new album and track fetching via MusicBrainz",
-        date: "2025-09-11"
-      },
-      oracle_album_reordering: {
-        default: true,
-        name: "Re-order listed albums on track pages based on listener count",
-        date: "2025-09-11"
-      },
-      oracle_fetch_artwork: {
-        default: true,
-        name: "Allow oracle to fetch cover art from album tag pages",
-        date: "2025-09-11"
-      },
-      control_center: {
-        default: false,
-        name: "Control center",
-        date: "2025-09-20"
-      },
-      mesmerizer: {
-        default: true,
-        name: "Redesigned artwork uploader",
-        date: "2025-09-25"
-      },
-      refreshed_lotus: {
-        default: false,
-        name: "Refreshed flow for submitting a lotus correction",
-        date: "2025-09-26"
-      },
-      inverse_compare: {
-        default: false,
-        name: "Introduce new inverse comparison option",
-        date: "2025-09-28"
-      },
-      menus: {
-        default: false,
-        name: "Replace browser menus with in-house",
-        date: "2025-10-03"
-      },
-      hoshino: {
-        default: true,
-        name: "Leverage oracle cache to re-assign artwork to tracks",
-        date: "2025-10-08"
-      },
-      ruby: {
-        default: true,
-        name: "Replace album/track artwork and metadata on dedicated pages",
-        date: "2025-10-08"
-      },
-      credits: {
-        default: false,
-        name: "Present album and track credits via oracle",
-        date: "2025-10-14"
-      }
-    }
+    url: "https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js",
+    feature_flags: {}
   };
 
   // node_modules/@kurkle/color/dist/color.esm.js

@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -9,7 +9,7 @@ import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
 import {checkup_nav, checkup_page_structure} from "../components/structure";
-import {register_background, update_page} from "../page";
+import {update_page} from "../page";
 import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
@@ -37,14 +37,6 @@ export async function bleh_home() {
     let cache;
     if (auth.name) {
         cache = await load_profile_cache_externally(auth.name);
-        if (cache.banner)
-            register_background(cache.banner);
-        else if (auth.avatar && !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
-            register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
-        else
-            register_background(null);
-    } else {
-        register_background(null);
     }
 
 

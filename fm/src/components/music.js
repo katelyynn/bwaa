@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -24,7 +24,6 @@ import {
 } from './lotus';
 import { register_menu } from './menu';
 import { other_listener } from './profile_shortcut';
-import { submit_scrobble } from './scrobble.js';
 import tippy from 'tippy.js';
 import { Chart } from '../main.js';
 import { DateTime } from 'luxon';
@@ -476,61 +475,6 @@ export async function show_your_scrobbles() {
         obsession_btn.textContent = tl(trans.obsession);
 
         interact_container.appendChild(obsession_form);
-    }
-
-    if (ff('submit_scrobble')) {
-        const can_api =
-            localStorage.getItem('bleh_auth') &&
-            localStorage.getItem('bleh_auth_valid') === 'true';
-
-        const source_album =
-            page.structure.main.querySelector('.source-album-name');
-        const source_album_artist = page.structure.main.querySelector(
-            '.source-album-artist'
-        );
-
-        let props = {
-            can_api
-        };
-
-        if (page.type == 'track')
-            props = {
-                ...props,
-                pre_track: page.name,
-                pre_artist: page.sister,
-                pre_album: source_album ? source_album.textContent : null,
-                pre_album_artist:
-                    source_album_artist ?
-                        source_album_artist.textContent
-                    :   page.sister
-            };
-        else if (page.type == 'album')
-            props = {
-                ...props,
-                pre_album: page.name,
-                pre_artist: page.sister,
-                pre_album_artist: page.sister
-            };
-        else if (page.type == 'artist')
-            props = {
-                ...props,
-                pre_artist: page.name,
-                pre_album_artist: page.name
-            };
-
-        const scrobble_btn = html.node`
-            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
-                ${tl(trans.scrobble)}
-            </button>
-        `;
-
-        if (!can_api) {
-            tippy(scrobble_btn, {
-                content: tl(trans.requires_api_in_settings)
-            });
-        }
-
-        interact_container.appendChild(scrobble_btn);
     }
 
     if (

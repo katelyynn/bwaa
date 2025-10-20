@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -16,7 +16,7 @@ import {
     show_your_scrobbles
 } from '../components/music';
 import { checkup_page_structure } from '../components/structure';
-import { register_background, update_page } from '../page';
+import { update_page } from '../page';
 import { ff } from '../sku';
 import { bleh_tags_mini } from './tag';
 import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from './wiki';
@@ -198,7 +198,6 @@ export function create_avatar(parent, src, override = 'expand') {
     log(`creating avatar for ${src} with override ${override}`, 'track');
 
     if (src.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg') || src == '') {
-        register_background(null);
 
         render(
             parent,
@@ -214,8 +213,6 @@ export function create_avatar(parent, src, override = 'expand') {
         .replace('/300x300/', '/ar0/')
         .replace('/avatar300s/', '/ar0/')
         .replace('/avatar170s/', '/ar0/');
-
-    register_background(full);
 
     const media = html.node`
         <div class="media">

@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -19,7 +19,6 @@ import {
 } from './components/markdown.js';
 import { copy } from './build/tools.js';
 import tippy from 'tippy.js';
-import { keybind } from './components/rabbit.js';
 
 export function patch_shouts() {
     if (!page.structure.main) return;
@@ -242,17 +241,6 @@ function shout_send(send_button) {
 
     button.classList.add('btn-send-shout-generic');
     button.textContent = tl(trans.send);
-
-    if (page.mobile) return;
-
-    tippy(button, {
-        content: tl(trans.send_quickly_with).replace(
-            '{kbd}',
-            keybind(['⌘', '⏎']).outerHTML
-        ),
-        allowHTML: true,
-        delay: [500, 0]
-    });
 }
 
 export function shout_header(shout_controls) {

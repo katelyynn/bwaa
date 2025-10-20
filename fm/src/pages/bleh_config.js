@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -7,7 +7,6 @@
 import { settings } from '../build/config';
 import { album_track_corrections, artist_corrections } from '../build/music';
 import {
-    api_key,
     auth,
     oracle_albums,
     oracle_artists,
@@ -69,43 +68,26 @@ export function bleh_settings() {
     let path = window.location.pathname.split('/');
     let tab = path[path.length - 1];
 
-    if (tab == 'bleh') tab = null;
+    if (tab == 'bwaa') tab = null;
 
     if (page.requested.tab && !tab) tab = page.requested.tab;
 
     const tabs = {
-        general: {
-            name: tl(trans.general),
-            icon: 'general'
-        },
-        visual: {
-            name: tl(trans.visual),
-            icon: 'visual'
+        home: {
+            name: tl(trans.home)
         },
         interface: {
-            name: tl(trans.interface),
-            icon: 'layout'
+            name: tl(trans.interface)
         },
         profile: {
             name: tl(trans.profile),
             icon: 'user'
         },
-        playback: {
-            name: tl(trans.playback),
-            icon: 'album'
-        },
         seasonal: {
             name: tl(trans.seasonal.name)
         },
-        accessibility: {
-            name: tl(trans.accessibility)
-        },
-        fill: {
-            type: 'fill'
-        },
         performance: {
-            name: tl(trans.troubleshooting),
-            icon: 'advanced'
+            name: tl(trans.troubleshooting)
         },
         sku: {
             name: tl(trans.flags),
@@ -161,13 +143,7 @@ export function bleh_settings() {
                 ${tl(trans.reset)}
             </button>
         </section>
-        ${ff('skip_to_setting') ? html.node`
-            <div class="bleh--panel">
-                <h4>${tl(trans.skip_to)}</h4>
-                <div class="skip-to-list"></div>
-            </div>
-        ` : ''}
-        <div class="bleh--panel">
+        <div class="form-section settings-form">
             <p class="card-tip">
                 ${version.brand} ${version.build}.${version.sku}
                 <i>(florence ${florence_version})</i>
@@ -177,7 +153,7 @@ export function bleh_settings() {
 
     page.structure.row.insertBefore(nav, page.structure.content);
 
-    if (!tab) change_settings_page('general');
+    if (!tab) change_settings_page('home');
     else change_settings_page(tab);
 
     if (page.requested.setting) scroll_to_setting(page.requested.setting);
@@ -185,7 +161,7 @@ export function bleh_settings() {
 
 function page_loading() {
     render(page.structure.main, html`
-        <div class="bleh--panel">
+        <div class="form-section settings-form">
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.loading)}</div>
             </div>
@@ -194,10 +170,10 @@ function page_loading() {
 }
 
 export async function render_setting_page(page_id) {
-    if (page_id == 'general') {
+    if (page_id == 'home') {
         if (auth.pro === null) {
             setTimeout(() => {
-                render_setting_page('general');
+                render_setting_page('home');
             }, 10);
             page_loading();
             return;
@@ -226,7 +202,8 @@ export async function render_setting_page(page_id) {
         const auth_valid = localStorage.getItem('bleh_auth_valid');
 
         render(page.structure.main, html`
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
+                    <h2 class="form-header">Welcome to <i>re:</i>bwaa!</h2>
                     <div class="update-center-header">
                         ${paused === 'true' ? html.node`
                             <div class="update-center-icon">
@@ -311,7 +288,7 @@ export async function render_setting_page(page_id) {
                         <div class="alert alert-info">${tl(trans.you_are_running_version, { v: version.build })}</div>
                     `}
                 </section>
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.profile)}</h4>
                     <div class="setting-group">
                         ${auth.name ? html.node`
@@ -421,7 +398,7 @@ export async function render_setting_page(page_id) {
                     </div>
                 </section>
                 ${!page.mobile ? html.node`
-                    <section class="bleh--panel">
+                    <section class="form-section settings-form">
                         <h4>${tl(trans.branding)}</h4>
                         <div class="setting-group">
                             ${setting({ id: 'branding_type' })}
@@ -429,18 +406,13 @@ export async function render_setting_page(page_id) {
                     </section>
                 ` : ''}
                 ${auth.name ? html.node`
-                    <section class="bleh--panel">
+                    <section class="form-section settings-form">
                         <h4>API</h4>
                         <div class="setting-group">
                             <div class="setting" data-type="action">
                                 <div class="heading">
                                     <h5>${tl(trans.api.name)}</h5>
                                     <p>${tl(trans.api.body)}</p>
-                                </div>
-                                <div class="toggle-wrap">
-                                    <a class="btn ${auth_key && auth_valid == 'true' ? '' : 'primary'} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
-                                        ${tl(trans.connect)}
-                                    </a>
                                 </div>
                             </div>
                             <div class="setting" data-type="info">
@@ -461,7 +433,7 @@ export async function render_setting_page(page_id) {
                         </div>
                     </section>
                 ` : ''}
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.language)}</h4>
                     <div class="setting-group">
                         <div class="languages">
@@ -531,22 +503,7 @@ export async function render_setting_page(page_id) {
                 </section>
             `
         );
-    } else if (page_id == 'visual') {
-        if (
-            auth.name &&
-            auth.sets.hue == 255 &&
-            auth.sets.sat == 1 &&
-            auth.sets.lit == 1
-        ) {
-            setTimeout(() => {
-                render_setting_page('visual');
-            }, 10);
-            page_loading();
-            return;
-        }
-
-        register_skip_to([]);
-
+    } else if (page_id == 'interface') {
         let colourful_active;
         let colourful_all;
         let sat_bg;
@@ -639,7 +596,7 @@ export async function render_setting_page(page_id) {
         }
 
         render(page.structure.main, html`
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.appearance)}</h4>
                     <div class="setting-group">
                         <div class="setting" data-type="action">
@@ -713,7 +670,7 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'noise' })}
                     </div>
                 </section>
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.fonts)}</h4>
                     <div class="setting-group">
                         ${setting({ id: 'font' })}
@@ -723,7 +680,7 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'font_emoji' })}
                     </div>
                 </section>
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.artwork)}</h4>
                     <div class="inner-preview pad">
                         <div class="palette albums" style="height: fit-content">
@@ -761,7 +718,7 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'avatar_radius' })}
                     </div>
                 </section>
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.other)}</h4>
                     <div class="setting-group">${setting({ id: 'rain' })}</div>
                 </section>
@@ -772,599 +729,13 @@ export async function render_setting_page(page_id) {
 
         display_colour_presets();
         update_colour_swatches();
-    } else if (page_id == 'interface') {
-        if (!page.state.quick_access_items) {
-            setTimeout(() => {
-                render_setting_page('interface');
-            }, 10);
-            page_loading();
-            return;
-        }
-
-        register_skip_to([]);
-
-        function chartlist_bar(value, max) {
-            let count_bar = html.node`
-                <div class="chartlist-count-bar">
-                    <a class="chartlist-count-bar-link">
-                        <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${value}" style="width: ${(max / max) * 100}%" />
-                        <span class="chartlist-count-bar-value">${value.toLocaleString(lang)}</span>
-                    </a>
-                </div>
-            `;
-
-            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
-
-            count_bar.setAttribute(
-                'data-bleh--scrobble-milestone',
-                parsed_scrobble_as_rank.milestone
-            );
-            count_bar.style.setProperty(
-                '--hue-over',
-                parsed_scrobble_as_rank.hue
-            );
-            count_bar.style.setProperty(
-                '--sat-over',
-                parsed_scrobble_as_rank.sat
-            );
-            count_bar.style.setProperty(
-                '--lit-over',
-                parsed_scrobble_as_rank.lit
-            );
-
-            return count_bar;
-        }
-
-        let bars;
-
-        let track_layout;
-        let expand_tracks;
-        let track_album_name_location;
-
-        let preview;
-
-        function render_track_preview() {
-            const avi = auth.avatar.replace('/avatar42s/', '/avatar170s/');
-
-            render(
-                preview,
-                html`
-                    <table
-                        class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist chartlist--with-more"
-                    >
-                        <tbody>
-                            <tr
-                                class="chartlist-row chartlist-row--with-artist chartlist-row--now-scrobbling"
-                                data-has-bar="false"
-                                data-show-album-text=${settings.expand_tracks !=
-                    'never' &&
-                    settings.track_layout == 'column'}
-                            >
-                                <td class="chartlist-image">
-                                    <a class="cover-art">
-                                        <img src=${avi} loading="lazy" />
-                                    </a>
-                                </td>
-                                <td class="kate-placeholder" />
-                                <td class="track-info" data-has-bar="false">
-                                    <span class="chartlist-name">
-                                        <a>Track name</a>
-                                    </span>
-                                    <span class="chartlist-artist">
-                                        <a>Artist name</a>
-                                    </span>
-                                    ${settings.expand_tracks != 'never' &&
-                        settings.track_layout == 'column'
-                        ? html.node`
-                                        <span
-                                            class="chartlist-album custom-album-text"
-                                        >
-                                            <a>Album name</a>
-                                        </span>
-                                    `
-                        : ''}
-                                </td>
-                            </tr>
-                            <tr
-                                class="chartlist-row chartlist-row--with-artist"
-                                data-has-bar="false"
-                                data-show-album-text=${settings.expand_tracks ==
-                    'always' &&
-                    settings.expand_tracks != 'never' &&
-                    settings.track_layout == 'column'}
-                            >
-                                <td class="chartlist-image">
-                                    <a class="cover-art">
-                                        <img src=${avi} loading="lazy" />
-                                    </a>
-                                </td>
-                                <td class="kate-placeholder" />
-                                <td class="track-info" data-has-bar="false">
-                                    <span class="chartlist-name">
-                                        <a>Track name</a>
-                                    </span>
-                                    <span class="chartlist-artist">
-                                        <a>Artist name</a>
-                                    </span>
-                                    ${settings.expand_tracks == 'always' &&
-                        settings.expand_tracks != 'never' &&
-                        settings.track_layout == 'column'
-                        ? html.node`
-                                        <span
-                                            class="chartlist-album custom-album-text"
-                                        >
-                                            <a>Album name</a>
-                                        </span>
-                                    `
-                        : ''}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `
-            );
-        }
-
-        render(
-            page.structure.main,
-            html`
-                <section class="bleh--panel">
-                    <h4>${tl(trans.tracklist)}</h4>
-                    <div
-                        class="inner-preview pad"
-                        ref=${(el) => (preview = el)}
-                    />
-                    <div class="setting-group">
-                        ${(track_layout = setting({
-                id: 'track_layout',
-                func: () => {
-                    expand_tracks.compat();
-                    track_album_name_location.compat();
-                    render_track_preview();
-                }
-            }))}
-                        ${(expand_tracks = setting({
-                id: 'expand_tracks',
-                func: () => {
-                    render_track_preview();
-                }
-            }))}
-                        ${(track_album_name_location = setting({
-                id: 'track_album_name_location'
-            }))}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <div class="inner-preview pad">
-                        <div class="bars" ref=${(el) => (bars = el)}>
-                            ${() => {
-                    let max = 30_000;
-
-                    for (
-                        let value = 1_000;
-                        value <= max;
-                        value += 1_000
-                    ) {
-                        bars.appendChild(chartlist_bar(value, max));
-                    }
-                }}
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'colourful_counts' })}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl(trans.overview)}</h4>
-                    <div class="setting-group">
-                        ${setting({
-                    id: 'music_links',
-                    list: page.state.music_links
-                })}
-                        ${setting({ id: 'default_avatar_action' })}
-                        ${setting({ id: 'simulate_scroll' })}
-                    </div>
-                    <div class="inner-preview pad flex">
-                        <section class="catalogue-tags">
-                            <ul class="tags-list tags-list--global">
-                                <li class="tag">
-                                    <a href="/tag/pop">pop</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/country">country</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/singer-songwriter"
-                                        >singer-songwriter</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/female+vocalists"
-                                        >female vocalists</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/synthpop">synthpop</a>
-                                </li>
-                            </ul>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'gendered_tags' })}
-                    </div>
-                </section>
-                ${!page.mobile
-                    ? html.node`
-            <section class="bleh--panel">
-                <h4>${tl(trans.navigation_items.name)}</h4>
-                <div class="setting-group">
-                    ${setting({ id: 'navigation_items', list: page.state.quick_access_items })}
-                    ${setting({ id: 'navigation_language' })}
-                </div>
-            </section>
-            `
-                    : ''}
-                <section class="bleh--panel">
-                    <h4>${tl(trans.shouts)}</h4>
-                    <div class="inner-preview pad flex">
-                        <div
-                            class="shout js-shout js-link-block"
-                            data-kate-processed="true"
-                        >
-                            ${auth.name
-                    ? html.node`
-                        <h3 class="shout-user">
-                            <a>${auth.name}</a>
-                        </h3>
-                        <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </span>
-                        `
-                    : html.node`
-                        <h3 class="shout-user">
-                            <a>${tl(trans.profile)}</a>
-                        </h3>
-                        <span class="avatar shout-user-avatar">
-                            <img class="missing-avatar" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </span>
-                        `}
-                            <a class="shout-permalink shout-timestamp">
-                                <time
-                                    datetime="2024-06-05T02:33:39+01:00"
-                                    title="Wednesday 5 Jun 2024, 2:33am"
-                                >
-                                    5 Jun 2:33am
-                                </time>
-                            </a>
-                            <div class="shout-body if-markdown-on">
-                                ${markdown(tl(trans.markdown_shouts.preview))}
-                            </div>
-                            <div class="shout-body if-markdown-off">
-                                <p>${tl(trans.markdown_shouts.preview)}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'shout_markdown' })}
-                    </div>
-                </section>
-                ${!page.mobile
-                    ? html.node`
-            <section class="bleh--panel">
-                <h4>${tl(trans.quick_switcher)}</h4>
-                <div class="setting-group">
-                    ${setting({ id: 'rabbit' })}
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.quick_switcher_keybinds)}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="btn see-more" onclick=${() => {
-                            dialog({
-                                id: 'quick_switcher_keybinds',
-                                title: tl(trans.quick_switcher),
-                                body: html.node`
-                                        <div class="setting-group">
-                                            ${setting({ id: 'rabbit_primary' })}
-                                            ${setting({ id: 'rabbit_search' })}
-                                            ${setting({ id: 'rabbit_profile' })}
-                                            ${setting({ id: 'rabbit_shortcut' })}
-                                            ${setting({ id: 'rabbit_bleh_settings' })}
-                                        </div>
-                                    `
-                            });
-                        }}>
-                                ${tl(trans.change_now)}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            `
-                    : ''}
-            `
-        );
-
-        render_track_preview();
-    } else if (page_id == 'playback') {
-        let total_artists = 0;
-        let total_album_tracks = 0;
-
-        if (artist_corrections)
-            total_artists = Object.keys(artist_corrections).length;
-        if (album_track_corrections)
-            total_album_tracks = Object.values(album_track_corrections).reduce(
-                (sum, album_tracks) => sum + Object.keys(album_tracks).length,
-                0
-            );
-
-        let corrections;
-        let format_guest_features;
-        let romanise_jp;
-        let romanise_ko;
-
-        render(
-            page.structure.main,
-            html`
-                <section class="bleh--panel">
-                    <h4>${tl(trans.music_corrections)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="lotus-preview">
-                            <div class="before">
-                                <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
-                                <h2>jUlIe</h2>
-                            </div>
-                            <div class="after">
-                                <h1>my anti-aircraft friend</h1>
-                                <h2>julie</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${(corrections = setting({
-                id: 'corrections',
-                func: () => {
-                    romanise_jp.compat();
-                    romanise_ko.compat();
-                }
-            }))}
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.corrections_loaded)}</h5>
-                            </div>
-                            <div class="info">
-                                <p>
-                                    ${tl(trans.corrections_loaded_value)
-                    .replace('{c1}', total_artists)
-                    .replace('{c2}', total_album_tracks)}
-                                </p>
-                                <button
-                                    class="see-more"
-                                    onclick="_open_correction_modal()"
-                                >
-                                    ${tl(trans.view_all)}
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.current_version)}</h5>
-                            </div>
-                            <div class="info">
-                                <p>
-                                    ${artist_corrections.version ==
-                    album_track_corrections.version
-                    ? artist_corrections.version
-                    : `${artist_corrections.version}, ${album_track_corrections.version}`}
-                                </p>
-                                <button
-                                    class="see-more update-check"
-                                    onclick="_lotus_check()"
-                                >
-                                    ${tl(trans.update_check)}
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.help_contribute)}</h5>
-                            </div>
-                            <div class="info">
-                                <a
-                                    class="see-more"
-                                    href="https://github.com/katelyynn/lotus/issues/new/choose"
-                                    target="_blank"
-                                >
-                                    ${tl(trans.suggest_correction)}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'prefer_no_redirect' })}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl(trans.legacy_redirects.name)}</h5>
-                                <p>${tl(trans.legacy_redirects.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <a
-                                    class="btn see-more"
-                                    href="${root}settings/website"
-                                    target="_blank"
-                                >
-                                    ${tl(trans.change_now)}
-                                </a>
-                            </div>
-                        </div>
-                        ${setting({ id: 'travis' })}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl(trans.smart_music_titles)}</h4>
-                    <div class="inner-preview pad flex">
-                        <section
-                            class="redesigned-header mockup redesigned-track-header no-top-margin"
-                        >
-                            <div class="avatar-side">
-                                <img
-                                    src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
-                                />
-                            </div>
-                            <div class="info-side">
-                                <div class="sub-text">${tl(trans.track)}</div>
-                                <div class="title-container">
-                                    <h1 class="bleh--name-with-features">
-                                        <div class="title">California Love</div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
-                                        >
-                                            ft. Dr. Dre, Roger Troutman
-                                        </div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
-                                        >
-                                            Remix
-                                        </div>
-                                    </h1>
-                                    <h1 class="bleh--name-without-features">
-                                        California Love (ft. Dr. Dre, Roger
-                                        Troutman) - Remix
-                                    </h1>
-                                </div>
-                                <h2>
-                                    <a class="header-new-crumb">2Pac</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Dr. Dre</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Roger Troutman</a
-                                    >
-                                </h2>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${(format_guest_features = setting({
-                    id: 'format_guest_features',
-                    func: () => {
-                        romanise_jp.compat();
-                        romanise_ko.compat();
-                    }
-                }))}
-                        ${setting({ id: 'show_guest_features' })}
-                        ${setting({ id: 'show_remaster_tags' })}
-                    </div>
-                    <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl(trans.romanise_titles)}</h5>
-                            </div>
-                            <div class="primary-selections">
-                                ${(romanise_jp = setting({
-                    id: 'romanise_jp',
-                    standalone: true
-                }))}
-                                ${(romanise_ko = setting({
-                    id: 'romanise_ko',
-                    standalone: true
-                }))}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-tip">${tl(trans.romanise_require)}</div>
-                    <div class="setting-group">
-                        ${setting({ id: 'glacier_library_graphs' })}
-                    </div>
-                </section>
-                ${ff('oracle')
-                    ? html.node`
-            <section class="bleh--panel">
-                <h4>${tl(trans.oracle_heading)}</h4>
-                <div class="setting-group">
-                    ${setting({ id: 'oracle_beta' })}
-                    <div
-                        class="setting"
-                        data-type="info"
-                        disabled=${!oracle_artists.version ||
-                        !oracle_albums.version ||
-                        !oracle_tracks.version
-                        }
-                    >
-                        <div class="heading">
-                            <h5>${tl(trans.current_version)}</h5>
-                        </div>
-                        <div class="info">
-                            <p>
-                                ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
-                            </p>
-                            <button
-                                class="see-more update-check"
-                                onclick=${() => oracle_data(true)}
-                            >
-                                ${tl(trans.update_check)}
-                            </button>
-                        </div>
-                    </div>
-                    <div
-                        class="setting"
-                        data-type="info"
-                        disabled=${!oracle_artists.version ||
-                        !oracle_albums.version ||
-                        !oracle_tracks.version
-                        }
-                    >
-                        <div class="heading">
-                            <h5>${tl(trans.manage_data)}</h5>
-                        </div>
-                        <div class="info">
-                            <button
-                                class="see-more"
-                                onclick=${() => manage_oracle_data()}
-                            >
-                                ${tl(trans.view_all)}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            `
-                    : ''}
-            `
-        );
     } else if (page_id == 'seasonal') {
         register_skip_to([]);
 
         render(
             page.structure.main,
             html`
-                <div class="bleh--panel">
+                <div class="form-section settings-form">
                     <div class="seasonal-inner">
                         <div class="sub-text">
                             ${tl(trans.seasonal_timeline)}
@@ -1474,7 +845,7 @@ export async function render_setting_page(page_id) {
         render(
             page.structure.main,
             html`
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <div class="alert alert-danger">
                         ${tl(trans.beware_notice)}
                     </div>
@@ -1583,7 +954,7 @@ export async function render_setting_page(page_id) {
             render(
                 page.structure.main,
                 html`
-                    <div class="bleh--panel">
+                    <div class="form-section settings-form">
                         <div class="loading-data-container">
                             <div class="loading-data-text error">
                                 ${tl(trans.not_logged_in)}
@@ -1607,7 +978,7 @@ export async function render_setting_page(page_id) {
         render(
             page.structure.main,
             html`
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.banners)}</h4>
                     <div class="inner-preview pad">
                         <div class="profile-mockup">
@@ -1677,7 +1048,7 @@ export async function render_setting_page(page_id) {
                 </section>
                 ${ff('friends')
                     ? html.node`
-            <section class="bleh--panel">
+            <section class="form-section settings-form">
                 <h4>${tl(trans.friends)}</h4>
                 <div class="setting-group">
                     ${(friends = setting({
@@ -1698,26 +1069,14 @@ export async function render_setting_page(page_id) {
             </section>
             `
                     : ''}
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.other)}</h4>
                     <div class="setting-group">
                         ${setting({ id: 'bio_markdown' })}
                         ${setting({ id: 'show_your_progress' })}
                     </div>
                 </section>
-                <section class="bleh--panel">
-                    <h4>${tl(trans.notes)}</h4>
-                    <div class="setting-group">
-                        <div class="profile-notes">
-                            <div class="loading-data-container">
-                                <div class="loading-data-text failed">
-                                    ${tl(trans.no_notes)}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.activity)}</h4>
                     <p>${tl(trans.what_are_activities)}</p>
                     <div class="inner-preview pad">
@@ -1763,7 +1122,6 @@ export async function render_setting_page(page_id) {
             `
         );
 
-        init_profile_notes();
         activity_preview();
     } else if (page_id == 'accessibility') {
         register_skip_to([]);
@@ -1771,7 +1129,7 @@ export async function render_setting_page(page_id) {
         render(
             page.structure.main,
             html`
-                <section class="bleh--panel">
+                <section class="form-section settings-form">
                     <h4>${tl(trans.accessibility)}</h4>
                     <div class="setting-group">
                         ${setting({ id: 'reduced_motion' })}
@@ -1781,7 +1139,7 @@ export async function render_setting_page(page_id) {
                 </section>
                 ${ff('static_gifs')
                     ? html.node`
-            <section class="bleh--panel">
+            <section class="form-section settings-form">
                 <h4>${tl(trans.images)}</h4>
                 <div class="setting-group">
                     ${setting({ id: 'static_gifs' })}
@@ -1807,7 +1165,7 @@ export async function render_setting_page(page_id) {
         render(
             page.structure.main,
             html`
-                <div class="bleh--panel">
+                <div class="form-section settings-form">
                     <div class="panel-intro">
                         <div class="sub-text">
                             ${version.build}.${version.sku}
@@ -1902,7 +1260,7 @@ export async function render_setting_page(page_id) {
         render(
             page.structure.main,
             html`
-                <div class="bleh--panel">
+                <div class="form-section settings-form">
                     <h4 class="top-header">${tl(trans.music)}</h4>
                     <h4>${tl(trans.tracklist)}</h4>
                     <div class="inner-preview pad">
@@ -2026,7 +1384,7 @@ unsafeWindow._change_settings_page = function (page, setting = null) {
 export function change_settings_page(page_id, setting = null) {
     if (page_id == page.state.settings_page) return;
 
-    window.history.pushState(page_id, '', `${root}bleh/${page_id}`);
+    window.history.pushState(page_id, '', `${root}bwaa/${page_id}`);
     page.state.settings_page = page_id;
 
     page.structure.main.innerHTML = '';
@@ -2062,7 +1420,7 @@ export function change_settings_page(page_id, setting = null) {
         render(
             page.structure.main,
             html`
-                <div class="bleh--panel">
+                <div class="form-section settings-form">
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">
                             ${tl(trans.value_failed_to_load).replace(
@@ -2519,94 +1877,6 @@ export function display_colour_presets() {
     }
 }
 
-function init_profile_notes() {
-    let profile_notes_table =
-        page.structure.main.querySelector('.profile-notes');
-    if (!profile_notes_table) return;
-
-    let profile_notes =
-        JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
-
-    if (Object.keys(profile_notes).length == 0) return;
-
-    profile_notes_table.classList =
-        'generic-table-list user-vertical-list take-space profile-notes';
-    profile_notes_table.innerHTML = '';
-
-    for (let user in profile_notes) {
-        profile_notes_table.appendChild(html.node`
-            <div class="generic-table-list-entry user-vertical-list-item" id="profile-note-row--${user}">
-                <div class="name">
-                    <a class="mention" href="${root}user/${user}">@${user}</a>
-                </div>
-                <div class="text preview">
-                    <p id="profile-note-row-preview--${user}">${{ html: profile_notes[user] }}</p>
-                </div>
-                <div class="actions">
-                    <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
-                        ${tl(trans.delete)}
-                    </button>
-                    <button class="icon chibi delete danger-subtle" onclick=${() => delete_profile_note(user)}>
-                        ${tl(trans.delete)}
-                    </button>
-                </div>
-            </div>
-        `);
-    }
-}
-
-function delete_profile_note(user) {
-    let profile_notes =
-        JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
-    delete profile_notes[username];
-    document
-        .getElementById(`profile-note-row--${username}`)
-        .style.setProperty('display', 'none');
-
-    set_storage('bleh_profile_notes', JSON.stringify(profile_notes));
-}
-
-function edit_profile_note(user) {
-    let profile_notes =
-        JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
-
-    let modal = dialog({
-        id: 'edit_profile_note',
-        title: tl(trans.edit_profile_note),
-        body: html.node`
-            <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'edit_profile_note' })}>
-                    ${tl(trans.cancel)}
-                </button>
-                <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => save_profile_note_in_window(modal, user)}>
-                    ${tl(trans.save)}
-                </button>
-            </div>
-        `
-    });
-}
-
-function save_profile_note_in_window(modal, user) {
-    let profile_notes =
-        JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
-    let value_to_save = modal
-        .querySelector('#bleh--profile-note')
-        .value.replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    profile_notes[user] = value_to_save;
-
-    document.getElementById(`profile-note-row-preview--${user}`).textContent =
-        value_to_save;
-
-    set_storage('bleh_profile_notes', JSON.stringify(profile_notes));
-    dialog_rm({ id: 'edit_profile_note' });
-}
-
 export function prepare_corrections_page() {
     let corrections_table_artist =
         document.getElementById('corrections-artist');
@@ -2677,7 +1947,7 @@ function import_settings() {
                     const parsed = JSON.parse(text.value);
 
                     // safe to continue
-                    set_storage('bleh', text.value);
+                    set_storage('bwaa', text.value);
                     Object.assign(settings, parsed);
                     load_settings();
 

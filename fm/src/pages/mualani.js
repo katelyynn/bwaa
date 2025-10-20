@@ -1,10 +1,10 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
 
-import { register_background, update_page } from '../page.js';
+import { update_page } from '../page.js';
 import { auth, page } from '../build/page.js';
 import { log } from '../build/log.js';
 import { checkup_page_structure } from '../components/structure.js';
@@ -26,8 +26,6 @@ export function mualani() {
     }
 
     checkup_page_structure();
-
-    register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
 
     page.type = 'bleh_mualani';
     page.subpage = '';

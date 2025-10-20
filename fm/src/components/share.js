@@ -1,5 +1,5 @@
 //
-// bleh, an extension for the music site Last.fm
+// bwaa, an extension for the music site Last.fm
 // Copyright (c) 2025 katelyn and contributors
 // Licensed under GPLv3
 //
@@ -24,7 +24,7 @@ export function share(url) {
                     class="share-input"
                     ref=${el => input = el}
                 />
-                <button 
+                <button
                     class="btn primary icon copy"
                     onclick=${() => {
                         input.select();
@@ -37,12 +37,12 @@ export function share(url) {
                 >${tl(trans.copy)}</button>
             </div>
             <div class="share-links">
-                <a 
+                <a
                     href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
                     target="_blank"
                     class="share-link share-link-twitter"
                 >Twitter</a>
-                <a 
+                <a
                     href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
                     target="_blank"
                     class="share-link share-link-facebook"
