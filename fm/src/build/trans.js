@@ -1055,10 +1055,7 @@ export const trans = {
             sv: 'Adaptera automatiskt för årstider'
         },
         body: {
-            en: 'Adapts the default colour, iconset, and shows particles depending on the season',
-            de: 'Passt die Standardfarbe und das Iconset an und zeigt Partikel entsprechend der Jahreszeit an',
-            pt: 'Adapta a cor padrão, ícones e exibe partículas dependendo da sazonalidade',
-            sv: 'Adaptera färg, ikoner, och visa partiklar beroende på årstiden'
+            en: 'Get into the spirit of the season!'
         }
     },
     seasonal_particles_fps: {
@@ -1081,6 +1078,9 @@ export const trans = {
             en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients'
         }
     },
+    seasonal_accent: {
+        en: 'Theme accent colours to the current season'
+    },
     seasonal_offset: {
         en: 'Seasonal events are ran in your timezone, which we calculated as {offset}',
         de: 'Saisonale Events werden in deiner Zeitzone ausgeführt, die wir als {offset} berechnet haben',
@@ -1093,21 +1093,6 @@ export const trans = {
         de: 'Berechnete Verschiebung basierend auf der Zeitzone',
         pt: 'Offset calculado com base no fuso horário',
         sv: 'Förskjutning kalkylerats från tidszon'
-    },
-    started: {
-        // season start date
-        // start date: 1 day ago
-        en: 'Start date'
-    },
-    next_in: {
-        // season next date
-        // next season: in 3 days
-        en: 'Next season'
-    },
-    ends_in: {
-        // season end date
-        // end date: in 2 days
-        en: 'End date'
     },
     text: {
         en: 'Text',

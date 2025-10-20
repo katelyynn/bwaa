@@ -6555,12 +6555,12 @@
       }, CanvasImage.prototype.removeCanvas = function() {
         this.canvas.parentNode.removeChild(this.canvas);
       };
-      var ColorThief4 = function() {
+      var ColorThief3 = function() {
       };
-      if (ColorThief4.prototype.getColor = function(a, b) {
+      if (ColorThief3.prototype.getColor = function(a, b) {
         var c = this.getPalette(a, 5, b), d = c[0];
         return d;
-      }, ColorThief4.prototype.getPalette = function(a, b, c) {
+      }, ColorThief3.prototype.getPalette = function(a, b, c) {
         "undefined" == typeof b && (b = 10), ("undefined" == typeof c || 1 > c) && (c = 10);
         for (var d, e, f, g, h, i = new CanvasImage(a), j = i.getImageData(), k = j.data, l2 = i.getPixelCount(), m = [], n2 = 0; l2 > n2; n2 += c) d = 4 * n2, e = k[d + 0], f = k[d + 1], g = k[d + 2], h = k[d + 3], h >= 125 && (e > 250 && f > 250 && g > 250 || m.push([e, f, g]));
         var o = MMCQ.quantize(m, b), p = o ? o.palette() : null;
@@ -6732,7 +6732,7 @@
           d2[0] > 251 && d2[1] > 251 && d2[2] > 251 && (a2[c2].color = [255, 255, 255]);
         } }, { quantize: h };
       })();
-      module.exports = ColorThief4;
+      module.exports = ColorThief3;
     }
   });
 
@@ -34089,7 +34089,7 @@
     })}
             </ul>
         </nav>
-        <div ref=${(el) => page.state.inject = el} />
+        <div id="bleh-settings-inject" ref=${(el) => page.state.inject = el} />
     `);
     if (!tab) change_settings_page("home");
     else change_settings_page(tab);
@@ -34127,290 +34127,303 @@
       if (auth.pro) badge_count++;
       const auth_key = localStorage.getItem("bleh_auth");
       const auth_valid = localStorage.getItem("bleh_auth_valid");
-      render(
-        page.state.inject,
-        html`
-                <section class="form-section settings-form">
-                    <h2 class="form-header">Welcome to <i>re:</i>bwaa!</h2>
-                    <div class="update-center-header">
-                        ${paused === "true" ? html.node`
-                            <div class="update-center-icon">
-                                <div class="update-container">
-                                    <div class="bleh-icon" data-type="update" />
-                                </div>
-                                <div class="check-circle paused colourful">
-                                    <div class="bleh-icon" data-type="paused" />
-                                </div>
-                            </div>
-                            <div class="update-center-details">
-                                <h2>${tl2(trans.updates_paused)}</h2>
-                                <p class="last-checked">${tl2(trans.paused_until_date).replace("{d}", DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
-                            </div>
-                            <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl2(trans.check)}</button>
-                        ` : update_required === "false" ? html.node`
-                            <div class="update-center-icon">
-                                <div class="update-container">
-                                    <div class="bleh-icon" data-type="update" />
-                                </div>
-                                ${last_checked ? html.node`
-                                <div class="check-circle colourful">
-                                    <div class="bleh-icon" data-type="check-thick" />
-                                </div>
-                                ` : ""}
-                            </div>
-                            <div class="update-center-details">
-                                ${last_checked ? html.node`
-                                <h2>${tl2(trans.you_are_up_to_date)}</h2>
-                                <p class="last-checked">${tl2(trans.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
-                                ` : html.node`
-                                <h2>${tl2(trans.missing_updates)}</h2>
-                                <p class="last-checked">${tl2(trans.never_checked)}</p>
-                                `}
-                            </div>
-                            <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
-          notify({
-            id: "update",
-            title: tl2(trans.updates),
-            body: tl2(trans.checked_for_updates),
-            icon: "icon-16-update"
-          });
-          render_setting_page("general");
-        })}>${tl2(trans.check)}</button>
-                        ` : html.node`
-                            <div class="update-center-icon">
-                                <div class="update-container">
-                                    <div class="bleh-icon" data-type="update" />
-                                </div>
-                            </div>
-                            <div class="update-center-details">
-                                <h2>${tl2(trans.update_available_to_install)}</h2>
-                                ${last_checked ? html.node`
-                                    <p class="last-checked">${tl2(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
-                                ` : html.node`
-                                    <p class="last-checked">${tl2(trans.never_checked)}</p>
-                                `}
-                            </div>
-                            <div class="button-group">
-                                <button class="btn icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
-          notify({
-            id: "update",
-            title: tl2(trans.updates),
-            body: tl2(trans.checked_for_updates),
-            icon: "icon-16-update"
-          });
-          render_setting_page("general");
-        })}>${tl2(trans.check)}</button>
-                                <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl2(trans.install_now)}</button>
-                            </div>
-                        `}
+      render(page.state.inject, html`
+            <section class="form-section settings-form">
+                <h2 class="form-header">Welcome to <i style="margin-right: 2px">re:</i>bwaa!</h2>
+                <p>You currently have version 3483249324932432</p>
+                <div class="profile-actions-section standalone">
+                    <div class="options">
+                        <a class="has-icon sponsor" onclick=${() => sponsor()}>${tl2(trans.sponsor)}</a>
                     </div>
-                    ${last_checked && paused === "false" && update_required === "true" ? html.node`
-                        <div class="alert alert-info">${tl2(trans.you_are_installing_version, { v: version_to_install })}</div>
+                </div>
+                <h2 class="tiny">Quick controls</h2>
+                <div class="more-link align-left">
+                    <a onclick=${() => change_settings_page("interface")}>Choose your page style</a>
+                </div>
+                <h2 class="tiny">Customise further</h2>
+                <fieldset>
+                    <legend>Fun</legend>
+                    ${setting({ id: "seasonal" })}
+                    ${setting({ id: "seasonal_accent" })}
+                    ${setting({ id: "seasonal_particles" })}
+                    ${setting({ id: "seasonal_particles_fps" })}
+                    ${setting({ id: "seasonal_overlays" })}
+                </fieldset>
+                <div class="update-center-header">
+                    ${paused === "true" ? html.node`
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
+                            </div>
+                            <div class="check-circle paused colourful">
+                                <div class="bleh-icon" data-type="paused" />
+                            </div>
+                        </div>
+                        <div class="update-center-details">
+                            <h2>${tl2(trans.updates_paused)}</h2>
+                            <p class="last-checked">${tl2(trans.paused_until_date).replace("{d}", DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
+                        </div>
+                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl2(trans.check)}</button>
+                    ` : update_required === "false" ? html.node`
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
+                            </div>
+                            ${last_checked ? html.node`
+                            <div class="check-circle colourful">
+                                <div class="bleh-icon" data-type="check-thick" />
+                            </div>
+                            ` : ""}
+                        </div>
+                        <div class="update-center-details">
+                            ${last_checked ? html.node`
+                            <h2>${tl2(trans.you_are_up_to_date)}</h2>
+                            <p class="last-checked">${tl2(trans.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
+                            ` : html.node`
+                            <h2>${tl2(trans.missing_updates)}</h2>
+                            <p class="last-checked">${tl2(trans.never_checked)}</p>
+                            `}
+                        </div>
+                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+        notify({
+          id: "update",
+          title: tl2(trans.updates),
+          body: tl2(trans.checked_for_updates),
+          icon: "icon-16-update"
+        });
+        render_setting_page("general");
+      })}>${tl2(trans.check)}</button>
                     ` : html.node`
-                        <div class="alert alert-info">${tl2(trans.you_are_running_version, { v: version.build })}</div>
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
+                            </div>
+                        </div>
+                        <div class="update-center-details">
+                            <h2>${tl2(trans.update_available_to_install)}</h2>
+                            ${last_checked ? html.node`
+                                <p class="last-checked">${tl2(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
+                            ` : html.node`
+                                <p class="last-checked">${tl2(trans.never_checked)}</p>
+                            `}
+                        </div>
+                        <div class="button-group">
+                            <button class="btn icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+        notify({
+          id: "update",
+          title: tl2(trans.updates),
+          body: tl2(trans.checked_for_updates),
+          icon: "icon-16-update"
+        });
+        render_setting_page("general");
+      })}>${tl2(trans.check)}</button>
+                            <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl2(trans.install_now)}</button>
+                        </div>
                     `}
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.profile)}</h4>
-                    <div class="setting-group">
-                        ${auth.name ? html.node`
-                            <div class="setting" data-type="info">
-                                <div class="avatar-container">
-                                    <div class="avatar-inner">
-                                        <img src=${auth.avatar} alt=${auth.name} />
-                                    </div>
-                                </div>
-                                <div class="heading">
-                                    <h5>${auth.name}</h5>
-                                </div>
-                                <div class="info">
-                                    <p>${tl2(trans.profile_and_badges, { c: badge_count.toString() })}</p>
-                                    ${badge_count > 0 ? html.node`
-                                        <button class="see-more" onclick=${() => {
-          dialog({
-            id: "badges",
-            title: auth.name,
-            body: html.node`
-                                                    <div class="generic-table-list badge-list">
-                                                        ${badges ? badges.map((badge) => {
-              let style;
-              let classname = "";
-              if (badge.icon && badge.hue && badge.sat && badge.lit) {
-                style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
-              } else {
-                classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
-              }
-              return html.node`
-                                                                <div class="generic-table-list-entry badge-list-entry">
-                                                                    <div class="icon-container colourful ${classname}" style=${style}>
-                                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                                    </div>
-                                                                    <div class="name colourful ${classname}" style=${style}>
-                                                                        ${badge.name}
-                                                                    </div>
-                                                                    <div class="text">
-                                                                        ${badge.reason}
-                                                                    </div>
-                                                                </div>
-                                                            `;
-            }) : ""}
-                                                        ${auth.pro ? html.node`
-                                                            <div class="generic-table-list-entry badge-list-entry">
-                                                                <div class="icon-container colourful user-status-subscriber">
-                                                                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                                </div>
-                                                                <div class="name colourful user-status-subscriber">
-                                                                    ${tl2(trans.badges["user-status-subscriber"].name)}
-                                                                </div>
-                                                                <div class="text">
-                                                                    ${tl2(trans.badges["user-status-subscriber"].reason)}
-                                                                </div>
-                                                            </div>
-                                                        ` : ""}
-                                                    </div>
-                                                `
-          });
-        }}>${tl2(trans.view)}</button>
-                                    ` : ""}
-                                </div>
-                            </div>
-                        ` : ""}
-                        ${auth.sponsor ? html.node`
-                            <div class="setting" data-type="action">
-                                <div class="heading">
-                                    <h5>${tl2(trans.you_are_a_sponsor)}</h5>
-                                    <p>${tl2(trans.sponsor_get_badge)}</p>
-                                </div>
-                                <div class="toggle-wrap">
-                                    <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
-                                        ${tl2(trans.manage_sponsor)}
-                                    </button>
-                                </div>
-                            </div>
-                        ` : html.node`
-                            <div class="setting" data-type="action">
-                                <div class="heading">
-                                    <h5>${tl2(trans.news_sponsor_cta)}</h5>
-                                    <p>${tl2(trans.api.body)}</p>
-                                </div>
-                                <div class="toggle-wrap">
-                                    <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
-                                        ${tl2(trans.sponsor)}
-                                    </button>
-                                </div>
-                            </div>
-                        `}
+                </div>
+                ${last_checked && paused === "false" && update_required === "true" ? html.node`
+                    <div class="alert alert-info">${tl2(trans.you_are_installing_version, { v: version_to_install })}</div>
+                ` : html.node`
+                    <div class="alert alert-info">${tl2(trans.you_are_running_version, { v: version.build })}</div>
+                `}
+            </section>
+            <section class="form-section settings-form">
+                <h4>${tl2(trans.profile)}</h4>
+                <div class="setting-group">
+                    ${auth.name ? html.node`
                         <div class="setting" data-type="info">
+                            <div class="avatar-container">
+                                <div class="avatar-inner">
+                                    <img src=${auth.avatar} alt=${auth.name} />
+                                </div>
+                            </div>
                             <div class="heading">
-                                <h5>${tl2(trans.current_version)}</h5>
+                                <h5>${auth.name}</h5>
                             </div>
                             <div class="info">
-                                <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
-                                    ${tl2(trans.update_check)}
-                                </button>
-                                <p>${sponsor_list.latest}</p>
+                                <p>${tl2(trans.profile_and_badges, { c: badge_count.toString() })}</p>
+                                ${badge_count > 0 ? html.node`
+                                    <button class="see-more" onclick=${() => {
+        dialog({
+          id: "badges",
+          title: auth.name,
+          body: html.node`
+                                                <div class="generic-table-list badge-list">
+                                                    ${badges ? badges.map((badge) => {
+            let style;
+            let classname = "";
+            if (badge.icon && badge.hue && badge.sat && badge.lit) {
+              style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+            } else {
+              classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+            }
+            return html.node`
+                                                            <div class="generic-table-list-entry badge-list-entry">
+                                                                <div class="icon-container colourful ${classname}" style=${style}>
+                                                                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                                </div>
+                                                                <div class="name colourful ${classname}" style=${style}>
+                                                                    ${badge.name}
+                                                                </div>
+                                                                <div class="text">
+                                                                    ${badge.reason}
+                                                                </div>
+                                                            </div>
+                                                        `;
+          }) : ""}
+                                                    ${auth.pro ? html.node`
+                                                        <div class="generic-table-list-entry badge-list-entry">
+                                                            <div class="icon-container colourful user-status-subscriber">
+                                                                <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                            </div>
+                                                            <div class="name colourful user-status-subscriber">
+                                                                ${tl2(trans.badges["user-status-subscriber"].name)}
+                                                            </div>
+                                                            <div class="text">
+                                                                ${tl2(trans.badges["user-status-subscriber"].reason)}
+                                                            </div>
+                                                        </div>
+                                                    ` : ""}
+                                                </div>
+                                            `
+        });
+      }}>${tl2(trans.view)}</button>
+                                ` : ""}
                             </div>
                         </div>
+                    ` : ""}
+                    ${auth.sponsor ? html.node`
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.you_are_a_sponsor)}</h5>
+                                <p>${tl2(trans.sponsor_get_badge)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
+                                    ${tl2(trans.manage_sponsor)}
+                                </button>
+                            </div>
+                        </div>
+                    ` : html.node`
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans.news_sponsor_cta)}</h5>
+                                <p>${tl2(trans.api.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
+                                    ${tl2(trans.sponsor)}
+                                </button>
+                            </div>
+                        </div>
+                    `}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl2(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
+                                ${tl2(trans.update_check)}
+                            </button>
+                            <p>${sponsor_list.latest}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            ${!page.mobile ? html.node`
+                <section class="form-section settings-form">
+                    <h4>${tl2(trans.branding)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: "branding_type" })}
                     </div>
                 </section>
-                ${!page.mobile ? html.node`
-                    <section class="form-section settings-form">
-                        <h4>${tl2(trans.branding)}</h4>
-                        <div class="setting-group">
-                            ${setting({ id: "branding_type" })}
-                        </div>
-                    </section>
-                ` : ""}
-                ${auth.name ? html.node`
-                    <section class="form-section settings-form">
-                        <h4>API</h4>
-                        <div class="setting-group">
-                            <div class="setting" data-type="action">
-                                <div class="heading">
-                                    <h5>${tl2(trans.api.name)}</h5>
-                                    <p>${tl2(trans.api.body)}</p>
-                                </div>
-                            </div>
-                            <div class="setting" data-type="info">
-                                <div class="heading">
-                                    <h5>${tl2(trans.api_status)}</h5>
-                                </div>
-                                <div class="info">
-                                    ${auth_key && auth_valid == "true" ? html.node`
-                                    <p>${tl2(trans.connected)}</p>
-                                    ` : html.node`
-                                    <p>${tl2(trans.not_connected)}</p>
-                                    `}
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                ` : ""}
+            ` : ""}
+            ${auth.name ? html.node`
                 <section class="form-section settings-form">
-                    <h4>${tl2(trans.language)}</h4>
-                    <div class="setting-group">
-                        <div class="languages">
-                            ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
-          let date;
-          const row = html.node`
-                                    <div class="language-row${lang == key ? " active" : ""}">
-                                        <div class="flag-container">
-                                            <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
-                                        </div>
-                                        <div class="name">
-                                            <h5>${language.name}</h5>
-                                            <p>${{ html: tl2(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
-                                        </div>
-                                        ${language.new ? html.node`
-                                            <div class="badges">
-                                                <div class="new-badge">${tl2(trans.new)}</div>
-                                            </div>
-                                        ` : html.node`
-                                            <div class="badges"></div>
-                                        `}
-                                        ${language.percent ? () => {
-            const elem = html.node`
-                                                                    <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
-                                                                        ${language.percent}%
-                                                                    </div>
-                                                                `;
-            tippy_esm_default(elem, {
-              content: `${tl2(trans.amount_translated, { c: language.translated })}, ${tl2(trans.missing_translated, { c: language.missing })}`
-            });
-            return elem;
-          } : ""}
-                                        <div class="date">
-                                            <p ref=${(el) => date = el}>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
-                                        </div>
-                                    </div>
-                                `;
-          if (language.last_updated != "latest") {
-            tippy_esm_default(date, {
-              content: DateTime.fromISO(
-                language.last_updated
-              ).toLocaleString(DateTime.DATE_MED)
-            });
-          }
-          return row;
-        })}
-                        </div>
-                    </div>
+                    <h4>API</h4>
                     <div class="setting-group">
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl2(trans.submit_language.name)}</h5>
-                                <p>${tl2(trans.submit_language.body)}</p>
+                                <h5>${tl2(trans.api.name)}</h5>
+                                <p>${tl2(trans.api.body)}</p>
                             </div>
-                            <div class="toggle-wrap">
-                                <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
-                                    ${tl2(trans.help_contribute)}
-                                </a>
+                        </div>
+                        <div class="setting" data-type="info">
+                            <div class="heading">
+                                <h5>${tl2(trans.api_status)}</h5>
+                            </div>
+                            <div class="info">
+                                ${auth_key && auth_valid == "true" ? html.node`
+                                <p>${tl2(trans.connected)}</p>
+                                ` : html.node`
+                                <p>${tl2(trans.not_connected)}</p>
+                                `}
                             </div>
                         </div>
                     </div>
                 </section>
-            `
-      );
+            ` : ""}
+            <section class="form-section settings-form">
+                <h4>${tl2(trans.language)}</h4>
+                <div class="setting-group">
+                    <div class="languages">
+                        ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
+        let date;
+        const row = html.node`
+                                <div class="language-row${lang == key ? " active" : ""}">
+                                    <div class="flag" name=${key} />
+                                    <div class="name">
+                                        <p><strong>${language.name}</strong> ${{ html: tl2(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
+                                    </div>
+                                    ${language.new ? html.node`
+                                        <div class="badges">
+                                            <div class="new-badge">${tl2(trans.new)}</div>
+                                        </div>
+                                    ` : html.node`
+                                        <div class="badges"></div>
+                                    `}
+                                    ${language.percent ? () => {
+          const elem = html.node`
+                                                                <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
+                                                                    ${language.percent}%
+                                                                </div>
+                                                            `;
+          tippy_esm_default(elem, {
+            content: `${tl2(trans.amount_translated, { c: language.translated })}, ${tl2(trans.missing_translated, { c: language.missing })}`
+          });
+          return elem;
+        } : ""}
+                                    <div class="date">
+                                        <p ref=${(el) => date = el}>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
+                                    </div>
+                                </div>
+                            `;
+        if (language.last_updated != "latest") {
+          tippy_esm_default(date, {
+            content: DateTime.fromISO(
+              language.last_updated
+            ).toLocaleString(DateTime.DATE_MED)
+          });
+        }
+        return row;
+      })}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl2(trans.submit_language.name)}</h5>
+                            <p>${tl2(trans.submit_language.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
+                                ${tl2(trans.help_contribute)}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `);
     } else if (page_id == "interface") {
       let render_tip = function() {
         adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
@@ -37313,7 +37326,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
 
   // src/components/track.js
-  var import_color_thief_browser2 = __toESM(require_color_thief_min(), 1);
   function patch_titles(search = page.structure.main) {
     if (page.subpage == "tags_overview") return;
     if (!search) {
@@ -37328,41 +37340,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const tracklists = search.querySelectorAll(
       ".chartlist:not(.chartlist__placeholder)"
     );
-    let insights = {
-      artist: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      album: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      track: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      }
-    };
     tracklists.forEach((tracklist) => {
       if (!tracklist) return;
       log2("found, checking", "tracks", "log", { tracklist, search });
@@ -37402,19 +37379,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           );
           track_title.removeAttribute("title");
         }
-        let track_info = track.querySelector(":scope > .track-info");
-        if (!track_info) {
-          track_info = html.node`
-                    <div class="track-info" data-has-bar=${tracklist.classList.contains("chartlist--with-bar")}>
-                        ${track_title.parentElement}
-                    </div>
-                `;
-          track.appendChild(track_info);
-        }
-        track.setAttribute(
-          "data-has-bar",
-          tracklist.classList.contains("chartlist--with-bar")
-        );
         let is_user = track.querySelector(".chartlist-image .avatar");
         let is_artist = false;
         if (is_user) {
@@ -37448,23 +37412,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             track_title.textContent = correct_artist(
               track_title.getAttribute("data-name")
             );
-          let bar2 = track.querySelector(".chartlist-count-bar-slug");
-          if (bar2) {
-            if (settings.colourful_counts)
-              patch_artist_ranks_in_list_view(track);
-            insights.artist.display = true;
-            let value = parseInt(bar2.getAttribute("data-stat-value"));
-            insights.artist.values.push(value);
-            if (value > insights.artist.highest.value)
-              insights.artist.highest.value = value;
-            log2(
-              `pushed insight artist label of ${track_title.textContent}`,
-              "glacier library",
-              "log"
-            );
-            insights.artist.labels.push(track_title.textContent);
-            log2("finished artist stuff, returning", "tracks", "log");
-          }
           return;
         }
         let is_album = track.hasAttribute("data-album-row");
@@ -37478,26 +37425,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           "track"
         );
         if (!wide) track.classList.add("chartlist-row--with-artist");
-        const bar = track.querySelector(".chartlist-count-bar-slug");
-        if (bar) {
-          let value = parseInt(bar.getAttribute("data-stat-value"));
-          if (is_album) {
-            insights.album.display = true;
-            insights.album.values.push(value);
-            if (value > insights.album.highest.value)
-              insights.album.highest.value = value;
-          } else {
-            insights.track.display = true;
-            insights.track.values.push(value);
-            if (value > insights.track.highest.value)
-              insights.track.highest.value = value;
-          }
-        }
         const is_active = track.classList.contains(
           "chartlist-row--now-scrobbling"
         );
         const has_bar = track.querySelector(":scope > .chartlist-bar");
-        let track_legacy_menu = track.querySelector(".chartlist-more-menu");
         let track_timestamp = track.querySelector(
           ".chartlist-timestamp span"
         );
@@ -37537,94 +37468,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }
         let song_artist_element = track.querySelector(".chartlist-artist");
         if (song_artist_element) {
-          track_info.appendChild(song_artist_element);
+          track.appendChild(song_artist_element);
         }
-        if (settings.format_guest_features) {
-          let formatted_title = name_includes(
-            track_title.getAttribute("data-name"),
-            track_artist,
-            track_title.getAttribute("data-inherit-artists")
-          );
-          console.log("formatted", formatted_title);
-          let song_title = track_title.getAttribute("data-name");
-          let song_tags = {};
-          if (formatted_title) {
-            song_title = formatted_title[0];
-            song_tags = formatted_title[1];
-          }
-          track_title.setAttribute(
-            "data-name",
-            correct_item_by_artist(
-              track_title.getAttribute("data-name"),
-              track_artist
-            )
-          );
-          render(track_title, smart_title(song_title, song_tags));
-          if (!song_artist_element && !is_user) {
-            song_artist_element = document.createElement("td");
-            song_artist_element.classList.add("chartlist-artist");
-            track_info.appendChild(song_artist_element);
-          }
-          console.log(
-            "artist matches",
-            song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist,
-            "artist is blank",
-            song_artist_element.textContent.trim() === "",
-            song_artist_element.textContent.trim(),
-            formatted_title[2]
-          );
-          if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
-            log2(
-              "artist either matches or is blank, replacing",
-              "tracks",
-              "log"
-            );
-            render(
-              song_artist_element,
-              smart_artists(formatted_title[2], formatted_title[3])
-            );
-          }
-          if (track.getAttribute("data-disambig") == "explicit") {
-            song_artist_element.insertBefore(
-              html.node`
-                        <span class="track-explicit">${tl2(trans.explicit)}</span>
-                    `,
-              song_artist_element.firstChild
-            );
-          }
-          if (track_legacy_menu) {
-            track.preview = html.node`
-                        <div class="track-preview">
-                            <div class="image">
-                                <div class="inner-image">
-                                    ${image ? html.node`<img src=${image.src} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
-                                </div>
-                            </div>
-                            <div class="info">
-                                <h5 class="title">${song_title}</h5>
-                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
-                                <div class="tags">
-                                    ${song_tags.map(
-              (tag) => html.node`
-                                        <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${tag.text}</div>
-                                    `
-            )}
-                                </div>
-                                ${is_album ? "" : html.node`<p class="album">${image && album_link ? correct_item_by_artist(
-              image.getAttribute("alt"),
-              track_artist
-            ) : album ? album.textContent : ""}</p>`}
-                                ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
-                                ${image?.getAttribute("data-hoshino") ? html.node`
-                                            <div class="hoshino-marker">
-                                                <div class="bleh-icon" />
-                                            </div>
-                                        ` : ""}
-                            </div>
-                        </div>
-                    `;
-          }
-        } else if (settings.corrections) {
+        if (settings.corrections) {
           let song_artist_element2 = track.querySelector(
             ".chartlist-artist a"
           );
@@ -37651,520 +37497,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             track_title.setAttribute("data-name", corrected_title);
           }
         }
-        if (track_legacy_menu) {
-          let menu;
-          let previous = track.querySelector(
-            ":scope > .more-button-wrapper"
-          );
-          if (previous) previous.style.display = "none";
-          const is_own_profile = page.type == "user" && page.name == auth.name;
-          const can_edit = is_own_profile && !is_active && (!is_album ? !has_bar : true) && auth.pro;
-          const can_delete = is_own_profile && !is_active && !has_bar && !is_album;
-          let more_button = html.node`
-                    <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
-            log2("requested track in-built", "menu", "info", {
-              menu
-            });
-            menu.setProps({
-              placement: "bottom",
-              offset: [],
-              getReferenceClientRect: null
-            });
-            if (menu.state.isShown) {
-              menu.hide();
-            } else {
-              menu.show();
-            }
-          }}>
-                        ${tl2(trans.more)}
-                    </button>
-                `;
-          tippy_esm_default(more_button, {
-            content: tl2(trans.more)
-          });
-          track.appendChild(html.node`
-                    <td class="more-button-wrapper">
-                        ${more_button}
-                    </td>
-                `);
-          setTimeout(() => {
-            let edit_button = track_legacy_menu.querySelector(
-              '[data-analytics-action="EditScrobbleOpen"]'
-            );
-            let bulk_edit_button = track_legacy_menu.querySelector(
-              '[data-analytics-action="BulkEditScrobblesOpen"]'
-            );
-            let delete_button = track_legacy_menu.querySelector(".more-item--delete");
-            if (edit_button) {
-              let form = edit_button.parentElement;
-              page.token = form.querySelector(
-                '[name="csrfmiddlewaretoken"]'
-              ).value;
-              track.setAttribute(
-                "data-action",
-                form.getAttribute("action")
-              );
-              if (!is_album) {
-                let album_name2 = form.querySelector(
-                  '[name="album_name"]'
-                );
-                let album_artist_name = form.querySelector(
-                  '[name="album_artist_name"]'
-                );
-                track.setAttribute(
-                  "data-artist-name",
-                  correct_artist(
-                    form.querySelector('[name="artist_name"]').value
-                  )
-                );
-                track.setAttribute(
-                  "data-track-name",
-                  correct_item_by_artist(
-                    form.querySelector('[name="track_name"]').value,
-                    form.querySelector('[name="artist_name"]').value
-                  )
-                );
-                if (album_name2)
-                  track.setAttribute(
-                    "data-album-name",
-                    correct_item_by_artist(
-                      album_name2.value,
-                      form.querySelector(
-                        '[name="artist_name"]'
-                      ).value
-                    )
-                  );
-                if (album_artist_name)
-                  track.setAttribute(
-                    "data-album-artist-name",
-                    correct_artist(album_artist_name.value)
-                  );
-                track.setAttribute(
-                  "data-timestamp",
-                  form.querySelector('[name="timestamp"]').value
-                );
-              } else {
-                track.setAttribute(
-                  "data-album-name",
-                  correct_item_by_artist(
-                    form.querySelector('[name="album_name"]').value,
-                    form.querySelector(
-                      '[name="album_artist_name"]'
-                    ).value
-                  )
-                );
-                track.setAttribute(
-                  "data-album-artist-name",
-                  correct_artist(
-                    form.querySelector(
-                      '[name="album_artist_name"]'
-                    ).value
-                  )
-                );
-                track.setAttribute(
-                  "data-album-name-original",
-                  correct_item_by_artist(
-                    form.querySelector(
-                      '[name="album_name_original"]'
-                    ).value,
-                    form.querySelector(
-                      '[name="album_artist_name_original"]'
-                    ).value
-                  )
-                );
-                track.setAttribute(
-                  "data-album-artist-name-original",
-                  correct_artist(
-                    form.querySelector(
-                      '[name="album_artist_name_original"]'
-                    ).value
-                  )
-                );
-                track.setAttribute(
-                  "data-album-image",
-                  form.querySelector('[name="album_image"]').value
-                );
-                track.setAttribute(
-                  "data-count",
-                  form.querySelector('[name="count"]').value
-                );
-              }
-            } else if (delete_button) {
-              let form = delete_button.parentElement;
-              page.token = form.querySelector(
-                '[name="csrfmiddlewaretoken"]'
-              ).value;
-              track.setAttribute(
-                "data-artist-name",
-                correct_artist(
-                  form.querySelector('[name="artist_name"]').value
-                )
-              );
-              track.setAttribute(
-                "data-track-name",
-                correct_item_by_artist(
-                  form.querySelector('[name="track_name"]').value,
-                  form.querySelector('[name="artist_name"]').value
-                )
-              );
-              track.setAttribute(
-                "data-timestamp",
-                form.querySelector('[name="timestamp"]').value
-              );
-            }
-            let album_name = sanitise(
-              image ? correct_item_by_artist(
-                image.getAttribute("alt"),
-                track_artist
-              ) : album ? album.textContent : ""
-            );
-            menu = tippy_esm_default(more_button, {
-              theme: "context-menu",
-              content: html.node`
-                            ${track.preview}
-                            ${can_edit ? html.node`
-                            <div class="button-combo">
-                                ${() => {
-                if (is_album) {
-                  return html.node`
-                                            <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
-                                                <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                                <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
-                                                <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
-                                                <input type="hidden" name="album_image" value=${track.getAttribute("data-album-image")}>
-                                                <input type="hidden" name="album_name_original" value=${track.getAttribute("data-album-name-original")}>
-                                                <input type="hidden" name="album_artist_name_original" value=${track.getAttribute("data-album-artist-name-original")}>
-                                                <input type="hidden" name="count" value=${track.getAttribute("data-count")}>
-                                                <button class="dropdown-menu-clickable-item" data-type="edit">
-                                                    ${tl2(trans.edit)}
-                                                </button>
-                                            </form>
-                                        `;
-                }
-                return html.node`
-                                        <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
-                                            <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                            <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
-                                            <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
-                                            <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
-                                            <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
-                                            <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
-                                            <button class="dropdown-menu-clickable-item" data-type="edit">
-                                                ${tl2(trans.edit)}
-                                            </button>
-                                        </form>
-                                    `;
-              }}
-                                ${bulk_edit_button ? html.node`
-                                    <div class="button-combo-sep" />
-                                    ${() => {
-                let button = track_legacy_menu.querySelector(
-                  '[data-analytics-action="BulkEditScrobblesOpen"]'
-                );
-                button.classList = "dropdown-menu-clickable-item chibi";
-                button.textContent = tl2(
-                  trans.bulk_edit
-                );
-                button.setAttribute(
-                  "data-type",
-                  "bulk-edit"
-                );
-                tippy_esm_default(button, {
-                  content: tl2(trans.bulk_edit)
-                });
-                return button;
-              }}
-                                ` : ""}
-                            </div>
-                            <div class="sep" />
-                            ` : ""}
-                            ${() => {
-                let container = track.querySelector(".chartlist-play");
-                if (!container) return;
-                let button = container.querySelector(
-                  ".chartlist-play-button"
-                );
-                if (!button) return;
-                button.classList = "dropdown-menu-clickable-item";
-                button.textContent = tl2(trans.play);
-                button.setAttribute("data-type", "play");
-                track.removeChild(container);
-                return button;
-              }}
-                            ${!is_album ? html.node`
-                            <div class="button-combo">
-                                ${() => {
-                return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href=${track_title.getAttribute("href")}>
-                                            ${tl2(trans.track)}
-                                        </a>
-                                    `;
-              }}
-                                <div class="button-combo-sep"/>
-                                ${() => {
-                let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")}">
-                                            ${tl2(trans.explore_in_library)}
-                                        </a>
-                                    `;
-                tippy_esm_default(button, {
-                  content: tl2(trans.explore_in_library),
-                  delay: [500, 0]
-                });
-                return button;
-              }}
-                            </div>
-                            ` : ""}
-                            ${album_name && album_link ? html.node`
-                            <div class="button-combo">
-                                ${() => {
-                return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${album_link.getAttribute("href")}>
-                                            ${tl2(trans.album)}
-                                        </a>
-                                    `;
-              }}
-                                <div class="button-combo-sep"/>
-                                ${() => {
-                let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${album_link.getAttribute("href")}">
-                                            ${tl2(trans.explore_in_library)}
-                                        </a>
-                                    `;
-                tippy_esm_default(button, {
-                  content: tl2(trans.explore_in_library),
-                  delay: [500, 0]
-                });
-                return button;
-              }}
-                            </div>
-                            ` : is_album ? html.node`
-                            <div class="button-combo">
-                                ${() => {
-                return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${track_title.getAttribute("href")}>
-                                            ${tl2(trans.album)}
-                                        </a>
-                                    `;
-              }}
-                                <div class="button-combo-sep"/>
-                                ${() => {
-                let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")})}">
-                                            ${tl2(trans.explore_in_library)}
-                                        </a>
-                                    `;
-                tippy_esm_default(button, {
-                  content: tl2(trans.explore_in_library),
-                  delay: [500, 0]
-                });
-                return button;
-              }}
-                            </div>
-                            ` : ""}
-                            <div class="button-combo">
-                                ${() => {
-                return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${redirect()}${sanitise(track_artist)}">
-                                            ${tl2(trans.artist)}
-                                        </a>
-                                    `;
-              }}
-                                <div class="button-combo-sep"/>
-                                ${() => {
-                let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}">
-                                            ${tl2(trans.explore_in_library)}
-                                        </a>
-                                    `;
-                tippy_esm_default(button, {
-                  content: tl2(trans.explore_in_library),
-                  delay: [500, 0]
-                });
-                return button;
-              }}
-                            </div>
-                            ${() => {
-                if (!is_own_profile || is_album) return;
-                let name = track.getAttribute("data-track-name");
-                let artist = track.getAttribute("data-artist-name");
-                if (!name) {
-                  name = track_title.getAttribute("data-name");
-                  artist = track_artist;
-                }
-                return html.node`
-                                    <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
-                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="name" value=${name}>
-                                        <input type="hidden" name="artist_name" value=${artist}>
-                                        <button class="dropdown-menu-clickable-item" data-type="obsession">
-                                            ${tl2(trans.obsess)}
-                                        </button>
-                                    </form>
-                                `;
-              }}
-                            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
-                copy(track_title.href);
-              }}>
-                                ${tl2(trans.copy)}
-                            </button>
-                            ${() => {
-                if (!is_own_profile || !can_delete) return;
-                let button = html.node`
-                                    <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete">
-                                        ${tl2(trans.delete)}
-                                    </button>
-                                `;
-                let form;
-                return html.node`
-                                    <div class="sep" />
-                                    <form ref=${(el) => form = el} style="margin: 0" method="POST" action="${root}user/${auth.name}/library/delete" onsubmit=${async (e) => {
-                  e.preventDefault();
-                  let url = `${root}user/${auth.name}/library/delete`;
-                  let form_data = new FormData(form);
-                  console.info(form_data);
-                  try {
-                    track.setAttribute(
-                      "data-ajax-form-state",
-                      "deleted"
-                    );
-                    await fetch(url, {
-                      method: "POST",
-                      body: form_data
-                    }).then((res) => {
-                      if (!res.ok) {
-                        log2(
-                          "failed to delete",
-                          "form",
-                          "error",
-                          { res }
-                        );
-                        track.removeAttribute(
-                          "data-ajax-form-state"
-                        );
-                        return;
-                      }
-                      log2(
-                        "received response",
-                        "form",
-                        "info",
-                        { res }
-                      );
-                      notify({
-                        id: "delete",
-                        title: tl2(trans.deleted),
-                        body: track_title.getAttribute(
-                          "data-name"
-                        ),
-                        icon: "icon-16-trash",
-                        type: "error"
-                      });
-                    });
-                  } catch (e2) {
-                    console.error(e2);
-                    track.removeAttribute(
-                      "data-ajax-form-state"
-                    );
-                  }
-                }}>
-                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
-                                        <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
-                                        <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
-                                        ${button}
-                                    </form>
-                                `;
-              }}
-                        `,
-              placement: "right-start",
-              trigger: "manual",
-              interactive: true,
-              interactiveBorder: 10,
-              offset: [0, 0],
-              hideOnClick: false,
-              appendTo: document.body,
-              onCreate(instance) {
-                instance.popper.addEventListener("click", () => {
-                  instance.hide();
-                });
-              },
-              onClickOutside(instance) {
-                instance.hide();
-              }
-            });
-            register_menu(track, menu);
-          }, 100);
-        }
-        if (is_album) {
-          log2(
-            `pushed insight album label of ${track_title.getAttribute("data-name")}`,
-            "glacier library",
-            "log"
-          );
-          insights.album.labels.push(
-            track_title.getAttribute("data-name")
-          );
-        } else {
-          log2(
-            `pushed insight track label of ${track_title.getAttribute("data-name")}`,
-            "glacier library",
-            "log"
-          );
-          insights.track.labels.push(
-            track_title.getAttribute("data-name")
-          );
-        }
-        let album_text = track.querySelector(
-          ".chartlist-album.custom-album-text"
-        );
-        if (image_wrap) {
-          if (!is_album && show_album_text && !has_bar && !album_text) {
-            let alt = romanise(
-              correct_item_by_artist(
-                image.getAttribute("alt"),
-                track_artist
-              )
-            );
-            track_info.appendChild(html.node`
-                        <td class="chartlist-album custom-album-text">
-                            <a href="${link.getAttribute("href")}">${alt}</a>
-                        </td>
-                    `);
-          }
-          if (!settings.colourful_tracks && !settings.colourful_tracks_all)
-            return;
-          if (!settings.colourful_tracks_all && !is_active) return;
-          image.setAttribute("crossorigin", "anonymous");
-          try {
-            image.addEventListener("load", function() {
-              let thief = new import_color_thief_browser2.default();
-              let colour2 = thief.getColor(image);
-              let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
-              let hue2 = hsl.h;
-              let sat = clamp_sat2(hsl.s / 100 * 3);
-              let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
-              const to_colour = track.querySelectorAll(
-                ".chartlist-count-bar, .chartlist-loved"
-              );
-              if (is_active) {
-                track.style.setProperty("--hue-over", hue2);
-                track.style.setProperty("--sat-over", sat);
-                track.style.setProperty("--lit-over", lit);
-              } else {
-                to_colour.forEach((elem) => {
-                  elem.classList.add("colourful");
-                  elem.style.setProperty("--hue-over", hue2);
-                  elem.style.setProperty("--sat-over", sat);
-                  elem.style.setProperty("--lit-over", lit);
-                });
-              }
-            });
-          } catch (e) {
-          }
-        }
       }
     });
-    if (page.subpage.startsWith("library")) bleh_glacier_insights(insights);
   }
 
   // src/news.js
@@ -42084,7 +41418,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
 
   // src/build/trans.js
-  var import_color_thief_browser3 = __toESM(require_color_thief_min(), 1);
+  var import_color_thief_browser2 = __toESM(require_color_thief_min(), 1);
   var lang = "en";
   var lang_info = {
     en: {
@@ -43126,10 +42460,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sv: "Adaptera automatiskt f\xF6r \xE5rstider"
       },
       body: {
-        en: "Adapts the default colour, iconset, and shows particles depending on the season",
-        de: "Passt die Standardfarbe und das Iconset an und zeigt Partikel entsprechend der Jahreszeit an",
-        pt: "Adapta a cor padr\xE3o, \xEDcones e exibe part\xEDculas dependendo da sazonalidade",
-        sv: "Adaptera f\xE4rg, ikoner, och visa partiklar beroende p\xE5 \xE5rstiden"
+        en: "Get into the spirit of the season!"
       }
     },
     seasonal_particles_fps: {
@@ -43152,6 +42483,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "During winter seasons this applies a coat of ice to panels, otherwise mainly gradients"
       }
     },
+    seasonal_accent: {
+      en: "Theme accent colours to the current season"
+    },
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
       de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben",
@@ -43164,21 +42498,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Berechnete Verschiebung basierend auf der Zeitzone",
       pt: "Offset calculado com base no fuso hor\xE1rio",
       sv: "F\xF6rskjutning kalkylerats fr\xE5n tidszon"
-    },
-    started: {
-      // season start date
-      // start date: 1 day ago
-      en: "Start date"
-    },
-    next_in: {
-      // season next date
-      // next season: in 3 days
-      en: "Next season"
-    },
-    ends_in: {
-      // season end date
-      // end date: in 2 days
-      en: "End date"
     },
     text: {
       en: "Text",
@@ -47594,7 +46913,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         avatar2.setAttribute("crossorigin", "anonymous");
         try {
           avatar2.addEventListener("load", () => {
-            let thief = new import_color_thief_browser3.default();
+            let thief = new import_color_thief_browser2.default();
             let colour2 = thief.getColor(avatar2);
             let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
             auth.sets.hue = hsl.h;

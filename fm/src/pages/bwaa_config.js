@@ -160,7 +160,7 @@ export function bwaa_settings() {
                 })}
             </ul>
         </nav>
-        <div ref=${el => page.state.inject = el} />
+        <div id="bleh-settings-inject" ref=${el => page.state.inject = el} />
     `);
 
     if (!tab) change_settings_page('home');
@@ -212,50 +212,93 @@ export async function render_setting_page(page_id) {
         const auth_valid = localStorage.getItem('bleh_auth_valid');
 
         render(page.state.inject, html`
-                <section class="form-section settings-form">
-                    <h2 class="form-header">Welcome to <i>re:</i>bwaa!</h2>
-                    <div class="update-center-header">
-                        ${paused === 'true' ? html.node`
-                            <div class="update-center-icon">
-                                <div class="update-container">
-                                    <div class="bleh-icon" data-type="update" />
-                                </div>
-                                <div class="check-circle paused colourful">
-                                    <div class="bleh-icon" data-type="paused" />
-                                </div>
+            <section class="form-section settings-form">
+                <h2 class="form-header">Welcome to <i style="margin-right: 2px">re:</i>bwaa!</h2>
+                <p>You currently have version 3483249324932432</p>
+                <div class="profile-actions-section standalone">
+                    <div class="options">
+                        <a class="has-icon sponsor" onclick=${() => sponsor()}>${tl(trans.sponsor)}</a>
+                    </div>
+                </div>
+                <h2 class="tiny">Quick controls</h2>
+                <div class="more-link align-left">
+                    <a onclick=${() => change_settings_page('interface')}>Choose your page style</a>
+                </div>
+                <h2 class="tiny">Customise further</h2>
+                <fieldset>
+                    <legend>Fun</legend>
+                    ${setting({ id: 'seasonal' })}
+                    ${setting({ id: 'seasonal_accent' })}
+                    ${setting({ id: 'seasonal_particles' })}
+                    ${setting({ id: 'seasonal_particles_fps' })}
+                    ${setting({ id: 'seasonal_overlays' })}
+                </fieldset>
+                <div class="update-center-header">
+                    ${paused === 'true' ? html.node`
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
                             </div>
-                            <div class="update-center-details">
-                                <h2>${tl(trans.updates_paused)}</h2>
-                                <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
+                            <div class="check-circle paused colourful">
+                                <div class="bleh-icon" data-type="paused" />
                             </div>
-                            <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} disabled>${tl(trans.check)}</button>
-                        ` : update_required === 'false' ? html.node`
-                            <div class="update-center-icon">
-                                <div class="update-container">
-                                    <div class="bleh-icon" data-type="update" />
-                                </div>
-                                ${last_checked
-                                        ? html.node`
-                                <div class="check-circle colourful">
-                                    <div class="bleh-icon" data-type="check-thick" />
-                                </div>
-                                `
-                                        : ''
-                                    }
+                        </div>
+                        <div class="update-center-details">
+                            <h2>${tl(trans.updates_paused)}</h2>
+                            <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
+                        </div>
+                        <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} disabled>${tl(trans.check)}</button>
+                    ` : update_required === 'false' ? html.node`
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
                             </div>
-                            <div class="update-center-details">
-                                ${last_checked
-                                        ? html.node`
-                                <h2>${tl(trans.you_are_up_to_date)}</h2>
-                                <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
-                                `
-                                        : html.node`
-                                <h2>${tl(trans.missing_updates)}</h2>
+                            ${last_checked
+                                    ? html.node`
+                            <div class="check-circle colourful">
+                                <div class="bleh-icon" data-type="check-thick" />
+                            </div>
+                            `
+                                    : ''
+                                }
+                        </div>
+                        <div class="update-center-details">
+                            ${last_checked
+                                    ? html.node`
+                            <h2>${tl(trans.you_are_up_to_date)}</h2>
+                            <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
+                            `
+                                    : html.node`
+                            <h2>${tl(trans.missing_updates)}</h2>
+                            <p class="last-checked">${tl(trans.never_checked)}</p>
+                            `
+                                }
+                        </div>
+                        <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => update_check(true, update_btn, () => {
+                            notify({
+                                id: 'update',
+                                title: tl(trans.updates),
+                                body: tl(trans.checked_for_updates),
+                                icon: 'icon-16-update'
+                            });
+                            render_setting_page('general');
+                        })}>${tl(trans.check)}</button>
+                    ` : html.node`
+                        <div class="update-center-icon">
+                            <div class="update-container">
+                                <div class="bleh-icon" data-type="update" />
+                            </div>
+                        </div>
+                        <div class="update-center-details">
+                            <h2>${tl(trans.update_available_to_install)}</h2>
+                            ${last_checked ? html.node`
+                                <p class="last-checked">${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
+                            ` : html.node`
                                 <p class="last-checked">${tl(trans.never_checked)}</p>
-                                `
-                                    }
-                            </div>
-                            <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => update_check(true, update_btn, () => {
+                            `}
+                        </div>
+                        <div class="button-group">
+                            <button class="btn icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => update_check(true, update_btn, () => {
                                 notify({
                                     id: 'update',
                                     title: tl(trans.updates),
@@ -264,255 +307,227 @@ export async function render_setting_page(page_id) {
                                 });
                                 render_setting_page('general');
                             })}>${tl(trans.check)}</button>
-                        ` : html.node`
-                            <div class="update-center-icon">
-                                <div class="update-container">
-                                    <div class="bleh-icon" data-type="update" />
-                                </div>
-                            </div>
-                            <div class="update-center-details">
-                                <h2>${tl(trans.update_available_to_install)}</h2>
-                                ${last_checked ? html.node`
-                                    <p class="last-checked">${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
-                                ` : html.node`
-                                    <p class="last-checked">${tl(trans.never_checked)}</p>
-                                `}
-                            </div>
-                            <div class="button-group">
-                                <button class="btn icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => update_check(true, update_btn, () => {
-                                    notify({
-                                        id: 'update',
-                                        title: tl(trans.updates),
-                                        body: tl(trans.checked_for_updates),
-                                        icon: 'icon-16-update'
-                                    });
-                                    render_setting_page('general');
-                                })}>${tl(trans.check)}</button>
-                                <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
-                            </div>
-                        `}
-                    </div>
-                    ${last_checked && paused === 'false' && update_required === 'true' ? html.node`
-                        <div class="alert alert-info">${tl(trans.you_are_installing_version, { v: version_to_install })}</div>
-                    ` : html.node`
-                        <div class="alert alert-info">${tl(trans.you_are_running_version, { v: version.build })}</div>
+                            <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+                        </div>
                     `}
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl(trans.profile)}</h4>
-                    <div class="setting-group">
-                        ${auth.name ? html.node`
-                            <div class="setting" data-type="info">
-                                <div class="avatar-container">
-                                    <div class="avatar-inner">
-                                        <img src=${auth.avatar} alt=${auth.name} />
-                                    </div>
-                                </div>
-                                <div class="heading">
-                                    <h5>${auth.name}</h5>
-                                </div>
-                                <div class="info">
-                                    <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>
-                                    ${badge_count > 0 ? html.node`
-                                        <button class="see-more" onclick=${() => {
-                                            dialog({
-                                                id: 'badges',
-                                                title: auth.name,
-                                                body: html.node`
-                                                    <div class="generic-table-list badge-list">
-                                                        ${badges ? badges.map(badge => {
-                                                            let style;
-                                                            let classname = '';
-                                                            if (
-                                                                badge.icon &&
-                                                                badge.hue &&
-                                                                badge.sat &&
-                                                                badge.lit
-                                                            ) {
-                                                                style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
-                                                            } else {
-                                                                classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
-                                                            }
-
-                                                            return html.node`
-                                                                <div class="generic-table-list-entry badge-list-entry">
-                                                                    <div class="icon-container colourful ${classname}" style=${style}>
-                                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                                    </div>
-                                                                    <div class="name colourful ${classname}" style=${style}>
-                                                                        ${badge.name}
-                                                                    </div>
-                                                                    <div class="text">
-                                                                        ${badge.reason}
-                                                                    </div>
-                                                                </div>
-                                                            `;
-                                                        }) : ''}
-                                                        ${auth.pro ? html.node`
-                                                            <div class="generic-table-list-entry badge-list-entry">
-                                                                <div class="icon-container colourful user-status-subscriber">
-                                                                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                                </div>
-                                                                <div class="name colourful user-status-subscriber">
-                                                                    ${tl(trans.badges['user-status-subscriber'].name)}
-                                                                </div>
-                                                                <div class="text">
-                                                                    ${tl(trans.badges['user-status-subscriber'].reason)}
-                                                                </div>
-                                                            </div>
-                                                        ` : ''}
-                                                    </div>
-                                                `
-                                            });
-                                        }}>${tl(trans.view)}</button>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        ` : ''}
-                        ${auth.sponsor ? html.node`
-                            <div class="setting" data-type="action">
-                                <div class="heading">
-                                    <h5>${tl(trans.you_are_a_sponsor)}</h5>
-                                    <p>${tl(trans.sponsor_get_badge)}</p>
-                                </div>
-                                <div class="toggle-wrap">
-                                    <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
-                                        ${tl(trans.manage_sponsor)}
-                                    </button>
-                                </div>
-                            </div>
-                        ` : html.node`
-                            <div class="setting" data-type="action">
-                                <div class="heading">
-                                    <h5>${tl(trans.news_sponsor_cta)}</h5>
-                                    <p>${tl(trans.api.body)}</p>
-                                </div>
-                                <div class="toggle-wrap">
-                                    <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
-                                        ${tl(trans.sponsor)}
-                                    </button>
-                                </div>
-                            </div>
-                        `}
+                </div>
+                ${last_checked && paused === 'false' && update_required === 'true' ? html.node`
+                    <div class="alert alert-info">${tl(trans.you_are_installing_version, { v: version_to_install })}</div>
+                ` : html.node`
+                    <div class="alert alert-info">${tl(trans.you_are_running_version, { v: version.build })}</div>
+                `}
+            </section>
+            <section class="form-section settings-form">
+                <h4>${tl(trans.profile)}</h4>
+                <div class="setting-group">
+                    ${auth.name ? html.node`
                         <div class="setting" data-type="info">
+                            <div class="avatar-container">
+                                <div class="avatar-inner">
+                                    <img src=${auth.avatar} alt=${auth.name} />
+                                </div>
+                            </div>
                             <div class="heading">
-                                <h5>${tl(trans.current_version)}</h5>
+                                <h5>${auth.name}</h5>
                             </div>
                             <div class="info">
-                                <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
-                                    ${tl(trans.update_check)}
-                                </button>
-                                <p>${sponsor_list.latest}</p>
+                                <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>
+                                ${badge_count > 0 ? html.node`
+                                    <button class="see-more" onclick=${() => {
+                                        dialog({
+                                            id: 'badges',
+                                            title: auth.name,
+                                            body: html.node`
+                                                <div class="generic-table-list badge-list">
+                                                    ${badges ? badges.map(badge => {
+                                                        let style;
+                                                        let classname = '';
+                                                        if (
+                                                            badge.icon &&
+                                                            badge.hue &&
+                                                            badge.sat &&
+                                                            badge.lit
+                                                        ) {
+                                                            style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+                                                        } else {
+                                                            classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+                                                        }
+
+                                                        return html.node`
+                                                            <div class="generic-table-list-entry badge-list-entry">
+                                                                <div class="icon-container colourful ${classname}" style=${style}>
+                                                                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                                </div>
+                                                                <div class="name colourful ${classname}" style=${style}>
+                                                                    ${badge.name}
+                                                                </div>
+                                                                <div class="text">
+                                                                    ${badge.reason}
+                                                                </div>
+                                                            </div>
+                                                        `;
+                                                    }) : ''}
+                                                    ${auth.pro ? html.node`
+                                                        <div class="generic-table-list-entry badge-list-entry">
+                                                            <div class="icon-container colourful user-status-subscriber">
+                                                                <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                            </div>
+                                                            <div class="name colourful user-status-subscriber">
+                                                                ${tl(trans.badges['user-status-subscriber'].name)}
+                                                            </div>
+                                                            <div class="text">
+                                                                ${tl(trans.badges['user-status-subscriber'].reason)}
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
+                                                </div>
+                                            `
+                                        });
+                                    }}>${tl(trans.view)}</button>
+                                ` : ''}
                             </div>
                         </div>
+                    ` : ''}
+                    ${auth.sponsor ? html.node`
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl(trans.you_are_a_sponsor)}</h5>
+                                <p>${tl(trans.sponsor_get_badge)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
+                                    ${tl(trans.manage_sponsor)}
+                                </button>
+                            </div>
+                        </div>
+                    ` : html.node`
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl(trans.news_sponsor_cta)}</h5>
+                                <p>${tl(trans.api.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
+                                    ${tl(trans.sponsor)}
+                                </button>
+                            </div>
+                        </div>
+                    `}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
+                                ${tl(trans.update_check)}
+                            </button>
+                            <p>${sponsor_list.latest}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            ${!page.mobile ? html.node`
+                <section class="form-section settings-form">
+                    <h4>${tl(trans.branding)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: 'branding_type' })}
                     </div>
                 </section>
-                ${!page.mobile ? html.node`
-                    <section class="form-section settings-form">
-                        <h4>${tl(trans.branding)}</h4>
-                        <div class="setting-group">
-                            ${setting({ id: 'branding_type' })}
-                        </div>
-                    </section>
-                ` : ''}
-                ${auth.name ? html.node`
-                    <section class="form-section settings-form">
-                        <h4>API</h4>
-                        <div class="setting-group">
-                            <div class="setting" data-type="action">
-                                <div class="heading">
-                                    <h5>${tl(trans.api.name)}</h5>
-                                    <p>${tl(trans.api.body)}</p>
-                                </div>
-                            </div>
-                            <div class="setting" data-type="info">
-                                <div class="heading">
-                                    <h5>${tl(trans.api_status)}</h5>
-                                </div>
-                                <div class="info">
-                                    ${auth_key && auth_valid == 'true'
-                                    ? html.node`
-                                    <p>${tl(trans.connected)}</p>
-                                    `
-                                    : html.node`
-                                    <p>${tl(trans.not_connected)}</p>
-                                    `
-                                }
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                ` : ''}
+            ` : ''}
+            ${auth.name ? html.node`
                 <section class="form-section settings-form">
-                    <h4>${tl(trans.language)}</h4>
-                    <div class="setting-group">
-                        <div class="languages">
-                            ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
-                                let date;
-
-                                const row = html.node`
-                                    <div class="language-row${lang == key ? ' active' : ''}">
-                                        <div class="flag-container">
-                                            <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
-                                        </div>
-                                        <div class="name">
-                                            <h5>${language.name}</h5>
-                                            <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
-                                        </div>
-                                        ${language.new ? html.node`
-                                            <div class="badges">
-                                                <div class="new-badge">${tl(trans.new)}</div>
-                                            </div>
-                                        ` : html.node`
-                                            <div class="badges"></div>
-                                        `}
-                                        ${language.percent ? () => {
-                                            const elem = html.node`
-                                                                    <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
-                                                                        ${language.percent}%
-                                                                    </div>
-                                                                `;
-
-                                            tippy(elem, {
-                                                content: `${tl(trans.amount_translated, { c: language.translated })}, ${tl(trans.missing_translated, { c: language.missing })}`
-                                            });
-
-                                            return elem;
-                                        } : ''}
-                                        <div class="date">
-                                            <p ref=${(el) => (date = el)}>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
-                                        </div>
-                                    </div>
-                                `;
-
-                                if (language.last_updated != 'latest') {
-                                    tippy(date, {
-                                        content: DateTime.fromISO(
-                                            language.last_updated
-                                        ).toLocaleString(DateTime.DATE_MED)
-                                    });
-                                }
-
-                                return row;
-                            })}
-                        </div>
-                    </div>
+                    <h4>API</h4>
                     <div class="setting-group">
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.submit_language.name)}</h5>
-                                <p>${tl(trans.submit_language.body)}</p>
+                                <h5>${tl(trans.api.name)}</h5>
+                                <p>${tl(trans.api.body)}</p>
                             </div>
-                            <div class="toggle-wrap">
-                                <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
-                                    ${tl(trans.help_contribute)}
-                                </a>
+                        </div>
+                        <div class="setting" data-type="info">
+                            <div class="heading">
+                                <h5>${tl(trans.api_status)}</h5>
+                            </div>
+                            <div class="info">
+                                ${auth_key && auth_valid == 'true'
+                                ? html.node`
+                                <p>${tl(trans.connected)}</p>
+                                `
+                                : html.node`
+                                <p>${tl(trans.not_connected)}</p>
+                                `
+                            }
                             </div>
                         </div>
                     </div>
                 </section>
-            `
-        );
+            ` : ''}
+            <section class="form-section settings-form">
+                <h4>${tl(trans.language)}</h4>
+                <div class="setting-group">
+                    <div class="languages">
+                        ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
+                            let date;
+
+                            const row = html.node`
+                                <div class="language-row${lang == key ? ' active' : ''}">
+                                    <div class="flag" name=${key} />
+                                    <div class="name">
+                                        <p><strong>${language.name}</strong> ${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
+                                    </div>
+                                    ${language.new ? html.node`
+                                        <div class="badges">
+                                            <div class="new-badge">${tl(trans.new)}</div>
+                                        </div>
+                                    ` : html.node`
+                                        <div class="badges"></div>
+                                    `}
+                                    ${language.percent ? () => {
+                                        const elem = html.node`
+                                                                <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
+                                                                    ${language.percent}%
+                                                                </div>
+                                                            `;
+
+                                        tippy(elem, {
+                                            content: `${tl(trans.amount_translated, { c: language.translated })}, ${tl(trans.missing_translated, { c: language.missing })}`
+                                        });
+
+                                        return elem;
+                                    } : ''}
+                                    <div class="date">
+                                        <p ref=${(el) => (date = el)}>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
+                                    </div>
+                                </div>
+                            `;
+
+                            if (language.last_updated != 'latest') {
+                                tippy(date, {
+                                    content: DateTime.fromISO(
+                                        language.last_updated
+                                    ).toLocaleString(DateTime.DATE_MED)
+                                });
+                            }
+
+                            return row;
+                        })}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.submit_language.name)}</h5>
+                            <p>${tl(trans.submit_language.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
+                                ${tl(trans.help_contribute)}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `);
     } else if (page_id == 'interface') {
         let colourful_active;
         let colourful_all;

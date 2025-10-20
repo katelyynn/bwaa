@@ -2045,40 +2045,6 @@
                             --top: 2px;
                             background-position: var(--flag-position, 0 0);
                         }
-
-                        &[name="de"] {
-                            --flag-position: 0 -20px;
-                        }
-                        &[name="es"] {
-                            --flag-position: 0 -40px;
-                        }
-                        &[name="fr"] {
-                            --flag-position: 0 -60px;
-                        }
-                        &[name="it"] {
-                            --flag-position: 0 -80px;
-                        }
-                        &[name="ja"] {
-                            --flag-position: 0 -100px;
-                        }
-                        &[name="pl"] {
-                            --flag-position: 0 -120px;
-                        }
-                        &[name="pt"] {
-                            --flag-position: 0 -140px;
-                        }
-                        &[name="ru"] {
-                            --flag-position: 0 -160px;
-                        }
-                        &[name="sv"] {
-                            --flag-position: 0 -180px;
-                        }
-                        &[name="tr"] {
-                            --flag-position: 0 -200px;
-                        }
-                        &[name="zh"] {
-                            --flag-position: 0 -220px;
-                        }
                     }
 
                     .language-menu {
@@ -8818,5 +8784,74 @@
 
     .setting {
         display: flex;
+    }
+
+    .flag {
+        width: 16px;
+        height: 11px;
+        background-image: var(--cdn-flatness-sprites-21-icons);
+        background-position: var(--flag-position);
+    }
+    .language-menu-item, .flag {
+        --flag-position: 0 0;
+
+        &[name="de"] {
+            --flag-position: 0 -20px;
+        }
+        &[name="es"] {
+            --flag-position: 0 -40px;
+        }
+        &[name="fr"] {
+            --flag-position: 0 -60px;
+        }
+        &[name="it"] {
+            --flag-position: 0 -80px;
+        }
+        &[name="ja"] {
+            --flag-position: 0 -100px;
+        }
+        &[name="pl"] {
+            --flag-position: 0 -120px;
+        }
+        &[name="pt"] {
+            --flag-position: 0 -140px;
+        }
+        &[name="ru"] {
+            --flag-position: 0 -160px;
+        }
+        &[name="sv"] {
+            --flag-position: 0 -180px;
+        }
+        &[name="tr"] {
+            --flag-position: 0 -200px;
+        }
+        &[name="zh"] {
+            --flag-position: 0 -220px;
+        }
+    }
+
+    .languages {
+        display: flex;
+        flex-direction: column;
+
+        & > .language-row {
+            height: 22px;
+            font-size: 11px;
+            line-height: 11px;
+            gap: 6px;
+
+            display: flex;
+            align-items: center;
+
+            & > .name {
+                flex: 1;
+            }
+
+            & > .date {
+                width: 140px;
+                text-align: right;
+                color: #aaa;
+            }
+        }
     }
 }
