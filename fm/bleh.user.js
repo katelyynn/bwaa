@@ -30128,7 +30128,7 @@
     if (!count_bar.hasAttribute("data-kate-processed")) {
       count_bar.setAttribute("data-kate-processed", "true");
       let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
-      count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+      count_bar.setAttribute("data-bwaa--scrobble-milestone", parsed_scrobble_as_rank.milestone);
       count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
       count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
       count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
@@ -30315,13 +30315,13 @@
       }
     };
     let grids = search.querySelectorAll(
-      ".grid-items-item:not([data-bleh-music-grids])"
+      ".grid-items-item:not([data-bwaa-music-grids])"
     );
     grids.forEach((grid, index3) => {
       let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
       if (is_loading) return;
       grid.style.setProperty("--delay", index3 * 0.04 + "s");
-      grid.setAttribute("data-bleh-music-grids", "true");
+      grid.setAttribute("data-bwaa-music-grids", "true");
       let is_album;
       if (page.type == "search") {
         is_album = grid.querySelector(".stat-name") == null;
@@ -30414,7 +30414,7 @@
           if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
             let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
             plays_elem.setAttribute(
-              "data-bleh--scrobble-milestone",
+              "data-bwaa--scrobble-milestone",
               parsed_scrobble_as_rank.milestone
             );
             plays_elem.style.setProperty(
@@ -30471,7 +30471,7 @@
                     <span class="title">${song_title}</span>
                     ${song_tags.map(
               (tag) => html.node`
-                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
+                        <span class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</span>
                     `
             )}
                 `
@@ -30616,7 +30616,7 @@
     update_inbuilt_select(id, value);
   };
   function update_inbuilt_select(id, value) {
-    document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
+    document.documentElement.setAttribute(`data-bwaa--inbuilt-${id}`, value);
   }
   function select(values, initial = "", name = "", func = null) {
     let select2;
@@ -30676,7 +30676,7 @@
       select2.value = selected;
       if (name != "")
         document.documentElement.setAttribute(
-          `data-bleh--inbuilt-id_${name}`,
+          `data-bwaa--inbuilt-id_${name}`,
           selected
         );
       if (func) func(selected);
@@ -30768,7 +30768,7 @@
       select_id
     );
     document.documentElement.setAttribute(
-      `data-bleh--inbuilt-${select_id}`,
+      `data-bwaa--inbuilt-${select_id}`,
       value
     );
   };
@@ -30860,8 +30860,8 @@
       ".js-gallery-image-details > div"
     );
     if (!image_sidebar) return;
-    if (image_sidebar.hasAttribute("data-bleh-gallery")) return;
-    image_sidebar.setAttribute("data-bleh-gallery", "true");
+    if (image_sidebar.hasAttribute("data-bwaa-gallery")) return;
+    image_sidebar.setAttribute("data-bwaa-gallery", "true");
     if (!ff("new_gallery_experience")) {
       patch_gallery_focused_image(
         image_sidebar,
@@ -31246,10 +31246,10 @@
   function patch_gallery_image_listing() {
     let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
     if (page.requested.tab != "saved" || page.requested.page != null)
-      page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
+      page.structure.container.setAttribute("data-bwaa--gallery-tab", "all");
     else
       page.structure.container.setAttribute(
-        "data-bleh--gallery-tab",
+        "data-bwaa--gallery-tab",
         "saved"
       );
     let nav = html.node`
@@ -31294,7 +31294,7 @@
           let menu = tippy_esm_default(image_element, {
             theme: "context-menu",
             content: html.node`
-                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bwaa--image-is-bookmarked="true">
                             ${tl2(trans.remove_save)}
                         </button>
                     `,
@@ -31335,7 +31335,7 @@
     }
   }
   function gallery_tab(id) {
-    page.structure.container.setAttribute("data-bleh--gallery-tab", id);
+    page.structure.container.setAttribute("data-bwaa--gallery-tab", id);
   }
   function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
     let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
@@ -31350,7 +31350,7 @@
       }
     }
     const save_btn = html.node`
-        <button class="bleh--gallery-bookmark-image-btn btn--has-icon" data-bleh--image-is-bookmarked=${image_is_bookmarked} onclick=${() => update_image_bookmark(save_btn, focused_image_id)}>
+        <button class="bleh--gallery-bookmark-image-btn btn--has-icon" data-bwaa--image-is-bookmarked=${image_is_bookmarked} onclick=${() => update_image_bookmark(save_btn, focused_image_id)}>
             ${tl2(trans.save)}
         </button>
     `;
@@ -31358,11 +31358,11 @@
   }
   function update_image_bookmark(button, id) {
     let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") == "true";
+    let is_bookmarked = button.getAttribute("data-bwaa--image-is-bookmarked") == "true";
     if (!bookmarked_images.hasOwnProperty(page.name))
       bookmarked_images[page.name] = [];
     if (is_bookmarked) {
-      button.setAttribute("data-bleh--image-is-bookmarked", "false");
+      button.setAttribute("data-bwaa--image-is-bookmarked", "false");
       let new_artist_bookmarks = [];
       for (let image in bookmarked_images[page.name]) {
         if (bookmarked_images[page.name][image] != id) {
@@ -31372,7 +31372,7 @@
       bookmarked_images[page.name] = new_artist_bookmarks;
       log(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
     } else {
-      button.setAttribute("data-bleh--image-is-bookmarked", "true");
+      button.setAttribute("data-bwaa--image-is-bookmarked", "true");
       bookmarked_images[page.name].push(id);
       log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
     }
@@ -33966,7 +33966,7 @@
         if (settings.colourful_counts && page.type == "artist") {
           let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
           listen_item.setAttribute(
-            "data-bleh--scrobble-milestone",
+            "data-bwaa--scrobble-milestone",
             parsed_scrobble_as_rank.milestone
           );
           p.style.setProperty(
@@ -34714,7 +34714,7 @@
     if (settings.colourful_counts && listens > -1 && header_type == "artist") {
       let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
       listen_item.setAttribute(
-        "data-bleh--scrobble-milestone",
+        "data-bwaa--scrobble-milestone",
         parsed_scrobble_as_rank.milestone
       );
       p.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
@@ -35423,7 +35423,7 @@
                                 <div class="tags">
                                     ${song_tags.map(
               (tag) => html.node`
-                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                                        <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${tag.text}</div>
                                     `
             )}
                                 </div>
@@ -39801,7 +39801,7 @@
   }
   function save_setting(id, value) {
     settings[id] = value;
-    document.documentElement.setAttribute(`data-bleh--${id}`, value);
+    document.documentElement.setAttribute(`data-bwaa--${id}`, value);
     if (id == "theme") {
       if (value == "light" || value == "ink" || value == "glass") {
         settings.theme_type = "light";
@@ -39809,7 +39809,7 @@
         settings.theme_type = "dark";
       }
       document.documentElement.setAttribute(
-        `data-bleh--theme_type`,
+        `data-bwaa--theme_type`,
         settings.theme_type
       );
       chart_reflow();
@@ -39906,14 +39906,14 @@
           `${settings[setting2]}${settings_store[setting2].suffix || ""}`
         );
       document.documentElement.setAttribute(
-        `data-bleh--${setting2}`,
+        `data-bwaa--${setting2}`,
         `${settings[setting2]}`
       );
     }
     load_skus();
     compile_settings();
     if (document.body.classList.contains("user-dashboard-layout")) {
-      document.documentElement.setAttribute("data-bleh--theme", "oled");
+      document.documentElement.setAttribute("data-bwaa--theme", "oled");
       page.state.settings_reload = true;
     }
     load_chart_colours();
@@ -39986,7 +39986,7 @@
           `${value}${settings_base[item].unit}`
         );
         document.documentElement.setAttribute(
-          `data-bleh--${item}`,
+          `data-bwaa--${item}`,
           `${value}`
         );
         if (item == "hue" || item == "sat" || item == "lit") {
@@ -40001,12 +40001,12 @@
               `--${settings_base.lit.css}`
             );
             document.documentElement.setAttribute(
-              "data-bleh--hsl-override",
+              "data-bwaa--hsl-override",
               "true"
             );
           } else {
             document.documentElement.setAttribute(
-              "data-bleh--hsl-override",
+              "data-bwaa--hsl-override",
               "false"
             );
           }
@@ -40020,7 +40020,7 @@
             settings_base[item].values[1]
           );
           document.documentElement.setAttribute(
-            `data-bleh--${item}`,
+            `data-bwaa--${item}`,
             `${settings_base[item].values[1]}`
           );
         } else if (modify) {
@@ -40032,7 +40032,7 @@
             settings_base[item].values[0]
           );
           document.documentElement.setAttribute(
-            `data-bleh--${item}`,
+            `data-bwaa--${item}`,
             `${settings_base[item].values[0]}`
           );
         } else {
@@ -40047,7 +40047,7 @@
           settings[item] = value;
           document.body.style.setProperty(`--${item}`, value);
           document.documentElement.setAttribute(
-            `data-bleh--${item}`,
+            `data-bwaa--${item}`,
             value
           );
           let toggle2 = document.getElementById(`toggle-${item}-${value}`);
@@ -40162,7 +40162,7 @@
         ).checked = false;
         element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
         document.documentElement.setAttribute(
-          `data-bleh--inbuilt-${item}`,
+          `data-bwaa--inbuilt-${item}`,
           inbuilt_settings[item].values[1]
         );
       } else if (modify) {
@@ -40171,7 +40171,7 @@
         ).checked = true;
         element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
         document.documentElement.setAttribute(
-          `data-bleh--inbuilt-${item}`,
+          `data-bwaa--inbuilt-${item}`,
           inbuilt_settings[item].values[0]
         );
       } else {
@@ -40190,7 +40190,7 @@
           ).checked = true;
           element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
           document.documentElement.setAttribute(
-            `data-bleh--inbuilt-${item}`,
+            `data-bwaa--inbuilt-${item}`,
             true
           );
         } else if (value == false) {
@@ -40200,7 +40200,7 @@
           ).checked = false;
           element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
           document.documentElement.setAttribute(
-            `data-bleh--inbuilt-${item}`,
+            `data-bwaa--inbuilt-${item}`,
             false
           );
         }
@@ -43999,7 +43999,7 @@
             <div class="title">${song_title.trim()}</div>
             ${song_tags.map(
           (tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${tag.text}</div>
             `
         )}
         `
@@ -44564,11 +44564,11 @@
         );
         if (report_box_container) {
           document.documentElement.setAttribute(
-            "data-bleh--theme",
+            "data-bwaa--theme",
             "oled"
           );
           document.documentElement.setAttribute(
-            "data-bleh--theme_type",
+            "data-bwaa--theme_type",
             "dark"
           );
           page.structure.row.after(report_box_container);
@@ -44999,7 +44999,7 @@
             <div class="title">${romanise(song_title.trim())}</div>
             ${song_tags.map(
           (tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
+                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</div>
             `
         )}
         `
@@ -45963,8 +45963,8 @@
 
   // src/avatar.js
   function patch_avatar(avatar2, name, type = "", parent = null, side = "right") {
-    if (avatar2.hasAttribute("data-bleh-avatar")) return {};
-    avatar2.setAttribute("data-bleh-avatar", "true");
+    if (avatar2.hasAttribute("data-bwaa-avatar")) return {};
+    avatar2.setAttribute("data-bwaa-avatar", "true");
     const avatar_img = avatar2.querySelector("img");
     if (!avatar_img) return {};
     avatar_img.setAttribute(
@@ -48183,7 +48183,7 @@
           "season"
         );
         document.documentElement.setAttribute(
-          "data-bleh--season",
+          "data-bwaa--season",
           season.id
         );
         if (season.snowflakes.state && settings.seasonal_particles != "none") {
@@ -48355,7 +48355,7 @@
       log("disabled loading for special interface", "style");
       return;
     }
-    document.documentElement.setAttribute("data-bleh--theme", settings.theme);
+    document.documentElement.setAttribute("data-bwaa--theme", settings.theme);
     document.documentElement.appendChild(
       html.node`<style>${cropper_min_default}</style>`
     );
@@ -48842,7 +48842,7 @@
       }
       return html.node`
                             <li class="navlist-item secondary-nav-item">
-                                <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>
+                                <a class="secondary-nav-item-link bleh--nav" data-bwaa-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>
                                     ${tab2.label ? tab2.label : tab2.name}
                                 </a>
                             </li>
@@ -49448,7 +49448,7 @@
             `;
         let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
         count_bar.setAttribute(
-          "data-bleh--scrobble-milestone",
+          "data-bwaa--scrobble-milestone",
           parsed_scrobble_as_rank.milestone
         );
         count_bar.style.setProperty(
@@ -49850,15 +49850,15 @@
                                         <div class="title">California Love</div>
                                         <div
                                             class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
+                                            data-bwaa--tag-type="ft."
+                                            data-bwaa--tag-group="guests"
                                         >
                                             ft. Dr. Dre, Roger Troutman
                                         </div>
                                         <div
                                             class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
+                                            data-bwaa--tag-type="- remix"
+                                            data-bwaa--tag-group="mixes"
                                         >
                                             Remix
                                         </div>
@@ -50588,8 +50588,8 @@
     if (ff("bleh_settings_tabs")) {
       let btns = document.querySelectorAll(".bleh--nav");
       btns.forEach((btn) => {
-        console.log(btn.getAttribute("data-bleh-page"), page_id);
-        if (btn.getAttribute("data-bleh-page") != page_id) {
+        console.log(btn.getAttribute("data-bwaa-page"), page_id);
+        if (btn.getAttribute("data-bwaa-page") != page_id) {
           btn.classList.remove("secondary-nav-item-link--active");
         } else {
           btn.classList.add("secondary-nav-item-link--active");
@@ -50598,8 +50598,8 @@
     } else {
       let btns = document.querySelectorAll(".bleh--btn");
       btns.forEach((btn) => {
-        console.log(btn.getAttribute("data-bleh-page"), page_id);
-        if (btn.getAttribute("data-bleh-page") != page_id) {
+        console.log(btn.getAttribute("data-bwaa-page"), page_id);
+        if (btn.getAttribute("data-bwaa-page") != page_id) {
           btn.classList.remove("active");
         } else {
           btn.classList.add("active");
@@ -51484,14 +51484,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <button class="theme-bubble" data-theme-id=${theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
                             ${theme.id == "adaptive" ? html.node`
-                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type=${["light", "ink"].includes(settings.theme_day) ? "light" : "dark"}>
+                            <div class="inner theme-preview" data-bwaa--theme=${settings.theme_day} data-bwaa--theme_type=${["light", "ink"].includes(settings.theme_day) ? "light" : "dark"}>
                                 ${theme_preview()}
                             </div>
-                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type=${["light", "ink"].includes(settings.theme_night) ? "light" : "dark"}>
+                            <div class="inner theme-preview" data-bwaa--theme=${settings.theme_night} data-bwaa--theme_type=${["light", "ink"].includes(settings.theme_night) ? "light" : "dark"}>
                                 ${theme_preview()}
                             </div>
                             ` : html.node`
-                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                            <div class="inner theme-preview" data-bwaa--theme=${theme.id} data-bwaa--theme_type=${theme.type}>
                                 ${theme_preview()}
                             </div>
                             `}
@@ -51517,8 +51517,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         html`
                 <div
                     class="inner theme-preview"
-                    data-bleh--theme=${settings.theme_day}
-                    data-bleh--theme_type=${["light", "ink"].includes(
+                    data-bwaa--theme=${settings.theme_day}
+                    data-bwaa--theme_type=${["light", "ink"].includes(
           settings.theme_day
         ) ? "light" : "dark"}
                 >
@@ -51526,8 +51526,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
                 <div
                     class="inner theme-preview"
-                    data-bleh--theme=${settings.theme_night}
-                    data-bleh--theme_type=${["light", "ink"].includes(
+                    data-bwaa--theme=${settings.theme_night}
+                    data-bwaa--theme_type=${["light", "ink"].includes(
           settings.theme_night
         ) ? "light" : "dark"}
                 >
@@ -51887,7 +51887,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         <div class="title">${romanise(song_title.trim())}</div>
         ${song_tags.map(
       (tag) => html.node`
-                <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
+                <div class="feat" data-bwaa--tag-type=${tag.type} data-bwaa--tag-group=${tag.group}>${romanise(tag.text)}</div>
             `
     )}
     `;
@@ -52174,10 +52174,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function subscribe_to_events() {
     if (!settings.activities || !page.structure.main) return;
     let love_track = page.structure.container.querySelectorAll(
-      `form[action="${root}user/${auth.name}/loved"]:not([data-bleh-subscribed])`
+      `form[action="${root}user/${auth.name}/loved"]:not([data-bwaa-subscribed])`
     );
     love_track.forEach((form) => {
-      form.setAttribute("data-bleh-subscribed", "true");
+      form.setAttribute("data-bwaa-subscribed", "true");
       let track = form.querySelector('[name="track"]').getAttribute("value");
       let artist = form.querySelector('[name="artist"]').getAttribute("value");
       artist = correct_artist(artist);
@@ -52208,10 +52208,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       );
     });
     let bookmark_item = document.body.querySelectorAll(
-      `form[action="/music/+bookmarks"]:not([data-bleh-subscribed])`
+      `form[action="/music/+bookmarks"]:not([data-bwaa-subscribed])`
     );
     bookmark_item.forEach((form) => {
-      form.setAttribute("data-bleh-subscribed", "true");
+      form.setAttribute("data-bwaa-subscribed", "true");
       let btn = form.querySelector("button");
       btn.addEventListener(
         "click",
@@ -52228,10 +52228,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       );
     });
     let obsess = document.body.querySelectorAll(
-      `.modal-body form[action$="${auth.name}/obsessions"]:not([data-bleh-subscribed])`
+      `.modal-body form[action$="${auth.name}/obsessions"]:not([data-bwaa-subscribed])`
     );
     obsess.forEach((form) => {
-      form.setAttribute("data-bleh-subscribed", "true");
+      form.setAttribute("data-bwaa-subscribed", "true");
       let track = form.querySelector('[name="name"]').getAttribute("value");
       let artist = form.querySelector('[name="artist_name"]').getAttribute("value");
       artist = correct_artist(artist);
@@ -52251,10 +52251,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       );
     });
     const post_shouts = page.structure.main.querySelectorAll(
-      ".btn-post-shout:not([data-bleh-subscribed])"
+      ".btn-post-shout:not([data-bwaa-subscribed])"
     );
     post_shouts.forEach((post) => {
-      post.setAttribute("data-bleh-subscribed", "true");
+      post.setAttribute("data-bwaa-subscribed", "true");
       post.addEventListener(
         "click",
         (e) => {
@@ -52280,10 +52280,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       );
     });
     let save_wiki_form = document.body.querySelector(
-      ".wiki-edit-form:not([data-bleh-subscribed])"
+      ".wiki-edit-form:not([data-bwaa-subscribed])"
     );
     if (save_wiki_form != null) {
-      save_wiki_form.setAttribute("data-bleh-subscribed", "true");
+      save_wiki_form.setAttribute("data-bwaa-subscribed", "true");
       let btn = save_wiki_form.querySelector(".form-submit button");
       btn.addEventListener(
         "click",
@@ -52299,10 +52299,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       );
     }
     let upload_img_form = document.body.querySelector(
-      'form[action$="/+images/upload"]:not([data-bleh-subscribed])'
+      'form[action$="/+images/upload"]:not([data-bwaa-subscribed])'
     );
     if (upload_img_form) {
-      upload_img_form.setAttribute("data-bleh-subscribed", "true");
+      upload_img_form.setAttribute("data-bwaa-subscribed", "true");
       let btn = upload_img_form.querySelector(".form-submit button");
       if (!btn) btn = upload_img_form.querySelector('button[type="submit"]');
       if (btn) {
@@ -53325,7 +53325,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               if (!theme.formal)
                 theme.formal = theme.id;
               const btn = html.node`
-                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${!settings.theme_schedule ? settings.theme == theme.id : theme.id == "adaptive"} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
+                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${!settings.theme_schedule ? settings.theme == theme.id : theme.id == "adaptive"} data-bwaa-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
                 if (theme.id != "adaptive") {
                   save_setting(
                     "theme_schedule",
@@ -53345,7 +53345,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 buttons.forEach(
                   (button) => {
                     const type = button.getAttribute(
-                      "data-bleh-theme"
+                      "data-bwaa-theme"
                     );
                     if (!settings.theme_schedule) {
                       button.setAttribute(
@@ -54936,15 +54936,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                         <div class="title">California Love</div>
                                         <div
                                             class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
+                                            data-bwaa--tag-type="ft."
+                                            data-bwaa--tag-group="guests"
                                         >
                                             ft. Dr. Dre, Roger Troutman
                                         </div>
                                         <div
                                             class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
+                                            data-bwaa--tag-type="- remix"
+                                            data-bwaa--tag-group="mixes"
                                         >
                                             Remix
                                         </div>

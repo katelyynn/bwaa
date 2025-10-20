@@ -544,11 +544,11 @@ export async function bleh_profiles() {
             );
             if (report_box_container) {
                 document.documentElement.setAttribute(
-                    'data-bleh--theme',
+                    'data-bwaa--theme',
                     'oled'
                 );
                 document.documentElement.setAttribute(
-                    'data-bleh--theme_type',
+                    'data-bwaa--theme_type',
                     'dark'
                 );
 
@@ -1128,7 +1128,7 @@ function bleh_featured_profile_track(object) {
             <div class="title">${romanise(song_title.trim())}</div>
             ${song_tags.map(
                 (tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
+                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</div>
             `
             )}
         `

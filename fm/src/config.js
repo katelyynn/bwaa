@@ -7,9 +7,7 @@
 import {
     inbuilt_settings,
     settings,
-    settings_base,
-    settings_store,
-    settings_template
+    settings_store
 } from './build/config';
 import { log } from './build/log';
 import { page, reload_pending } from './build/page';
@@ -39,44 +37,6 @@ export function load_settings(skip = false) {
         else settings.theme_type = 'dark';
     }
 
-    // migrates old settings
-    if (settings.version < 2025.0929) {
-        if (settings.seasonal_particles == true)
-            settings.seasonal_particles = 'all';
-        else if (settings.seasonal_particles == false)
-            settings.seasonal_particles = 'none';
-
-        if (settings.seasonal_particles_reduced == true) {
-            settings.seasonal_particles = 'less';
-            delete settings.seasonal_particles_reduced;
-        } else if (settings.seasonal_particles_reduced == false) {
-            delete settings.seasonal_particles_reduced;
-        }
-
-        if (settings.font_weight == 480 || settings.font_weight == 440)
-            settings.font_weight = settings_store.font_weight.default;
-        if (
-            settings.font_weight_medium == 650 ||
-            settings.font_weight_medium == 570
-        )
-            settings.font_weight_medium =
-                settings_store.font_weight_medium.default;
-        if (
-            settings.font_weight_bold == 730 ||
-            settings.font_weight_bold == 760 ||
-            settings.font_weight_bold == 680
-        )
-            settings.font_weight_bold = settings_store.font_weight_bold.default;
-    }
-
-    if (settings.profile_shortcut) {
-        settings.friends = [settings.profile_shortcut];
-        settings.starred_friend = settings.profile_shortcut;
-
-        localStorage.removeItem('bleh_profile_shortcut_avi');
-        delete settings.profile_shortcut;
-    }
-
     // save setting into body
     for (let setting in settings) {
         if (
@@ -93,7 +53,7 @@ export function load_settings(skip = false) {
                 `${settings[setting]}${settings_store[setting].suffix || ''}`
             );
         document.documentElement.setAttribute(
-            `data-bleh--${setting}`,
+            `data-bwaa--${setting}`,
             `${settings[setting]}`
         );
     }
@@ -105,7 +65,7 @@ export function load_settings(skip = false) {
 
     // override theme when browsing listening reports
     if (document.body.classList.contains('user-dashboard-layout')) {
-        document.documentElement.setAttribute('data-bleh--theme', 'oled');
+        document.documentElement.setAttribute('data-bwaa--theme', 'oled');
         page.state.settings_reload = true;
     }
 
@@ -131,18 +91,13 @@ export function toggle_theme() {
     chart_reflow();
 }
 
-// settings-page specific
-function reset_all() {
-    for (let item in settings_base) reset_item(item);
-}
-
 export function refresh_all(search = document) {
-    for (let item in settings_base)
+    for (let item in settings_store)
         update_item(item, settings[item], false, search);
 }
 
 function reset_item(item) {
-    update_item(item, settings_base[item].value);
+    update_item(item, settings_store[item].default);
 }
 
 export function update_params(params = {}) {
@@ -214,7 +169,7 @@ function update_item(item, value, modify = true, search = document) {
                 `${value}${settings_base[item].unit}`
             );
             document.documentElement.setAttribute(
-                `data-bleh--${item}`,
+                `data-bwaa--${item}`,
                 `${value}`
             );
 
@@ -236,12 +191,12 @@ function update_item(item, value, modify = true, search = document) {
                         `--${settings_base.lit.css}`
                     );
                     document.documentElement.setAttribute(
-                        'data-bleh--hsl-override',
+                        'data-bwaa--hsl-override',
                         'true'
                     );
                 } else {
                     document.documentElement.setAttribute(
-                        'data-bleh--hsl-override',
+                        'data-bwaa--hsl-override',
                         'false'
                     );
                 }
@@ -259,7 +214,7 @@ function update_item(item, value, modify = true, search = document) {
                     settings_base[item].values[1]
                 );
                 document.documentElement.setAttribute(
-                    `data-bleh--${item}`,
+                    `data-bwaa--${item}`,
                     `${settings_base[item].values[1]}`
                 );
             } else if (modify) {
@@ -275,7 +230,7 @@ function update_item(item, value, modify = true, search = document) {
                     settings_base[item].values[0]
                 );
                 document.documentElement.setAttribute(
-                    `data-bleh--${item}`,
+                    `data-bwaa--${item}`,
                     `${settings_base[item].values[0]}`
                 );
             } else {
@@ -297,7 +252,7 @@ function update_item(item, value, modify = true, search = document) {
                 // save setting into body
                 document.body.style.setProperty(`--${item}`, value);
                 document.documentElement.setAttribute(
-                    `data-bleh--${item}`,
+                    `data-bwaa--${item}`,
                     value
                 );
 
@@ -470,7 +425,7 @@ export function update_inbuilt_item(
                 .querySelector(`#toggle-${item}`)
                 .setAttribute('aria-checked', false);
             document.documentElement.setAttribute(
-                `data-bleh--inbuilt-${item}`,
+                `data-bwaa--inbuilt-${item}`,
                 inbuilt_settings[item].values[1]
             );
         } else if (modify) {
@@ -481,7 +436,7 @@ export function update_inbuilt_item(
                 .querySelector(`#toggle-${item}`)
                 .setAttribute('aria-checked', true);
             document.documentElement.setAttribute(
-                `data-bleh--inbuilt-${item}`,
+                `data-bwaa--inbuilt-${item}`,
                 inbuilt_settings[item].values[0]
             );
         } else {
@@ -503,7 +458,7 @@ export function update_inbuilt_item(
                     .querySelector(`#toggle-${item}`)
                     .setAttribute('aria-checked', true);
                 document.documentElement.setAttribute(
-                    `data-bleh--inbuilt-${item}`,
+                    `data-bwaa--inbuilt-${item}`,
                     true
                 );
             } else if (value == false) {
@@ -515,7 +470,7 @@ export function update_inbuilt_item(
                     .querySelector(`#toggle-${item}`)
                     .setAttribute('aria-checked', false);
                 document.documentElement.setAttribute(
-                    `data-bleh--inbuilt-${item}`,
+                    `data-bwaa--inbuilt-${item}`,
                     false
                 );
             }

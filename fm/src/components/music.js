@@ -347,7 +347,7 @@ export async function show_your_scrobbles() {
                         parse_scrobbles_as_rank(listens);
 
                     listen_item.setAttribute(
-                        'data-bleh--scrobble-milestone',
+                        'data-bwaa--scrobble-milestone',
                         parsed_scrobble_as_rank.milestone
                     );
                     p.style.setProperty(
@@ -1242,7 +1242,7 @@ function create_listen_item(
         let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
 
         listen_item.setAttribute(
-            'data-bleh--scrobble-milestone',
+            'data-bwaa--scrobble-milestone',
             parsed_scrobble_as_rank.milestone
         );
         p.style.setProperty('--hue-user', parsed_scrobble_as_rank.hue);

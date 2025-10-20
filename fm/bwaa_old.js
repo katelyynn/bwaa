@@ -3928,7 +3928,7 @@ let last_season_time;
         let gallery_bookmark_button = document.createElement('div');
         gallery_bookmark_button.classList.add('gallery-image-bookmark-button');
         gallery_bookmark_button.innerHTML = (`
-            <button class="gallery-image-bookmark-button-button" data-bleh--image-is-bookmarked="${image_is_bookmarked}" onclick="_update_image_bookmark(this, '${artist_name}', '${focused_image_id}')">
+            <button class="gallery-image-bookmark-button-button" data-bwaa--image-is-bookmarked="${image_is_bookmarked}" onclick="_update_image_bookmark(this, '${artist_name}', '${focused_image_id}')">
                 <span class="bookmark-votes"></span>
                 <span class="vote-text" id="bookmark-vote-text">
                     ${(image_is_bookmarked)
@@ -3945,7 +3945,7 @@ let last_season_time;
     }
     function update_image_bookmark(button, artist, id) {
         let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
-        let is_bookmarked = (button.getAttribute('data-bleh--image-is-bookmarked') === 'true');
+        let is_bookmarked = (button.getAttribute('data-bwaa--image-is-bookmarked') === 'true');
 
         document.getElementById('bookmark-vote-text').textContent = (is_bookmarked)
         ? trans[lang].gallery.save.to_save
@@ -3957,7 +3957,7 @@ let last_season_time;
         if (is_bookmarked) {
             // remove from bookmarks
 
-            button.setAttribute('data-bleh--image-is-bookmarked', 'false');
+            button.setAttribute('data-bwaa--image-is-bookmarked', 'false');
 
             let new_artist_bookmarks = [];
             for (let image in bookmarked_images[artist]) {
@@ -3972,7 +3972,7 @@ let last_season_time;
         } else {
             // add to bookmarks
 
-            button.setAttribute('data-bleh--image-is-bookmarked', 'true');
+            button.setAttribute('data-bwaa--image-is-bookmarked', 'true');
             bookmarked_images[artist].push(id);
             deliver_notif(trans[lang].gallery.save.added.replace('{artist}', artist));
             console.info('bleh - image', id, 'from artist', artist, 'has been added to bookmarks');

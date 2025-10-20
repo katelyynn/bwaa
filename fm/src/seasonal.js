@@ -22,7 +22,7 @@ import { DateTime, Duration } from 'luxon';
 export function set_season() {
     if (!settings.seasonal) return;
 
-    let last_season_seen = localStorage.getItem('bleh_last_season_seen') || '';
+    let last_season_seen = localStorage.getItem('bwaa_last_season_seen') || '';
 
     let now = new Date();
     log(`it is now ${now}`, 'season', 'log');
@@ -162,7 +162,7 @@ export function set_season() {
                     persist: true
                 });
             }
-            set_storage('bleh_last_season_seen', season.id);
+            set_storage('bwaa_last_season_seen', season.id);
 
             load_chart_colours();
 
