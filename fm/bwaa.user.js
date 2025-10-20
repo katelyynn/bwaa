@@ -18208,57 +18208,6 @@
       xhr.send();
     });
   }
-  function convert_gif_to_png(url) {
-    const available_hosts = ["www.last.fm", "lastfm.freetls.fastly.net"];
-    const link = new URL(url, `https://www.last.fm${root}`);
-    if (!available_hosts.includes(link.hostname))
-      return Promise.reject(
-        new Error("url is not in valid hosts list: " + link.hostname)
-      );
-    return new Promise((resolve2, reject) => {
-      const image = html.node`
-            <img crossorigin="anonymous" src=${url}>
-        `;
-      console.info("image", image);
-      image.onload = () => {
-        const canvas = html.node`
-                <canvas width=${image.width} height=${image.height} />
-            `;
-        console.info("image canvas", canvas);
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(image, 0, 0);
-        resolve2(canvas.toDataURL("image/png"));
-      };
-      image.onerror = reject;
-    });
-  }
-  function control_gif_pause(image, override = false) {
-    if (!image) return;
-    let processed = image.getAttribute("data-gif-pause");
-    if (processed) return;
-    image.setAttribute("data-gif-pause", "true");
-    let setting2 = settings.static_gifs;
-    if (override) setting2 = "never";
-    if (setting2 == "always") return;
-    const original = image.src;
-    convert_gif_to_png(original).then((paused) => {
-      if (setting2 == "never") {
-        image.src = paused;
-        return;
-      }
-      image.addEventListener("mouseenter", () => {
-        image.src = original;
-      });
-      image.addEventListener("mouseleave", () => {
-        image.src = paused;
-      });
-      image.src = paused;
-      log2("processed url", "image", "log", { original, paused });
-    }).catch((e) => {
-      log2("failed to process url", "image", "error", { original });
-      console.error(e);
-    });
-  }
   function is_link_external(url) {
     try {
       const link = new URL(url, window.location.origin);
@@ -24231,7 +24180,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       appendTo: document.body
     });
     register_menu(parent ? parent : avatar2, popup);
-    control_gif_pause(avatar_img2);
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge)
       return { type: pre_existing_badge.classList[1] };

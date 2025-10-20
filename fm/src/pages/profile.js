@@ -11,7 +11,6 @@ import { auth, page, root } from '../build/page';
 import { sponsor_list } from '../build/sponsor';
 import {
     clean_number,
-    control_gif_pause,
     romanise,
     sanitise,
     set_storage

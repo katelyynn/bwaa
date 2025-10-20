@@ -133,8 +133,6 @@ export function patch_avatar(
 
     register_menu(parent ? parent : avatar, popup);
 
-    control_gif_pause(avatar_img);
-
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge)
         return { type: pre_existing_badge.classList[1] };
