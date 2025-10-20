@@ -1724,12 +1724,8 @@ export const trans = {
         pt: 'Sugira uma correção',
         sv: 'Föreslå en ändring'
     },
-    recent_tracks: {
-        en: 'Recent Tracks',
-        de: 'Kürzlich gehört',
-        pt: 'Faixas recentes',
-        ja: '最近のトラック',
-        sv: 'Nyligen spelat'
+    recently_listened_tracks: {
+        en: 'Recently Listened Tracks'
     },
     top_artists: {
         en: 'Top Artists',
