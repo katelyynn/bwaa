@@ -11,7 +11,7 @@ import { notify } from './notify.js';
 import { auth, page } from '../build/page.js';
 import { request_reload } from '../config.js';
 import { log } from '../build/log.js';
-import { change_settings_page } from '../pages/bleh_config.js';
+import { change_settings_page } from '../pages/bwaa_config';
 import { dialog, dialog_rm } from './dialog.js';
 import tippy from 'tippy.js';
 import { version } from '../main.js';

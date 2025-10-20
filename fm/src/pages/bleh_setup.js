@@ -14,7 +14,7 @@ import { checkup_page_structure } from '../components/structure';
 import { refresh_all, update_colour_swatches } from '../config';
 import { version } from '../main';
 import { update_page } from '../page';
-import { display_colour_presets, theme_bubbles } from './bleh_config';
+import { display_colour_presets, theme_bubbles } from './bwaa_config';
 import { html, render } from 'lighterhtml';
 import { setting } from '../components/settings.js';
 import { ff } from '../sku.js';

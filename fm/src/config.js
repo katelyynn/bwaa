@@ -17,7 +17,7 @@ import { stored_season } from './build/seasonal';
 import { tl, trans } from './build/trans';
 import { chart_reflow, load_chart_colours } from './chart';
 import { notify } from './components/notify';
-import { load_skus } from './pages/bleh_config';
+import { load_skus } from './pages/bwaa_config';
 import { bleh_glacier_date_graph_generate } from './pages/glacier';
 import { compile_settings, save_setting } from './components/settings.js';
 

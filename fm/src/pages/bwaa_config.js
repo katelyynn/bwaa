@@ -4,37 +4,32 @@
 // Licensed under GPLv3
 //
 
-import { settings } from '../build/config';
-import { album_track_corrections, artist_corrections } from '../build/music';
+import { settings } from '../build/config.js';
+import { album_track_corrections, artist_corrections } from '../build/music.js';
 import {
     auth,
-    oracle_albums,
-    oracle_artists,
-    oracle_tracks,
     page,
     root,
     theme_preview
-} from '../build/page';
-import { stored_season } from '../build/seasonal';
-import { sponsor_list } from '../build/sponsor';
-import { clamp_sat, hex_to_hsl, set_storage, time } from '../build/tools';
-import { lang, lang_info, tl, trans } from '../build/trans';
-import { load_badges } from '../components/badge';
-import { dialog, dialog_rm } from '../components/dialog';
-import { markdown } from '../components/markdown';
-import { notify } from '../components/notify';
-import { load_settings, refresh_all, update_colour_swatches } from '../config';
-import { version } from '../main';
-import { update_page } from '../page';
-import { seasonal_timer_end, seasonal_timer_start } from '../seasonal';
-import { ff } from '../sku';
+} from '../build/page.js';
+import { stored_season } from '../build/seasonal.js';
+import { sponsor_list } from '../build/sponsor.js';
+import { clamp_sat, hex_to_hsl, set_storage, time } from '../build/tools.js';
+import { lang, lang_info, tl, trans } from '../build/trans.js';
+import { load_badges } from '../components/badge.js';
+import { dialog, dialog_rm } from '../components/dialog.js';
+import { notify } from '../components/notify.js';
+import { load_settings, refresh_all, update_colour_swatches } from '../config.js';
+import { version } from '../main.js';
+import { update_page } from '../page.js';
+import { seasonal_timer_end, seasonal_timer_start } from '../seasonal.js';
+import { ff } from '../sku.js';
 import { html, render } from 'lighterhtml';
 import {
     compile_settings,
     save_setting,
     setting
 } from '../components/settings.js';
-import { parse_scrobbles_as_rank } from '../components/colourful_counts.js';
 import { input } from '../components/input.js';
 import { share } from '../components/share.js';
 import { force_refresh_style, start_update, update_check } from '../style.js';
@@ -45,13 +40,24 @@ import {
 } from './profile.js';
 import { select_prepare_list } from '../components/select.js';
 import { match } from '../components/dynamic_theming.js';
-import { manage_oracle_data, oracle_data } from '../components/oracle.js';
 import { render_activity } from '../activity.js';
 import { DateTime } from 'luxon';
 import { sponsor, sponsor_manage, sponsors } from '../sponsor.js';
 import { version as florence_version } from '@tealmiku/florence';
+import { checkup_page_structure } from '../components/structure.js';
 
-export function bleh_settings() {
+export function bwaa_settings() {
+    page.structure.container = document.body.querySelector('.page-content');
+    try {
+        page.structure.row = page.structure.container.querySelector('.row');
+        page.structure.main = page.structure.row.querySelector('.col-main');
+        page.structure.side = page.structure.row.querySelector('.col-sidebar');
+    } catch(e) {
+        log('unable to find elements', 'page structure');
+    }
+
+    checkup_page_structure();
+
     page.name = auth.name;
     page.subpage = '';
 
@@ -96,32 +102,6 @@ export function bleh_settings() {
     };
 
     // go wild
-    let nav = html.node`
-        <div class="toolbar">
-            <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
-                <ul class="navlist-items">
-                    ${Object.entries(tabs).map(([id, tab]) => {
-                        if (tab.hide_if) return html.node``;
-
-                        if (tab.type && tab.type == 'fill') {
-                            return html.node`
-                                <div class="fill" />
-                            `;
-                        }
-
-                        return html.node`
-                            <li class="navlist-item secondary-nav-item">
-                                <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab.icon} data-password=${tab.password} onclick=${() => change_settings_page(id)}>
-                                    ${tab.label ? tab.label : tab.name}
-                                </a>
-                            </li>
-                        `;
-                    })}
-                </ul>
-            </nav>
-        </div>
-    `;
-
     render(page.structure.side, html`
         <div class="cta first priority sponsor colourful">
             ${auth.sponsor ? html.node`
@@ -151,7 +131,37 @@ export function bleh_settings() {
         </div>
     `);
 
-    page.structure.row.insertBefore(nav, page.structure.content);
+    page.state.nav_items = [];
+
+    render(page.structure.main, html`
+        <nav class="navlist secondary-nav navlist--more">
+            <ul class="navlist-items">
+                ${Object.entries(tabs).map(([id, tab]) => {
+                    if (tab.hide_if) return html.node``;
+
+                    if (tab.type && tab.type == 'fill') {
+                        return html.node`
+                            <div class="fill" />
+                        `;
+                    }
+
+                    let item;
+                    const elem = html.node`
+                        <li class="navlist-item secondary-nav-item">
+                            <a class="secondary-nav-item-link bleh--nav" ref=${el => item = el} data-bwaa-page=${id} data-type=${tab.icon} data-password=${tab.password} onclick=${() => change_settings_page(id)}>
+                                ${tab.label ? tab.label : tab.name}
+                            </a>
+                        </li>
+                    `;
+
+                    page.state.nav_items.push(item);
+
+                    return elem;
+                })}
+            </ul>
+        </nav>
+        <div ref=${el => page.state.inject = el} />
+    `);
 
     if (!tab) change_settings_page('home');
     else change_settings_page(tab);
@@ -160,7 +170,7 @@ export function bleh_settings() {
 }
 
 function page_loading() {
-    render(page.structure.main, html`
+    render(page.state.inject, html`
         <div class="form-section settings-form">
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.loading)}</div>
@@ -201,7 +211,7 @@ export async function render_setting_page(page_id) {
         const auth_key = localStorage.getItem('bleh_auth');
         const auth_valid = localStorage.getItem('bleh_auth_valid');
 
-        render(page.structure.main, html`
+        render(page.state.inject, html`
                 <section class="form-section settings-form">
                     <h2 class="form-header">Welcome to <i>re:</i>bwaa!</h2>
                     <div class="update-center-header">
@@ -595,7 +605,7 @@ export async function render_setting_page(page_id) {
             `);
         }
 
-        render(page.structure.main, html`
+        render(page.state.inject, html`
                 <section class="form-section settings-form">
                     <h4>${tl(trans.appearance)}</h4>
                     <div class="setting-group">
@@ -733,7 +743,7 @@ export async function render_setting_page(page_id) {
         register_skip_to([]);
 
         render(
-            page.structure.main,
+            page.state.inject,
             html`
                 <div class="form-section settings-form">
                     <div class="seasonal-inner">
@@ -843,7 +853,7 @@ export async function render_setting_page(page_id) {
         }
 
         render(
-            page.structure.main,
+            page.state.inject,
             html`
                 <section class="form-section settings-form">
                     <div class="alert alert-danger">
@@ -952,7 +962,7 @@ export async function render_setting_page(page_id) {
     } else if (page_id == 'profile') {
         if (!auth.name) {
             render(
-                page.structure.main,
+                page.state.inject,
                 html`
                     <div class="form-section settings-form">
                         <div class="loading-data-container">
@@ -976,7 +986,7 @@ export async function render_setting_page(page_id) {
         console.info('friends', settings.friends, settings);
 
         render(
-            page.structure.main,
+            page.state.inject,
             html`
                 <section class="form-section settings-form">
                     <h4>${tl(trans.banners)}</h4>
@@ -1127,7 +1137,7 @@ export async function render_setting_page(page_id) {
         register_skip_to([]);
 
         render(
-            page.structure.main,
+            page.state.inject,
             html`
                 <section class="form-section settings-form">
                     <h4>${tl(trans.accessibility)}</h4>
@@ -1163,7 +1173,7 @@ export async function render_setting_page(page_id) {
         register_skip_to([]);
 
         render(
-            page.structure.main,
+            page.state.inject,
             html`
                 <div class="form-section settings-form">
                     <div class="panel-intro">
@@ -1258,7 +1268,7 @@ export async function render_setting_page(page_id) {
         ]);
 
         render(
-            page.structure.main,
+            page.state.inject,
             html`
                 <div class="form-section settings-form">
                     <h4 class="top-header">${tl(trans.music)}</h4>
@@ -1387,29 +1397,15 @@ export function change_settings_page(page_id, setting = null) {
     window.history.pushState(page_id, '', `${root}bwaa/${page_id}`);
     page.state.settings_page = page_id;
 
-    page.structure.main.innerHTML = '';
+    render(page.state.inject, html``);
 
-    if (ff('bleh_settings_tabs')) {
-        let btns = document.querySelectorAll('.bleh--nav');
-        btns.forEach((btn) => {
-            console.log(btn.getAttribute('data-bleh-page'), page_id);
-            if (btn.getAttribute('data-bleh-page') != page_id) {
-                btn.classList.remove('secondary-nav-item-link--active');
-            } else {
-                btn.classList.add('secondary-nav-item-link--active');
-            }
-        });
-    } else {
-        let btns = document.querySelectorAll('.bleh--btn');
-        btns.forEach((btn) => {
-            console.log(btn.getAttribute('data-bleh-page'), page_id);
-            if (btn.getAttribute('data-bleh-page') != page_id) {
-                btn.classList.remove('active');
-            } else {
-                btn.classList.add('active');
-            }
-        });
-    }
+    page.state.nav_items.forEach(item => {
+        if (item.getAttribute('data-bwaa-page') != page_id) {
+            item.classList.remove('secondary-nav-item-link--active');
+        } else {
+            item.classList.add('secondary-nav-item-link--active');
+        }
+    });
 
     if (page_id == 'seasonal') seasonal_timer_start();
     else seasonal_timer_end();
@@ -1418,7 +1414,7 @@ export function change_settings_page(page_id, setting = null) {
         render_setting_page(page_id);
     } catch (e) {
         render(
-            page.structure.main,
+            page.state.inject,
             html`
                 <div class="form-section settings-form">
                     <div class="loading-data-container">

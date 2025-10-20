@@ -21,7 +21,7 @@ import {
     set_storage
 } from '../build/tools';
 import { tl, trans } from '../build/trans';
-import { prepare_corrections_page } from '../pages/bleh_config';
+import { prepare_corrections_page } from '../pages/bwaa_config';
 import { dialog, dialog_rm } from './dialog';
 import { html, render } from 'lighterhtml';
 import { redirect } from './music.js';
