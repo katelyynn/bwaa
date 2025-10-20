@@ -118,8 +118,8 @@ function update_item(item, value, modify = true, search = document) {
 
     if (container) console.info(container);
     else if (
-        settings_base[item].type != 'slider' &&
-        settings_base[item].type != 'options'
+        settings_store[item].type != 'slider' &&
+        settings_store[item].type != 'options'
     )
         return;
 
@@ -129,25 +129,25 @@ function update_item(item, value, modify = true, search = document) {
         if (value != settings[item]) new_value = true;
 
         if (
-            (settings_base[item].require_reload == true ||
-                (settings_base[item].require_reload == 'partial' &&
+            (settings_store[item].require_reload == true ||
+                (settings_store[item].require_reload == 'partial' &&
                     page.type != 'bleh_settings')) &&
             new_value
         )
             request_reload();
 
-        if (settings_base[item].type == 'slider' && modify)
+        if (settings_store[item].type == 'slider' && modify)
             settings[item] = value;
 
         if (!modify) console.info(item, value, modify);
 
-        if (settings_base[item].type == 'slider') {
+        if (settings_store[item].type == 'slider') {
             // text to show current slider value
             try {
                 let slider = search.querySelector(`#slider-${item}`);
 
                 search.querySelector(`#value-${item}`).textContent =
-                    `${settings[item]}${settings_base[item].unit}`;
+                    `${settings[item]}${settings_store[item].unit}`;
                 slider.value = settings[item];
                 search
                     .querySelector(`#slider-track-${item}`)
@@ -159,8 +159,8 @@ function update_item(item, value, modify = true, search = document) {
 
             // save setting into body
             document.body.style.setProperty(
-                `--${settings_base[item].css}`,
-                `${value}${settings_base[item].unit}`
+                `--${settings_store[item].css}`,
+                `${value}${settings_store[item].unit}`
             );
             document.documentElement.setAttribute(
                 `data-bwaa--${item}`,
@@ -169,20 +169,20 @@ function update_item(item, value, modify = true, search = document) {
 
             if (item == 'hue' || item == 'sat' || item == 'lit') {
                 if (
-                    settings.hue == settings_base.hue.value &&
-                    settings.sat == settings_base.sat.value &&
-                    settings.lit == settings_base.lit.value &&
+                    settings.hue == settings_store.hue.value &&
+                    settings.sat == settings_store.sat.value &&
+                    settings.lit == settings_store.lit.value &&
                     settings.seasonal &&
                     stored_season.id != 'none'
                 ) {
                     document.body.style.removeProperty(
-                        `--${settings_base.hue.css}`
+                        `--${settings_store.hue.css}`
                     );
                     document.body.style.removeProperty(
-                        `--${settings_base.sat.css}`
+                        `--${settings_store.sat.css}`
                     );
                     document.body.style.removeProperty(
-                        `--${settings_base.lit.css}`
+                        `--${settings_store.lit.css}`
                     );
                     document.documentElement.setAttribute(
                         'data-bwaa--hsl-override',
@@ -195,9 +195,9 @@ function update_item(item, value, modify = true, search = document) {
                     );
                 }
             }
-        } else if (settings_base[item].type == 'toggle') {
-            if (settings[item] == settings_base[item].values[0] && modify) {
-                settings[item] = settings_base[item].values[1];
+        } else if (settings_store[item].type == 'toggle') {
+            if (settings[item] == settings_store[item].values[0] && modify) {
+                settings[item] = settings_store[item].values[1];
                 search
                     .querySelector(`#toggle-${item}`)
                     .setAttribute('aria-checked', false);
@@ -205,14 +205,14 @@ function update_item(item, value, modify = true, search = document) {
                 // save setting into body
                 document.body.style.setProperty(
                     `--${item}`,
-                    settings_base[item].values[1]
+                    settings_store[item].values[1]
                 );
                 document.documentElement.setAttribute(
                     `data-bwaa--${item}`,
-                    `${settings_base[item].values[1]}`
+                    `${settings_store[item].values[1]}`
                 );
             } else if (modify) {
-                settings[item] = settings_base[item].values[0];
+                settings[item] = settings_store[item].values[0];
                 console.log(`toggle-${item}`);
                 search
                     .querySelector(`#toggle-${item}`)
@@ -221,15 +221,15 @@ function update_item(item, value, modify = true, search = document) {
                 // save setting into body
                 document.body.style.setProperty(
                     `--${item}`,
-                    settings_base[item].values[0]
+                    settings_store[item].values[0]
                 );
                 document.documentElement.setAttribute(
                     `data-bwaa--${item}`,
-                    `${settings_base[item].values[0]}`
+                    `${settings_store[item].values[0]}`
                 );
             } else {
                 // dont modify, just show
-                if (settings[item] == settings_base[item].values[0]) {
+                if (settings[item] == settings_store[item].values[0]) {
                     search
                         .querySelector(`#toggle-${item}`)
                         .setAttribute('aria-checked', true);
@@ -239,7 +239,7 @@ function update_item(item, value, modify = true, search = document) {
                         .setAttribute('aria-checked', false);
                 }
             }
-        } else if (settings_base[item].type == 'options') {
+        } else if (settings_store[item].type == 'options') {
             if (modify) {
                 settings[item] = value;
 
@@ -282,7 +282,7 @@ function update_item(item, value, modify = true, search = document) {
     } catch (e) {}
 
     if (container) {
-        if (settings[item] != settings_base[item].value)
+        if (settings[item] != settings_store[item].value)
             container.classList.add('modified');
         else container.classList.remove('modified');
     }

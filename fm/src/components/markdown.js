@@ -75,10 +75,6 @@ export function markdown(
         ALLOWED_TAGS.push('ul', 'ol', 'li');
     }
 
-    let hue;
-    let sat;
-    let lit;
-
     let links = [];
 
     const banner = () => [
@@ -86,22 +82,7 @@ export function markdown(
             type: 'lang',
             regex: /\[banner=([^\]]+)\]/g,
             replace: (_, url) => {
-                try {
-                    const safe = new URL(url);
-                    if (!['http:', 'https:'].includes(safe.protocol))
-                        return `<img alt="banner" loading="lazy">`;
-
-                    const escaped = safe.href.replace(/"/g, '&quot;');
-
-                    const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
-
-                    return DOMPurify.sanitize(image, {
-                        ALLOWED_TAGS: ['img'],
-                        ALLOWED_ATTR: ['src', 'alt', 'loading']
-                    });
-                } catch {
-                    return `<img alt="banner" loading="lazy">`;
-                }
+                return '';
             }
         }
     ];
@@ -151,19 +132,6 @@ export function markdown(
             type: 'lang',
             regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
             replace: (_, h, s, l) => {
-                hue = Math.min(
-                    settings_store.hue.max,
-                    Math.max(settings_store.hue.min, parseInt(h, 10))
-                );
-                sat = Math.min(
-                    settings_store.sat.max,
-                    Math.max(settings_store.sat.min, parseFloat(s))
-                );
-                lit = Math.min(
-                    settings_store.lit.max,
-                    Math.max(settings_store.lit.min, parseFloat(l))
-                );
-
                 return '';
             }
         }
@@ -317,11 +285,6 @@ export function markdown(
     const body = html.node([parsed]);
     log('rendered', 'markdown', 'info', { body });
 
-    let profile_cache;
-
-    const will_cache = cache === true;
-    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
-
     const link_strings = {
         'open.spotify.com': 'Spotify',
         'spotify.com': 'Spotify',
@@ -387,16 +350,6 @@ export function markdown(
             }
 
             image.setAttribute('loading', 'lazy');
-
-            let func = () => expand_avatar(image.src, image.alt);
-            if (in_dialog) func = () => open(image.src);
-
-            const container = html.node`
-                <div class="markdown-image" onclick=${func} />
-            `;
-
-            image.after(container);
-            container.appendChild(image);
         });
     }
 

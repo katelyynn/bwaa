@@ -8501,6 +8501,42 @@
     }
 
     .markdown-body {
+        /* match default last.fm */
+        .text-center,
+        .text-left,
+        .text-right {
+            & + p {
+                margin-top: 24px;
+            }
+        }
+
+        blockquote,
+        p {
+            margin: 24px 0;
+        }
+
+        .text-center {
+            text-align: center;
+
+            & > p > img {
+                margin: 0 auto;
+            }
+        }
+        .text-left {
+            text-align: left;
+        }
+        .text-right {
+            text-align: right;
+
+            & > p > img {
+                margin-left: auto;
+            }
+        }
+
+        img {
+            width: 100%;
+        }
+
         h5 {
             margin-top: 15px;
             font: inherit;
@@ -8540,6 +8576,13 @@
         img {
             width: 100%;
             margin-bottom: 15px;
+        }
+
+        :first-child {
+            margin-top: unset;
+        }
+        :last-child {
+            margin-bottom: unset;
         }
     }
 

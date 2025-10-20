@@ -20789,20 +20789,20 @@
   function update_item(item, value, modify = true, search = document) {
     let container = search.querySelector(`#container-${item}`);
     if (container) console.info(container);
-    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
+    else if (settings_store[item].type != "slider" && settings_store[item].type != "options")
       return;
     try {
       let new_value = false;
       if (value != settings[item]) new_value = true;
-      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
+      if ((settings_store[item].require_reload == true || settings_store[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
         request_reload();
-      if (settings_base[item].type == "slider" && modify)
+      if (settings_store[item].type == "slider" && modify)
         settings[item] = value;
       if (!modify) console.info(item, value, modify);
-      if (settings_base[item].type == "slider") {
+      if (settings_store[item].type == "slider") {
         try {
           let slider = search.querySelector(`#slider-${item}`);
-          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_store[item].unit}`;
           slider.value = settings[item];
           search.querySelector(`#slider-track-${item}`).style.setProperty(
             "--percent",
@@ -20811,23 +20811,23 @@
         } catch (e) {
         }
         document.body.style.setProperty(
-          `--${settings_base[item].css}`,
-          `${value}${settings_base[item].unit}`
+          `--${settings_store[item].css}`,
+          `${value}${settings_store[item].unit}`
         );
         document.documentElement.setAttribute(
           `data-bwaa--${item}`,
           `${value}`
         );
         if (item == "hue" || item == "sat" || item == "lit") {
-          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
+          if (settings.hue == settings_store.hue.value && settings.sat == settings_store.sat.value && settings.lit == settings_store.lit.value && settings.seasonal && stored_season.id != "none") {
             document.body.style.removeProperty(
-              `--${settings_base.hue.css}`
+              `--${settings_store.hue.css}`
             );
             document.body.style.removeProperty(
-              `--${settings_base.sat.css}`
+              `--${settings_store.sat.css}`
             );
             document.body.style.removeProperty(
-              `--${settings_base.lit.css}`
+              `--${settings_store.lit.css}`
             );
             document.documentElement.setAttribute(
               "data-bwaa--hsl-override",
@@ -20840,38 +20840,38 @@
             );
           }
         }
-      } else if (settings_base[item].type == "toggle") {
-        if (settings[item] == settings_base[item].values[0] && modify) {
-          settings[item] = settings_base[item].values[1];
+      } else if (settings_store[item].type == "toggle") {
+        if (settings[item] == settings_store[item].values[0] && modify) {
+          settings[item] = settings_store[item].values[1];
           search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
           document.body.style.setProperty(
             `--${item}`,
-            settings_base[item].values[1]
+            settings_store[item].values[1]
           );
           document.documentElement.setAttribute(
             `data-bwaa--${item}`,
-            `${settings_base[item].values[1]}`
+            `${settings_store[item].values[1]}`
           );
         } else if (modify) {
-          settings[item] = settings_base[item].values[0];
+          settings[item] = settings_store[item].values[0];
           console.log(`toggle-${item}`);
           search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
           document.body.style.setProperty(
             `--${item}`,
-            settings_base[item].values[0]
+            settings_store[item].values[0]
           );
           document.documentElement.setAttribute(
             `data-bwaa--${item}`,
-            `${settings_base[item].values[0]}`
+            `${settings_store[item].values[0]}`
           );
         } else {
-          if (settings[item] == settings_base[item].values[0]) {
+          if (settings[item] == settings_store[item].values[0]) {
             search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
           } else {
             search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
           }
         }
-      } else if (settings_base[item].type == "options") {
+      } else if (settings_store[item].type == "options") {
         if (modify) {
           settings[item] = value;
           document.body.style.setProperty(`--${item}`, value);
@@ -20902,7 +20902,7 @@
     } catch (e) {
     }
     if (container) {
-      if (settings[item] != settings_base[item].value)
+      if (settings[item] != settings_store[item].value)
         container.classList.add("modified");
       else container.classList.remove("modified");
     }
@@ -24095,11 +24095,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function patch_avatar(avatar2, name, type = "", parent = null, side = "right") {
     if (avatar2.hasAttribute("data-bwaa-avatar")) return {};
     avatar2.setAttribute("data-bwaa-avatar", "true");
-    const avatar_img2 = avatar2.querySelector("img");
-    if (!avatar_img2) return {};
-    avatar_img2.setAttribute(
+    const avatar_img = avatar2.querySelector("img");
+    if (!avatar_img) return {};
+    avatar_img.setAttribute(
       "src",
-      avatar_img2.getAttribute("src").replace("/64s/", "/avatar70s/")
+      avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/")
     );
     avatar2.setAttribute("title", "");
     let badges = load_badges(name);
@@ -24126,7 +24126,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <div class="track-preview user-preview">
                 <div class="image">
                     <div class="inner-image">
-                        <img src=${avatar_img2.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
+                        <img src=${avatar_img.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
                     </div>
                 </div>
                 <div class="info">
@@ -26220,28 +26220,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (allow_lists) {
       ALLOWED_TAGS.push("ul", "ol", "li");
     }
-    let hue2;
-    let sat;
-    let lit;
     let links = [];
     const banner = () => [
       {
         type: "lang",
         regex: /\[banner=([^\]]+)\]/g,
         replace: (_, url) => {
-          try {
-            const safe = new URL(url);
-            if (!["http:", "https:"].includes(safe.protocol))
-              return `<img alt="banner" loading="lazy">`;
-            const escaped = safe.href.replace(/"/g, "&quot;");
-            const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
-            return purify.sanitize(image, {
-              ALLOWED_TAGS: ["img"],
-              ALLOWED_ATTR: ["src", "alt", "loading"]
-            });
-          } catch {
-            return `<img alt="banner" loading="lazy">`;
-          }
+          return "";
         }
       }
     ];
@@ -26277,18 +26262,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         type: "lang",
         regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
         replace: (_, h, s2, l2) => {
-          hue2 = Math.min(
-            settings_store.hue.max,
-            Math.max(settings_store.hue.min, parseInt(h, 10))
-          );
-          sat = Math.min(
-            settings_store.sat.max,
-            Math.max(settings_store.sat.min, parseFloat(s2))
-          );
-          lit = Math.min(
-            settings_store.lit.max,
-            Math.max(settings_store.lit.min, parseFloat(l2))
-          );
           return "";
         }
       }
@@ -26408,9 +26381,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
     const body = html.node([parsed2]);
     log2("rendered", "markdown", "info", { body });
-    let profile_cache2;
-    const will_cache = cache3 === true;
-    log2(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache3 });
     const link_strings = {
       "open.spotify.com": "Spotify",
       "spotify.com": "Spotify",
@@ -26469,13 +26439,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           return;
         }
         image.setAttribute("loading", "lazy");
-        let func = () => expand_avatar(image.src, image.alt);
-        if (in_dialog) func = () => open(image.src);
-        const container = html.node`
-                <div class="markdown-image" onclick=${func} />
-            `;
-        image.after(container);
-        container.appendChild(image);
       });
     }
     return body;
@@ -31682,12 +31645,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let position = album_header.querySelector(
         ".header-new-chart-position-number"
       );
-      const avatar_img2 = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
+      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
       const listeners = document.body.querySelector(
         ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
       );
       save_hoshino_artwork(
-        avatar_img2,
+        avatar_img,
         page.name,
         page.sister,
         clean_number(listeners?.title)
@@ -33879,8 +33842,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       });
       chars.setAttribute("data-exceeded", value.length >= 500);
       render(preview, markdown(value, markdown_settings));
-      let profile_cache2 = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      let cache3 = profile_cache2[auth.name];
+      let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+      let cache3 = profile_cache[auth.name];
       console.info("cache", cache3);
       render(
         banner_setting,
@@ -36373,13 +36336,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </p>
                 ` : ""}
             </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
-      let current = settings.profile_header_expand;
-      expander.setAttribute("aria-expanded", !current);
-      save_setting("profile_header_expand", !current);
-    }} aria-expanded=${settings.profile_header_expand}>${tl2(trans.expand)}</button>
-            </div>
         </section>
     `;
     page.structure.container.insertBefore(
@@ -36387,13 +36343,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       page.structure.container.firstElementChild
     );
     profile_header.classList.add("legacy-header");
-    if (!new_account) {
-      const src = avatar_img.src;
-      page.avatar = src;
-      avatar2.addEventListener("click", () => {
-        expand_avatar(src.replace("/avatar170s/", "/ar0/"));
-      });
-    }
     let library_tab = page.structure.nav.querySelector(
       ".secondary-nav-item--library a"
     );
@@ -36407,6 +36356,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (loved_tab) loved_tab.textContent = tl2(trans.loved);
     if (!is_subpage) {
       let is_following = page.structure.container.querySelector(".label.user-follow");
+      if (settings.bio_markdown) {
+        let about_me_text = about_me_sidebar.querySelector("p");
+        let result = bio_parse(about_me_text);
+        about_me_text.after(result);
+        about_me_text.remove();
+      }
       profile_recents();
       profile_artists();
       profile_albums();
@@ -36531,7 +36486,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         ".redesigned-profile-header .header-title-secondary"
       );
       if (profile_sub_text)
-        parse_sub_text(profile_sub_text, page.name, cache);
+        parse_sub_text(profile_sub_text, page.name);
       let featured_track_panel = profile_header.querySelector(
         ".header-featured-track"
       );
@@ -36577,57 +36532,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         `,
         about_me_sidebar.firstChild
       );
-      tippy_esm_default(settings_btn, {
-        theme: "window",
-        content: html.node`
-                <div class="dialog-settings">
-                    <div class="setting-group blend">
-                        ${setting({ id: "bio_markdown" })}
-                    </div>
-                </div>
-            `,
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        appendTo: document.body,
-        hideOnClick: "toggle",
-        onClickOutside(instance) {
-          if (instance.popper.querySelector('[aria-expanded="true"]')) {
-            return;
-          }
-          instance.hide();
-        }
-      });
-      if (cache.banner || cache.hue || cache.sat || cache.lit) {
-        tippy_esm_default(info_tip, {
-          content: html.node`
-                    <div class="profile-items">
-                        ${cache.banner ? html.node`
-                        <div class="profile-item" data-type="banner">
-                            <span class="bleh-icon" style="--icon: var(--mask)" />
-                            <p>${tl2(trans.profile_banner.name)}</p>
-                        </div>
-                        ` : ""}
-                        ${cache.hue > -1 && cache.sat > -1 && cache.lit > -1 ? html.node`
-                        <div class="profile-item" data-type="accent">
-                            <span class="bleh-icon" style="--icon: var(--mask)" />
-                            <p>${tl2(trans.profile_accent.name)}</p>
-                            <p class="subtle">${cache.hue}, ${cache.sat}, ${cache.lit}</p>
-                        </div>
-                        ` : ""}
-                    </div>
-                `
-        });
-      } else {
-        info_tip.remove();
-      }
       if (ff("redesigned_profile_header"))
         redesign_profile_header(is_own_profile, is_following);
-      if (!is_own_profile && profile_note)
-        create_profile_note_panel(page.name, profile_note);
     } else {
-      load_profile_cache(page.name, cache, profile_cache);
       let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage == "events") {
@@ -36900,7 +36807,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
-    save_profile_cache(cache, profile_cache, page.name);
   }
   function create_profile_note_panel(username, has_note) {
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
@@ -37651,7 +37557,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     });
   }
-  function parse_sub_text(profile_sub_text, name = page.name, cache3) {
+  function bio_parse(text3) {
+    let temp = document.createElement("div");
+    temp.classList.add("markdown-body");
+    render(
+      temp,
+      markdown(text3.textContent, {
+        allow_headers: true,
+        allow_banners: true,
+        allow_icons: true,
+        allow_hue: true,
+        allow_socials: true,
+        allow_alignment: true
+      })
+    );
+    return temp;
+  }
+  function parse_sub_text(profile_sub_text, name = page.name) {
     const display_name = profile_sub_text.querySelector(
       ".header-title-display-name"
     );
@@ -37659,11 +37581,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ".header-scrobble-since"
     );
     scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl2(trans.account_scrobbling_since_replace), "");
-    const pronouns2 = use_pronouns(display_name.textContent);
     profile_sub_text.insertBefore(
       html.node`
         <span class="header-title-secondary--pre">
-            ${pronouns2 ? tl2(trans.account_pronouns) : tl2(trans.aka)}
+            ${tl2(trans.aka)}
         </span>
     `,
       display_name
@@ -37676,8 +37597,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     `,
       scrobble_since
     );
-    cache3.aka = display_name.textContent.trim();
-    cache3.created = scrobble_since.textContent.trim();
   }
   function bleh_profile_events() {
     const selected_tab = page.structure.toolbar?.querySelector(

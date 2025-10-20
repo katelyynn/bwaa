@@ -139,13 +139,6 @@ export async function bleh_profiles() {
                     :   ''
                 }
             </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" ref=${(el) => (expander = el)} onclick=${() => {
-                    let current = settings.profile_header_expand;
-                    expander.setAttribute('aria-expanded', !current);
-                    save_setting('profile_header_expand', !current);
-                }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
-            </div>
         </section>
     `;
 
@@ -154,16 +147,6 @@ export async function bleh_profiles() {
         page.structure.container.firstElementChild
     );
     profile_header.classList.add('legacy-header');
-
-    // make avatar clickable
-    if (!new_account) {
-        const src = avatar_img.src;
-        page.avatar = src;
-
-        avatar.addEventListener('click', () => {
-            expand_avatar(src.replace('/avatar170s/', '/ar0/'));
-        });
-    }
 
     // translations in other languages
     let library_tab = page.structure.nav.querySelector(
@@ -181,8 +164,17 @@ export async function bleh_profiles() {
     if (loved_tab) loved_tab.textContent = tl(trans.loved);
 
     if (!is_subpage) {
-        let is_following =
-            page.structure.container.querySelector('.label.user-follow');
+        let is_following = page.structure.container.querySelector('.label.user-follow');
+
+
+        if (settings.bio_markdown) {
+            let about_me_text = about_me_sidebar.querySelector('p');
+            let result = bio_parse(about_me_text);
+
+            about_me_text.after(result);
+            about_me_text.remove();
+        }
+
 
         //
 
@@ -333,7 +325,7 @@ export async function bleh_profiles() {
             '.redesigned-profile-header .header-title-secondary'
         );
         if (profile_sub_text)
-            parse_sub_text(profile_sub_text, page.name, cache);
+            parse_sub_text(profile_sub_text, page.name);
 
         // featured track
         let featured_track_panel = profile_header.querySelector(
@@ -393,71 +385,9 @@ export async function bleh_profiles() {
             about_me_sidebar.firstChild
         );
 
-        tippy(settings_btn, {
-            theme: 'window',
-            content: html.node`
-                <div class="dialog-settings">
-                    <div class="setting-group blend">
-                        ${setting({ id: 'bio_markdown' })}
-                    </div>
-                </div>
-            `,
-            placement: 'bottom',
-            interactive: true,
-            interactiveBorder: 10,
-            trigger: 'click',
-            appendTo: document.body,
-            hideOnClick: 'toggle',
-
-            onClickOutside(instance) {
-                if (instance.popper.querySelector('[aria-expanded="true"]')) {
-                    return;
-                }
-
-                instance.hide();
-            }
-        });
-
-        if (cache.banner || cache.hue || cache.sat || cache.lit) {
-            tippy(info_tip, {
-                content: html.node`
-                    <div class="profile-items">
-                        ${
-                            cache.banner ?
-                                html.node`
-                        <div class="profile-item" data-type="banner">
-                            <span class="bleh-icon" style="--icon: var(--mask)" />
-                            <p>${tl(trans.profile_banner.name)}</p>
-                        </div>
-                        `
-                            :   ''
-                        }
-                        ${
-                            cache.hue > -1 && cache.sat > -1 && cache.lit > -1 ?
-                                html.node`
-                        <div class="profile-item" data-type="accent">
-                            <span class="bleh-icon" style="--icon: var(--mask)" />
-                            <p>${tl(trans.profile_accent.name)}</p>
-                            <p class="subtle">${cache.hue}, ${cache.sat}, ${cache.lit}</p>
-                        </div>
-                        `
-                            :   ''
-                        }
-                    </div>
-                `
-            });
-        } else {
-            info_tip.remove();
-        }
-
         if (ff('redesigned_profile_header'))
             redesign_profile_header(is_own_profile, is_following);
-
-        if (!is_own_profile && profile_note)
-            create_profile_note_panel(page.name, profile_note);
     } else {
-        load_profile_cache(page.name, cache, profile_cache);
-
         let btn_add = page.structure.side.querySelector('.add-button');
         if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
 
@@ -814,8 +744,6 @@ export async function bleh_profiles() {
         label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
-
-    save_profile_cache(cache, profile_cache, page.name);
 }
 
 function create_profile_note_panel(username, has_note) {
@@ -1721,7 +1649,7 @@ function profile_tracks() {
     });
 }
 
-function bio_parse(text, cache = true, take_effect = true) {
+function bio_parse(text) {
     let temp = document.createElement('div');
     temp.classList.add('markdown-body');
 
@@ -1732,8 +1660,6 @@ function bio_parse(text, cache = true, take_effect = true) {
             allow_banners: true,
             allow_icons: true,
             allow_hue: true,
-            cache,
-            take_effect,
             allow_socials: true,
             allow_alignment: true
         })
@@ -1742,7 +1668,7 @@ function bio_parse(text, cache = true, take_effect = true) {
     return temp;
 }
 
-function parse_sub_text(profile_sub_text, name = page.name, cache) {
+function parse_sub_text(profile_sub_text, name = page.name) {
     const display_name = profile_sub_text.querySelector(
         '.header-title-display-name'
     );
@@ -1753,13 +1679,10 @@ function parse_sub_text(profile_sub_text, name = page.name, cache) {
         .slice(2)
         .replace(tl(trans.account_scrobbling_since_replace), '');
 
-    // pronouns?
-    const pronouns = use_pronouns(display_name.textContent);
-
     profile_sub_text.insertBefore(
         html.node`
         <span class="header-title-secondary--pre">
-            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+            ${tl(trans.aka)}
         </span>
     `,
         display_name
@@ -1773,9 +1696,6 @@ function parse_sub_text(profile_sub_text, name = page.name, cache) {
     `,
         scrobble_since
     );
-
-    cache.aka = display_name.textContent.trim();
-    cache.created = scrobble_since.textContent.trim();
 }
 
 function bleh_profile_events() {
