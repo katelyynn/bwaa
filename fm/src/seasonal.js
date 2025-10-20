@@ -119,7 +119,7 @@ export function set_season() {
             );
 
             document.documentElement.setAttribute(
-                'data-bleh--season',
+                'data-bwaa--season',
                 season.id
             );
 

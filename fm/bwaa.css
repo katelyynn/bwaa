@@ -4151,7 +4151,7 @@ form[action*="/playlists/create/"],
                 display: none;
             }
         }
-        &.gallery-image-bookmark-button-button[data-bleh--image-is-bookmarked="true"],
+        &.gallery-image-bookmark-button-button[data-bwaa--image-is-bookmarked="true"],
         .gallery-image-vote-buttons[data-ajax-form-state=up-voted] &.gallery-image-vote-up-on,
         .gallery-image-vote-buttons[data-ajax-form-state=down-voted] &.gallery-image-vote-down-on,
         .gallery-image-preferred-button[data-ajax-form-state="preferred"] &.gallery-image-preferred-on

@@ -2331,15 +2331,15 @@ export function theme_bubbles(func = null) {
                         <div class="bubble">
                             ${theme.id == 'adaptive'
                 ? html.node`
-                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type=${['light', 'ink'].includes(settings.theme_day) ? 'light' : 'dark'}>
+                            <div class="inner theme-preview" data-bwaa--theme=${settings.theme_day} data-bwaa--theme_type=${['light', 'ink'].includes(settings.theme_day) ? 'light' : 'dark'}>
                                 ${theme_preview()}
                             </div>
-                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type=${['light', 'ink'].includes(settings.theme_night) ? 'light' : 'dark'}>
+                            <div class="inner theme-preview" data-bwaa--theme=${settings.theme_night} data-bwaa--theme_type=${['light', 'ink'].includes(settings.theme_night) ? 'light' : 'dark'}>
                                 ${theme_preview()}
                             </div>
                             `
                 : html.node`
-                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                            <div class="inner theme-preview" data-bwaa--theme=${theme.id} data-bwaa--theme_type=${theme.type}>
                                 ${theme_preview()}
                             </div>
                             `
@@ -2371,8 +2371,8 @@ export function theme_bubbles(func = null) {
             html`
                 <div
                     class="inner theme-preview"
-                    data-bleh--theme=${settings.theme_day}
-                    data-bleh--theme_type=${['light', 'ink'].includes(
+                    data-bwaa--theme=${settings.theme_day}
+                    data-bwaa--theme_type=${['light', 'ink'].includes(
                 settings.theme_day
             )
                     ? 'light'
@@ -2382,8 +2382,8 @@ export function theme_bubbles(func = null) {
                 </div>
                 <div
                     class="inner theme-preview"
-                    data-bleh--theme=${settings.theme_night}
-                    data-bleh--theme_type=${['light', 'ink'].includes(
+                    data-bwaa--theme=${settings.theme_night}
+                    data-bwaa--theme_type=${['light', 'ink'].includes(
                         settings.theme_night
                     )
                     ? 'light'

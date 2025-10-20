@@ -21,8 +21,8 @@ export function patch_avatar(
     parent = null,
     side = 'right'
 ) {
-    if (avatar.hasAttribute('data-bleh-avatar')) return {};
-    avatar.setAttribute('data-bleh-avatar', 'true');
+    if (avatar.hasAttribute('data-bwaa-avatar')) return {};
+    avatar.setAttribute('data-bwaa-avatar', 'true');
 
     const avatar_img = avatar.querySelector('img');
     if (!avatar_img) return {};

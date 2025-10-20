@@ -344,15 +344,15 @@ unsafeWindow._setup_music = function () {
                                         <div class="title">California Love</div>
                                         <div
                                             class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
+                                            data-bwaa--tag-type="ft."
+                                            data-bwaa--tag-group="guests"
                                         >
                                             ft. Dr. Dre, Roger Troutman
                                         </div>
                                         <div
                                             class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
+                                            data-bwaa--tag-type="- remix"
+                                            data-bwaa--tag-group="mixes"
                                         >
                                             Remix
                                         </div>

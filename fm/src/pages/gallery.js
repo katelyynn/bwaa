@@ -26,8 +26,8 @@ export function bleh_gallery() {
     );
     if (!image_sidebar) return;
 
-    if (image_sidebar.hasAttribute('data-bleh-gallery')) return;
-    image_sidebar.setAttribute('data-bleh-gallery', 'true');
+    if (image_sidebar.hasAttribute('data-bwaa-gallery')) return;
+    image_sidebar.setAttribute('data-bwaa-gallery', 'true');
 
     if (!ff('new_gallery_experience')) {
         patch_gallery_focused_image(
@@ -562,10 +562,10 @@ function patch_gallery_image_listing() {
         JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
 
     if (page.requested.tab != 'saved' || page.requested.page != null)
-        page.structure.container.setAttribute('data-bleh--gallery-tab', 'all');
+        page.structure.container.setAttribute('data-bwaa--gallery-tab', 'all');
     else
         page.structure.container.setAttribute(
-            'data-bleh--gallery-tab',
+            'data-bwaa--gallery-tab',
             'saved'
         );
 
@@ -621,7 +621,7 @@ function patch_gallery_image_listing() {
                 let menu = tippy(image_element, {
                     theme: 'context-menu',
                     content: html.node`
-                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bwaa--image-is-bookmarked="true">
                             ${tl(trans.remove_save)}
                         </button>
                     `,
@@ -671,7 +671,7 @@ function patch_gallery_image_listing() {
 }
 
 function gallery_tab(id) {
-    page.structure.container.setAttribute('data-bleh--gallery-tab', id);
+    page.structure.container.setAttribute('data-bwaa--gallery-tab', id);
 
     // remove ?tab=saved
     /*if (page.requested.tab == 'saved') {
@@ -707,7 +707,7 @@ function patch_gallery_focused_image(
 
     // append a bookmark button
     const save_btn = html.node`
-        <button class="bleh--gallery-bookmark-image-btn btn--has-icon" data-bleh--image-is-bookmarked=${image_is_bookmarked} onclick=${() => update_image_bookmark(save_btn, focused_image_id)}>
+        <button class="bleh--gallery-bookmark-image-btn btn--has-icon" data-bwaa--image-is-bookmarked=${image_is_bookmarked} onclick=${() => update_image_bookmark(save_btn, focused_image_id)}>
             ${tl(trans.save)}
         </button>
     `;
@@ -719,7 +719,7 @@ function update_image_bookmark(button, id) {
     let bookmarked_images =
         JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
     let is_bookmarked =
-        button.getAttribute('data-bleh--image-is-bookmarked') == 'true';
+        button.getAttribute('data-bwaa--image-is-bookmarked') == 'true';
 
     if (!bookmarked_images.hasOwnProperty(page.name))
         bookmarked_images[page.name] = [];
@@ -727,7 +727,7 @@ function update_image_bookmark(button, id) {
     if (is_bookmarked) {
         // remove from bookmarks
 
-        button.setAttribute('data-bleh--image-is-bookmarked', 'false');
+        button.setAttribute('data-bwaa--image-is-bookmarked', 'false');
 
         let new_artist_bookmarks = [];
         for (let image in bookmarked_images[page.name]) {
@@ -741,7 +741,7 @@ function update_image_bookmark(button, id) {
     } else {
         // add to bookmarks
 
-        button.setAttribute('data-bleh--image-is-bookmarked', 'true');
+        button.setAttribute('data-bwaa--image-is-bookmarked', 'true');
         bookmarked_images[page.name].push(id);
         log(`image ${id} from ${page.name} added to bookmarks`, 'gallery');
     }

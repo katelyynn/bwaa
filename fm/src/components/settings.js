@@ -1044,7 +1044,7 @@ function reset_text(id, input, submit, option, reset_btn, avatar) {
 
 export function save_setting(id, value) {
     settings[id] = value;
-    document.documentElement.setAttribute(`data-bleh--${id}`, value);
+    document.documentElement.setAttribute(`data-bwaa--${id}`, value);
 
     if (id == 'theme') {
         if (value == 'light' || value == 'ink' || value == 'glass') {
@@ -1054,7 +1054,7 @@ export function save_setting(id, value) {
         }
 
         document.documentElement.setAttribute(
-            `data-bleh--theme_type`,
+            `data-bwaa--theme_type`,
             settings.theme_type
         );
         chart_reflow();

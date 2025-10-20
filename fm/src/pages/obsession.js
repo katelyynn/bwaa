@@ -125,7 +125,7 @@ export function bleh_obsession() {
             <div class="title">${song_title.trim()}</div>
             ${song_tags.map(
                 (tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${tag.text}</div>
             `
             )}
         `

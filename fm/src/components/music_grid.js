@@ -65,7 +65,7 @@ export function music_grids(search = page.structure.main, use_colour = true) {
     };
 
     let grids = search.querySelectorAll(
-        '.grid-items-item:not([data-bleh-music-grids])'
+        '.grid-items-item:not([data-bwaa-music-grids])'
     );
     grids.forEach((grid, index) => {
         let is_loading = grid.querySelector('.grid-items-empty-inner') != null;
@@ -73,7 +73,7 @@ export function music_grids(search = page.structure.main, use_colour = true) {
 
         grid.style.setProperty('--delay', index * 0.04 + 's');
 
-        grid.setAttribute('data-bleh-music-grids', 'true');
+        grid.setAttribute('data-bwaa-music-grids', 'true');
 
         let is_album;
         if (page.type == 'search') {
@@ -216,7 +216,7 @@ export function music_grids(search = page.structure.main, use_colour = true) {
                         parse_scrobbles_as_rank(plays);
 
                     plays_elem.setAttribute(
-                        'data-bleh--scrobble-milestone',
+                        'data-bwaa--scrobble-milestone',
                         parsed_scrobble_as_rank.milestone
                     );
                     plays_elem.style.setProperty(
@@ -283,7 +283,7 @@ export function music_grids(search = page.structure.main, use_colour = true) {
                     <span class="title">${song_title}</span>
                     ${song_tags.map(
                         (tag) => html.node`
-                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
+                        <span class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</span>
                     `
                     )}
                 `

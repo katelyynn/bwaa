@@ -148,10 +148,10 @@ export function subscribe_to_events() {
     if (!settings.activities || !page.structure.main) return;
 
     let love_track = page.structure.container.querySelectorAll(
-        `form[action="${root}user/${auth.name}/loved"]:not([data-bleh-subscribed])`
+        `form[action="${root}user/${auth.name}/loved"]:not([data-bwaa-subscribed])`
     );
     love_track.forEach((form) => {
-        form.setAttribute('data-bleh-subscribed', 'true');
+        form.setAttribute('data-bwaa-subscribed', 'true');
 
         let track = form.querySelector('[name="track"]').getAttribute('value');
         let artist = form
@@ -193,10 +193,10 @@ export function subscribe_to_events() {
     });
 
     let bookmark_item = document.body.querySelectorAll(
-        `form[action="/music/+bookmarks"]:not([data-bleh-subscribed])`
+        `form[action="/music/+bookmarks"]:not([data-bwaa-subscribed])`
     );
     bookmark_item.forEach((form) => {
-        form.setAttribute('data-bleh-subscribed', 'true');
+        form.setAttribute('data-bwaa-subscribed', 'true');
 
         let btn = form.querySelector('button');
 
@@ -218,10 +218,10 @@ export function subscribe_to_events() {
     });
 
     let obsess = document.body.querySelectorAll(
-        `.modal-body form[action$="${auth.name}/obsessions"]:not([data-bleh-subscribed])`
+        `.modal-body form[action$="${auth.name}/obsessions"]:not([data-bwaa-subscribed])`
     );
     obsess.forEach((form) => {
-        form.setAttribute('data-bleh-subscribed', 'true');
+        form.setAttribute('data-bwaa-subscribed', 'true');
 
         let track = form.querySelector('[name="name"]').getAttribute('value');
         let artist = form
@@ -249,10 +249,10 @@ export function subscribe_to_events() {
     });
 
     const post_shouts = page.structure.main.querySelectorAll(
-        '.btn-post-shout:not([data-bleh-subscribed])'
+        '.btn-post-shout:not([data-bwaa-subscribed])'
     );
     post_shouts.forEach((post) => {
-        post.setAttribute('data-bleh-subscribed', 'true');
+        post.setAttribute('data-bwaa-subscribed', 'true');
 
         post.addEventListener(
             'click',
@@ -283,10 +283,10 @@ export function subscribe_to_events() {
     });
 
     let save_wiki_form = document.body.querySelector(
-        '.wiki-edit-form:not([data-bleh-subscribed])'
+        '.wiki-edit-form:not([data-bwaa-subscribed])'
     );
     if (save_wiki_form != null) {
-        save_wiki_form.setAttribute('data-bleh-subscribed', 'true');
+        save_wiki_form.setAttribute('data-bwaa-subscribed', 'true');
 
         let btn = save_wiki_form.querySelector('.form-submit button');
 
@@ -306,10 +306,10 @@ export function subscribe_to_events() {
     }
 
     let upload_img_form = document.body.querySelector(
-        'form[action$="/+images/upload"]:not([data-bleh-subscribed])'
+        'form[action$="/+images/upload"]:not([data-bwaa-subscribed])'
     );
     if (upload_img_form) {
-        upload_img_form.setAttribute('data-bleh-subscribed', 'true');
+        upload_img_form.setAttribute('data-bwaa-subscribed', 'true');
 
         let btn = upload_img_form.querySelector('.form-submit button');
         if (!btn) btn = upload_img_form.querySelector('button[type="submit"]');
