@@ -24,7 +24,6 @@ import {
     name_includes
 } from '../components/lotus';
 import { markdown } from '../components/markdown';
-import { redesign_profile_header } from '../components/profile_header';
 import {
     select,
     select_prepare
@@ -249,78 +248,12 @@ export async function bleh_profiles() {
             }
         }
 
-        let scrobble_text;
-        let listen_container = html.node`
-            <section class="listen-panel listen-profile-panel">
-                <div class="listener-row">
-                    <div class="scrobble-side">
-                        <h3>${tl(trans.scrobbles)}</h3>
-                        <p ref=${(el) => (scrobble_text = el)}><a href="${root}user/${page.name}/library">${scrobbles.toLocaleString(lang)}</a></p>
-                    </div>
-                    <div class="artist-side">
-                        <h3>${tl(trans.artists)}</h3>
-                        <p><a href="${root}user/${page.name}/library/artists">${artists.toLocaleString(lang)}</a></p>
-                    </div>
-                    <div class="loved-side">
-                        <h3>${tl(trans.loved)}</h3>
-                        <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
-                    </div>
-                </div>
-                ${
-                    scrobbles > 0 ?
-                        html.node`
-                <div class="scrobble-canvas-container mini">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text">${tl(trans.loading_count_days).replace('{c}', '90')}</div>
-                    </div>
-                </div>
-                <div class="more-link">
-                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                        ${tl(trans.explore_in_library)}
-                    </a>
-                </div>
-                `
-                    : auth.name ?
-                        html.node`
-                <div class="scrobble-canvas-container mini">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
-                    </div>
-                </div>
-                `
-                    :   html.node``
-                }
-            </section>
-        `;
-
-        if (scrobbles > 0) {
-            tippy(scrobble_text, {
-                content: average
-            });
-        }
-
-        if (sponsor_list && page.name != sponsor_list.sponsor_account) {
-            if (!page.mobile)
-                page.structure.side.insertBefore(
-                    listen_container,
-                    page.structure.side.firstChild
-                );
-            else
-                page.structure.main.insertBefore(
-                    listen_container,
-                    page.structure.main.firstChild
-                );
-        }
-
         // featured track
         let featured_track_panel = profile_header.querySelector(
             '.header-featured-track'
         );
         if (featured_track_panel)
             bleh_featured_profile_track(featured_track_panel);
-
-        if (ff('redesigned_profile_header'))
-            redesign_profile_header(is_own_profile, is_following);
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');
         if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
