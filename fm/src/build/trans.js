@@ -1042,6 +1042,9 @@ export const trans = {
         ja: 'チャート',
         sv: 'Topplistor'
     },
+    journal: {
+        en: 'Journal'
+    },
     community: {
         en: 'Community'
     },
@@ -1673,33 +1676,38 @@ export const trans = {
     count_artists: {
         en: '{c} Artists'
     },
-    you_share_count_with: {
-        // as in your musical taste % between you and someone else
-        // you are {percentage%} compatible (in taste) {list of artists}
-        en: 'You are {c} compatible',
-        de: 'Ihr seid {c} kompatibel',
-        pt: 'Voce é {c} compatível',
-        sv: 'Du är {c} kompatibel',
-        two: {
-            en: '{artist1}, {artist2}',
-            de: '{artist1}, {artist2}',
-            pt: '{artist1}, {artist2}',
-            sv: '{artist1}, {artist2}',
-            ja: '{artist1}、{artist2}'
+    music_compat: {
+        en: 'Your musical compatibility with {u} is {v}',
+        super: {
+            en: 'Super'
         },
-        three: {
-            en: '{artist1}, {artist2}, {artist3}',
-            de: '{artist1}, {artist2}, {artist3}',
-            pt: '{artist1}, {artist2}, {artist3}',
-            sv: '{artist1}, {artist2}, {artist3}',
-            ja: '{artist1}、{artist2}、{artist3}'
+        very_high: {
+            en: 'Very High'
+        },
+        high: {
+            en: 'High'
+        },
+        medium: {
+            en: 'Medium'
+        },
+        low: {
+            en: 'Low'
+        },
+        very_low: {
+            en: 'Very Low'
+        },
+        unknown: {
+            en: 'Unknown'
         }
     },
-    taste_similarity: {
-        en: 'Taste similarity',
-        de: 'Musikgeschmack-Ähnlichkeit',
-        pt: 'Similaridade de gostos',
-        sv: 'Smaklikhet'
+    music_in_common: {
+        en: 'Music you have in common includes {v}.',
+        two: {
+            en: '{v1} and {v2}'
+        },
+        three: {
+            en: '{v1}, {v2}, and {v3}'
+        }
     },
     message: {
         // as in a direct message

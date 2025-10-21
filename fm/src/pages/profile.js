@@ -30,7 +30,8 @@ import {
 } from '../components/select';
 import {
     checkup_page_structure,
-    convert_to_toolbar
+    convert_to_toolbar,
+    tab_replace
 } from '../components/structure';
 import { refresh_all, update_inbuilt_item } from '../config';
 import { update_page } from '../page';
@@ -95,19 +96,20 @@ export async function bleh_profiles() {
     profile_header.classList.add('legacy-header');
 
     // translations in other languages
-    let library_tab = page.structure.nav.querySelector(
-        '.secondary-nav-item--library a'
-    );
-    library_tab.textContent = tl(trans.library);
+    tab_replace('listening-report', tl(trans.charts));
+    tab_replace('library', tl(trans.library));
+
+    page.structure.nav.querySelector(':scope > .navlist-items').appendChild(html.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--journal">
+            <a class="secondary-nav-item-link ${page.subpage.startsWith('journal') ? 'secondary-nav-item-link--active' : ''}" href="${root}user/${page.name}/journal">
+                ${tl(trans.journal)}
+            </a>
+        </li>
+    `);
 
     let is_own_profile = page.name == auth.name;
     if (is_own_profile)
         profile_header.setAttribute('data-is-own-profile', 'true');
-
-    let loved_tab = page.structure.nav.querySelector(
-        '.secondary-nav-item--loved a'
-    );
-    if (loved_tab) loved_tab.textContent = tl(trans.loved);
 
     if (!is_subpage) {
         profile_recents();
@@ -118,9 +120,7 @@ export async function bleh_profiles() {
         let artists = 0;
         let loved = 0;
 
-        let metadata = profile_header.querySelectorAll(
-            '.header-metadata-display'
-        );
+        const metadata = profile_header.querySelectorAll('.header-metadata-display');
         metadata.forEach((item, index) => {
             if (index == 0) {
                 let para = item.querySelector('p');
@@ -138,17 +138,13 @@ export async function bleh_profiles() {
         page.state.artists = artists;
         page.state.loved = loved;
 
-        const display_name = profile_sub_text.querySelector(
-            '.header-title-display-name'
-        );
-        const scrobble_since = profile_sub_text.querySelector(
-            '.header-scrobble-since'
-        );
+        const display_name = profile_sub_text.querySelector('.header-title-display-name');
+        const scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
         scrobble_since.textContent = scrobble_since.textContent
             .slice(2)
             .replace(tl(trans.account_scrobbling_since_replace), '');
 
-        page.structure.main.insertBefore(html.node`
+        const header = html.node`
             <section class="profile-header-section" data-page-style=${settings.page_style}>
                 <div class="badge-avatar">
                     ${avatar}
@@ -180,7 +176,56 @@ export async function bleh_profiles() {
                     </div>
                 </div>
             </section>
-        `,page.structure.main.firstElementChild);
+        `;
+        page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+
+        if (!is_own_profile) {
+            let taste = '';
+            let taste_percentage = '';
+            let taste_artists = [];
+
+            let taste_meter = profile_header.querySelector('.tasteometer');
+
+            if (taste_meter) {
+                taste = taste_meter.classList[1].replace('tasteometer-compat-', '');
+
+                let artists = taste_meter.querySelectorAll('a');
+                artists.forEach((artist) => {
+                    taste_artists.push(
+                        correct_artist(artist.getAttribute('title'))
+                    );
+                });
+
+                taste_percentage = taste_meter
+                    .querySelector('.tasteometer-viz')
+                    .getAttribute('title');
+                if (taste_percentage == '99%') taste_percentage = '100%';
+            }
+
+            let text;
+            if (taste_artists.length == 3) {
+                text = tl(trans.music_in_common.three, { v1: `<a href="${root}music/${taste_artists[0]}">${correct_artist(taste_artists[0])}</a>`, v2: `<a href="${root}music/${taste_artists[1]}">${correct_artist(taste_artists[1])}</a>`, v3: `<a href="${root}music/${taste_artists[2]}">${correct_artist(taste_artists[2])}</a>` });
+            } else if (taste_artists.length == 2) {
+                text = tl(trans.music_in_common.two, { v1: `<a href="${root}music/${taste_artists[0]}">${correct_artist(taste_artists[0])}</a>`, v2: `<a href="${root}music/${taste_artists[1]}">${correct_artist(taste_artists[1])}</a>` });
+            } else if (taste_artists.length == 1) {
+                text = `<a href="${root}music/${taste_artists[0]}">${correct_artist(taste_artists[0])}</a>`;
+            }
+
+            header.after(html.node`
+                <section class="profile-actions-section">
+                    <div class="options">
+
+                    </div>
+                    <div class="tasteometer tasteometer-compact-${taste}" data-taste=${taste}>
+                        <p>${{ html: tl(trans.music_compat, { u: `<strong>${page.name}</strong>`, v: `<strong>${tl(trans.music_compat[taste]).toUpperCase()}</strong>` }) }}</p>
+                        <div class="bar">
+                            <div class="fill" style="width: ${taste_percentage}" />
+                        </div>
+                        <p>${{ html: tl(trans.music_in_common, { v: text }) }}</p>
+                    </div>
+                </section>
+            `);
+        }
 
         let is_following = page.structure.container.querySelector('.label.user-follow');
 

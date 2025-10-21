@@ -190,3 +190,10 @@ export function convert_to_toolbar() {
     );
     page.structure.content_top.style.display = 'none';
 }
+
+export function tab_replace(query, text) {
+    if (!page.structure.nav) return;
+
+    const tab = page.structure.nav.querySelector(`.secondary-nav-item--${query} a`);
+    if (tab) tab.textContent = text;
+}
