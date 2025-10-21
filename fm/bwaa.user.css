@@ -2029,7 +2029,9 @@
                 color: #ddd;
                 font-size: 11px;
 
-                a {
+                & > .language-wrapper > a,
+                & > a {
+                    display: inline-flex;
                     color: inherit;
                     cursor: pointer;
 
@@ -2042,7 +2044,6 @@
                     position: relative;
 
                     & > a {
-                        display: inline-flex;
                         padding-left: calc(16px + 6px);
 
                         &:before {
