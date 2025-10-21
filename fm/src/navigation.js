@@ -90,6 +90,7 @@ export function append_nav() {
 
     language_options.forEach(option => {
         const btn = option.querySelector('button');
+        if (!btn) return;
 
         btn.classList = 'language-menu-item';
     });

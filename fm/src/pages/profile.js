@@ -144,10 +144,56 @@ export async function bleh_profiles() {
             .slice(2)
             .replace(tl(trans.account_scrobbling_since_replace), '');
 
+
+        // badges
+        log(`querying badges for ${page.name}`, 'profile');
+
+        const types = html.node`
+            <div class="user-types" />
+        `;
+
+        const stock_badges = profile_name_obj.querySelectorAll('.label');
+        stock_badges.forEach((badge) => {
+            const type = badge.classList[1]?.replace('user-status-', '');
+            if (['None', 'label--fade'].includes(type)) return;
+
+            badge.classList = `user-type user-type--${type}`;
+            render(badge, html`
+                <a>${badge.textContent.trim()}</a>
+            `);
+            types.appendChild(badge);
+        });
+
+        const badges = load_badges(page.name);
+        log('got badges', 'profile', 'info', { badges });
+
+        if (badges) {
+            badges.forEach((badge) => {
+                types.insertBefore(create_badge(badge, false, true), types.firstChild);
+            });
+        }
+
+        const type_badges = types.querySelectorAll(':scope > .user-type');
+        type_badges.forEach((badge, index) => {
+            if (type_badges.length > 1) {
+                if (index == 0) {
+                    types.appendChild(html.node`
+                        <div class="user-type user-type-extras">
+                            <a>+${type_badges.length - 1}</a>
+                        </div>
+                    `);
+                } else {
+                    badge.classList.add('user-type-overflow');
+                }
+            }
+        });
+
+
         const header = html.node`
             <section class="profile-header-section" data-page-style=${settings.page_style}>
                 <div class="badge-avatar">
                     ${avatar}
+                    ${types}
                 </div>
                 <div class="badge-info">
                     <h1>${page.name}</h1>
@@ -614,43 +660,6 @@ export async function bleh_profiles() {
     update_page();
 
     patch_profile_following();
-
-    // badges
-    log(`querying badges for ${page.name}`, 'profile');
-
-    if (ff('badges')) {
-        let stock_badges = profile_name_obj.querySelectorAll('.label');
-        stock_badges.forEach((badge) => {
-            if (badge.classList[1] == 'user-status-None') return;
-
-            badge.classList.add('expand');
-
-            tippy(badge, {
-                theme: 'badge',
-                placement: 'bottom',
-                content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `
-            });
-        });
-    }
-
-    let badges = load_badges(page.name);
-
-    if (badges) {
-        badges.forEach((badge) => {
-            profile_name_obj.appendChild(create_badge(badge, false, true));
-        });
-    }
-
-    let badge_elements = profile_name_obj.querySelectorAll('.label');
-    let label_container = document.createElement('div');
-    label_container.classList.add('badges');
-    badge_elements.forEach((badge) => {
-        label_container.appendChild(badge);
-    });
-    profile_name_obj.appendChild(label_container);
 }
 
 function create_profile_note_panel(username, has_note) {

@@ -15,8 +15,6 @@ import { status } from './components/status';
 import { set_storage } from './build/tools';
 
 export function sponsors(force = false) {
-    if (!ff('sponsor')) return;
-
     let sponsor_data = localStorage.getItem('kat_sponsors');
     let sponsor_expire = new Date(localStorage.getItem('kat_sponsors_expire'));
 

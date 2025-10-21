@@ -9,7 +9,6 @@ import { sponsor_list } from '../build/sponsor';
 import { tl, trans } from '../build/trans';
 import { html } from 'lighterhtml';
 import { sponsor } from '../sponsor.js';
-import tippy from 'tippy.js';
 
 export function load_badges(user, solo = false) {
     if (!sponsor_list || !sponsor_list.badges) return;
@@ -86,18 +85,15 @@ export function create_badge(
         inbuilt: false
     },
     on_avatar = false,
-    long = false,
     small = false
 ) {
-    const classlist = on_avatar ? 'avatar-status-dot' : 'label no-hover';
+    const classlist = on_avatar ? 'avatar-status-dot' : 'user-type';
 
     let elem = html.node`
         <span class=${classlist}>
-            ${badge.name}
+            <a>${badge.name}</a>
         </span>
     `;
-
-    if (long) elem.classList.add('expand');
 
     if (
         badge.icon != '' &&
@@ -106,6 +102,7 @@ export function create_badge(
         badge.lit > -1
     ) {
         // new style badge
+        elem.classList.add('user-type-reason--sponsor');
         elem.style.setProperty('--mask', `url(${badge.icon})`);
         elem.style.setProperty('--hue-over', badge.hue);
         elem.style.setProperty('--sat-over', badge.sat);
@@ -114,21 +111,12 @@ export function create_badge(
         elem.classList.add(badge.type);
     } else {
         elem.classList.add(
-            `user-status--bleh-${badge.type}`,
-            `user-status--bleh-user-${badge.user}`
+            `user-type--${badge.type}`,
+            `user-type-for--${badge.user}`
         );
     }
 
     if (on_avatar || small) return elem;
-
-    tippy(elem, {
-        theme: 'badge',
-        placement: 'bottom',
-        content: html.node`
-            <div class="badge-name">${badge.name}</div>
-            <div class="badge-reason">${badge.reason}</div>
-        `
-    });
 
     if (badge.type == 'sponsor') elem.onclick = sponsor;
 
