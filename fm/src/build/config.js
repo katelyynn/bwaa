@@ -61,28 +61,19 @@ export let inbuilt_settings = {
 
 export let settings_store = {
     theme: {
-        default: 'darker',
+        default: 'simply_red',
         type: 'radio',
-        title: trans.theme
+        values: {
+            simply_red: {
+                name: trans.simply_red
+            },
+            paint_it_black: {
+                en: trans.paint_it_black
+            }
+        }
     },
     theme_schedule: {
         default: false
-    },
-    theme_day: {
-        default: 'light',
-        type: 'select',
-        title: trans.theme_day.name,
-        body: trans.theme_day.body,
-        incompatible: { theme_schedule: false },
-        hide_if_incompatible: true
-    },
-    theme_night: {
-        default: 'darker',
-        type: 'select',
-        title: trans.theme_night.name,
-        body: trans.theme_night.body,
-        incompatible: { theme_schedule: false },
-        hide_if_incompatible: true
     },
     page_style: {
         default: 2012,

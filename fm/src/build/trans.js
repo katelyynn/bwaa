@@ -735,83 +735,17 @@ export const trans = {
         pt: 'Tema',
         sv: 'Tema'
     },
-    theme_day: {
-        name: {
-            en: 'Day',
-            de: 'Tag',
-            sv: 'Dag'
-        },
-        body: {
-            en: 'When your system reports light theme',
-            de: 'Wenn dein System ein helles Farbschema hat',
-            sv: 'När ditt system rapporterar ett ljust tema'
-        }
+    simply_red: {
+        en: 'Simply Red'
     },
-    theme_night: {
-        name: {
-            en: 'Night',
-            de: 'Nacht',
-            sv: 'Natt'
-        },
-        body: {
-            en: 'When your system reports dark theme',
-            de: 'Wenn dein System ein dunkles Farbschema hat',
-            sv: 'När ditt system rapporterar ett mörk tema'
-        }
+    paint_it_black: {
+        en: 'Paint It Black'
     },
-    theme_schedule: {
-        en: 'Choose which theme preference to apply based on your system theme.',
-        de: 'Wähle dein bevorzugtes Farbschema basierend auf deinem Systemdesign.',
-        sv: 'Välj föredraget tema att tillämpa utgående från ditt systemtema.'
+    switch_colour_style: {
+        en: 'Switch Colour Style'
     },
-    themes: {
-        name: {
-            en: 'Themes',
-            de: 'Farbschema',
-            pt: 'Temas',
-            sv: 'Teman'
-        },
-        light: {
-            en: 'Light',
-            de: 'Hell',
-            pt: 'Claro',
-            sv: 'Ljus'
-        },
-        ink: {
-            en: 'Ink',
-            de: 'Tinte',
-            pt: 'Tinta',
-            sv: 'Bläck'
-        },
-        dark: {
-            en: 'Ash',
-            de: 'Asche',
-            pt: 'Cinza',
-            sv: 'Aska'
-        },
-        darker: {
-            en: 'Dark',
-            de: 'Dunkel',
-            pt: 'Escuro',
-            sv: 'Mörk'
-        },
-        oled: {
-            en: 'Void',
-            de: 'Nacht',
-            pt: 'Vazio',
-            sv: 'Tomhet'
-        }
-    },
-    colours: {
-        en: 'Colours',
-        de: 'Farben',
-        pt: 'Colorir',
-        sv: 'Färger'
-    },
-    adaptive: {
-        en: 'Adaptive',
-        de: 'Adaptiv',
-        sv: 'Adaptiv'
+    help: {
+        en: 'Help'
     },
     adaptive_tip: {
         en: 'Your theme preference will be either {day} or {night}, based on your system. ',
@@ -822,36 +756,6 @@ export const trans = {
         en: 'Change schedule',
         de: 'Zeitplan ändern',
         sv: 'Ändra schema'
-    },
-    change_my_colour_when: {
-        name: {
-            en: 'Use a context-based accent colour when',
-            de: 'Kontextbasierte Akzentfarbe verwenden, wenn',
-            sv: 'Använd kontextbaserad accentfärg när'
-        },
-        body: {
-            en: 'Temporarily override your selected accent to match album art',
-            de: 'Überschreibe vorübergehend deine ausgewählte Akzentfarbe, damit sie zum Albumcover passt',
-            sv: 'Ändra tillfälligt din valda accentfärg för att matcha albumkonsten'
-        }
-    },
-    hue_from_album: {
-        // a sub-option for change_my_colour_when
-        en: 'Browsing album pages',
-        de: 'Albumseiten angesehen werden',
-        sv: 'Du är på albumsidor'
-    },
-    colourful_active: {
-        // a sub-option for change_my_colour_when
-        en: 'Actively scrobbling a track',
-        de: 'ein Titel aktiv gescrobbelt wird',
-        sv: 'Aktivt skrobblar en låt'
-    },
-    colourful_all: {
-        // a sub-option for change_my_colour_when
-        en: 'Viewing any track',
-        de: 'ein beliebiger Titel angesehen wird',
-        sv: 'Visar en låt'
     },
     configure: {
         en: 'Configure',
@@ -1138,8 +1042,8 @@ export const trans = {
         ja: 'チャート',
         sv: 'Topplistor'
     },
-    view_the_charts: {
-        en: 'View the charts'
+    community: {
+        en: 'Community'
     },
     welcome_back_user: {
         en: 'Welcome back {user}!',
@@ -1825,6 +1729,9 @@ export const trans = {
         de: 'Werde Sponsor',
         pt: 'Torne-se um apoiador',
         sv: 'Bli en sponsor'
+    },
+    sponsor_text: {
+        en: 'Sponsor'
     },
     message_sponsor: {
         // rewards meaning a badge for example

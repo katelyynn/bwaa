@@ -5,20 +5,13 @@
 //
 
 import { settings } from './build/config';
-import { auth, discord, page, root } from './build/page';
-import { stored_season } from './build/seasonal';
-import { tl, trans } from './build/trans';
-import { create_badge, load_badges } from './components/badge';
-import { version } from './main';
+import { auth, page, root } from './build/page';
+import { tl, trans, lang } from './build/trans';
 import { ff } from './sku';
 import { html, render } from 'lighterhtml';
-import { news } from './news.js';
-import { save_setting, setting } from './components/settings.js';
-import { prompt_for_update } from './style.js';
+import { save_setting } from './components/settings.js';
 import tippy from 'tippy.js';
 import { sponsor } from './sponsor.js';
-import { register_menu } from './components/menu.js';
-import { DateTime } from 'luxon';
 
 export function append_nav() {
     if (ff('developer') && !page.structure.indicator) {
@@ -64,183 +57,109 @@ export function append_nav() {
     const masthead = document.body.querySelector('.masthead');
     const inner = masthead.querySelector('.masthead-inner-wrap');
 
-    const navs = inner.querySelector('.masthead-nav-wrap');
-
-    const search = inner.querySelector('.masthead-search-form');
-    const form = search.querySelector('.masthead-search-field');
-    form.placeholder = tl(trans.search);
-    inner.insertBefore(
-        html.node`
-        <div class="masthead-search-wrap">
-            ${search}
-        </div>
-    `,
-        navs
-    );
-
     // 2025-04-14
     let new_auth = masthead.querySelector('.auth-dropdown-menu');
 
     let links = masthead.querySelector('.masthead-nav .navlist-items');
-    render(links, html``);
+    render(links, html`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}music">${tl(trans.music)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}radio">${tl(trans.radio)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}events">${tl(trans.events)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}charts">${tl(trans.charts)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="https://support.last.fm" target="_blank">${tl(trans.community)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" onclick=${() => sponsor()}>${tl(trans.sponsor_text)}</a>
+        </li>
+    `);
 
-    let auth_link = masthead.querySelector(
-        '.masthead-nav-wrap > .site-auth .auth-link'
-    );
-    if (!auth_link) {
-        render(
-            links,
-            html`
-                ${() => {
-                    const elem = html.node`
-                    <li class="masthead-nav-item">
-                        <a class="masthead-nav-control chibi" href="${root}bleh" data-label="bleh_no_auth">
-                            ${tl(trans.bleh_settings)}
+
+    const selected_language = document.querySelector(
+        '.footer-language--active strong'
+    )?.textContent;
+    const language_options = document.querySelectorAll('.footer-language-form');
+
+    language_options.forEach(option => {
+        const btn = option.querySelector('button');
+
+        btn.classList = 'language-menu-item';
+    });
+
+    inner.appendChild(html.node`
+        <div class="search-companion-nav">
+            ${() => {
+                let dialog_open = false;
+
+                const wrapper = html.node`
+                    <span class="language-wrapper" data-dialog-open=${dialog_open}>
+                        <a onclick=${() => {
+                            dialog_open = !dialog_open;
+                            wrapper.setAttribute('data-dialog-open', dialog_open);
+                        }} name=${lang}>
+                            ${selected_language.trim()}
                         </a>
-                    </li>
+                        <div class="language-menu">
+                            ${language_options}
+                        </div>
+                    </span>
                 `;
 
-                    tippy(elem, {
-                        content: tl(trans.bleh_settings)
-                    });
+                return wrapper;
+            }} |
+             ${() => {
+                const elem = html.node`
+                    <a onclick=${() => {
+                        const to_save = settings.theme == 'simply_red' ? 'paint_it_black' : 'simply_red';
 
-                    return elem;
-                }}
-            `
-        );
+                        save_setting('theme', to_save);
+                        elem.textContent = tl(trans[to_save]);
+                    }} title=${tl(trans.switch_colour_style)}>
+                        ${tl(trans[settings.theme])}
+                    </a>
+                `;
 
-        masthead.appendChild(html.node`
-            <div class="mobile-controls">
-                <a class="btn mobile-control" data-type="register" href="${root}join">
-                    ${tl(trans.sign_up)}
-                </a>
-                <a class="btn mobile-control" aria-checked=${page.type == 'settings' || page.type == 'bleh_settings'} data-menu-item="settings" href="${root}bleh">
-                    ${tl(trans.settings)}
-                </a>
-                <a class="btn mobile-control" data-type="login" href="${root}login">
-                    ${tl(trans.log_in)}
-                </a>
-            </div>
-        `);
+                return elem;
+            }} |
+             <a href="${root}help">${tl(trans.help)}</a>
+        </div>
+    `);
 
-        return;
-    }
 
-    if (auth_link.hasAttribute('data-bleh')) return;
-    auth_link.setAttribute('data-bleh', 'true');
+    const site_auth = masthead.querySelector('.masthead-nav-wrap > .site-auth');
+    const auth_link = site_auth?.querySelector(':scope > .auth-link');
+    if (!auth_link) return;
 
     auth_link.appendChild(html.node`
         <p>${auth.name}</p>
     `);
 
-    let badges = load_badges(auth.name, true);
-
-    if (badges) {
-        auth_link.appendChild(create_badge(badges[0], false, false, true));
-    } else if (auth.pro) {
-        auth_link.appendChild(html.node`
-            <span class="label user-status-subscriber auth-badge">${tl(trans.badges['user-status-subscriber'].name)}</span>
-        `);
-    }
-
-    /*let quick_switcher = html.node`
-        <li class="masthead-nav-item">
-            <button class="masthead-nav-control" data-type="cmd" onclick=${() => page.state.rabbit()}>
-                ${tl(trans.quick_switcher)}
-            </button>
-        </li>
-    `;
-
-    tippy(quick_switcher, {
-        content: tl(trans.quick_switcher)
-    });
-
-    links.appendChild(quick_switcher);*/
-
-    const more_button = html.node`
-        <button class="masthead-nav-control chibi icon" data-type="more">
-            ${tl(trans.more)}
-        </button>
-    `;
-
-    tippy(more_button, {
-        content: more_button.textContent
-    });
-
-    const more_menu = tippy(more_button, {
-        content: html.node`
-            <a class="dropdown-menu-clickable-item accent" data-type="discord" href="https://discord.gg/${discord}" target="_blank">
-                ${tl(trans.join_discord)}
-            </a>
-            <button class="dropdown-menu-clickable-item sponsor" onclick=${() => sponsor()}>
-                ${tl(trans.sponsor)}
-            </button>
-            <a class="dropdown-menu-clickable-item lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                ${tl(trans.suggest_correction)}
-            </a>
-            <div class="sep" />
-            <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
-                ${tl(trans.updates)}
-            </a>
-            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
-                ${tl(trans.news)}
-            </button>
-            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${tl(trans.report_issue)}
-            </a>
-        `,
-        theme: 'menu',
-        placement: 'top',
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            instance.popper.addEventListener('click', (event) => {
-                instance.hide();
-            });
-        }
-    });
-
-    links.appendChild(more_button);
-
-    // configure bleh
-    let bleh_container = html.node`
-            <li class="masthead-nav-item">
-                <a class="masthead-nav-control chibi" href="${root}bleh${stored_season.id != 'none' ? '/seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != 'none' ? 'true' : 'false'}">
-                    ${stored_season.id == 'none' ? tl(trans.bleh_settings) : DateTime.fromISO(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}
-                </a>
-            </li>
-        `;
-    if (stored_season.id == 'none') {
-        tippy(bleh_container, {
-            content: tl(trans.bleh_settings)
-        });
-    } else {
-        page.header.season_tooltip = tippy(bleh_container, {
-            theme: 'seasonal-swatch',
-            content: html.node`
-                    <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl(trans.seasonal.listing[stored_season.id])}</span>
-                    <span class="season-exclusive">${tl(trans.seasonal.notice)}</span>
-                `
-        });
-    }
-    links.appendChild(bleh_container);
-
-    page.header.season = bleh_container.querySelector('a');
-
     let notif_count = new_auth.querySelector(
         '[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge'
     );
-    if (!notif_count) notif_count = '0';
-    else notif_count = notif_count.textContent;
+    if (!notif_count) notif_count = 0;
+    else notif_count = parseInt(notif_count.textContent);
     let inbox_count = new_auth.querySelector(
         '[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge'
     );
-    if (!inbox_count) inbox_count = '0';
-    else inbox_count = inbox_count.textContent;
+    if (!inbox_count) inbox_count = 0;
+    else inbox_count = parseInt(inbox_count.textContent);
 
-    const count = parseInt(notif_count) + parseInt(inbox_count);
+    site_auth.appendChild(html.node`
+        <div class="user-companion-nav">
+            <a href="${root}inbox/notifications">${tl(trans.notifications)}${notif_count > 0 ? ` (${notif_count})` : ''}</a> |
+             <a href="${root}inbox">${tl(trans.inbox)}${inbox_count > 0 ? ` (${inbox_count})` : ''}</a> |
+             <a href="${root}logout">${tl(trans.logout)}</a>
+        </div>
+    `);
 
     // auth menu
     const token = new_auth

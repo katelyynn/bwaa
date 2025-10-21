@@ -31142,116 +31142,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
   }
 
-  // src/news.js
-  function news() {
-    let changelog = localStorage.getItem("bleh_changelog");
-    let changelog_expire = new Date(
-      localStorage.getItem("bleh_changelog_expire")
-    );
-    let current_time = /* @__PURE__ */ new Date();
-    if (!changelog) {
-      log2("not cached, fetching", "changelog");
-      request_changelog();
-      dialog_rm({ id: "rabbit" });
-    } else {
-      if (changelog_expire < current_time) request_changelog();
-      else open_changelog(JSON.parse(changelog));
-    }
-  }
-  function request_changelog(open_after = true) {
-    let button = page.state.navigation_menu_news;
-    if (button) button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log2(`responded with ${xhr.status}`, "changelog");
-      if (xhr.status != 200) {
-        log2(
-          "request has been cancelled, will request again in 1h",
-          "changelog"
-        );
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status == 200) {
-        if (open_after) {
-          try {
-            open_changelog(JSON.parse(this.response));
-            set_storage("bleh_changelog", this.response);
-            api_expire.setHours(api_expire.getHours() + 2);
-            log2(`cached until ${api_expire}`, "changelog");
-            set_storage("bleh_changelog_expire", api_expire);
-          } catch (e) {
-            deliver_notif(
-              "The changelog is currently unavailable due to errors, try again later.",
-              true
-            );
-            console.error(e);
-          }
-        }
-      }
-      if (button != null) button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  function open_changelog(changelog) {
-    const window2 = dialog({
-      id: "changelog",
-      title: tl2(trans.news_from_user).replace(
-        "{user}",
-        sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"
-      ),
-      body: html.node`
-            <div class="cta first sponsor colourful margin-bottom">
-                <strong>${tl2(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor(true)">${tl2(trans.sponsor)}</a>
-            </div>
-            <div class="changelog-list"></div>
-        `,
-      type: "changelog",
-      allow_scroll: true
-    });
-    const changelog_list = window2.querySelector(".changelog-list");
-    let index3 = 0;
-    for (let version4 in changelog) {
-      if (version4 == "updated" || version4 == "latest") continue;
-      if (index3 > 10) continue;
-      const version_item = html.node`
-            <div class="changelog-version-item" data-changelog-type="${changelog[version4].type}" data-changelog-latest="${index3 == 0 ? "true" : "false"}" data-changelog-version="${version4}">
-                <div class="version-item-header">
-                    <div class="sub-text">
-                        <div class="breadcrumb">
-                            <div class="breadcrumb-origin">
-                                ${version4}
-                            </div>
-                            <div class="breadcrumb-name">
-                                ${tl2(trans.news.type[changelog[version4].type])}
-                            </div>
-                        </div>
-                    </div>
-                    <h3>${changelog[version4].name}</h3>
-                    ${version4 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version4].name}</h4>` : ""}
-                </div>
-                <div class="version-item-body markdown-body">
-                    ${markdown(changelog[version4].bio, {
-        allow_headers: true,
-        starting_header: 5,
-        in_dialog: true
-      })}
-                </div>
-            </div>
-        `;
-      if (changelog[version4].type == "major")
-        version_item.setAttribute("id", "latest_major_release");
-      changelog_list.appendChild(version_item);
-      index3++;
-    }
-  }
-  unsafeWindow._update_local_changelog_cache = function(json) {
-    set_storage("bleh_changelog", JSON.stringify(json));
-  };
-
   // src/navigation.js
   function append_nav() {
     if (ff("developer") && !page.structure.indicator) {
@@ -31292,146 +31182,93 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     const masthead = document.body.querySelector(".masthead");
     const inner = masthead.querySelector(".masthead-inner-wrap");
-    const navs = inner.querySelector(".masthead-nav-wrap");
-    const search = inner.querySelector(".masthead-search-form");
-    const form = search.querySelector(".masthead-search-field");
-    form.placeholder = tl2(trans.search);
-    inner.insertBefore(
-      html.node`
-        <div class="masthead-search-wrap">
-            ${search}
-        </div>
-    `,
-      navs
-    );
     let new_auth = masthead.querySelector(".auth-dropdown-menu");
     let links = masthead.querySelector(".masthead-nav .navlist-items");
-    render(links, html``);
-    let auth_link2 = masthead.querySelector(
-      ".masthead-nav-wrap > .site-auth .auth-link"
-    );
-    if (!auth_link2) {
-      render(
-        links,
-        html`
-                ${() => {
-          const elem = html.node`
-                    <li class="masthead-nav-item">
-                        <a class="masthead-nav-control chibi" href="${root}bleh" data-label="bleh_no_auth">
-                            ${tl2(trans.bleh_settings)}
+    render(links, html`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}music">${tl2(trans.music)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}radio">${tl2(trans.radio)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}events">${tl2(trans.events)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}charts">${tl2(trans.charts)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="https://support.last.fm" target="_blank">${tl2(trans.community)}</a>
+        </li>
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" onclick=${() => sponsor()}>${tl2(trans.sponsor_text)}</a>
+        </li>
+    `);
+    const selected_language = document.querySelector(
+      ".footer-language--active strong"
+    )?.textContent;
+    const language_options = document.querySelectorAll(".footer-language-form");
+    language_options.forEach((option2) => {
+      const btn = option2.querySelector("button");
+      btn.classList = "language-menu-item";
+    });
+    inner.appendChild(html.node`
+        <div class="search-companion-nav">
+            ${() => {
+      let dialog_open = false;
+      const wrapper = html.node`
+                    <span class="language-wrapper" data-dialog-open=${dialog_open}>
+                        <a onclick=${() => {
+        dialog_open = !dialog_open;
+        wrapper.setAttribute("data-dialog-open", dialog_open);
+      }} name=${lang}>
+                            ${selected_language.trim()}
                         </a>
-                    </li>
+                        <div class="language-menu">
+                            ${language_options}
+                        </div>
+                    </span>
                 `;
-          tippy_esm_default(elem, {
-            content: tl2(trans.bleh_settings)
-          });
-          return elem;
-        }}
-            `
-      );
-      masthead.appendChild(html.node`
-            <div class="mobile-controls">
-                <a class="btn mobile-control" data-type="register" href="${root}join">
-                    ${tl2(trans.sign_up)}
-                </a>
-                <a class="btn mobile-control" aria-checked=${page.type == "settings" || page.type == "bleh_settings"} data-menu-item="settings" href="${root}bleh">
-                    ${tl2(trans.settings)}
-                </a>
-                <a class="btn mobile-control" data-type="login" href="${root}login">
-                    ${tl2(trans.log_in)}
-                </a>
-            </div>
-        `);
-      return;
-    }
-    if (auth_link2.hasAttribute("data-bleh")) return;
-    auth_link2.setAttribute("data-bleh", "true");
+      return wrapper;
+    }} |
+             ${() => {
+      const elem = html.node`
+                    <a onclick=${() => {
+        const to_save = settings.theme == "simply_red" ? "paint_it_black" : "simply_red";
+        save_setting("theme", to_save);
+        elem.textContent = tl2(trans[to_save]);
+      }} title=${tl2(trans.switch_colour_style)}>
+                        ${tl2(trans[settings.theme])}
+                    </a>
+                `;
+      return elem;
+    }} |
+             <a href="${root}help">${tl2(trans.help)}</a>
+        </div>
+    `);
+    const site_auth = masthead.querySelector(".masthead-nav-wrap > .site-auth");
+    const auth_link2 = site_auth?.querySelector(":scope > .auth-link");
+    if (!auth_link2) return;
     auth_link2.appendChild(html.node`
         <p>${auth.name}</p>
     `);
-    let badges = load_badges(auth.name, true);
-    if (badges) {
-      auth_link2.appendChild(create_badge(badges[0], false, false, true));
-    } else if (auth.pro) {
-      auth_link2.appendChild(html.node`
-            <span class="label user-status-subscriber auth-badge">${tl2(trans.badges["user-status-subscriber"].name)}</span>
-        `);
-    }
-    const more_button = html.node`
-        <button class="masthead-nav-control chibi icon" data-type="more">
-            ${tl2(trans.more)}
-        </button>
-    `;
-    tippy_esm_default(more_button, {
-      content: more_button.textContent
-    });
-    const more_menu = tippy_esm_default(more_button, {
-      content: html.node`
-            <a class="dropdown-menu-clickable-item accent" data-type="discord" href="https://discord.gg/${discord}" target="_blank">
-                ${tl2(trans.join_discord)}
-            </a>
-            <button class="dropdown-menu-clickable-item sponsor" onclick=${() => sponsor()}>
-                ${tl2(trans.sponsor)}
-            </button>
-            <a class="dropdown-menu-clickable-item lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                ${tl2(trans.suggest_correction)}
-            </a>
-            <div class="sep" />
-            <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
-                ${tl2(trans.updates)}
-            </a>
-            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
-                ${tl2(trans.news)}
-            </button>
-            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${tl2(trans.report_issue)}
-            </a>
-        `,
-      theme: "menu",
-      placement: "top",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-      }
-    });
-    links.appendChild(more_button);
-    let bleh_container = html.node`
-            <li class="masthead-nav-item">
-                <a class="masthead-nav-control chibi" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-                    ${stored_season.id == "none" ? tl2(trans.bleh_settings) : DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}
-                </a>
-            </li>
-        `;
-    if (stored_season.id == "none") {
-      tippy_esm_default(bleh_container, {
-        content: tl2(trans.bleh_settings)
-      });
-    } else {
-      page.header.season_tooltip = tippy_esm_default(bleh_container, {
-        theme: "seasonal-swatch",
-        content: html.node`
-                    <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans.seasonal.listing[stored_season.id])}</span>
-                    <span class="season-exclusive">${tl2(trans.seasonal.notice)}</span>
-                `
-      });
-    }
-    links.appendChild(bleh_container);
-    page.header.season = bleh_container.querySelector("a");
     let notif_count = new_auth.querySelector(
       '[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge'
     );
-    if (!notif_count) notif_count = "0";
-    else notif_count = notif_count.textContent;
+    if (!notif_count) notif_count = 0;
+    else notif_count = parseInt(notif_count.textContent);
     let inbox_count = new_auth.querySelector(
       '[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge'
     );
-    if (!inbox_count) inbox_count = "0";
-    else inbox_count = inbox_count.textContent;
-    const count = parseInt(notif_count) + parseInt(inbox_count);
+    if (!inbox_count) inbox_count = 0;
+    else inbox_count = parseInt(inbox_count.textContent);
+    site_auth.appendChild(html.node`
+        <div class="user-companion-nav">
+            <a href="${root}inbox/notifications">${tl2(trans.notifications)}${notif_count > 0 ? ` (${notif_count})` : ""}</a> |
+             <a href="${root}inbox">${tl2(trans.inbox)}${inbox_count > 0 ? ` (${inbox_count})` : ""}</a> |
+             <a href="${root}logout">${tl2(trans.logout)}</a>
+        </div>
+    `);
     const token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     page.token = token;
     let auth_menu = tippy_esm_default(auth_link2, {
@@ -32312,6 +32149,101 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         </section>
     `);
   }
+
+  // src/news.js
+  function request_changelog(open_after = true) {
+    let button = page.state.navigation_menu_news;
+    if (button) button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log2(`responded with ${xhr.status}`, "changelog");
+      if (xhr.status != 200) {
+        log2(
+          "request has been cancelled, will request again in 1h",
+          "changelog"
+        );
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status == 200) {
+        if (open_after) {
+          try {
+            open_changelog(JSON.parse(this.response));
+            set_storage("bleh_changelog", this.response);
+            api_expire.setHours(api_expire.getHours() + 2);
+            log2(`cached until ${api_expire}`, "changelog");
+            set_storage("bleh_changelog_expire", api_expire);
+          } catch (e) {
+            deliver_notif(
+              "The changelog is currently unavailable due to errors, try again later.",
+              true
+            );
+            console.error(e);
+          }
+        }
+      }
+      if (button != null) button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  function open_changelog(changelog) {
+    const window2 = dialog({
+      id: "changelog",
+      title: tl2(trans.news_from_user).replace(
+        "{user}",
+        sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"
+      ),
+      body: html.node`
+            <div class="cta first sponsor colourful margin-bottom">
+                <strong>${tl2(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor(true)">${tl2(trans.sponsor)}</a>
+            </div>
+            <div class="changelog-list"></div>
+        `,
+      type: "changelog",
+      allow_scroll: true
+    });
+    const changelog_list = window2.querySelector(".changelog-list");
+    let index3 = 0;
+    for (let version4 in changelog) {
+      if (version4 == "updated" || version4 == "latest") continue;
+      if (index3 > 10) continue;
+      const version_item = html.node`
+            <div class="changelog-version-item" data-changelog-type="${changelog[version4].type}" data-changelog-latest="${index3 == 0 ? "true" : "false"}" data-changelog-version="${version4}">
+                <div class="version-item-header">
+                    <div class="sub-text">
+                        <div class="breadcrumb">
+                            <div class="breadcrumb-origin">
+                                ${version4}
+                            </div>
+                            <div class="breadcrumb-name">
+                                ${tl2(trans.news.type[changelog[version4].type])}
+                            </div>
+                        </div>
+                    </div>
+                    <h3>${changelog[version4].name}</h3>
+                    ${version4 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version4].name}</h4>` : ""}
+                </div>
+                <div class="version-item-body markdown-body">
+                    ${markdown(changelog[version4].bio, {
+        allow_headers: true,
+        starting_header: 5,
+        in_dialog: true
+      })}
+                </div>
+            </div>
+        `;
+      if (changelog[version4].type == "major")
+        version_item.setAttribute("id", "latest_major_release");
+      changelog_list.appendChild(version_item);
+      index3++;
+    }
+  }
+  unsafeWindow._update_local_changelog_cache = function(json) {
+    set_storage("bleh_changelog", JSON.stringify(json));
+  };
 
   // src/pages/bleh_setup.js
   function bleh_setup() {
@@ -38962,83 +38894,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Tema",
       sv: "Tema"
     },
-    theme_day: {
-      name: {
-        en: "Day",
-        de: "Tag",
-        sv: "Dag"
-      },
-      body: {
-        en: "When your system reports light theme",
-        de: "Wenn dein System ein helles Farbschema hat",
-        sv: "N\xE4r ditt system rapporterar ett ljust tema"
-      }
+    simply_red: {
+      en: "Simply Red"
     },
-    theme_night: {
-      name: {
-        en: "Night",
-        de: "Nacht",
-        sv: "Natt"
-      },
-      body: {
-        en: "When your system reports dark theme",
-        de: "Wenn dein System ein dunkles Farbschema hat",
-        sv: "N\xE4r ditt system rapporterar ett m\xF6rk tema"
-      }
+    paint_it_black: {
+      en: "Paint It Black"
     },
-    theme_schedule: {
-      en: "Choose which theme preference to apply based on your system theme.",
-      de: "W\xE4hle dein bevorzugtes Farbschema basierend auf deinem Systemdesign.",
-      sv: "V\xE4lj f\xF6redraget tema att till\xE4mpa utg\xE5ende fr\xE5n ditt systemtema."
+    switch_colour_style: {
+      en: "Switch Colour Style"
     },
-    themes: {
-      name: {
-        en: "Themes",
-        de: "Farbschema",
-        pt: "Temas",
-        sv: "Teman"
-      },
-      light: {
-        en: "Light",
-        de: "Hell",
-        pt: "Claro",
-        sv: "Ljus"
-      },
-      ink: {
-        en: "Ink",
-        de: "Tinte",
-        pt: "Tinta",
-        sv: "Bl\xE4ck"
-      },
-      dark: {
-        en: "Ash",
-        de: "Asche",
-        pt: "Cinza",
-        sv: "Aska"
-      },
-      darker: {
-        en: "Dark",
-        de: "Dunkel",
-        pt: "Escuro",
-        sv: "M\xF6rk"
-      },
-      oled: {
-        en: "Void",
-        de: "Nacht",
-        pt: "Vazio",
-        sv: "Tomhet"
-      }
-    },
-    colours: {
-      en: "Colours",
-      de: "Farben",
-      pt: "Colorir",
-      sv: "F\xE4rger"
-    },
-    adaptive: {
-      en: "Adaptive",
-      de: "Adaptiv",
-      sv: "Adaptiv"
+    help: {
+      en: "Help"
     },
     adaptive_tip: {
       en: "Your theme preference will be either {day} or {night}, based on your system. ",
@@ -39049,36 +38915,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Change schedule",
       de: "Zeitplan \xE4ndern",
       sv: "\xC4ndra schema"
-    },
-    change_my_colour_when: {
-      name: {
-        en: "Use a context-based accent colour when",
-        de: "Kontextbasierte Akzentfarbe verwenden, wenn",
-        sv: "Anv\xE4nd kontextbaserad accentf\xE4rg n\xE4r"
-      },
-      body: {
-        en: "Temporarily override your selected accent to match album art",
-        de: "\xDCberschreibe vor\xFCbergehend deine ausgew\xE4hlte Akzentfarbe, damit sie zum Albumcover passt",
-        sv: "\xC4ndra tillf\xE4lligt din valda accentf\xE4rg f\xF6r att matcha albumkonsten"
-      }
-    },
-    hue_from_album: {
-      // a sub-option for change_my_colour_when
-      en: "Browsing album pages",
-      de: "Albumseiten angesehen werden",
-      sv: "Du \xE4r p\xE5 albumsidor"
-    },
-    colourful_active: {
-      // a sub-option for change_my_colour_when
-      en: "Actively scrobbling a track",
-      de: "ein Titel aktiv gescrobbelt wird",
-      sv: "Aktivt skrobblar en l\xE5t"
-    },
-    colourful_all: {
-      // a sub-option for change_my_colour_when
-      en: "Viewing any track",
-      de: "ein beliebiger Titel angesehen wird",
-      sv: "Visar en l\xE5t"
     },
     configure: {
       en: "Configure",
@@ -39365,8 +39201,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ja: "\u30C1\u30E3\u30FC\u30C8",
       sv: "Topplistor"
     },
-    view_the_charts: {
-      en: "View the charts"
+    community: {
+      en: "Community"
     },
     welcome_back_user: {
       en: "Welcome back {user}!",
@@ -40051,6 +39887,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Werde Sponsor",
       pt: "Torne-se um apoiador",
       sv: "Bli en sponsor"
+    },
+    sponsor_text: {
+      en: "Sponsor"
     },
     message_sponsor: {
       // rewards meaning a badge for example
@@ -43819,28 +43658,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   };
   var settings_store = {
     theme: {
-      default: "darker",
+      default: "simply_red",
       type: "radio",
-      title: trans.theme
+      values: {
+        simply_red: {
+          name: trans.simply_red
+        },
+        paint_it_black: {
+          en: trans.paint_it_black
+        }
+      }
     },
     theme_schedule: {
       default: false
-    },
-    theme_day: {
-      default: "light",
-      type: "select",
-      title: trans.theme_day.name,
-      body: trans.theme_day.body,
-      incompatible: { theme_schedule: false },
-      hide_if_incompatible: true
-    },
-    theme_night: {
-      default: "darker",
-      type: "select",
-      title: trans.theme_night.name,
-      body: trans.theme_night.body,
-      incompatible: { theme_schedule: false },
-      hide_if_incompatible: true
     },
     page_style: {
       default: 2012,
