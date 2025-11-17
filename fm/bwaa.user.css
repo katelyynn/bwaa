@@ -71,10 +71,12 @@
     }
 
     :root {
-        --snow: rgb(109, 173, 199);
+        --snow: #FFF;
+        --snow-glow: #999;
 
         &[data-bwaa--theme="paint_it_black"] {
             --snow: snow;
+            --snow-glow: var(--snow);
         }
 
         --page: 962px;
@@ -5220,7 +5222,7 @@
         }
     }
     .language-menu,
-    .js .auth-dropdown-menu {
+    [data-theme="auth-menu-v2"] {
         background: #a00100 !important;
         border: 1px solid #750500 !important;
         border-radius: 0 0 3px 3px !important;
@@ -5245,7 +5247,7 @@
             font-size: 11px;
             line-height: 22px;
             height: 22px;
-            color: #ddd;
+            color: #ddd !important;
             text-decoration: none !important;
 
             &[data-analytics-label="notifications"],
@@ -5256,12 +5258,12 @@
 
             &:active,
             &:hover {
-                background: #750500;
-                color: #fff;
+                background: #750500 !important;
+                color: #fff !important;
             }
 
             [data-bwaa--theme="paint_it_black"] &:hover {
-                background: var(--border);
+                background: var(--border) !important;
             }
 
             .auth-dropdown-item-secondary {
@@ -6070,7 +6072,7 @@
             .top-listeners-track,
             .user-list-description {
                 &.top-listeners-track,
-                p {
+                & > p {
                     font-size: 10px;
                     line-height: 1.181818;
 
@@ -7231,6 +7233,9 @@
     .popup_visible {
         overflow: unset;
     }
+    .popup_wrapper {
+        backdrop-filter: none;
+    }
 
     .popup_background {
         display: none !important;
@@ -7743,8 +7748,6 @@
         position: fixed;
         left: 0px;
         top: 0px;
-        display: none;
-        /*filter: drop-shadow(0 0 5px white);*/
         z-index: 900;
         user-select: none;
         pointer-events: none;
@@ -7762,8 +7765,11 @@
         z-index: 1000;
         pointer-events: none;
         border-radius: 50%;
-        width: 7px;
-        height: 7px;
+        width: 8px;
+        height: 8px;
+        margin-top: -8px;
+
+        box-shadow: var(--seasonal-particles-glow, 0 0 10px var(--snow-glow));
     }
 
 

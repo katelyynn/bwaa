@@ -31271,7 +31271,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let auth_menu = tippy_esm_default(auth_link2, {
       theme: "auth-menu-v2",
       content: html.node`
-            <a href="${root}user/${auth.name}">${auth.name}</a>
+            <a class="auth-dropdown-menu-item" href="${root}">${tl2(trans.home)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}user/${auth.name}">${tl2(trans.profile)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}music">${tl2(trans.recommended)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}user/${auth.name}/library">${tl2(trans.library)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}user/${auth.name}/events">${tl2(trans.events)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}settings">${tl2(trans.settings)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}bwaa">${version.brand}</a>
         `,
       placement: "top",
       interactive: true,
@@ -31285,7 +31291,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     auth_link2.removeAttribute("data-disclose-hover--allow-enter-open");
     auth_link2.addEventListener("click", (e) => {
       const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
-      const new_tab = e.button === 1 || cmd;
+      const new_tab = e.button == 1 || cmd;
       if (!new_tab) e.preventDefault();
     });
   }

@@ -12,6 +12,7 @@ import { html, render } from 'lighterhtml';
 import { save_setting } from './components/settings.js';
 import tippy from 'tippy.js';
 import { sponsor } from './sponsor.js';
+import { version } from './main.js';
 
 export function append_nav() {
     if (ff('developer') && !page.structure.indicator) {
@@ -171,7 +172,13 @@ export function append_nav() {
     let auth_menu = tippy(auth_link, {
         theme: 'auth-menu-v2',
         content: html.node`
-            <a href="${root}user/${auth.name}">${auth.name}</a>
+            <a class="auth-dropdown-menu-item" href="${root}">${tl(trans.home)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}user/${auth.name}">${tl(trans.profile)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}music">${tl(trans.recommended)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}user/${auth.name}/library">${tl(trans.library)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}user/${auth.name}/events">${tl(trans.events)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}settings">${tl(trans.settings)}</a>
+            <a class="auth-dropdown-menu-item" href="${root}bwaa">${version.brand}</a>
         `,
         placement: 'top',
         interactive: true,
@@ -187,7 +194,7 @@ export function append_nav() {
 
     auth_link.addEventListener('click', (e) => {
         const cmd = e.getModifierState('Control') || e.getModifierState('Meta');
-        const new_tab = e.button === 1 || cmd;
+        const new_tab = e.button == 1 || cmd;
 
         // only allow clicking link if new tab action
         if (!new_tab) e.preventDefault();
