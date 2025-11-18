@@ -79,8 +79,29 @@ export let settings_store = {
         default: 2012,
         type: 'radio',
         values: {
+            2007: {
+                name: '2007'
+            },
+            2008: {
+                name: '2008'
+            },
+            2009: {
+                name: '2009'
+            },
+            2010: {
+                name: '2010'
+            },
+            2011: {
+                name: '2011'
+            },
             2012: {
                 name: '2012'
+            },
+            2013: {
+                name: '2013'
+            },
+            2014: {
+                name: '2014'
             }
         }
     },
@@ -88,11 +109,6 @@ export let settings_store = {
         default: false,
         title: trans.theme_loading.name,
         body: trans.theme_loading.body
-    },
-    underline_links: {
-        default: false,
-        title: trans.underline_links.name,
-        body: trans.underline_links.body
     },
     corrections: {
         default: true,
@@ -227,75 +243,10 @@ export let settings_store = {
         title: trans.prefer_no_redirect.name,
         body: trans.prefer_no_redirect.body
     },
-    inbox_view: {
-        default: 'notifications',
-        type: 'tabs',
-        values: {
-            notifications: {
-                name: trans.notifications
-            },
-            messages: {
-                name: trans.messages
-            }
-        }
-    },
-    navigation_items: {
-        default: ['home', 'library', 'shouts'],
-        type: 'list',
-        title: trans.navigation_items.name,
-        body: trans.navigation_items.body,
-        predefined: true
-    },
-    navigation_language: {
+    varied_avatar_shapes: {
         default: true,
-        type: 'checkbox',
-        title: trans.navigation_language
-    },
-    branding_type: {
-        default: 'bleh',
-        type: 'radio',
-        title: trans.branding_type.name,
-        body: trans.branding_type.body,
-        values: {
-            bleh: {
-                name: 'bleh'
-            },
-            lastfm: {
-                name: 'Last.fm'
-            }
-        }
-    },
-    trusted_sites: {
-        default: [],
-        type: 'list'
-    },
-    friends: {
-        default: [],
-        type: 'list',
-        title: trans.friends,
-        body: trans.friends_setting,
-        warn_if_matches_auth: true
-    },
-    starred_friend: {
-        default: '',
-        type: 'select',
-        title: trans.starred_friend.name,
-        body: trans.starred_friend.body
-    },
-    dismissed: {
-        default: [],
-        type: 'list'
-    },
-    oracle_beta: {
-        default: false,
-        title: trans.oracle_beta.name,
-        body: trans.oracle_beta.body,
-        beta: true,
-        new_release: true
-    },
-    control_center: {
-        default: [],
-        type: 'list'
+        title: trans.varied_avatar_shapes.name,
+        body: trans.varied_avatar_shapes.body
     },
     romanise_jp: {
         default: false,

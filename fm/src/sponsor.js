@@ -119,11 +119,6 @@ export function sponsor(replace = false) {
         title: tl(trans.support_future_development),
         body: html.node`
             <div class="modal-vertical-inner support-inner">
-                <div class="avatar">
-                    <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
-                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                </div>
-                <h1>${tl(trans.support_future_development)}</h1>
                 <p>${html.node([
                     tl(trans.why_sponsor).replace(
                         'katelyn',
@@ -156,14 +151,9 @@ export function sponsor_manage() {
     ) {
         dialog({
             id: 'sponsor_manage',
-            title: tl(trans.sponsor),
+            title: tl(trans.you_are_a_sponsor),
             body: html.node`
                 <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
                     <p>${tl(trans.sponsor_no_badge)}</p>
                 </div>
             `,
@@ -172,14 +162,9 @@ export function sponsor_manage() {
     } else {
         dialog({
             id: 'sponsor_manage',
-            title: tl(trans.sponsor),
+            title: tl(trans.you_are_a_sponsor),
             body: html.node`
                 <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
                     <p>${tl(trans.sponsor_get_badge)}</p>
                 </div>
                 <div class="modal-footer">

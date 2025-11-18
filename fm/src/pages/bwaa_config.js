@@ -40,6 +40,7 @@ import { DateTime } from 'luxon';
 import { sponsor, sponsor_manage, sponsors } from '../sponsor.js';
 import { version as florence_version } from '@tealmiku/florence';
 import { checkup_page_structure } from '../components/structure.js';
+import { generic_subpage_header } from '../components/header.js';
 
 export function bwaa_settings() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -54,6 +55,7 @@ export function bwaa_settings() {
     checkup_page_structure();
 
     page.name = auth.name;
+    page.avatar = auth.avatar;
     page.subpage = '';
 
     update_page();
@@ -127,6 +129,8 @@ export function bwaa_settings() {
     `);
 
     page.state.nav_items = [];
+
+    page.structure.row.insertBefore(generic_subpage_header(tl(trans.configure_bwaa_settings)), page.structure.row.firstElementChild);
 
     render(page.structure.main, html`
         <nav class="navlist secondary-nav navlist--more">
@@ -313,10 +317,10 @@ export async function render_setting_page(page_id) {
                 `}
             </section>
             <section class="form-section settings-form">
-                <h4>${tl(trans.profile)}</h4>
-                <div class="setting-group">
+                <fieldset>
+                    <legend>${tl(trans.profile)}</legend>
                     ${auth.name ? html.node`
-                        <div class="setting" data-type="info">
+                        <div class="form-group" data-type="info">
                             <div class="avatar-container">
                                 <div class="avatar-inner">
                                     <img src=${auth.avatar} alt=${auth.name} />
@@ -384,7 +388,7 @@ export async function render_setting_page(page_id) {
                         </div>
                     ` : ''}
                     ${auth.sponsor ? html.node`
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl(trans.you_are_a_sponsor)}</h5>
                                 <p>${tl(trans.sponsor_get_badge)}</p>
@@ -396,7 +400,7 @@ export async function render_setting_page(page_id) {
                             </div>
                         </div>
                     ` : html.node`
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl(trans.news_sponsor_cta)}</h5>
                                 <p>${tl(trans.api.body)}</p>
@@ -408,7 +412,7 @@ export async function render_setting_page(page_id) {
                             </div>
                         </div>
                     `}
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.current_version)}</h5>
                         </div>
@@ -419,27 +423,19 @@ export async function render_setting_page(page_id) {
                             <p>${sponsor_list.latest}</p>
                         </div>
                     </div>
-                </div>
+                </fieldset>
             </section>
-            ${!page.mobile ? html.node`
-                <section class="form-section settings-form">
-                    <h4>${tl(trans.branding)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: 'branding_type' })}
-                    </div>
-                </section>
-            ` : ''}
             ${auth.name ? html.node`
                 <section class="form-section settings-form">
                     <h4>API</h4>
                     <div class="setting-group">
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl(trans.api.name)}</h5>
                                 <p>${tl(trans.api.body)}</p>
                             </div>
                         </div>
-                        <div class="setting" data-type="info">
+                        <div class="form-group" data-type="info">
                             <div class="heading">
                                 <h5>${tl(trans.api_status)}</h5>
                             </div>
@@ -509,7 +505,7 @@ export async function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="setting-group">
-                    <div class="setting" data-type="action">
+                    <div class="form-group" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.submit_language.name)}</h5>
                             <p>${tl(trans.submit_language.body)}</p>
@@ -524,227 +520,18 @@ export async function render_setting_page(page_id) {
             </section>
         `);
     } else if (page_id == 'interface') {
-        let colourful_active;
-        let colourful_all;
-        let sat_bg;
-
-        let adaptive_tip;
-        let bubbles;
-
-        function render_tip() {
-            adaptive_tip.setAttribute('aria-hidden', !settings.theme_schedule);
-
-            render(adaptive_tip, html`
-                ${tl(trans.adaptive_tip, {
-                    day: tl(trans.themes[settings.theme_day]),
-                    night: tl(trans.themes[settings.theme_night])
-                })}
-                <a onclick=${() => {
-                    dialog({
-                        id: 'auto_theme',
-                        title: tl(trans.themes.name),
-                        body: html.node`
-                            <div class="setting-group">
-                                ${(theme_day = setting({
-                                    id: 'theme_day',
-                                    list: [
-                                        {
-                                            value: 'light',
-                                            text: tl(trans.themes.light)
-                                        },
-                                        {
-                                            value: 'ink',
-                                            text: tl(trans.themes.ink)
-                                        },
-                                        {
-                                            value: 'dark',
-                                            text: tl(trans.themes.dark)
-                                        },
-                                        {
-                                            value: 'darker',
-                                            text: tl(trans.themes.darker)
-                                        },
-                                        {
-                                            value: 'oled',
-                                            text: tl(trans.themes.oled)
-                                        }
-                                    ],
-                                    func: () => {
-                                        render_tip();
-                                        bubbles.re_render();
-                                        match();
-                                    }
-                                }))}
-                                ${(theme_night = setting({
-                                    id: 'theme_night',
-                                    list: [
-                                        {
-                                            value: 'light',
-                                            text: tl(trans.themes.light)
-                                        },
-                                        {
-                                            value: 'ink',
-                                            text: tl(trans.themes.ink)
-                                        },
-                                        {
-                                            value: 'dark',
-                                            text: tl(trans.themes.dark)
-                                        },
-                                        {
-                                            value: 'darker',
-                                            text: tl(trans.themes.darker)
-                                        },
-                                        {
-                                            value: 'oled',
-                                            text: tl(trans.themes.oled)
-                                        }
-                                    ],
-                                    func: () => {
-                                        render_tip();
-                                        bubbles.re_render();
-                                        match();
-                                    }
-                                }))}
-                            </div>
-                            <p class="card-tip">${tl(trans.theme_schedule)}</p>
-                        `
-                    });
-                }}>
-                    ${tl(trans.change_schedule)}
-                </a>
-            `);
-        }
-
         render(page.state.inject, html`
-                <section class="form-section settings-form">
-                    <h4>${tl(trans.appearance)}</h4>
-                    <div class="setting-group">
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl(trans.themes.name)}</h5>
-                            </div>
-                            <div class="info v">
-                                ${(bubbles = theme_bubbles(() => {
-                sat_bg.compat();
-
-                render_tip();
-                match();
-            }))}
-                                <p
-                                    class="card-tip"
-                                    ref=${(el) => (adaptive_tip = el)}
-                                />
-                            </div>
-                        </div>
-                        ${setting({ id: 'solarium' })}
-                        ${ff('high_contrast')
-                    ? setting({ id: 'high_contrast' })
-                    : ''}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl(trans.hue)}</h5>
-                            </div>
-                            <div class="info swatch-info">
-                                <div
-                                    id="colour_custom"
-                                    class="swatch-group palette"
-                                ></div>
-                                <div class="sep swatch-sep" />
-                                <div
-                                    id="colour_palette"
-                                    class="swatch-group palette"
-                                ></div>
-                            </div>
-                        </div>
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl(trans.change_my_colour_when.name)}</h5>
-                                <p>${tl(trans.change_my_colour_when.body)}</p>
-                            </div>
-                            <div class="primary-selections">
-                                ${setting({
-                        id: 'hue_from_album',
-                        standalone: true
-                    })}
-                                ${(colourful_active = setting({
-                        id: 'colourful_tracks',
-                        standalone: true,
-                        func: () => {
-                            colourful_all.compat();
-                        }
-                    }))}
-                                ${(colourful_all = setting({
-                        id: 'colourful_tracks_all',
-                        standalone: true,
-                        func: () => {
-                            colourful_active.compat();
-                        }
-                    }))}
-                            </div>
-                        </div>
-                        ${ff('card_saturation')
-                    ? html.node`
-                                ${(sat_bg = setting({ id: 'sat_bg' }))}
-                            `
-                    : ''}
-                        ${setting({ id: 'noise' })}
-                    </div>
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl(trans.fonts)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: 'font' })}
-                        ${setting({ id: 'font_weight' })}
-                        ${setting({ id: 'font_weight_medium' })}
-                        ${setting({ id: 'font_weight_bold' })}
-                        ${setting({ id: 'font_emoji' })}
-                    </div>
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl(trans.artwork)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="palette albums" style="height: fit-content">
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/b897255bf422baa93a42536af293f9f8.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/510546e3b6df7504392274c528c77780.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/49cc807f69d59746b6b04be3434e6637.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/dd76702cea38c838a3090dd9496d92d9.jpg')"
-                            ></div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'gloss' })}
-                        ${setting({ id: 'grid_glow' })}
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'avatar_radius' })}
-                    </div>
-                </section>
-            `
-        );
-
-        render_tip();
-
-        display_colour_presets();
-        update_colour_swatches();
+            <div class="form-section settings-form">
+                <fieldset>
+                    <legend>${tl(trans.page_style)}</legend>
+                    ${setting({id: 'page_style'})}
+                </fieldset>
+                <fieldset>
+                    <legend>${tl(trans.social)}</legend>
+                    ${setting({id: 'varied_avatar_shapes'})}
+                </fieldset>
+            </div>
+        `);
     } else if (page_id == 'seasonal') {
         register_skip_to([]);
 
@@ -764,7 +551,7 @@ export async function render_setting_page(page_id) {
                     </div>
                     <div class="setting-group">
                         ${setting({ id: 'seasonal' })}
-                        <div class="setting" data-type="info">
+                        <div class="form-group" data-type="info">
                             <div class="heading">
                                 <h5>${tl(trans.current_season)}</h5>
                             </div>
@@ -790,7 +577,7 @@ export async function render_setting_page(page_id) {
                     stored_season.start &&
                     stored_season.end
                     ? html.node`
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.started)}</h5>
                         </div>
@@ -798,7 +585,7 @@ export async function render_setting_page(page_id) {
                             <p id="current_season_start">${DateTime.fromISO(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
                         </div>
                     </div>
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.ends_in)}</h5>
                         </div>
@@ -809,7 +596,7 @@ export async function render_setting_page(page_id) {
                     `
                     : settings.seasonal
                         ? html.node`
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.next_in)}</h5>
                         </div>
@@ -821,7 +608,7 @@ export async function render_setting_page(page_id) {
                         : ''}
                         ${settings.seasonal
                     ? html.node`
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.calculated_offset)}</h5>
                         </div>
@@ -867,7 +654,7 @@ export async function render_setting_page(page_id) {
                     </div>
                     <div class="setting-group">
                         ${setting({ id: 'dev' })} ${setting({ id: 'branch' })}
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl(trans.force_refresh_style.name)}</h5>
                                 <p>${tl(trans.force_refresh_style.body)}</p>
@@ -1042,7 +829,7 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     <div class="setting-group">
-                        <div class="setting" data-type="options">
+                        <div class="form-group" data-type="options">
                             <div class="heading">
                                 <h5>${tl(trans.view_backgrounds_on)}</h5>
                             </div>
@@ -1075,7 +862,7 @@ export async function render_setting_page(page_id) {
                     </div>
                     <div class="setting-group">
                         ${setting({ id: 'activities' })}
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl(trans.clear_history)}</h5>
                             </div>
@@ -1134,7 +921,7 @@ export async function render_setting_page(page_id) {
                 <h4>${tl(trans.images)}</h4>
                 <div class="setting-group">
                     ${setting({ id: 'static_gifs' })}
-                    <div class="setting" data-type="options">
+                    <div class="form-group" data-type="options">
                         <div class="heading">
                             <h5>${tl(trans.apply_to)}<div class="new-badge">${tl(trans.new)}</div></h5>
                         </div>
@@ -1178,7 +965,7 @@ export async function render_setting_page(page_id) {
                         let state;
 
                         return html.node`
-                            <div class="setting" data-type="toggle" onclick=${() => {
+                            <div class="form-group" data-type="toggle" onclick=${() => {
                                 let current = checkbox.checked;
 
                                 checkbox.checked = !current;
@@ -1721,7 +1508,7 @@ export function display_colour_presets() {
                             <div class="setting-group blend">
                                 ${ff('colour_based_on_hex')
                             ? html.node`
-                                <div class="setting" data-type="text">
+                                <div class="form-group" data-type="text">
                                     <div class="heading">
                                         <h5>${tl(trans.convert_from_hex)}</h5>
                                     </div>

@@ -5316,6 +5316,12 @@
 
         min-width: 107px;
 
+        animation: none !important;
+
+        &[data-state="hidden"] {
+            display: none;
+        }
+
         [data-bwaa--theme="paint_it_black"] & {
             background: #000 !important;
             border-color: var(--border) !important; /* supposed to be #000 but that looks strange */
@@ -5839,7 +5845,7 @@
         text-transform: unset !important;
 
         min-width: unset !important;
-        min-height: 21px !important;
+        min-height: 24px !important;
         width: fit-content !important;
         height: fit-content !important;
 
@@ -5952,6 +5958,10 @@
             }
             .more-link:last-child {
                 margin-bottom: unset !important;
+            }
+
+            &[data-type="info"] {
+                display: flex;
             }
         }
 
@@ -7436,6 +7446,8 @@
 
             padding: 15px !important;
 
+            animation: fade_in 0.5s;
+
             .bwaa-modal-title {
                 padding: 5px 15px !important;
                 background: transparent;
@@ -7452,6 +7464,10 @@
                     color: inherit !important;
                     letter-spacing: inherit !important;
                 }
+            }
+
+            &.to-remove {
+                animation: fade_out 0.5s;
             }
         }
     }
@@ -9002,6 +9018,7 @@
         }
     }
 
+    .artwork-and-metadata-row,
     .labs-cta,
     .legacy-header {
         display: none;

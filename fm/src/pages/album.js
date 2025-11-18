@@ -17,7 +17,7 @@ import {
 } from '../build/tools';
 import { tl, trans } from '../build/trans';
 import { bleh_about_artist } from '../components/about_artist';
-import { patch_header_title } from '../components/lotus';
+import { correct_artist, correct_item_by_artist, patch_header_title } from '../components/lotus';
 import { register_menu } from '../components/menu';
 import {
     redirect,
@@ -39,14 +39,8 @@ import { save_hoshino_artwork } from '../components/hoshino.js';
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
 
-    page.sister = album_header.querySelector(
-        '.header-new-crumb span'
-    ).textContent;
-    page.name = document.body
-        .querySelector('[data-page-resource-name]')
-        .getAttribute('data-page-resource-name');
-
-    patch_header_title();
+    page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+    page.name = document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name');
 
     let is_subpage = album_header.classList.contains('header-new--subpage');
 
@@ -54,9 +48,7 @@ export function bleh_albums() {
     if (auth.pro) {
         // pro
 
-        page.structure.container = document.body.querySelector(
-            '.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))'
-        );
+        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
     } else {
         // not pro
 
@@ -95,126 +87,53 @@ export function bleh_albums() {
 
     checkup_page_structure(is_subpage, album_header);
 
-    if (ff('refreshed_music_nav')) {
-        let avatar = album_header.querySelector('.header-new-background-image');
-        let title = album_header.querySelector('.header-new-title');
-        let artist = album_header.querySelector('[itemprop="byArtist"]');
-        let position = album_header.querySelector(
-            '.header-new-chart-position-number'
-        );
+    const avatar = album_header.querySelector('.header-new-background-image');
+    const position = album_header.querySelector('.header-new-chart-position-number');
 
-        const avatar_img = avatar
-            ?.getAttribute('content')
-            .replace('/ar0/', '/avatar300s/');
+    const avatar_img = avatar?.getAttribute('content').replace('/ar0/', '/avatar300s/');
 
-        const listeners = document.body.querySelector(
-            '.header-new-info-desktop .header-metadata-tnew-display > p > abbr'
-        );
+    const listeners = document.body.querySelector('.header-new-info-desktop .header-metadata-tnew-display > p > abbr');
 
-        save_hoshino_artwork(
-            avatar_img,
-            page.name,
-            page.sister,
-            clean_number(listeners?.title)
-        );
+    save_hoshino_artwork(
+        avatar_img,
+        page.name,
+        page.sister,
+        clean_number(listeners?.title)
+    );
 
-        let redesigned_album_header = html.node`
-            <section class="redesigned-header redesigned-album-header no-background">
-                ${
-                    is_subpage || ff('show_album_cover_always') ?
-                        html.node`
-                <div class="avatar-side">
-                    ${
-                        avatar ?
-                            html.node`
-                    <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
-                    <a class="bleh--avatar-clickable-link"></a>
-                    `
-                        :   html.node`<img class="missing-album">`
-                    }
+    const header = html.node`
+        <section class="profile-album-section">
+            <div class="album-info">
+                <h1>${{html: tl(trans.value_by_user, {
+                    v: correct_item_by_artist(page.name, page.sister),
+                    u: `<a href="${root}music/${page.sister}">${correct_artist(page.sister)}</a>`
+                })}}</h1>
+                <div class="stats">
+
                 </div>
-                `
-                    :   ''
-                }
-                <div class="info-side">
-                    <div class="sub-text">${tl(trans.album)}</div>
-                    <div class="title-container">
-                        ${title}
-                        ${position ? position : ''}
-                    </div>
-                    <h2>${artist}</h2>
+                <div class="actions">
+
                 </div>
-                ${
-                    page.suggest ?
-                        html.node`
-                <div class="suggest-side">
-                    <div class="cta suggest">
-                        <strong>${tl(trans.suggest_title.name)}</strong>
-                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace('{v}', desanitise(page.suggest, '+'))}</a>
-                    </div>
+                <div class="tags">
+
                 </div>
-                `
-                    :   ''
-                }
-        `;
+                <div class="shouts">
 
-        if (avatar) register_background(avatar.getAttribute('content'));
-        else register_background(null);
+                </div>
+                <div class="share-bar">
 
-        page.structure.container.insertBefore(
-            redesigned_album_header,
-            page.structure.container.firstElementChild
-        );
-        album_header.classList.add('legacy-header');
-
-        let avatar_side = redesigned_album_header.querySelector('.avatar-side');
-        let avatar_link = avatar_side.querySelector('a');
-
-        if (avatar && avatar_link) {
-            if (settings.default_avatar_action == 'expand' && avatar)
-                avatar_link.setAttribute(
-                    'onclick',
-                    `_expand_avatar('${avatar.getAttribute('content')}')`
-                );
-            else if (settings.default_avatar_action == 'gallery')
-                avatar_link.href = `${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
-
-            let menu = tippy(avatar_side, {
-                theme: 'context-menu',
-                content: html.node`
-                    ${
-                        avatar ?
-                            html.node`
-                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute('content'))} data-menu-item="expand">
-                        ${tl(trans.expand)}
-                    </button>
-                    `
-                        :   ''
-                    }
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${tl(trans.artwork)}
-                    </a>
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                        ${tl(trans.settings)}
-                    </a>
-                `,
-                placement: 'right-start',
-                trigger: 'manual',
-                interactive: true,
-                interactiveBorder: 10,
-                offset: [0, 0],
-
-                onShow(instance) {
-                    instance.popper.addEventListener('click', (event) => {
-                        instance.hide();
-                    });
-                }
-            });
-
-            register_menu(avatar_side, menu);
-        }
-    }
+                </div>
+            </div>
+            <div class="album-image-side">
+                <a class="image">
+                    ${avatar ? html.node`
+                        <img src=${avatar_img}>
+                    ` : ''}
+                </a>
+            </div>
+    `;
+    page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    album_header.classList.add('legacy-header');
 
     // cover
     if (settings.hue_from_album) {

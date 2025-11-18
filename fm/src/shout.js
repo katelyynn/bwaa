@@ -23,14 +23,6 @@ import tippy from 'tippy.js';
 export function patch_shouts() {
     if (!page.structure.main) return;
 
-    let shout_controls = page.structure.main.querySelector(
-        '.shoutbox-controls-wrapper:not([data-shouts])'
-    );
-    if (shout_controls) {
-        shout_controls.setAttribute('data-shouts', 'true');
-        shout_header(shout_controls);
-    }
-
     let shouts = page.structure.main.querySelectorAll(
         '.shout:not([data-kate-processed])'
     );
@@ -174,47 +166,6 @@ export function patch_shouts() {
         patch_avatar(shout_avatar, auth.name);
 
         let send_button = shout_form.querySelector('.form-group--submit');
-        shout_send(send_button);
-
-        const help_text = shout_form.querySelector('.form-row-help-text');
-        help_text.classList.add('dual-tip');
-
-        const textarea = shout_form.querySelector('textarea');
-
-        let chars;
-        let preview;
-        render(
-            help_text,
-            html`
-                <div
-                    class="tip markdown-enabled"
-                    onclick=${() => markdown_prompt()}
-                >
-                    ${tl(trans.supports_markdown)}
-                </div>
-                <div
-                    class="tip preview"
-                    onclick=${() => markdown_preview(textarea.value)}
-                    ref=${(el) => (preview = el)}
-                    disabled="true"
-                >
-                    ${tl(trans.preview)}
-                </div>
-                <div class="tip characters" ref=${(el) => (chars = el)}>
-                    ${tl(trans.value_characters_max, { v: '0/1000' })}
-                </div>
-            `
-        );
-
-        textarea.addEventListener('input', () => {
-            const value = textarea.value;
-            chars.textContent = tl(trans.value_characters_max, {
-                v: `${value.length}/1000`
-            });
-            chars.setAttribute('data-exceeded', value.length >= 1000);
-
-            preview.setAttribute('disabled', value.length <= 0);
-        });
 
         shout_form.addEventListener('keydown', (e) => {
             // CTRL + ENTER
@@ -222,28 +173,14 @@ export function patch_shouts() {
                 e.preventDefault();
 
                 send_button.querySelector('.btn-post-shout').click();
-                notify({
-                    id: 'shout',
-                    title: tl(trans.shouts),
-                    body: tl(trans.sent),
-                    icon: 'icon-16-shoutbox'
-                });
             }
         });
     });
 }
 
-function shout_send(send_button) {
-    if (!send_button) return;
-
-    let button = send_button.querySelector('.btn-post-shout');
-    if (!button) return;
-
-    button.classList.add('btn-send-shout-generic');
-    button.textContent = tl(trans.send);
-}
-
 export function shout_header(shout_controls) {
+    return;
+
     if (!shout_controls) return;
 
     let panel;

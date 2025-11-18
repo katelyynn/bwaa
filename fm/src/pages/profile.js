@@ -666,6 +666,12 @@ export async function bleh_profiles() {
                 .appendChild(html.node`
                 <div class="new-badge count-badge">${count}</div>
             `);
+        } else if (page.subpage.startsWith('library')) {
+            const date_range = page.structure.side.querySelector('.date-range-picker-form');
+
+            if (date_range) {
+                date_range.classList.remove('content-form');
+            }
         }
     }
 

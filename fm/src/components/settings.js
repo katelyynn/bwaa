@@ -127,7 +127,7 @@ export function setting({
             let working_max = settings_store[id].max - settings_store[id].min;
 
             const elem = html.node`
-                <div class="setting v2 ${standalone ? 'standalone' : ''} ${settings_store[id].vertical ? 'v' : ''}" data-type="range" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => (option = el)} data-modified=${value != settings_store[id].default}>
+                <div class="form-group ${standalone ? 'standalone' : ''} ${settings_store[id].vertical ? 'v' : ''}" data-type="range" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => (option = el)} data-modified=${value != settings_store[id].default}>
                     ${
                         text ?
                             html.node`
@@ -252,7 +252,7 @@ export function setting({
                 placeholder = tl(placeholder);
 
             let container = html.node`
-                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => (option = el)} data-modified=${value != settings_store[id].default}>
+                <div class="form-group ${standalone ? 'standalone' : ''}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => (option = el)} data-modified=${value != settings_store[id].default}>
                     ${
                         icon ?
                             html.node`
@@ -496,79 +496,29 @@ export function setting({
         } else if (type == 'radio') {
             let buttons = [];
 
-            let reset_btn;
-
             const elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
-                    ${
-                        icon ?
-                            html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    `
-                        :   ''
-                    }
-                    ${
-                        text ?
-                            html.node`
-                    <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => (reset_btn = el)} onclick=${() => reset_radio()}>${tl(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ''}
-                    </div>
-                    `
-                        :   ''
-                    }
-                    ${
-                        settings_store[id].extensions ?
-                            html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map(
-                            (extension) => () => {
-                                let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-                                tippy(container, {
-                                    content: tl(
-                                        trans.requires_extension_value
-                                    ).replace('{v}', tl(extension))
-                                });
-                                return container;
-                            }
-                        )}
-                    </div>
-                    `
-                        :   ''
-                    }
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                <div class="form-group" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
+                    <label>
+                        ${html_title}
+                    </label>
+                    ${body ? html.node`<div class="alert">${body}</div>` : ''}
                     <div class="primary-selections">
                         ${Object.entries(settings_store[id].values).map(
                             ([key, val]) => {
-                                const icon = val.icon;
-
                                 const button = html.node`
-                                    <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
+                                    <div class="form-group" data-type="radio" data-value=${key} onclick=${() => {
                                         update_radio(key);
                                     }}>
-                                        <div class="radio-cont">
-                                            <div class="radio" aria-checked=${value == key} />
-                                        </div>
-                                        ${
-                                            icon ?
-                                                html.node`
-                                                    <div class="icon">
-                                                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                                                    </div>
-                                                `
-                                            :   ''
-                                        }
-                                        <div class="heading">
-                                            <h5>${typeof val.name == 'object' ? tl(val.name) : val.name}</h5>
+                                        <div class="radio">
+                                            <label for="setting_${id}_${key}">
+                                                <input type="radio" id="setting_${id}_${key}" name=${id} value=${key} ref=${el => radio = el}>
+                                                ${typeof val.name == 'object' ? tl(val.name) : val.name}
+                                            </label>
                                         </div>
                                     </div>
                                 `;
+
+                                radio.checked = value == key;
 
                                 buttons.push(button);
                                 return button;
@@ -598,33 +548,10 @@ export function setting({
 
             elem.compat();
 
-            tippy(reset_btn, {
-                content: tl(trans.reset)
-            });
-
             function update_radio(val) {
                 save_setting(id, val);
 
-                elem.setAttribute(
-                    'data-modified',
-                    val != settings_store[id].default
-                );
-
-                buttons.forEach((btn) => {
-                    btn.querySelector('.radio').setAttribute(
-                        'aria-checked',
-                        btn.getAttribute('data-value') == val
-                    );
-                });
-
                 if (func) func(val);
-            }
-
-            function reset_radio() {
-                update_radio(settings_store[id].default);
-                status({
-                    title: tl(trans.reset_item_to_default)
-                });
             }
 
             return elem;
@@ -638,7 +565,7 @@ export function setting({
             let lists;
 
             const elem = html.node`
-                <div class="setting v2" data-type="list">
+                <div class="form-group" data-type="list">
                     ${
                         icon ?
                             html.node`
@@ -827,7 +754,7 @@ export function setting({
 
             let elem;
             elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
+                <div class="form-group" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
                     ${
                         icon ?
                             html.node`

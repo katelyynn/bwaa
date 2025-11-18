@@ -19434,11 +19434,6 @@
       title: tl2(trans.support_future_development),
       body: html.node`
             <div class="modal-vertical-inner support-inner">
-                <div class="avatar">
-                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans.your_avatar)}">
-                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                </div>
-                <h1>${tl2(trans.support_future_development)}</h1>
                 <p>${html.node([
         tl2(trans.why_sponsor).replace(
           "katelyn",
@@ -19465,14 +19460,9 @@
     if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
       dialog({
         id: "sponsor_manage",
-        title: tl2(trans.sponsor),
+        title: tl2(trans.you_are_a_sponsor),
         body: html.node`
                 <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl2(trans.you_are_a_sponsor)}</h1>
                     <p>${tl2(trans.sponsor_no_badge)}</p>
                 </div>
             `,
@@ -19481,14 +19471,9 @@
     } else {
       dialog({
         id: "sponsor_manage",
-        title: tl2(trans.sponsor),
+        title: tl2(trans.you_are_a_sponsor),
         body: html.node`
                 <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl2(trans.you_are_a_sponsor)}</h1>
                     <p>${tl2(trans.sponsor_get_badge)}</p>
                 </div>
                 <div class="modal-footer">
@@ -19984,7 +19969,7 @@
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
         const elem = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option2 = el} data-modified=${value != settings_store[id].default}>
+                <div class="form-group ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option2 = el} data-modified=${value != settings_store[id].default}>
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_range()}>${tl2(trans.reset)}</button></h5>
@@ -20061,7 +20046,7 @@
         if (placeholder && placeholder != "empty")
           placeholder = tl2(placeholder);
         let container = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option2 = el} data-modified=${value != settings_store[id].default}>
+                <div class="form-group ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option2 = el} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -20248,79 +20233,31 @@
       } else if (type == "radio") {
         let update_radio = function(val) {
           save_setting(id, val);
-          elem.setAttribute(
-            "data-modified",
-            val != settings_store[id].default
-          );
-          buttons.forEach((btn) => {
-            btn.querySelector(".radio").setAttribute(
-              "aria-checked",
-              btn.getAttribute("data-value") == val
-            );
-          });
           if (func) func(val);
-        }, reset_radio = function() {
-          update_radio(settings_store[id].default);
-          status({
-            title: tl2(trans.reset_item_to_default)
-          });
         };
         let buttons = [];
-        let reset_btn;
         const elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text3 ? html.node`
-                    <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_radio()}>${tl2(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map(
-          (extension) => () => {
-            let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-            tippy_esm_default(container, {
-              content: tl2(
-                trans.requires_extension_value
-              ).replace("{v}", tl2(extension))
-            });
-            return container;
-          }
-        )}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                <div class="form-group" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
+                    <label>
+                        ${html_title}
+                    </label>
+                    ${body ? html.node`<div class="alert">${body}</div>` : ""}
                     <div class="primary-selections">
                         ${Object.entries(settings_store[id].values).map(
           ([key, val]) => {
-            const icon2 = val.icon;
             const button = html.node`
-                                    <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
+                                    <div class="form-group" data-type="radio" data-value=${key} onclick=${() => {
               update_radio(key);
             }}>
-                                        <div class="radio-cont">
-                                            <div class="radio" aria-checked=${value == key} />
-                                        </div>
-                                        ${icon2 ? html.node`
-                                                    <div class="icon">
-                                                        <div class="bleh-icon" style="--icon: var(--${icon2})" />
-                                                    </div>
-                                                ` : ""}
-                                        <div class="heading">
-                                            <h5>${typeof val.name == "object" ? tl2(val.name) : val.name}</h5>
+                                        <div class="radio">
+                                            <label for="setting_${id}_${key}">
+                                                <input type="radio" id="setting_${id}_${key}" name=${id} value=${key} ref=${(el) => radio = el}>
+                                                ${typeof val.name == "object" ? tl2(val.name) : val.name}
+                                            </label>
                                         </div>
                                     </div>
                                 `;
+            radio.checked = value == key;
             buttons.push(button);
             return button;
           }
@@ -20342,9 +20279,6 @@
           });
         };
         elem.compat();
-        tippy_esm_default(reset_btn, {
-          content: tl2(trans.reset)
-        });
         return elem;
       } else if (type == "list") {
         let render_list_items = function(current = settings[id]) {
@@ -20453,7 +20387,7 @@
           });
         let lists;
         const elem = html.node`
-                <div class="setting v2" data-type="list">
+                <div class="form-group" data-type="list">
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -20509,7 +20443,7 @@
         if (list.length === 0) disabled = true;
         let elem;
         elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
+                <div class="form-group" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -21836,6 +21770,39 @@
     if (tab) tab.textContent = text3;
   }
 
+  // src/components/header.js
+  function generic_subpage_header(header_title, link_type = "user", direct_link = "") {
+    let link_field = html.node`<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
+    let name = page.name;
+    let sister = page.sister;
+    if (["album", "track"].includes(link_type)) {
+      name = correct_item_by_artist(page.name, page.sister);
+    } else if (link_type == "artist") {
+      name = correct_artist(page.name);
+    }
+    if (link_type == "artist")
+      link_field = html.node`<a href="${root}music/${sanitise(page.name)}">${name}</a>`;
+    else if (link_type == "album")
+      link_field = html.node`<a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${name}</a>`;
+    else if (link_type == "track")
+      link_field = html.node`<a href="${root}music/${sanitise(page.sister)}/_/${sanitise(page.name)}">${name}</a>`;
+    else if (link_type == "direct")
+      link_field = html.node`<a href="${direct_link}">${name}</a>`;
+    return html.node`
+        <section class="profile-header-subpage-section" ref=${(el) => page.state.header = el}>
+            ${page.avatar != "" ? html.node`
+                <div class="badge-avatar">
+                    <img src=${page.avatar} alt=${name}>
+                </div>
+            ` : ""}
+            <div class="badge-info">
+                ${link_field}
+                <h1 ref=${(el) => page.state.title = el}>${header_title}</h1>
+            </div>
+        </section>
+    `;
+  }
+
   // src/pages/bwaa_config.js
   function bwaa_settings() {
     page.structure.container = document.body.querySelector(".page-content");
@@ -21848,6 +21815,7 @@
     }
     checkup_page_structure();
     page.name = auth.name;
+    page.avatar = auth.avatar;
     page.subpage = "";
     update_page();
     page.structure.row.removeChild(page.structure.row.firstElementChild);
@@ -21910,6 +21878,7 @@
         </div>
     `);
     page.state.nav_items = [];
+    page.structure.row.insertBefore(generic_subpage_header(tl2(trans.configure_bwaa_settings)), page.structure.row.firstElementChild);
     render(page.structure.main, html`
         <nav class="navlist secondary-nav navlist--more">
             <ul class="navlist-items">
@@ -22072,10 +22041,10 @@
                 `}
             </section>
             <section class="form-section settings-form">
-                <h4>${tl2(trans.profile)}</h4>
-                <div class="setting-group">
+                <fieldset>
+                    <legend>${tl2(trans.profile)}</legend>
                     ${auth.name ? html.node`
-                        <div class="setting" data-type="info">
+                        <div class="form-group" data-type="info">
                             <div class="avatar-container">
                                 <div class="avatar-inner">
                                     <img src=${auth.avatar} alt=${auth.name} />
@@ -22137,7 +22106,7 @@
                         </div>
                     ` : ""}
                     ${auth.sponsor ? html.node`
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl2(trans.you_are_a_sponsor)}</h5>
                                 <p>${tl2(trans.sponsor_get_badge)}</p>
@@ -22149,7 +22118,7 @@
                             </div>
                         </div>
                     ` : html.node`
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl2(trans.news_sponsor_cta)}</h5>
                                 <p>${tl2(trans.api.body)}</p>
@@ -22161,7 +22130,7 @@
                             </div>
                         </div>
                     `}
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl2(trans.current_version)}</h5>
                         </div>
@@ -22172,27 +22141,19 @@
                             <p>${sponsor_list.latest}</p>
                         </div>
                     </div>
-                </div>
+                </fieldset>
             </section>
-            ${!page.mobile ? html.node`
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.branding)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: "branding_type" })}
-                    </div>
-                </section>
-            ` : ""}
             ${auth.name ? html.node`
                 <section class="form-section settings-form">
                     <h4>API</h4>
                     <div class="setting-group">
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl2(trans.api.name)}</h5>
                                 <p>${tl2(trans.api.body)}</p>
                             </div>
                         </div>
-                        <div class="setting" data-type="info">
+                        <div class="form-group" data-type="info">
                             <div class="heading">
                                 <h5>${tl2(trans.api_status)}</h5>
                             </div>
@@ -22254,7 +22215,7 @@
                     </div>
                 </div>
                 <div class="setting-group">
-                    <div class="setting" data-type="action">
+                    <div class="form-group" data-type="action">
                         <div class="heading">
                             <h5>${tl2(trans.submit_language.name)}</h5>
                             <p>${tl2(trans.submit_language.body)}</p>
@@ -22269,218 +22230,18 @@
             </section>
         `);
     } else if (page_id == "interface") {
-      let render_tip = function() {
-        adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
-        render(adaptive_tip, html`
-                ${tl2(trans.adaptive_tip, {
-          day: tl2(trans.themes[settings.theme_day]),
-          night: tl2(trans.themes[settings.theme_night])
-        })}
-                <a onclick=${() => {
-          dialog({
-            id: "auto_theme",
-            title: tl2(trans.themes.name),
-            body: html.node`
-                            <div class="setting-group">
-                                ${theme_day = setting({
-              id: "theme_day",
-              list: [
-                {
-                  value: "light",
-                  text: tl2(trans.themes.light)
-                },
-                {
-                  value: "ink",
-                  text: tl2(trans.themes.ink)
-                },
-                {
-                  value: "dark",
-                  text: tl2(trans.themes.dark)
-                },
-                {
-                  value: "darker",
-                  text: tl2(trans.themes.darker)
-                },
-                {
-                  value: "oled",
-                  text: tl2(trans.themes.oled)
-                }
-              ],
-              func: () => {
-                render_tip();
-                bubbles.re_render();
-                match2();
-              }
-            })}
-                                ${theme_night = setting({
-              id: "theme_night",
-              list: [
-                {
-                  value: "light",
-                  text: tl2(trans.themes.light)
-                },
-                {
-                  value: "ink",
-                  text: tl2(trans.themes.ink)
-                },
-                {
-                  value: "dark",
-                  text: tl2(trans.themes.dark)
-                },
-                {
-                  value: "darker",
-                  text: tl2(trans.themes.darker)
-                },
-                {
-                  value: "oled",
-                  text: tl2(trans.themes.oled)
-                }
-              ],
-              func: () => {
-                render_tip();
-                bubbles.re_render();
-                match2();
-              }
-            })}
-                            </div>
-                            <p class="card-tip">${tl2(trans.theme_schedule)}</p>
-                        `
-          });
-        }}>
-                    ${tl2(trans.change_schedule)}
-                </a>
-            `);
-      };
-      let colourful_active;
-      let colourful_all;
-      let sat_bg2;
-      let adaptive_tip;
-      let bubbles;
-      render(
-        page.state.inject,
-        html`
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.appearance)}</h4>
-                    <div class="setting-group">
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.themes.name)}</h5>
-                            </div>
-                            <div class="info v">
-                                ${bubbles = theme_bubbles(() => {
-          sat_bg2.compat();
-          render_tip();
-          match2();
-        })}
-                                <p
-                                    class="card-tip"
-                                    ref=${(el) => adaptive_tip = el}
-                                />
-                            </div>
-                        </div>
-                        ${setting({ id: "solarium" })}
-                        ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.hue)}</h5>
-                            </div>
-                            <div class="info swatch-info">
-                                <div
-                                    id="colour_custom"
-                                    class="swatch-group palette"
-                                ></div>
-                                <div class="sep swatch-sep" />
-                                <div
-                                    id="colour_palette"
-                                    class="swatch-group palette"
-                                ></div>
-                            </div>
-                        </div>
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans.change_my_colour_when.name)}</h5>
-                                <p>${tl2(trans.change_my_colour_when.body)}</p>
-                            </div>
-                            <div class="primary-selections">
-                                ${setting({
-          id: "hue_from_album",
-          standalone: true
-        })}
-                                ${colourful_active = setting({
-          id: "colourful_tracks",
-          standalone: true,
-          func: () => {
-            colourful_all.compat();
-          }
-        })}
-                                ${colourful_all = setting({
-          id: "colourful_tracks_all",
-          standalone: true,
-          func: () => {
-            colourful_active.compat();
-          }
-        })}
-                            </div>
-                        </div>
-                        ${ff("card_saturation") ? html.node`
-                                ${sat_bg2 = setting({ id: "sat_bg" })}
-                            ` : ""}
-                        ${setting({ id: "noise" })}
-                    </div>
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.fonts)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: "font" })}
-                        ${setting({ id: "font_weight" })}
-                        ${setting({ id: "font_weight_medium" })}
-                        ${setting({ id: "font_weight_bold" })}
-                        ${setting({ id: "font_emoji" })}
-                    </div>
-                </section>
-                <section class="form-section settings-form">
-                    <h4>${tl2(trans.artwork)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="palette albums" style="height: fit-content">
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/b897255bf422baa93a42536af293f9f8.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/510546e3b6df7504392274c528c77780.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/49cc807f69d59746b6b04be3434e6637.jpg')"
-                            ></div>
-                            <div
-                                class="album-cover swatch"
-                                style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/dd76702cea38c838a3090dd9496d92d9.jpg')"
-                            ></div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "gloss" })}
-                        ${setting({ id: "grid_glow" })}
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "avatar_radius" })}
-                    </div>
-                </section>
-            `
-      );
-      render_tip();
-      display_colour_presets();
-      update_colour_swatches();
+      render(page.state.inject, html`
+            <div class="form-section settings-form">
+                <fieldset>
+                    <legend>${tl2(trans.page_style)}</legend>
+                    ${setting({ id: "page_style" })}
+                </fieldset>
+                <fieldset>
+                    <legend>${tl2(trans.social)}</legend>
+                    ${setting({ id: "varied_avatar_shapes" })}
+                </fieldset>
+            </div>
+        `);
     } else if (page_id == "seasonal") {
       register_skip_to([]);
       render(
@@ -22499,7 +22260,7 @@
                     </div>
                     <div class="setting-group">
                         ${setting({ id: "seasonal" })}
-                        <div class="setting" data-type="info">
+                        <div class="form-group" data-type="info">
                             <div class="heading">
                                 <h5>${tl2(trans.current_season)}</h5>
                             </div>
@@ -22520,7 +22281,7 @@
                             </div>
                         </div>
                         ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl2(trans.started)}</h5>
                         </div>
@@ -22528,7 +22289,7 @@
                             <p id="current_season_start">${DateTime.fromISO(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
                         </div>
                     </div>
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl2(trans.ends_in)}</h5>
                         </div>
@@ -22537,7 +22298,7 @@
                         </div>
                     </div>
                     ` : settings.seasonal ? html.node`
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl2(trans.next_in)}</h5>
                         </div>
@@ -22547,7 +22308,7 @@
                     </div>
                     ` : ""}
                         ${settings.seasonal ? html.node`
-                    <div class="setting" data-type="info">
+                    <div class="form-group" data-type="info">
                         <div class="heading">
                             <h5>${tl2(trans.calculated_offset)}</h5>
                         </div>
@@ -22590,7 +22351,7 @@
                     </div>
                     <div class="setting-group">
                         ${setting({ id: "dev" })} ${setting({ id: "branch" })}
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl2(trans.force_refresh_style.name)}</h5>
                                 <p>${tl2(trans.force_refresh_style.body)}</p>
@@ -22759,7 +22520,7 @@
                         </div>
                     </div>
                     <div class="setting-group">
-                        <div class="setting" data-type="options">
+                        <div class="form-group" data-type="options">
                             <div class="heading">
                                 <h5>${tl2(trans.view_backgrounds_on)}</h5>
                             </div>
@@ -22792,7 +22553,7 @@
                     </div>
                     <div class="setting-group">
                         ${setting({ id: "activities" })}
-                        <div class="setting" data-type="action">
+                        <div class="form-group" data-type="action">
                             <div class="heading">
                                 <h5>${tl2(trans.clear_history)}</h5>
                             </div>
@@ -22848,7 +22609,7 @@
                 <h4>${tl2(trans.images)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "static_gifs" })}
-                    <div class="setting" data-type="options">
+                    <div class="form-group" data-type="options">
                         <div class="heading">
                             <h5>${tl2(trans.apply_to)}<div class="new-badge">${tl2(trans.new)}</div></h5>
                         </div>
@@ -22886,7 +22647,7 @@
           let checkbox;
           let state;
           return html.node`
-                            <div class="setting" data-type="toggle" onclick=${() => {
+                            <div class="form-group" data-type="toggle" onclick=${() => {
             let current = checkbox.checked;
             checkbox.checked = !current;
             state.setAttribute("aria-checked", !current);
@@ -23356,7 +23117,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         <div class="dialog-settings">
                             <div class="setting-group blend">
                                 ${ff("colour_based_on_hex") ? html.node`
-                                <div class="setting" data-type="text">
+                                <div class="form-group" data-type="text">
                                     <div class="heading">
                                         <h5>${tl2(trans.convert_from_hex)}</h5>
                                     </div>
@@ -24059,10 +23820,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     avatar2.setAttribute("data-bwaa-avatar", "true");
     const avatar_img = avatar2.querySelector("img");
     if (!avatar_img) return {};
-    avatar_img.setAttribute(
-      "src",
-      avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/")
-    );
+    avatar_img.src = avatar_img.src.replace("/64s/", "/avatar70s/");
+    if (settings.varied_avatar_shapes) {
+      avatar_img.src = avatar_img.src.replace("/avatar70s/", "/arXL/").replace("/avatar170s/", "/arXL/").replace("/avatar300s/", "/arXL");
+    }
     avatar2.setAttribute("title", "");
     let badges = load_badges(name);
     let pre_existing_badge = avatar2.querySelector(".avatar-status-dot");
@@ -26630,54 +26391,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         `
     });
   }
-  function markdown_preview(text3, {
-    allow_headers = false,
-    starting_header = 3,
-    allow_links = true,
-    line_breaks = true,
-    allow_banners = false,
-    allow_icons = false,
-    allow_hue = false,
-    allow_socials = false,
-    allow_lists = true,
-    allow_alignment = false
-  } = {}) {
-    if (!line_breaks) allow_alignment = false;
-    dialog({
-      id: "markdown",
-      title: tl2(trans.preview),
-      body: html.node`
-            <div class="shout-container">
-                <div class="shout" style="--delay: 0s">
-                    <h3 class="shout-user">
-                        <a href="${root}user/${auth.name}">${auth.name}</a>
-                    </h3>
-                    <span class="avatar shout-user-avatar">
-                        <img src=${auth.avatar} alt=${tl2(trans.your_avatar)} loading="lazy">
-                    </span>
-                    <a class="shout-user-avatar-link js-link-block-cover-link" href="${root}user/${auth.name}" tabindex="-1" />
-                    <div class="shout-body">
-                        <p class="markdown-body">
-                            ${markdown(text3, {
-        allow_headers,
-        starting_header,
-        allow_links,
-        line_breaks,
-        allow_banners,
-        allow_icons,
-        allow_hue,
-        allow_socials,
-        allow_lists,
-        allow_alignment,
-        in_dialog: true
-      })}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        `
-    });
-  }
   function local_restriction(text3) {
     if (text3.textContent.trim().startsWith("Due to local laws, we are temporarily"))
       text3.classList.add("local-restriction");
@@ -28542,21 +28255,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     };
     xhr.send();
   }
-  function oracle_credits() {
-    dialog({
-      id: "oracle_credits",
-      title: tl2(trans.credits),
-      body: html.node`
-            <div class="oracle-credits">
-                <h3>${correct_item_by_artist(page.name, page.sister)}</h3>
-                <div class="credit">
-                    <h4>${tl2(trans.performed_by)}</h4>
-                    <span>${correct_artist(page.sister)}</span>
-                </div>
-            </div>
-        `
-    });
-  }
   function oracle_debug() {
     const debug = page.state.oracle_debug;
     log2("debug", "oracle", "info", { debug });
@@ -28810,7 +28508,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl2(trans.home)}
+                            ${tl2(trans.artist)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
@@ -28867,7 +28565,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl2(trans.home)}
+                            ${tl2(trans.album)}
                         </a>
                     </li>
                     ${!page_is_blocked ? html.node`
@@ -28899,7 +28597,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl2(trans.home)}
+                            ${tl2(trans.track)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
@@ -28927,7 +28625,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </ul>
             `);
       }
-      page.structure.container.insertBefore(tabs, page.structure.row);
+      page.structure.row.insertBefore(tabs, page.structure.row.firstElementChild);
       page.structure.tabs = tabs;
     }
     let col_main = page.structure.container.querySelector(
@@ -29057,13 +28755,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       obsession_btn.textContent = tl2(trans.obsession);
       interact_container.appendChild(obsession_form);
     }
-    if (ff("credits") && ff("oracle") && settings.oracle_beta && ["album", "track"].includes(page.type)) {
-      interact_container.appendChild(html.node`
-            <button class="btn side-action" data-type="credits" onclick=${() => oracle_credits()}>
-                ${tl2(trans.credits)}
-            </button>
-        `);
-    }
     const play_btn = interact_container.querySelector(".header-new-playlink");
     if (play_btn) interact_container.removeChild(play_btn);
     if (auth.name) {
@@ -29166,344 +28857,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </div>
         </div>
     `;
-    if (page.type == "track") {
-      play_on = page.structure.side.querySelector(
-        ".play-this-track-playlinks"
-      );
-      play_on.parentElement.remove();
-      play_links = play_on.querySelectorAll("li");
-      play_links.forEach((item) => {
-        const link = item.querySelector(
-          ".play-this-track-playlink:not(.visible-xs)"
-        );
-        link.classList.remove("play-this-track-playlink");
-        link.classList.add("music-link");
-        const replace = item.querySelector(".replace-playlink");
-        if (link.classList.contains("play-this-track-playlink--youtube")) {
-          link.textContent = "YouTube";
-          if (!settings.music_links.includes("youtube")) return;
-        } else if (link.classList.contains("play-this-track-playlink--spotify")) {
-          link.textContent = "Spotify";
-          if (!settings.music_links.includes("spotify")) return;
-        } else if (link.classList.contains("play-this-track-playlink--itunes")) {
-          link.textContent = "Apple";
-          if (!settings.music_links.includes("itunes")) return;
-        }
-        if (replace) {
-          replace.classList.add("dropdown-menu-clickable-item");
-          item.removeChild(replace);
-          let menu = tippy_esm_default(link, {
-            theme: "context-menu",
-            content: replace,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            appendTo: document.body,
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(link, menu);
-        }
-        link_container.appendChild(item);
-      });
-      if (["genius", "tidal", "deezer", "qobuz"].some(
-        (service) => settings.music_links.includes(service)
-      )) {
-        link_container.appendChild(html.node`
-                ${settings.music_links.includes("genius") ? html.node`
-                    <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                        Genius
-                    </a>
-                ` : ""}
-                ${settings.music_links.includes("tidal") ? html.node`
-                    <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                        Tidal
-                    </a>
-                ` : ""}
-                ${settings.music_links.includes("deezer") ? html.node`
-                    <a class="music-link play-this-track-playlink--deezer" href="https://www.deezer.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                        Deezer
-                    </a>
-                ` : ""}
-                ${settings.music_links.includes("qobuz") ? html.node`
-                    <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, " ")}%20${sanitise(page.name, " ")}" target="_blank">
-                        Qobuz
-                    </a>
-                ` : ""}
-            `);
-      }
-    } else {
-      if (page.type == "album") {
-        render(
-          link_container,
-          html`
-                    ${settings.music_links.includes("spotify") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--spotify"
-                                href="https://open.spotify.com/search/${sanitise(
-            page.sister,
-            " "
-          )} ${sanitise(page.name, " ")}"
-                                target="_blank"
-                            >
-                                Spotify
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("itunes") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--itunes"
-                                href="https://music.apple.com/gb/search?term=${sanitise(
-            page.sister,
-            " "
-          )} ${sanitise(page.name, " ")}"
-                                target="_blank"
-                            >
-                                Apple
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("youtube") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--youtube-music"
-                                href="https://music.youtube.com/search?q=${sanitise(
-            page.sister
-          )}+${sanitise(page.name)}"
-                                target="_blank"
-                            >
-                                YouTube
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("tidal") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--tidal"
-                                href="https://listen.tidal.com/search?q=${sanitise(
-            page.sister,
-            " "
-          )} ${sanitise(page.name, " ")}"
-                                target="_blank"
-                            >
-                                Tidal
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("deezer") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--deezer"
-                                href="https://www.deezer.com/search/${sanitise(
-            page.sister,
-            " "
-          )} ${sanitise(page.name, " ")}"
-                                target="_blank"
-                            >
-                                Deezer
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("discogs") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--discogs"
-                                href="https://www.discogs.com/search?q=${sanitise(
-            page.sister
-          )}+${sanitise(page.name)}&type=all"
-                                target="_blank"
-                            >
-                                Discogs
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("qobuz") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--qobuz"
-                                href="https://www.qobuz.com/search/albums/${sanitise(
-            page.sister,
-            " "
-          )}%20${sanitise(page.name, " ")}"
-                                target="_blank"
-                            >
-                                Qobuz
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("aoty") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--aoty"
-                                href="https://www.albumoftheyear.org/search/?q=${sanitise(
-            page.sister
-          )}+${sanitise(page.name)}"
-                                target="_blank"
-                            >
-                                AOTY
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("rym") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--rym"
-                                href="https://rateyourmusic.com/search?searchterm=${sanitise(
-            page.sister,
-            " "
-          )} ${sanitise(page.name, " ")}"
-                                target="_blank"
-                            >
-                                RYM
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("genius") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--genius"
-                                href="https://genius.com/search?q=${sanitise(
-            page.sister
-          )}+${sanitise(page.name)}"
-                                target="_blank"
-                            >
-                                Genius
-                            </a>
-                    ` : ""}
-                `
-        );
-      } else {
-        render(
-          link_container,
-          html`
-                    ${settings.music_links.includes("spotify") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--spotify"
-                                href="https://open.spotify.com/search/${sanitise(
-            page.name,
-            " "
-          )}"
-                                target="_blank"
-                            >
-                                Spotify
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("itunes") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--itunes"
-                                href="https://music.apple.com/gb/search?term=${sanitise(
-            page.name,
-            " "
-          )}"
-                                target="_blank"
-                            >
-                                Apple
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("youtube") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--youtube-music"
-                                href="https://music.youtube.com/search?q=${sanitise(
-            page.name
-          )}"
-                                target="_blank"
-                            >
-                                YouTube
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("tidal") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--tidal"
-                                href="https://listen.tidal.com/search?q=${sanitise(
-            page.name,
-            " "
-          )}"
-                                target="_blank"
-                            >
-                                Tidal
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("deezer") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--deezer"
-                                href="https://www.deezer.com/search/${sanitise(
-            page.name,
-            " "
-          )}"
-                                target="_blank"
-                            >
-                                Deezer
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("discogs") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--discogs"
-                                href="https://www.discogs.com/search?q=${sanitise(
-            page.name
-          )}&type=artist"
-                                target="_blank"
-                            >
-                                Discogs
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("qobuz") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--qobuz"
-                                href="https://www.qobuz.com/search/artists/${sanitise(
-            page.name,
-            " "
-          )}"
-                                target="_blank"
-                            >
-                                Qobuz
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("aoty") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--aoty"
-                                href="https://www.albumoftheyear.org/search/?q=${sanitise(
-            page.name
-          )}"
-                                target="_blank"
-                            >
-                                AOTY
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("rym") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--rym"
-                                href="https://rateyourmusic.com/search?searchterm=${sanitise(
-            page.name,
-            " "
-          )}"
-                                target="_blank"
-                            >
-                                RYM
-                            </a>
-                    ` : ""}
-                    ${settings.music_links.includes("genius") ? html.node`
-                            <a
-                                class="music-link play-this-track-playlink--genius"
-                                href="https://genius.com/search?q=${sanitise(
-            page.name
-          )}"
-                                target="_blank"
-                            >
-                                Genius
-                            </a>
-                    ` : ""}
-                `
-        );
-        let externals = page.structure.side.querySelector(
-          ".resource-external-links"
-        );
-        if (externals) {
-          page.structure.side.removeChild(externals.parentElement);
-          let externals_links = externals.querySelectorAll(
-            ".resource-external-link"
-          );
-          externals_links.forEach((link) => {
-            link.classList.add("music-link");
-            let type = link.classList[1];
-            if (type == "resource-external-link--homepage")
-              link.textContent = tl2(trans.website);
-            else if (type == "resource-external-link--twitter")
-              link.textContent = "Twitter";
-            else if (type == "resource-external-link--facebook")
-              link.textContent = "Facebook";
-            link_container.appendChild(link);
-          });
-        }
-      }
-    }
     if (link_container.childNodes.length > 0) col_main.appendChild(link_group);
     const tags = col_main.querySelector(".catalogue-tags");
     if (tags) {
@@ -31388,16 +30741,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/pages/album.js
   function bleh_albums() {
     let album_header = document.body.querySelector(".header-new--album");
-    page.sister = album_header.querySelector(
-      ".header-new-crumb span"
-    ).textContent;
+    page.sister = album_header.querySelector(".header-new-crumb span").textContent;
     page.name = document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name");
-    patch_header_title();
     let is_subpage = album_header.classList.contains("header-new--subpage");
     if (auth.pro) {
-      page.structure.container = document.body.querySelector(
-        ".page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))"
-      );
+      page.structure.container = document.body.querySelector(".page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))");
     } else {
       if (!is_subpage) {
         page.structure.container = document.body.querySelector(
@@ -31428,97 +30776,49 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       log2("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, album_header);
-    if (ff("refreshed_music_nav")) {
-      let avatar2 = album_header.querySelector(".header-new-background-image");
-      let title = album_header.querySelector(".header-new-title");
-      let artist = album_header.querySelector('[itemprop="byArtist"]');
-      let position = album_header.querySelector(
-        ".header-new-chart-position-number"
-      );
-      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
-      const listeners = document.body.querySelector(
-        ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
-      );
-      save_hoshino_artwork(
-        avatar_img,
-        page.name,
-        page.sister,
-        clean_number(listeners?.title)
-      );
-      let redesigned_album_header = html.node`
-            <section class="redesigned-header redesigned-album-header no-background">
-                ${is_subpage || ff("show_album_cover_always") ? html.node`
-                <div class="avatar-side">
+    const avatar2 = album_header.querySelector(".header-new-background-image");
+    const position = album_header.querySelector(".header-new-chart-position-number");
+    const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
+    const listeners = document.body.querySelector(".header-new-info-desktop .header-metadata-tnew-display > p > abbr");
+    save_hoshino_artwork(
+      avatar_img,
+      page.name,
+      page.sister,
+      clean_number(listeners?.title)
+    );
+    const header = html.node`
+        <section class="profile-album-section">
+            <div class="album-info">
+                <h1>${{ html: tl2(trans.value_by_user, {
+      v: correct_item_by_artist(page.name, page.sister),
+      u: `<a href="${root}music/${page.sister}">${correct_artist(page.sister)}</a>`
+    }) }}</h1>
+                <div class="stats">
+
+                </div>
+                <div class="actions">
+
+                </div>
+                <div class="tags">
+
+                </div>
+                <div class="shouts">
+
+                </div>
+                <div class="share-bar">
+
+                </div>
+            </div>
+            <div class="album-image-side">
+                <a class="image">
                     ${avatar2 ? html.node`
-                    <img src="${avatar2.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
-                    <a class="bleh--avatar-clickable-link"></a>
-                    ` : html.node`<img class="missing-album">`}
-                </div>
-                ` : ""}
-                <div class="info-side">
-                    <div class="sub-text">${tl2(trans.album)}</div>
-                    <div class="title-container">
-                        ${title}
-                        ${position ? position : ""}
-                    </div>
-                    <h2>${artist}</h2>
-                </div>
-                ${page.suggest ? html.node`
-                <div class="suggest-side">
-                    <div class="cta suggest">
-                        <strong>${tl2(trans.suggest_title.name)}</strong>
-                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl2(trans.suggest_title.body).replace("{v}", desanitise(page.suggest, "+"))}</a>
-                    </div>
-                </div>
-                ` : ""}
-        `;
-      if (avatar2) register_background(avatar2.getAttribute("content"));
-      else register_background(null);
-      page.structure.container.insertBefore(
-        redesigned_album_header,
-        page.structure.container.firstElementChild
-      );
-      album_header.classList.add("legacy-header");
-      let avatar_side = redesigned_album_header.querySelector(".avatar-side");
-      let avatar_link = avatar_side.querySelector("a");
-      if (avatar2 && avatar_link) {
-        if (settings.default_avatar_action == "expand" && avatar2)
-          avatar_link.setAttribute(
-            "onclick",
-            `_expand_avatar('${avatar2.getAttribute("content")}')`
-          );
-        else if (settings.default_avatar_action == "gallery")
-          avatar_link.href = `${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
-        let menu = tippy_esm_default(avatar_side, {
-          theme: "context-menu",
-          content: html.node`
-                    ${avatar2 ? html.node`
-                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar2.getAttribute("content"))} data-menu-item="expand">
-                        ${tl2(trans.expand)}
-                    </button>
+                        <img src=${avatar_img}>
                     ` : ""}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${tl2(trans.artwork)}
-                    </a>
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                        ${tl2(trans.settings)}
-                    </a>
-                `,
-          placement: "right-start",
-          trigger: "manual",
-          interactive: true,
-          interactiveBorder: 10,
-          offset: [0, 0],
-          onShow(instance) {
-            instance.popper.addEventListener("click", (event3) => {
-              instance.hide();
-            });
-          }
-        });
-        register_menu(avatar_side, menu);
-      }
-    }
+                </a>
+            </div>
+    `;
+    page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    album_header.classList.add("legacy-header");
     if (settings.hue_from_album) {
       let header_inner = album_header.querySelector(".header-new-inner");
       try {
@@ -32990,7 +32290,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   var import_cropperjs = __toESM(require_cropper(), 1);
 
   // src/components/radio_toggle.js
-  function radio({ name, value, values = {} }) {
+  function radio2({ name, value, values = {} }) {
     let buttons = [];
     let elem = html.node`
         <div class="primary-selections">
@@ -34639,7 +33939,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                 <h5>${tl2(trans.auto_correct_scrobbles.name)}</h5>
                                 <p>${tl2(trans.auto_correct_scrobbles.body)}</p>
                             </div>
-                            ${radio({
+                            ${radio2({
         name: auto_correct.name,
         value: auto_correct.value,
         values: {
@@ -34730,7 +34030,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                 <h5>${tl2(trans.preferred_affiliate.name)}</h5>
                                 <p>${tl2(trans.preferred_affiliate.body)}</p>
                             </div>
-                            ${radio({
+                            ${radio2({
         name: preferred_affiliate.name,
         value: preferred_affiliate.value,
         values: radio_convert(
@@ -35752,32 +35052,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (pages) page.structure.container.appendChild(pages);
   }
 
-  // src/components/header.js
-  function generic_subpage_header(header_title, link_type = "user", direct_link = "") {
-    let link_field = html.node`<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
-    if (link_type == "artist")
-      link_field = html.node`<a href="${root}music/${sanitise(page.name)}">${page.name}</a>`;
-    else if (link_type == "album")
-      link_field = html.node`<a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${page.name}</a>`;
-    else if (link_type == "track")
-      link_field = html.node`<a href="${root}music/${sanitise(page.sister)}/_/${sanitise(page.name)}">${page.name}</a>`;
-    else if (link_type == "direct")
-      link_field = html.node`<a href="${direct_link}">${page.name}</a>`;
-    return html.node`
-        <section class="profile-header-subpage-section" ref=${(el) => page.state.header = el}>
-            ${page.avatar != "" ? html.node`
-                <div class="badge-avatar">
-                    <img src=${page.avatar} alt=${page.name}>
-                </div>
-            ` : ""}
-            <div class="badge-info">
-                ${link_field}
-                <h1 ref=${(el) => page.state.title = el}>${header_title}</h1>
-            </div>
-        </section>
-    `;
-  }
-
   // src/pages/profile.js
   async function bleh_profiles() {
     if (page.subpage == "obsessions_obsession") {
@@ -36259,6 +35533,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         page.structure.nav.querySelector(".secondary-nav-item--loved a").appendChild(html.node`
                 <div class="new-badge count-badge">${count}</div>
             `);
+      } else if (page.subpage.startsWith("library")) {
+        const date_range = page.structure.side.querySelector(".date-range-picker-form");
+        if (date_range) {
+          date_range.classList.remove("content-form");
+        }
       }
     }
     log2("status is", "page", "info", page);
@@ -36664,13 +35943,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/shout.js
   function patch_shouts() {
     if (!page.structure.main) return;
-    let shout_controls = page.structure.main.querySelector(
-      ".shoutbox-controls-wrapper:not([data-shouts])"
-    );
-    if (shout_controls) {
-      shout_controls.setAttribute("data-shouts", "true");
-      shout_header(shout_controls);
-    }
     let shouts = page.structure.main.querySelectorAll(
       ".shout:not([data-kate-processed])"
     );
@@ -36777,64 +36049,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let shout_avatar = shout_form.querySelector(".shout-user-avatar");
       patch_avatar(shout_avatar, auth.name);
       let send_button = shout_form.querySelector(".form-group--submit");
-      shout_send(send_button);
-      const help_text = shout_form.querySelector(".form-row-help-text");
-      help_text.classList.add("dual-tip");
-      const textarea = shout_form.querySelector("textarea");
-      let chars;
-      let preview;
-      render(
-        help_text,
-        html`
-                <div
-                    class="tip markdown-enabled"
-                    onclick=${() => markdown_prompt()}
-                >
-                    ${tl2(trans.supports_markdown)}
-                </div>
-                <div
-                    class="tip preview"
-                    onclick=${() => markdown_preview(textarea.value)}
-                    ref=${(el) => preview = el}
-                    disabled="true"
-                >
-                    ${tl2(trans.preview)}
-                </div>
-                <div class="tip characters" ref=${(el) => chars = el}>
-                    ${tl2(trans.value_characters_max, { v: "0/1000" })}
-                </div>
-            `
-      );
-      textarea.addEventListener("input", () => {
-        const value = textarea.value;
-        chars.textContent = tl2(trans.value_characters_max, {
-          v: `${value.length}/1000`
-        });
-        chars.setAttribute("data-exceeded", value.length >= 1e3);
-        preview.setAttribute("disabled", value.length <= 0);
-      });
       shout_form.addEventListener("keydown", (e) => {
         if (e.ctrlKey && e.keyCode == 13) {
           e.preventDefault();
           send_button.querySelector(".btn-post-shout").click();
-          notify({
-            id: "shout",
-            title: tl2(trans.shouts),
-            body: tl2(trans.sent),
-            icon: "icon-16-shoutbox"
-          });
         }
       });
     });
   }
-  function shout_send(send_button) {
-    if (!send_button) return;
-    let button = send_button.querySelector(".btn-post-shout");
-    if (!button) return;
-    button.classList.add("btn-send-shout-generic");
-    button.textContent = tl2(trans.send);
-  }
   function shout_header(shout_controls) {
+    return;
     if (!shout_controls) return;
     let panel;
     let settings_btn;
@@ -38225,6 +37449,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ja: "\u8A2D\u5B9A",
       sv: "Inst\xE4llningar"
     },
+    configure_bwaa_settings: {
+      en: "Configure bwaa settings"
+    },
     on_ignore_list: {
       en: "Ignored",
       de: "Ignoriert",
@@ -38498,16 +37725,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ja: "\u30C8\u30E9\u30C3\u30AF",
       sv: "L\xE5tar"
     },
-    appearance: {
-      en: "Appearance",
-      de: "Erscheinungsbild",
-      pt: "Apar\xEAncia",
-      sv: "Uts\xE9ende"
-    },
-    visual: {
-      en: "Visual",
-      de: "Design",
-      sv: "Visuellt"
+    page_style: {
+      en: "Page style"
     },
     theme: {
       en: "Theme",
@@ -40209,94 +39428,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     view_image: {
       en: "View image"
     },
-    event_cancelled: {
-      // obviously remove the emoji or replace it as
-      // you see fit if desired
-      en: "This event has been cancelled (\u2565\uFE4F\u2565)",
-      de: "Dieses Event wurde abgesagt (\u2565\uFE4F\u2565)",
-      pt: "Este evento foi cancelado (\u2565\uFE4F\u2565)",
-      sv: "Detta evenemang har avbrutits (\u2565\uFE4F\u2565)"
-    },
-    format_guest_features: {
-      name: {
-        en: "Smart credited artists and song tags",
-        de: "Intelligente K\xFCnstler- und Song-Tags",
-        pt: "Tags inteligentes de artistas e m\xFAsicas",
-        sv: "Smartformat f\xF6r g\xE4startister och l\xE5ttaggar"
-      },
-      body: {
-        en: "Analyses album and track titles into their guests, versions, remixes, etc.",
-        de: "Analysiert Album- und Songtitel hinsichtlich ihrer Versionen, Remixe usw.",
-        pt: "Analisa t\xEDtulos de \xE1lbuns e faixas e os separa em seus convidados, vers\xF5es, remixes etc.",
-        sv: "Analyserar album och l\xE5ttitlar till g\xE4startister, olika versioner, remixar osv."
-      }
-    },
-    show_guest_features: {
-      name: {
-        en: "Duplicate credited artists in title",
-        de: "Doppelte Nennung der K\xFCnstler:innen im Titel",
-        pt: "Artistas creditados duplicados no t\xEDtulo",
-        sv: "Duplicera artistnamn i l\xE5ttitel"
-      },
-      body: {
-        en: "Otherwise guests are neatly placed next to the primary artist",
-        de: "Ansonsten werden gefeaturete K\xFCnstler:innen neben dem/der Hauptk\xFCnstler:in platziert",
-        pt: "Caso contr\xE1rio os convidados s\xE3o organizados de forma elegante ao lado do artista principal",
-        sv: "Annars placeras g\xE4startister fint bredvid huvudartisten"
-      }
-    },
-    track_layout: {
-      name: {
-        en: "Track layout"
-      },
-      body: {
-        en: "Choose which axis to display track information on"
-      },
-      column: {
-        en: "Place title and artist vertically"
-      },
-      row: {
-        en: "Place title and artist horizontally"
-      }
-    },
-    track_album_name_location: {
-      name: {
-        en: "Album name location"
-      },
-      body: {
-        en: "Choose which axis to display said album name on"
-      },
-      column: {
-        en: "Place below title and artist"
-      },
-      row: {
-        en: "Place to the side of title and artist"
-      }
-    },
-    expand_tracks: {
-      name: {
-        en: "Show associated album for tracks"
-      },
-      body: {
-        en: "Places the track\u2019s associated album name if there\u2019s room"
-      }
-    },
-    expand_tracks_when_active: {
-      en: "Only when actively scrobbling",
-      de: "Nur w\xE4hrend des aktiven Scrobbelns",
-      sv: "Endast n\xE4r du skrobblar"
-    },
-    expand_tracks_always: {
-      en: "Always when possible",
-      de: "Immer, wenn m\xF6glich",
-      sv: "Alltid, n\xE4r det \xE4r m\xF6jligt"
-    },
-    show_remaster_tags: {
-      en: "Show remaster tags",
-      de: "Remaster-Tags anzeigen",
-      pt: "Mostrar as tags de remaster",
-      sv: "Visa remaster-taggar"
-    },
     recent_realtime: {
       name: {
         en: "Refresh tracks automatically",
@@ -40358,36 +39489,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Diagrammgr\xF6\xDFe",
       pt: "Tamanho da tabela",
       sv: "Liststorlek"
-    },
-    country: {
-      en: "Country",
-      de: "Land",
-      pt: "Pa\xEDs",
-      sv: "Land"
-    },
-    subtitle: {
-      en: "Subtitle",
-      de: "Untertitel",
-      pt: "Legenda",
-      sv: "Undertext"
-    },
-    pronoun_tip: {
-      en: "Pronouns are specially supported if placed first",
-      de: "Pronomen werden unterst\xFCtzt, wenn sie an erster Stelle stehen",
-      pt: "Os pronomes s\xE3o especialmente apoiados se colocados primeiro",
-      sv: "Pronomen har speciellt st\xF6d om det placeras f\xF6rst"
-    },
-    block_list: {
-      en: "Block list",
-      de: "Blockierliste",
-      pt: "Lista de bloqueados",
-      sv: "Blocklista"
-    },
-    when_blocked: {
-      en: "What happens with blocked users?",
-      de: "Was passiert mit blockierten Benutzern?",
-      pt: "O que acontece com os usu\xE1rios bloqueados?",
-      sv: "Vad h\xE4nder med blockerade anv\xE4ndare?"
     },
     blocked_count: {
       en: "You have blocked {c} profiles",
@@ -41406,70 +40507,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Privacidade",
       sv: "Sekretess"
     },
-    recent_listening: {
-      name: {
-        en: "Hide your recent listening history",
-        de: "Deine zuletzt geh\xF6rten Titel ausblenden",
-        pt: "Ocultar seu hist\xF3rico de scrobbles recente",
-        sv: "G\xF6m senaste lyssnarinformationen"
-      },
-      body: {
-        en: "Keeps your activity more private",
-        de: "Gibt deiner Aktivit\xE4t mehr Privatsph\xE4re",
-        pt: "Mant\xE9m sua atividade mais privada",
-        sv: "H\xE5ller din aktivitet mer privat"
-      }
-    },
-    allow_messages_from: {
-      en: "Allow messages from",
-      de: "Erlaube Nachrichten von",
-      pt: "Permitir mensagens de",
-      sv: "Till\xE5t meddelanden ifr\xE5n"
-    },
     everyone: {
       en: "Everyone",
       de: "Jedem",
       pt: "Todo mundo",
       sv: "Alla"
     },
-    following_and_neighbours: {
-      en: "Following and neighbours",
-      de: "Nachbarn und Leuten, denen du folgst",
-      pt: "Seguindo e vizinhos",
-      sv: "F\xF6ljare och grannar"
-    },
-    close_shouts: {
-      name: {
-        en: "Close my shoutbox",
-        de: "Meine Shoutbox schlie\xDFen",
-        pt: "Fechar minha caixa de mensagens",
-        sv: "St\xE4ng min hojtl\xE5da"
-      },
-      body: {
-        en: "Removes visibility from everyone (including you)",
-        de: "Blendet deine Shoutbox f\xFCr alle Beutzer aus (einschlie\xDFlich dir)",
-        pt: "Remove a visibilidade de todos (incluindo voc\xEA)",
-        sv: "Ta bort synlighet fr\xE5n alla (inkl. dig)"
-      }
-    },
     error: {
       en: "Error",
       de: "Fehler",
       pt: "Erro",
       sv: "Error"
-    },
-    erm: {
-      // used when a page is taken down
-      en: "erm...",
-      de: "\xE4hm...",
-      pt: "puts...",
-      sv: "ehm..."
-    },
-    shortcut: {
-      en: "Shortcut",
-      de: "Verkn\xFCpfung",
-      pt: "Atalho",
-      sv: "Genomv\xE4g"
     },
     last_count_days: {
       en: "Last {c} days",
@@ -41484,12 +40532,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Todo o per\xEDodo",
       ja: "\u3059\u3079\u3066\u306E\u671F\u9593",
       sv: "All tid"
-    },
-    choose_a_timeframe_above: {
-      en: "Choose a timeframe above",
-      de: "W\xE4hle oben einen Zeitraum",
-      pt: "Escolha um prazo acima",
-      sv: "V\xE4lj en tidsram ovan"
     },
     failed: {
       en: "Failed",
@@ -41508,40 +40550,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Support",
       pt: "Suporte",
       sv: "Support"
-    },
-    no_plays_in_range: {
-      // no plays in date range
-      en: "No plays in this range",
-      de: "Keine Plays in diesem Zeitraum",
-      sv: "Inga lyssningar under valda datumintervallet"
-    },
-    accessible_name_colours: {
-      name: {
-        en: "Prefer accessible name colours",
-        de: "Bevorzuge gut lesbare Namensfarben",
-        pt: "Preferir nomes de cores acess\xEDveis",
-        sv: "F\xF6redra l\xE4ttl\xE4sta namnf\xE4rger"
-      },
-      body: {
-        en: "Replaces badge and link-coloured names with your theme\u2019s header colour",
-        de: "Ersetzt Abzeichen- und Linkfarben mit der Kopfzeilenfarbe deines Farbschemas",
-        pt: "Substitui os nomes coloridos dos emblemas e links pela cor do cabe\xE7alho do seu tema",
-        sv: "Ers\xE4tter emblem och l\xE4nkf\xE4rgade namn med ditt temas rubrikf\xE4rg"
-      }
-    },
-    underline_links: {
-      name: {
-        en: "Always underline links",
-        de: "Links immer unterstreichen",
-        pt: "Sempre sublinhe os links",
-        sv: "Ha alltid understrykta l\xE4nkar"
-      },
-      body: {
-        en: "Forces buttons, links, and other interactables to have an underline",
-        de: "Erzwingt, dass Schaltfl\xE4chen, Links und andere interaktive Elemente unterstrichen sind",
-        pt: "For\xE7a bot\xF5es, links e outros interativos a terem um sublinhado",
-        sv: "Tvingar knappar, l\xE4nkar och andra interaktiva objekt att ha understrykt text"
-      }
     },
     theme_loading: {
       name: {
@@ -41668,12 +40676,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "{v} falhou ao carregar",
       sv: "{v} kunde inte laddas"
     },
-    profile_does_not_have_enough_scrobbles: {
-      en: "Profile does not have enough scrobbles",
-      de: "Profil hat nicht gen\xFCgend Scrobbles",
-      pt: "O perfil n\xE3o tem scrobbles o suficiente",
-      sv: "Profilen har inte tillr\xE4ckligt med skrobblingar"
-    },
     requires_extension_value: {
       en: "Requires extension \u2018{v}\u2019",
       de: "Ben\xF6tigt die Erweiterung \u201E{v}\u201C",
@@ -41755,115 +40757,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Por favor, n\xE3o se clone",
       sv: "Sn\xE4lla, klona inte dig sj\xE4lv"
     },
-    generate: {
-      en: "Generate",
-      de: "Generieren",
-      pt: "Gerar",
-      sv: "Generera"
-    },
-    your_settings_are_invalid: {
-      en: "Your settings are invalid",
-      de: "Deine Einstellungen sind ung\xFCltig",
-      pt: "Suas configura\xE7\xF5es s\xE3o inv\xE1lidas",
-      sv: "Dina inst\xE4llningar \xE4r ogiltiga"
-    },
-    top_type: {
-      en: "Top {type}",
-      de: "Top-{type}",
-      sv: "Topp{type}"
-    },
-    download: {
-      en: "Download",
-      de: "Herunterladen",
-      pt: "Baixar",
-      sv: "Ladda ned"
-    },
-    downloaded: {
-      en: "Downloaded",
-      de: "Heruntergeladen",
-      pt: "Baixado",
-      sv: "Nedladdat"
-    },
-    are_you_sure: {
-      en: "Are you sure?",
-      de: "Bist du sicher?",
-      pt: "Voc\xEA tem certeza?",
-      sv: "\xC4r du s\xE4ker"
-    },
-    this_will_require_loading_count_pages: {
-      en: "This will require loading {c} pages",
-      de: "Dies erfordert das Laden von {c} Seiten",
-      pt: "Isso requer carregar {c} p\xE1ginas",
-      sv: "Det h\xE4r kr\xE4ver att {c} sidor laddas"
-    },
-    chart_template_filename: {
-      en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand} {date}",
-      de: "{user} Collage ({timeframe}, Top-{type}, {size}) - {brand} {date}",
-      pt: "{user} Colagem ({timeframe}, Top {type}, {size}) - {brand} {date}",
-      sv: "{user} Collage ({timeframe}, Topp{type}, {size}) - {brand} {date}"
-    },
-    waiting_for_images: {
-      en: "Waiting for images",
-      pt: "Aguardando imagens",
-      sv: "V\xE4ntar p\xE5 bilder"
-    },
-    collage_title: {
-      name: {
-        en: "Collage title",
-        de: "Collagentitel",
-        pt: "T\xEDtulo da colagem",
-        sv: "Collagetitel"
-      },
-      body: {
-        en: "Include a subtle header showing your username and settings you used",
-        de: "F\xFCgt eine dezente Kopfzeile hinzu, die deinen Benutzernamen und die von dir gew\xE4hlten Einstellungen anzeigt",
-        pt: "Inclua um cabe\xE7alho discreto mostrando seu nome de usu\xE1rio e as configura\xE7\xF5es que voc\xEA usou",
-        sv: "L\xE4gger till en liten rubrik som visar ditt anv\xE4ndarnamn och dina inst\xE4llningar"
-      }
-    },
-    collage_grid_text: {
-      en: "Show names on grid items",
-      de: "Namen auf Rasterobjekten anzeigen",
-      pt: "Mostrar nomes nos itens da grade",
-      sv: "Visa namn p\xE5 collageobjekt"
-    },
-    collage_grid_plays: {
-      en: "Show plays on grid items",
-      de: "Plays auf Rasterobjekten anzeigen",
-      pt: "Mostrar reprodu\xE7\xF5es nos itens da grade",
-      sv: "Visa spelningar p\xE5 collageobjekt"
-    },
-    collage_grid_gap: {
-      name: {
-        en: "Leave a gap between grid items",
-        de: "Abstand zwischen Rasterobjekten",
-        pt: "Deixe um espa\xE7o entre os itens da grade",
-        sv: "L\xE4mna rum mellan collageobjekt"
-      },
-      body: {
-        en: "Includes outer and inner padding with round grid items",
-        de: "F\xFCgt \xE4u\xDFere und innere Abst\xE4nde sowie abgerundete Rasterobjekte hinzu",
-        sv: "L\xE4gger till inre och yttre mellanrum med avrundade collageobjekt"
-      }
-    },
-    collage_centered: {
-      name: {
-        en: "Center info on grid items",
-        de: "Informationen auf Rasterobjekten zentrieren",
-        sv: "Centrera informationen p\xE5 collageobjekt"
-      },
-      body: {
-        en: "Similar to the look of other collage solutions",
-        de: "\xC4hnlicher Stil wie andere Collagenl\xF6sungen",
-        sv: "Mer lik till hur andra collagegenererare g\xF6r det"
-      }
-    },
-    organising_plays: {
-      en: "Organising plays",
-      de: "Plays werden organisiert",
-      pt: "Organizando reprodu\xE7\xF5es",
-      sv: "Organisera spelningar"
-    },
     update_now: {
       en: "Update now",
       de: "Jetzt aktualisieren",
@@ -41931,141 +40824,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Problem melden",
       pt: "Relatar problema",
       sv: "Rapportera problem"
-    },
-    opens_your_value_settings: {
-      // DE: is this used both for profile settings and bleh settings in the quick switcher? ~Myrai
-      // Profile Settings would be {v}einstellungen, bleh Settings would be {v}-Einstellungen
-      en: "Open your {v} settings",
-      de: "\xD6ffne deine {v}-Einstellungen",
-      pt: "Abra suas op\xE7\xF5es de {v}",
-      sv: "\xD6ppna dina {v}-inst\xE4llningar"
-    },
-    opens_your_value: {
-      // DE: depending on the word in {v}, this might be "dein", "deine" or the inclusive "dein:e" ~Myrai
-      // DEIN Profil, DEIN:E markierte Freund:in, DEINE Benachrichtigungen, DEINE Nachrichten, DEINE Minis, DEINE Profileinstellungen
-      en: "Open your {v}",
-      de: "\xD6ffne dein {v}",
-      pt: "Abra seu {v}",
-      sv: "\xD6pnna dina {v}"
-    },
-    opens_the_value: {
-      // DE: same here, depends on context ~Myrai
-      // currently, it's all "die" – DIE Farbschemenauswahl, DIE Minis, DIE Neuigkeiten, DIE bleh-Einstellungen
-      en: "Open the {v}",
-      de: "\xD6ffne die {v}",
-      pt: "Abra o {v}",
-      sv: "\xD6ppna {v}"
-    },
-    theme_picker: {
-      en: "Theme picker",
-      de: "Farbschemenauswahl",
-      pt: "Seletor de temas",
-      sv: "Temav\xE4ljare"
-    },
-    changes_your_theme: {
-      en: "Changes your theme",
-      de: "\xC4ndert dein Farbschema",
-      pt: "Mude seu tema",
-      sv: "\xC4ndrar ditt tema"
-    },
-    on_this_page: {
-      en: "On this page",
-      de: "Auf dieser Seite",
-      pt: "Nessa p\xE1gina",
-      sv: "P\xE5 denna sida"
-    },
-    use_current_page_as_context: {
-      en: "Use current page as context",
-      de: "Aktuelle Seite als Kontext verwenden",
-      pt: "Usar a p\xE1gina atual como contexto",
-      sv: "Anv\xE4nd aktuella sidan som referens"
-    },
-    opens_the_value_for_type: {
-      en: "Open the {v} for {t}",
-      de: "\xD6ffne das {v} f\xFCr {t}",
-      pt: "Abra a {v} para {t}",
-      sv: "\xD6pnnar {v] f\xF6r {t}"
-    },
-    quick_switcher: {
-      en: "Rabbit hole",
-      de: "Quick Switcher",
-      sv: "Genv\xE4gar"
-    },
-    use_quick_switcher: {
-      name: {
-        en: "Enable the quick switcher",
-        de: "Quick Switcher aktivieren",
-        sv: "Aktivera snabbv\xE4xlare"
-      },
-      body: {
-        en: "Make full use of your keyboard to navigate exactly where you want to be",
-        de: "Nutze deine Tastatur, um genau dorthin zu navigieren, wo du hinm\xF6chtest",
-        sv: "G\xF6r full anv\xE4ndning av ditt tangentbord f\xF6r att navigera till precis vart du vill vara"
-      }
-    },
-    quick_switcher_keybinds: {
-      en: "Change keybinds",
-      de: "Tastenkombinationen \xE4ndern",
-      sv: "\xC4ndra tangentbordsgenv\xE4gar"
-    },
-    switch_placeholder: {
-      en: "Quick switch to a page or action",
-      de: "Schnell zu einer Seite oder Aktion wechseln",
-      pt: "Alternar rapidamente para uma p\xE1gina ou a\xE7\xE3o",
-      sv: "Hoppa snabbt till en sida eller annan \xE5tg\xE4rd"
-    },
-    rabbit_search: {
-      en: "Enter {v} name",
-      de: "Gebe den Namen des {v}s ein",
-      sv: "Skriv {v}namn"
-    },
-    compares_your_taste: {
-      en: "Compare your taste with {v}",
-      de: "Vergleiche deinen Musikgeschmack mit {v}",
-      pt: "Compare o seu gosto com {v}",
-      sv: "J\xE4mf\xF6r musiksmak med {v}"
-    },
-    select_an_option: {
-      en: "Select an option",
-      de: "W\xE4hle eine Option",
-      pt: "Selecione uma op\xE7\xE3o",
-      sv: "V\xE4lj ett alternativ"
-    },
-    nothing_matches_your_search: {
-      en: "Nothing matches your search",
-      de: "Es wurde nichts zu deiner Suche gefunden",
-      pt: "Nada corresponde \xE0 sua pesquisa",
-      sv: "Inga resultat matchar din s\xF6kning"
-    },
-    create_a_collage: {
-      en: "Create a collage of your choosing",
-      de: "Erstelle eine Collage deiner Wahl",
-      pt: "Crie uma colagem de sua escolha",
-      sv: "Skapa ett collage som du vill"
-    },
-    search_for_music_or_user: {
-      en: "Search for music or a user",
-      de: "Suche nach Musik oder einem Benutzer",
-      pt: "Pesquise por m\xFAsica ou usu\xE1rio",
-      sv: "S\xF6k musik eller en anv\xE4ndare"
-    },
-    search_for_value: {
-      en: "Search for {v}",
-      de: "Nach {v} suchen",
-      pt: "Pesquise por {v}",
-      sv: "S\xF6k upp {v}"
-    },
-    choose_a_search_type: {
-      en: "Choose a search type",
-      de: "W\xE4hle einen Suchtyp",
-      pt: "Escolha um tipo de pesquisa",
-      sv: "V\xE4lj s\xF6ktyp"
-    },
-    finish_search: {
-      en: "Finish your search",
-      de: "Beende deine Suche",
-      pt: "Finalize sua pesquisa",
-      sv: "Finalisera s\xF6kning"
     },
     view_count_more: {
       en: "View {c} more",
@@ -42371,98 +41129,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sv: "Ok\xE4nd"
       }
     },
-    reduced_motion: {
-      name: {
-        en: "Reduce motion in animations",
-        de: "Bewegung von Animationen reduzieren",
-        sv: "Minska animationr\xF6relse"
-      },
-      body: {
-        en: "Decreases the intensity of animations, hover effects, and other moving parts",
-        de: "Verringert die Intensit\xE4t von Animationen, Hover-Effekten und anderen beweglichen Komponenten",
-        sv: "Minskar intensiteten av animationer, effekter vid hovring, och andra r\xF6rande delar"
-      }
-    },
-    banners: {
-      en: "Banners",
-      de: "Banner"
-    },
-    view_backgrounds_on: {
-      en: "View banners on",
-      de: "Banner anzeigen auf",
-      sv: "Visa banners p\xE5"
-    },
-    own_profile: {
-      en: "Own profile",
-      de: "Meinem Profil",
-      sv: "Din egen profil"
-    },
-    other_profiles: {
-      en: "Other profiles",
-      de: "Anderen Profilen",
-      sv: "Andra profiler"
-    },
-    profile_avi_background: {
-      name: {
-        en: "Prefer avatar image for profiles without a banner",
-        de: "Bevorzuge Profilbild f\xFCr Profile ohne Banner",
-        sv: "F\xF6redra profilbild f\xF6r profiler utan en banner"
-      },
-      body: {
-        en: "All artist-based banner images will be replaced by the user\u2019s avatar",
-        de: "Alle k\xFCnstlerbasierten Bannerbilder werden durch das Profilbild des Benutzers ersetzt",
-        sv: "Alla artistbaserade bannerbilder blir ers\xE4tt av anv\xE4ndarens profilbild"
-      }
-    },
-    profile_banner: {
-      name: {
-        en: "Profile banner",
-        de: "Profilbanner",
-        sv: "Profilbanner"
-      },
-      body: {
-        en: "Add your own custom banner image to your profile with [banner=url] in your bio",
-        de: "F\xFCge deinem Profil ein eigenes Bannerbild hinzu, indem du deiner Biografie [banner=url] hinzuf\xFCgst",
-        sv: "L\xE4g till en egen banner till din profil genom att s\xE4tta [banner=url] i din biografi"
-      }
-    },
-    profile_accent: {
-      name: {
-        en: "Profile accent",
-        de: "Profilakzent",
-        sv: "Profilaccent"
-      },
-      body: {
-        en: "Add flair to your profile visible to all users regardless of personal accent",
-        de: "F\xFCge deinem Profil einen Akzent hinzu, der f\xFCr alle Benutzer sichtbar ist, unabh\xE4ngig von deren pers\xF6nlichem Akzent",
-        sv: "L\xE4gg till flair p\xE5 din profil som syns f\xF6r alla anv\xE4ndare oberoende p\xE5 egen accentf\xE4rg"
-      },
-      reminder: {
-        en: "Changed your accent, don\u2019t forget to save!",
-        de: "Du hast deinen Akzent ge\xE4ndert, vergiss\u2019 nicht zu speichern!",
-        sv: "\xC4ndrade din accentf\xE4rg, gl\xF6m inte att spara!"
-      }
-    },
     none: {
       en: "None",
       de: "Keins",
-      sv: "Ingen",
-      banner: {
-        // no profile banner present
-        en: "None",
-        de: "Keins"
-      },
-      starred_friend: {
-        // no starred friend selected
-        en: "None",
-        de: "Kein:e"
-      }
-    },
-    current_banner_value: {
-      // uses none.banner from above
-      en: "Current banner: {v}",
-      de: "Aktuelles Banner: {v}",
-      sv: "Nuvarande banner: {v}"
+      sv: "Ingen"
     },
     show_your_progress: {
       name: {
@@ -42476,273 +41146,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sv: "J\xE4mf\xF6r denna veckans spelningar med f\xF6rra veckan, kr\xE4ver Last.fm Pro"
       }
     },
-    manual: {
-      en: "Manual",
-      de: "Manuell",
-      sv: "Manuellt"
-    },
-    enter_a_manual_date: {
-      en: "Enter a date in the format YYYY-MM-DD",
-      de: "Gebe ein Datum im Format JJJJ-MM-TT ein",
-      sv: "Skriv in ett datum med formatet YYYY-MM-DD"
-    },
-    minimum_value: {
-      en: "Minimum: {v}",
-      de: "Minimum: {v}",
-      sv: "Minst: {v}"
-    },
-    maximum_value: {
-      en: "Maximum: {v}",
-      de: "Maximum: {v}",
-      sv: "Max: {v}"
-    },
-    manual_date: {
-      en: "Type a date manually",
-      de: "Datum manuell eingeben",
-      sv: "Skriv in ett datum manuellt"
-    },
-    red: {
-      en: "Red",
-      de: "Rot",
-      pt: "Vermelho",
-      sv: "R\xF6d"
-    },
-    orange: {
-      en: "Orange",
-      de: "Orange",
-      pt: "Laranja"
-    },
-    yellow: {
-      en: "Yellow",
-      de: "Gelb",
-      pt: "Amarelo",
-      sv: "Gul"
-    },
-    lime: {
-      en: "Lime",
-      de: "Limette",
-      pt: "Lima"
-    },
-    green: {
-      en: "Green",
-      de: "Gr\xFCn",
-      pt: "Verde",
-      sv: "Gr\xF6n"
-    },
-    aqua: {
-      en: "Aqua",
-      de: "T\xFCrkis",
-      pt: "\xC1gua",
-      sv: "Turkos"
-    },
-    blue: {
-      en: "Blue",
-      de: "Blau",
-      pt: "Azul",
-      sv: "Bl\xE5"
-    },
-    purple: {
-      en: "Purple",
-      de: "Lila",
-      pt: "Roxo",
-      sv: "Lila"
-    },
-    pink: {
-      en: "Pink",
-      de: "Rosa",
-      pt: "Rosa",
-      sv: "Rosa"
-    },
-    grey: {
-      en: "Grey",
-      de: "Grau",
-      pt: "Cinza",
-      sv: "Gr\xE5"
-    },
-    minis: {
-      // 'Minis' is the word i eventually settled on for
-      // the games and tools integrated into bleh
-      en: "Minis",
-      de: "Minis",
-      sv: "Mini"
-    },
-    minis_description: {
-      en: "Play mini-games, puzzles, and interact with tools all powered by your listening history",
-      de: "Spiele Minispiele, R\xE4tsel und interagiere mit Tools, die auf deinem H\xF6rverlauf basieren",
-      sv: "Spela minispel, pussel, och interagera med verktyg som \xE4r helt baserad p\xE5 din lyssningshistorik"
-    },
-    no_mini_found: {
-      en: "No mini found for \u2018{v}\u2019",
-      de: "Kein Mini f\xFCr \u201E{v}\u201C gefunden",
-      sv: "Ingen mini hittad f\xF6r \u2018{v}\u2019"
-    },
-    pixel: {
-      name: {
-        en: "Pixel"
-      },
-      body: {
-        en: "Guess the album from it\u2019s pixelated artwork and clues",
-        de: "Errate das Album anhand des verpixelten Albumcovers und Hinweisen",
-        sv: "Gissa albumet fr\xE5n sin pixellerad konst och ledtr\xE5dar"
-      }
-    },
-    rainbow: {
-      name: {
-        en: "Rainbow",
-        de: "Regenbogen"
-      },
-      body: {
-        en: "Arrange your listening history into a swirl of colours",
-        de: "Stelle deinen H\xF6rverlauf als Farbwirbel dar",
-        sv: "Ordna ihop din lyssningshistorik till en virvel av f\xE4rg"
-      }
-    },
-    receipt: {
-      name: {
-        en: "Receipt",
-        de: "Quittung"
-      },
-      body: {
-        en: "Print out your top tracks as a receipt",
-        de: "Drucke deine Top-Songs als Quittung aus",
-        sv: "Skriv ut dina toppl\xE5tar som ett kvitto"
-      }
-    },
-    collage_description: {
-      en: "Generate a personalised image based on your listening history and options",
-      de: "Erstelle ein personalisiertes Bild basierend auf deinem H\xF6rverlauf und deinen Einstellungen",
-      sv: "Skapa en personlig bild baserad p\xE5 din lyssningshistoria och inst\xE4llningar"
-    },
-    labs_cta: {
-      // a period on the end looks weird cus of the link
-      en: "If you\u2019re looking for more, try out Last.fm\u2019s own {a}Labs feature{/a}",
-      de: "Wenn du nach mehr suchst, probiere die {a}Labs-Funktion{/a} von Last.fm aus",
-      sv: "Om du letar efter lite mer, testa Last.fm\u2019s {a}egna Labs{/a}"
-    },
-    compare_description: {
-      en: "Find your shared artists, albums, and tracks with another",
-      de: "Finde heraus, welche gemeinsamen K\xFCnstler:innen, Alben und Tracks du mit jemand anderem teilst",
-      sv: "Hitta dina delade artister, album, och l\xE5tar med n\xE5n annan"
-    },
-    enter_a_profile: {
-      en: "Enter a profile",
-      de: "Profil eingeben",
-      sv: "Skriv in ett anv\xE4ndarnamn"
-    },
-    compare_with: {
-      en: "Compare with",
-      de: "Vergleichen mit",
-      sv: "J\xE4mf\xF6r"
-    },
     value_settings: {
       en: "{v} Settings",
       de: "{v}-Einstellungen",
       sv: "{v} Inst\xE4llningar"
-    },
-    suggest_title: {
-      name: {
-        en: "This page doesn\u2019t seem official",
-        de: "Diese Seite scheint nicht offiziell zu sein",
-        sv: "Denna sida ser inte ut att vara officiell"
-      },
-      body: {
-        en: "Navigate to {v} instead",
-        de: "Stattdessen zu {v} wechseln",
-        sv: "Hoppa till {v} ist\xE4llet"
-      }
-    },
-    lyrics: {
-      // lyrics
-      en: "Lyrics",
-      name: {
-        // the game
-        en: "Lyrics"
-      },
-      body: {
-        en: "Guess the song from a random lyric",
-        de: "Errate den Song anhand eines zuf\xE4lligen Songtextes",
-        sv: "Gissa l\xE5ten fr\xE5n en slumpad l\xE5ttext"
-      }
-    },
-    jumbled_title: {
-      en: "Jumbled title",
-      de: "Song-Durcheinander",
-      sv: "Omr\xF6rd titel"
-    },
-    re_jumble: {
-      en: "Re-jumble",
-      de: "Neu mischen",
-      sv: "R\xF6r om igen"
-    },
-    begin: {
-      en: "Begin",
-      de: "Start",
-      sv: "B\xF6rja"
-    },
-    jumbled_guess: {
-      en: "Guess the album name with the pixelated cover, jumbled title, and hints!",
-      de: "Errate den Albumtitel mit verpixeltem Cover, durcheinandergew\xFCrfeltem Titel und Hinweisen!",
-      sv: "Gissa albumtiteln med pixellerad konst, omr\xF6rd titel, och ledtr\xE5dar!"
-    },
-    add_hint: {
-      en: "Add hint",
-      de: "Gib\u2019 mir einen Tipp!",
-      sv: "L\xE4gg till ledtr\xE5d"
-    },
-    give_up: {
-      en: "Give up",
-      de: "Aufgeben",
-      sv: "Ge upp"
-    },
-    you_guessed_correctly: {
-      en: "You guessed correctly!",
-      de: "Du hast richtig geraten!",
-      sv: "Du gissade r\xE4tt!"
-    },
-    guess: {
-      en: "Guess",
-      de: "Raten",
-      sv: "Gissa"
-    },
-    enter_a_guess: {
-      en: "Enter a guess",
-      de: "Gebe eine Vermutung ein",
-      sv: "Skriv in en gissning"
-    },
-    hints: {
-      en: "Hints",
-      de: "Tipps",
-      sv: "Ledtr\xE5dar",
-      plays: {
-        en: "You have {v} plays on this album",
-        de: "Du hast {v} mal einen Song von diesem Album geh\xF6rt",
-        sv: "Du har {v} lyssningar p\xE5 det h\xE4r albumet"
-      },
-      release: {
-        en: "Album was released on {v}",
-        de: "Das Album wurde am {v} ver\xF6ffentlicht",
-        sv: "Albumet sl\xE4pptes {v}"
-      },
-      tag: {
-        en: "The artist is tagged with {v}",
-        de: "Der/die K\xFCnstler:in ist mit {v} getaggt",
-        sv: "Artisten har taggats som {v}"
-      },
-      born: {
-        en: "The artist was born {v}",
-        de: "Der/die K\xFCnstler:in wurde {v} geboren",
-        sv: "Artisten var f\xF6dd {v}"
-      }
-    },
-    reveal: {
-      en: "The album was {name} by {artist}",
-      de: "Das Album war {name} von {artist}",
-      sv: "Albumet var {name} av {artist}"
-    },
-    time_up: {
-      en: "Time is up!",
-      de: "Die Zeit ist um!",
-      sv: "Slut p\xE5 tid!"
     },
     global: {
       en: "Global",
@@ -42822,154 +41229,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Schaue deinen H\xF6rbericht an",
       sv: "Visa din lyssningsrapport f\xF6r {m}"
     },
-    count_mutual_listeners: {
-      en: "You have {c} mutual listeners",
-      de: "Du hast {c} gemeinsame H\xF6rer",
-      sv: "Du har {c} \xF6msesidiga lyssnare"
-    },
-    no_mutual_listeners: {
-      en: "You have no mutual listeners",
-      de: "Du hast keine gemeinsamen H\xF6rer",
-      sv: "Du har inga \xF6msesidiga lyssnare"
-    },
-    no_mutual_listeners_explain: {
-      en: "This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect.",
-      de: "Dies kann entweder an fehlenden Mutuals oder einer fehlerhaften Seitenweiterleitung liegen.",
-      sv: "Det kan inneb\xE4ra att du antingen inte har \xF6msesidiga f\xF6ljare som lyssnar eller att sidan har en gammal omdirigering"
-    },
-    navigation_items: {
-      name: {
-        en: "Quick access",
-        de: "Schnellzugriff",
-        sv: "Snabb\xE5tkomst"
-      },
-      body: {
-        en: "Arrange your navigation menu to suit your usage best",
-        de: "Ordne dein Navigationsmen\xFC so an, dass es am besten zu deiner Nutzung passt",
-        sv: "Ordna din navigationsmeny f\xF6r att b\xE4st passa dig"
-      }
-    },
-    edit_quick_access: {
-      en: "Edit quick access",
-      de: "Schnellzugriff bearbeiten",
-      sv: "Redigera snabb\xE5tkomst"
-    },
-    navigation_language: {
-      en: "Show option to change language",
-      de: "Option zum \xC4ndern der Sprache anzeigen",
-      sv: "Visa alternativet att \xE4ndra spr\xE5k"
-    },
-    branding: {
-      en: "Branding"
-    },
-    branding_type: {
-      name: {
-        en: "Branding type",
-        de: "Branding-Art",
-        sv: "Brandingalternativ"
-      },
-      body: {
-        en: "Decide which branding source to use for the header",
-        de: "W\xE4hle aus, welches Branding f\xFCr die Kopfzeile verwendet werden soll",
-        sv: "V\xE4lj vilken sorts branding f\xF6r att anv\xE4nda p\xE5 sidhuvudet"
-      }
-    },
-    rain: {
-      name: {
-        en: "Enable rainfall",
-        de: "Regen aktivieren",
-        sv: "Aktivera regn"
-      },
-      body: {
-        en: "Immerse yourself in soothing visual rain",
-        de: "Tauche in den beruhigenden visuellen Regen ein",
-        sv: "Omsluta dig sj\xE4lv i en lugnande regneffekt"
-      }
-    },
     images: {
       en: "Images",
       de: "Bilder",
       sv: "Bilder"
-    },
-    static_gifs: {
-      en: "Control animation of GIFs",
-      de: "Steuere die Animation von GIFs",
-      sv: "Kontrollera GIF-animation"
-    },
-    always_animate: {
-      en: "Always animate",
-      de: "Immer animieren",
-      sv: "Animera alltid"
-    },
-    only_on_hover: {
-      en: "Only on hover",
-      de: "Nur beim Hovern",
-      sv: "Endast under hovring"
-    },
-    static_banners: {
-      en: "Prevent animations in profile banners",
-      de: "Deaktiviere Animationen in Profilbannern",
-      sv: "St\xE4ng av animationer i profilbanners"
-    },
-    change_zoom: {
-      en: "Change zoom level",
-      de: "Zoomlevel \xE4ndern",
-      sv: "\xC4ndra zoomniv\xE5"
-    },
-    static_avatars: {
-      en: "User avatars",
-      de: "Benutzer-Profilbilder",
-      sv: "Anv\xE4ndarprofilbilder"
-    },
-    static_music: {
-      en: "Artists and albums",
-      de: "K\xFCnstler:innen und Alben",
-      sv: "Artister och album"
-    },
-    apply_to: {
-      en: "Apply to",
-      de: "Anwenden auf",
-      sv: "Till\xE4mpa till"
-    },
-    change_images_for: {
-      en: "Change images for",
-      de: "Bilder \xE4ndern f\xFCr",
-      sv: "\xC4ndra bild f\xF6r"
-    },
-    leaving_site: {
-      name: {
-        en: "Don\u2019t get lost",
-        de: "Verirre dich nicht",
-        sv: "G\xE5 inte vilse"
-      },
-      body: {
-        en: "This link is taking you to the following location",
-        de: "Dieser Link f\xFChrt dich zu folgendem Ort",
-        sv: "L\xE4nken tar dig till den h\xE4r platsen"
-      }
-    },
-    leaving_site_dangerous: {
-      name: {
-        en: "Be careful",
-        de: "Vorsicht",
-        sv: "Var f\xF6rsiktig"
-      },
-      body: {
-        en: "This link can open an application on your device",
-        de: "Dieser Link kann eine Anwendung auf deinem Ger\xE4t \xF6ffnen",
-        sv: "L\xE4nken kan \xF6ppna en applikation p\xE5 din enhet"
-      }
-    },
-    leaving_site_checkbox: {
-      en: "Trust {v} links in the future",
-      de: "{v}-Links zuk\xFCnftig vertrauen",
-      sv: "Lita p\xE5 l\xE4nkar fr\xE5n {v} i framtiden"
-    },
-    visit: {
-      // visit site
-      en: "Visit",
-      de: "Besuchen",
-      sv: "Bes\xF6k"
     },
     auto_correct_scrobbles: {
       name: {
@@ -43029,30 +41292,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Du musst eingeloggt sein",
       sv: "Du l\xE4r vara inloggad"
     },
-    oracle_notice: {
-      en: "You are currently testing \u2018oracle\u2019, a redesigned album and track view",
-      de: "Du testest gerade \u201Eoracle\u201C, eine neu gestaltete Album- und Titelseite"
-    },
     debug: {
       en: "Debug"
     },
     send_feedback: {
       en: "Send feedback",
       de: "Feedback senden"
-    },
-    oracle_heading: {
-      en: "Experimental",
-      de: "Experimentell"
-    },
-    oracle_beta: {
-      name: {
-        en: "Enable the experimental \u2018oracle\u2019 system",
-        de: "Experimentelles \u201Eoracle\u201C-System aktivieren"
-      },
-      body: {
-        en: "A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage.",
-        de: "Eine neu gestaltete Album- und Titelseite, die Daten von MusicBrainz bezieht. Kann in Zukunft ver\xF6ffentlicht oder verworfen werden. Bitte sende Feedback basierend auf deiner Nutzung."
-      }
     },
     label: {
       en: "Label",
@@ -43096,18 +41341,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Playlist erstellen",
       sv: "Skapa spellista"
     },
-    music_links: {
-      name: {
-        en: "Music linking",
-        de: "Musikverlinkung",
-        sv: "Musikl\xE4nkar"
-      },
-      body: {
-        en: "Choose which services to display for artists, albums, and tracks",
-        de: "W\xE4hle aus, welche Dienste f\xFCr K\xFCnstler:innen, Alben und Songs angezeigt werden sollen",
-        sv: "V\xE4lj vilka tj\xE4nster att visa f\xF6r artister, album, och l\xE5tar"
-      }
-    },
     amount_translated: {
       // number of strings translated
       en: "{c} translated"
@@ -43140,6 +41373,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     sign_up: {
       en: "Sign up"
+    },
+    varied_avatar_shapes: {
+      name: {
+        en: "Allowed varied avatar shapes"
+      },
+      body: {
+        en: "This removes square restrictions and displays images freely as they were uploaded."
+      }
+    },
+    social: {
+      en: "Social"
     }
   };
   function tl2(key, replacements = {}) {
@@ -43305,8 +41549,29 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       default: 2012,
       type: "radio",
       values: {
+        2007: {
+          name: "2007"
+        },
+        2008: {
+          name: "2008"
+        },
+        2009: {
+          name: "2009"
+        },
+        2010: {
+          name: "2010"
+        },
+        2011: {
+          name: "2011"
+        },
         2012: {
           name: "2012"
+        },
+        2013: {
+          name: "2013"
+        },
+        2014: {
+          name: "2014"
         }
       }
     },
@@ -43314,11 +41579,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       default: false,
       title: trans.theme_loading.name,
       body: trans.theme_loading.body
-    },
-    underline_links: {
-      default: false,
-      title: trans.underline_links.name,
-      body: trans.underline_links.body
     },
     corrections: {
       default: true,
@@ -43453,75 +41713,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       title: trans.prefer_no_redirect.name,
       body: trans.prefer_no_redirect.body
     },
-    inbox_view: {
-      default: "notifications",
-      type: "tabs",
-      values: {
-        notifications: {
-          name: trans.notifications
-        },
-        messages: {
-          name: trans.messages
-        }
-      }
-    },
-    navigation_items: {
-      default: ["home", "library", "shouts"],
-      type: "list",
-      title: trans.navigation_items.name,
-      body: trans.navigation_items.body,
-      predefined: true
-    },
-    navigation_language: {
+    varied_avatar_shapes: {
       default: true,
-      type: "checkbox",
-      title: trans.navigation_language
-    },
-    branding_type: {
-      default: "bleh",
-      type: "radio",
-      title: trans.branding_type.name,
-      body: trans.branding_type.body,
-      values: {
-        bleh: {
-          name: "bleh"
-        },
-        lastfm: {
-          name: "Last.fm"
-        }
-      }
-    },
-    trusted_sites: {
-      default: [],
-      type: "list"
-    },
-    friends: {
-      default: [],
-      type: "list",
-      title: trans.friends,
-      body: trans.friends_setting,
-      warn_if_matches_auth: true
-    },
-    starred_friend: {
-      default: "",
-      type: "select",
-      title: trans.starred_friend.name,
-      body: trans.starred_friend.body
-    },
-    dismissed: {
-      default: [],
-      type: "list"
-    },
-    oracle_beta: {
-      default: false,
-      title: trans.oracle_beta.name,
-      body: trans.oracle_beta.body,
-      beta: true,
-      new_release: true
-    },
-    control_center: {
-      default: [],
-      type: "list"
+      title: trans.varied_avatar_shapes.name,
+      body: trans.varied_avatar_shapes.body
     },
     romanise_jp: {
       default: false,

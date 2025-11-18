@@ -12,6 +12,7 @@ import { dialog } from './components/dialog';
 import tippy from 'tippy.js';
 import { control_gif_pause } from './build/tools';
 import { register_menu } from './components/menu';
+import { settings } from './build/config';
 
 export function patch_avatar(
     avatar,
@@ -29,10 +30,14 @@ export function patch_avatar(
     // last.fm bug: it uses 64s instead of avatar70s for
     // event attendees - this causes it to center in the middle of the image
     // rather than the top
-    avatar_img.setAttribute(
-        'src',
-        avatar_img.getAttribute('src').replace('/64s/', '/avatar70s/')
-    );
+    avatar_img.src = avatar_img.src.replace('/64s/', '/avatar70s/');
+
+    if (settings.varied_avatar_shapes) {
+        avatar_img.src = avatar_img.src
+            .replace('/avatar70s/', '/arXL/')
+            .replace('/avatar170s/', '/arXL/')
+            .replace('/avatar300s/', '/arXL');
+    }
 
     avatar.setAttribute('title', '');
 
