@@ -19798,7 +19798,7 @@
     let error_tooltip;
     let colour_block;
     let container = html.node`
-        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+        <div class="input-container colourful" data-type=${type} data-has-error="false">
             ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
             ${type == "textarea" ? html.node`
                 <textarea class="modern-input" disabled=${disabled} autofocus=${focus} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
@@ -21261,7 +21261,7 @@
       id: "share",
       title: tl2(trans.share),
       body: html.node`
-            <div class="share-top content-form">
+            <div class="share-top">
                 <input
                     type="text"
                     readonly
@@ -21797,6 +21797,7 @@
         if (overview) overview.textContent = text3;
       }
     }
+    page.structure.content_top = document.body.querySelector(".content-top");
   }
   function checkup_nav() {
     if (!ff("short")) return;
@@ -21821,16 +21822,12 @@
   function convert_to_toolbar() {
     const nav = page.structure.content_top.querySelector(".navlist");
     if (!nav) return;
-    nav.classList.add("redesigned-navigation");
     page.structure.toolbar = html.node`
-        <div class="toolbar">
+        <div class="friend-tabs">
             ${nav}
         </div>
     `;
-    page.structure.row.insertBefore(
-      page.structure.toolbar,
-      page.structure.row.firstChild
-    );
+    page.structure.main.insertBefore(page.structure.toolbar, page.structure.main.firstElementChild);
     page.structure.content_top.style.display = "none";
   }
   function tab_replace(query, text3) {
@@ -26143,6 +26140,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     in_dialog = false,
     allow_icons = false,
     allow_hue = false,
+    allow_fonts = false,
     take_effect = false,
     cache: cache3 = false,
     allow_socials = false,
@@ -26185,12 +26183,25 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (allow_lists) {
       ALLOWED_TAGS.push("ul", "ol", "li");
     }
+    let hue2;
+    let sat;
+    let lit;
     let links = [];
     const banner = () => [
       {
         type: "lang",
         regex: /\[banner=([^\]]+)\]/g,
         replace: (_, url) => {
+          delete cache3.banner;
+          delete cache3.banner_orig;
+          try {
+            const safe = new URL(url);
+            if (!["http:", "https:"].includes(safe.protocol)) return "";
+            cache3.banner = `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=webp&n=-1`;
+            if (name == auth.name) cache3.banner_orig = url;
+          } catch {
+            cache3.banner = "accent";
+          }
           return "";
         }
       }
@@ -26226,7 +26237,25 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       {
         type: "lang",
         regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
-        replace: (_, h, s2, l2) => {
+        replace: (_) => {
+          return "";
+        }
+      }
+    ];
+    const font = () => [
+      {
+        type: "lang",
+        regex: /\[font=([^\]]+)\]/g,
+        replace: (_) => {
+          return "";
+        }
+      }
+    ];
+    const display_name = () => [
+      {
+        type: "lang",
+        regex: /\[name=([^\]]+)\]/g,
+        replace: (_) => {
           return "";
         }
       }
@@ -26304,10 +26333,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (line_breaks) extensions.push(blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
-    if (allow_hue) extensions.push(accent());
+    if (allow_hue) extensions.push(accent(), display_name());
+    if (allow_fonts) extensions.push(font());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
     extensions.push(mentions());
+    let profile_cache;
+    const will_cache = cache3 === true;
+    log2(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache3 });
+    if ((allow_banners || allow_hue) && will_cache) {
+      profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+      cache3 = profile_cache[name] || {};
+    }
     const converter = new import_showdown.default.Converter({
       extensions,
       emoji: true,
@@ -26370,7 +26407,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       "music.youtube.com": "YouTube Music",
       "facebook.com": "Facebook",
       "www.discogs.com": "Discogs",
-      "discogs.com": "Discogs"
+      "discogs.com": "Discogs",
+      "tidal.com": "Tidal"
     };
     if (links.length > 0) {
       body.appendChild(html.node`
@@ -26387,7 +26425,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           label = link_strings[link.host];
         }
         return html.node`
-                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-path=${link.path}>
+                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-host-unknown=${!link_strings.hasOwnProperty(link.host)} data-path=${link.path} style="--favi: url(https://icons.duckduckgo.com/ip3/${link.host}.ico)">
                                 ${label}
                             </a>
                         `;
@@ -26397,14 +26435,74 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         `);
     }
     if (body.nodeName != "#text") patch_wiki_contents(body);
+    if (line_breaks && body.nodeName != "#text") {
+      local_restriction(body);
+      body.querySelectorAll("p").forEach((text4) => {
+        local_restriction(text4);
+      });
+    }
     if (body.nodeName != "#text") {
       body.querySelectorAll("img").forEach((image) => {
         if (!line_breaks) {
           image.remove();
           return;
         }
+        const proxy_free = [
+          "count.getloli.com",
+          "i.imgur.com",
+          "media1.tenor.com",
+          "katelyynn.github.io",
+          "i.pinimg.com"
+        ];
+        try {
+          const url = new URL(image.src);
+          if (!proxy_free.includes(url.hostname)) {
+            image.setAttribute("data-unsafe-href", encodeURI(image.src));
+            image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
+          }
+        } catch (e) {
+          image.setAttribute("data-unsafe-href", encodeURI(image.src));
+          image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
+        }
         image.setAttribute("loading", "lazy");
+        let func = () => expand_avatar(image.src, image.alt);
+        if (in_dialog) func = () => open(image.src);
+        const container = html.node`
+                <div class="markdown-image" onclick=${func} />
+            `;
+        image.after(container);
+        container.appendChild(image);
       });
+    }
+    if (allow_hue) {
+      console.info(hue2, sat, lit);
+      if (hue2 !== void 0 && sat !== void 0 && lit !== void 0) {
+        if (take_effect) {
+          document.body.style.setProperty("--hue-album", hue2);
+          document.body.style.setProperty("--sat-album", sat);
+          document.body.style.setProperty("--lit-album", lit);
+          load_chart_colours();
+        }
+        cache3.hue = hue2;
+        cache3.sat = sat;
+        cache3.lit = lit;
+        log2("custom accent settings present", "profile", "info", {
+          hue: hue2,
+          sat,
+          lit
+        });
+      } else {
+        if (cache3.hue) delete cache3.hue;
+        if (cache3.sat) delete cache3.sat;
+        if (cache3.lit) delete cache3.lit;
+        log2("cleared custom accent settings", "profile", "log");
+      }
+    }
+    if (cache3 && will_cache) {
+      log2("finalised cache from markdown parsing", "markdown", "info", {
+        cache: cache3
+      });
+      save_profile_cache(cache3, profile_cache, name);
     }
     return body;
   }
@@ -26579,6 +26677,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </div>
         `
     });
+  }
+  function local_restriction(text3) {
+    if (text3.textContent.trim().startsWith("Due to local laws, we are temporarily"))
+      text3.classList.add("local-restriction");
   }
   function external_url_prompt(url, dangerous = false) {
     log2(
@@ -31066,19 +31168,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           "chartlist-row--now-scrobbling"
         );
         const has_bar = track.querySelector(":scope > .chartlist-bar");
-        let track_timestamp = track.querySelector(
-          ".chartlist-timestamp span"
-        );
-        let track_timestamp_contents;
-        if (track_timestamp && !is_active) {
-          track_timestamp_contents = track_timestamp.getAttribute("title");
-          if (track_timestamp_contents) {
-            track_timestamp.setAttribute("title", "");
-            tippy_esm_default(track_timestamp, {
-              content: track_timestamp_contents
-            });
-          }
-        }
         let album = track.querySelector(".chartlist-album a");
         if (!is_album && album)
           album.textContent = correct_item_by_artist(
@@ -35663,6 +35752,32 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (pages) page.structure.container.appendChild(pages);
   }
 
+  // src/components/header.js
+  function generic_subpage_header(header_title, link_type = "user", direct_link = "") {
+    let link_field = html.node`<a href="${root}user/${sanitise(page.name)}">${page.name}</a>`;
+    if (link_type == "artist")
+      link_field = html.node`<a href="${root}music/${sanitise(page.name)}">${page.name}</a>`;
+    else if (link_type == "album")
+      link_field = html.node`<a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}">${page.name}</a>`;
+    else if (link_type == "track")
+      link_field = html.node`<a href="${root}music/${sanitise(page.sister)}/_/${sanitise(page.name)}">${page.name}</a>`;
+    else if (link_type == "direct")
+      link_field = html.node`<a href="${direct_link}">${page.name}</a>`;
+    return html.node`
+        <section class="profile-header-subpage-section" ref=${(el) => page.state.header = el}>
+            ${page.avatar != "" ? html.node`
+                <div class="badge-avatar">
+                    <img src=${page.avatar} alt=${page.name}>
+                </div>
+            ` : ""}
+            <div class="badge-info">
+                ${link_field}
+                <h1 ref=${(el) => page.state.title = el}>${header_title}</h1>
+            </div>
+        </section>
+    `;
+  }
+
   // src/pages/profile.js
   async function bleh_profiles() {
     if (page.subpage == "obsessions_obsession") {
@@ -35694,9 +35809,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const profile_sub_text = profile_header.querySelector(".header-title-secondary");
     if (!avatar2) {
       avatar2 = profile_header.querySelector(".header-avatar-add");
+      page.avatar = "";
       new_account = true;
     } else {
       avatar2 = avatar2.querySelector("img");
+      page.avatar = avatar2.src;
+      avatar2.src = avatar2.src.replace("/avatar170s/", "/arXL/");
     }
     profile_header.classList.add("legacy-header");
     tab_replace("listening-report", tl2(trans.charts));
@@ -35805,7 +35923,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </section>
         `;
       page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+      const sponsor_profile = sponsor_list ? page.name == sponsor_list.sponsor_account : false;
       if (!is_own_profile) {
+        const follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]');
+        const message_button = profile_header.querySelector(".header-message-user");
         let taste = "";
         let taste_percentage = "";
         let taste_artists = [];
@@ -35832,7 +35953,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         header.after(html.node`
                 <section class="profile-actions-section">
                     <div class="options">
-
+                        ${!sponsor_profile ? follow_button : ""}
+                        ${message_button ? html.node`<a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">${tl2(trans.send_a_message)}</a>` : ""}
+                        ${!sponsor_profile ? html.node`<a class="has-icon leave-a-shout" href="${root}user/${page.name}/shoutbox">${tl2(trans.leave_a_shout)}</a>` : ""}
                     </div>
                     <div class="tasteometer tasteometer-compact-${taste}" data-taste=${taste}>
                         <p>${{ html: tl2(trans.music_compat, { u: `<strong>${page.name}</strong>`, v: `<strong>${tl2(trans.music_compat[taste]).toUpperCase()}</strong>` }) }}</p>
@@ -35901,6 +36024,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (featured_track_panel)
         bleh_featured_profile_track(featured_track_panel);
     } else {
+      page.structure.row.insertBefore(generic_subpage_header(page.structure.content_top.querySelector("h1").textContent), page.structure.row.firstElementChild);
       let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage == "events") {
@@ -36159,7 +36283,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     navlist.removeChild(followers_tab);
     navlist.removeChild(neighbours_tab);
     let friends_nav = html.node`
-        <div class="toolbar">
+        <div class="friend-tabs">
             <nav class="navlist secondary-nav redesigned-navigation">
                 <ul class="navlist-items">
                     ${{ html: following_tab.outerHTML }}
@@ -36171,10 +36295,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     `;
     link.href = `${root}user/${page.name}/friends`;
     link.textContent = tl2(trans.friends);
-    page.structure.row.insertBefore(
-      friends_nav,
-      page.structure.row.firstElementChild
-    );
+    page.structure.main.insertBefore(friends_nav, page.structure.main.firstElementChild);
     page.structure.row.classList.add("col-main-is-primary");
     following_tab = friends_nav.querySelector(
       ".secondary-nav-item--following a"
@@ -36201,21 +36322,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <div class="new-badge count-badge">${count}</div>
         `);
     }
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons-wrapper");
-    view_buttons.innerHTML = `
-        <div class="view-buttons">
-            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${tl2(trans.grid)}
-            </button>
-            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${tl2(trans.list)}
-            </button>
-        </div>
-    `;
     const user_panel = html.node`
         <section class="users">
-            ${view_buttons}
             ${html.node([page.structure.main.innerHTML])}
         </section>
     `;
@@ -36233,52 +36341,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let artist_elem = details.querySelector(".featured-item-artist");
     name_elem.classList = "";
     artist_elem.classList = "source-album-artist";
-    let artist_elem_full = artist_elem;
     const img = art.querySelector(".cover-art");
     hoshino(
       img.querySelector(":scope > img"),
       name_elem.textContent.trim(),
       artist_elem.textContent.trim()
     );
-    if (settings.format_guest_features) {
-      let song_title = name_elem.textContent;
-      let formatted_title = name_includes(
-        song_title,
-        artist_elem.textContent
-      );
-      let song_tags = {};
-      if (formatted_title) {
-        song_title = formatted_title[0];
-        song_tags = formatted_title[1];
-      }
-      render(
-        name_elem,
-        html.node`
-            <div class="title">${romanise(song_title.trim())}</div>
-            ${song_tags.map(
-          (tag) => html.node`
-                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</div>
-            `
-        )}
-        `
-      );
-      artist_elem_full = html.node`
-            <div class="source-album-artist">
-                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>
-            </div>
-        `;
-      let song_guests = formatted_title[3];
-      for (let guest in song_guests) {
-        artist_elem_full.innerHTML = `${artist_elem_full.innerHTML},`;
-        let guest_element = document.createElement("a");
-        guest_element.setAttribute(
-          "href",
-          `${root}music/${redirect()}${sanitise(song_guests[guest])}`
-        );
-        guest_element.textContent = romanise(song_guests[guest]);
-        artist_elem_full.appendChild(guest_element);
-      }
-    } else if (settings.corrections) {
+    if (settings.corrections) {
       name_elem.textContent = romanise(
         correct_item_by_artist(
           name_elem.textContent.trim(),
@@ -36296,37 +36365,34 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       button.textContent = tl2(trans.remove);
     }
     let panel = html.node`
-        <section class="featured-item-panel">
-            <div class="sub-text">
+        <section class="featured-item-section">
+            <h2>
                 ${form ? html.node`
-                <a class="has-icon" data-type="obsession" href=${link}>
-                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                <a href=${link}>
                     ${tl2(trans.obsession)}
                 </a>
                 ${form}
                 ` : html.node`
-                <div class="has-icon" data-type="track">
-                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl2(trans.top_track)}
-                </div>
+                ${tl2(trans.top_track)}
                 `}
-            </div>
-            <div class="source-album js-link-block link-block">
-                <div class="source-album-art small">
-                    ${img}
-                </div>
-                <div class="source-album-details">
-                    <h4 class="source-album-name">${name_elem}</h4>
-                    ${artist_elem_full}
-                </div>
-                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute("href")} />
+            </h2>
+            <div class="grid-items">
+                <li class="grid-items-item link-block">
+                    <div class="grid-items-cover-image">
+                        <div class="grid-items-cover-image-image">
+                            ${img}
+                        </div>
+                        <div class="grid-items-item-details">
+                            <p class="grid-items-item-main-text">${name_elem}</p>
+                            <p class="grid-items-item-aux-text">${artist_elem}</p>
+                        </div>
+                        <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute("href")} />
+                    </div>
+                </li>
             </div>
         </section>
     `;
-    page.structure.side.insertBefore(
-      panel,
-      page.structure.side.firstElementChild
-    );
+    page.structure.side.appendChild(panel);
   }
   function profile_recents() {
     let panel = page.structure.main.querySelector("#recent-tracks-section");
@@ -36898,43 +36964,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
 
   // src/components/radio.js
   function bleh_radio() {
-    let radios = page.structure.side.querySelectorAll(".stationlink");
-    radios.forEach((radio2) => {
-      let type = radio2.getAttribute("data-analytics-label");
-      radio2.classList.add("radio-button");
-      let text3 = tl2(trans[type]);
-      if (type == "tag")
-        text3 = page.name;
-      else if (type == "event")
-        text3 = tl2(trans.artists);
-      render(radio2, html`
-            <h3 class="sub-text">${tl2(trans.radio)}</h3>
-            <h4>${text3}</h4>
-        `);
-      radio2.removeAttribute("title");
-    });
     if (page.type == "user") {
-      let promo_v3 = page.structure.side.querySelector(".promo-v3");
+      const promo_v3 = page.structure.side.querySelector(".promo-v3");
       if (!promo_v3) return;
-      let header = promo_v3.querySelector("h2");
-      header.textContent = tl2(trans.listening);
-      let promos = promo_v3.querySelectorAll(".listening-report-promo");
-      let container = document.createElement("div");
-      container.classList.add("listening-report-promos");
-      promos.forEach((promo) => {
-        container.appendChild(promo);
+      const promos = promo_v3.querySelectorAll(".listening-report-promo");
+      promos.forEach((report) => {
+        report.classList.remove("listening-report-promo");
+        report.classList.add("listen-report", "journal-like");
+        const date = report.querySelector(".listening-report-promo-date").textContent;
+        const title = report.querySelector(".listening-report-promo-title").textContent.replace(".", " ");
+        render(report, html`
+                <div class="title">${title}</div>
+                <div class="date">${date}</div>
+            `);
       });
-      promo_v3.appendChild(container);
-      if (radios.length == 0) return;
-      let sep = document.createElement("div");
-      sep.classList.add("sep");
-      promo_v3.appendChild(sep);
-      let list = page.structure.side.querySelector(".stationlink-list");
-      page.structure.side.removeChild(list.parentElement);
-      promo_v3.appendChild(list);
-    } else {
-      let header = page.structure.side.querySelector(".stationlinks-header");
-      header.textContent = tl2(trans.listening);
     }
   }
 
@@ -39445,12 +39488,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "{v1}, {v2}, and {v3}"
       }
     },
-    message: {
+    send_a_message: {
       // as in a direct message
-      en: "Message",
-      de: "Nachricht schreiben",
-      pt: "Mensagem",
-      sv: "Meddela"
+      en: "Send a message"
+    },
+    leave_a_shout: {
+      en: "Leave a shout"
     },
     join_discord: {
       en: "Join Discord",

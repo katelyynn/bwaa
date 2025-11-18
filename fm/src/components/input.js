@@ -33,7 +33,7 @@ export function input({
     let colour_block;
 
     let container = html.node`
-        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+        <div class="input-container colourful" data-type=${type} data-has-error="false">
             ${type == 'colour' ? html.node`<span class="colour-block" ref=${(el) => (colour_block = el)} />` : ''}
             ${
                 type == 'textarea' ?

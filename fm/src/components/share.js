@@ -16,7 +16,7 @@ export function share(url) {
         id: 'share',
         title: tl(trans.share),
         body: html.node`
-            <div class="share-top content-form">
+            <div class="share-top">
                 <input
                     type="text"
                     readonly

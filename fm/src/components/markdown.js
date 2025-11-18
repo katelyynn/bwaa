@@ -29,6 +29,7 @@ export function markdown(
         in_dialog = false,
         allow_icons = false,
         allow_hue = false,
+        allow_fonts = false,
         take_effect = false,
         cache = false,
         allow_socials = false,
@@ -75,6 +76,10 @@ export function markdown(
         ALLOWED_TAGS.push('ul', 'ol', 'li');
     }
 
+    let hue;
+    let sat;
+    let lit;
+
     let links = [];
 
     const banner = () => [
@@ -82,6 +87,19 @@ export function markdown(
             type: 'lang',
             regex: /\[banner=([^\]]+)\]/g,
             replace: (_, url) => {
+                delete cache.banner;
+                delete cache.banner_orig;
+
+                try {
+                    const safe = new URL(url);
+                    if (!['http:', 'https:'].includes(safe.protocol)) return '';
+
+                    cache.banner = `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=webp&n=-1`;
+                    if (name == auth.name) cache.banner_orig = url;
+                } catch {
+                    cache.banner = 'accent';
+                }
+
                 return '';
             }
         }
@@ -131,7 +149,29 @@ export function markdown(
         {
             type: 'lang',
             regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
-            replace: (_, h, s, l) => {
+            replace: (_) => {
+                return '';
+            }
+        }
+    ];
+
+    // sets a profile's font
+    const font = () => [
+        {
+            type: 'lang',
+            regex: /\[font=([^\]]+)\]/g,
+            replace: (_) => {
+                return '';
+            }
+        }
+    ];
+
+    // sets a profile's display name
+    const display_name = () => [
+        {
+            type: 'lang',
+            regex: /\[name=([^\]]+)\]/g,
+            replace: (_) => {
                 return '';
             }
         }
@@ -228,10 +268,22 @@ export function markdown(
     if (line_breaks) extensions.push(blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
-    if (allow_hue) extensions.push(accent());
+    if (allow_hue) extensions.push(accent(), display_name());
+    if (allow_fonts) extensions.push(font());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
     extensions.push(mentions());
+
+    let profile_cache;
+
+    const will_cache = cache === true;
+    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
+
+    if ((allow_banners || allow_hue) && will_cache) {
+        profile_cache =
+            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        cache = profile_cache[name] || {};
+    }
 
     const converter = new showdown.Converter({
         extensions,
@@ -309,7 +361,8 @@ export function markdown(
         'music.youtube.com': 'YouTube Music',
         'facebook.com': 'Facebook',
         'www.discogs.com': 'Discogs',
-        'discogs.com': 'Discogs'
+        'discogs.com': 'Discogs',
+        'tidal.com': 'Tidal'
     };
 
     if (links.length > 0) {
@@ -329,7 +382,7 @@ export function markdown(
                         }
 
                         return html.node`
-                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-path=${link.path}>
+                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-host-unknown=${!link_strings.hasOwnProperty(link.host)} data-path=${link.path} style="--favi: url(https://icons.duckduckgo.com/ip3/${link.host}.ico)">
                                 ${label}
                             </a>
                         `;
@@ -341,6 +394,14 @@ export function markdown(
 
     if (body.nodeName != '#text') patch_wiki_contents(body);
 
+    // funny local restriction message
+    if (line_breaks && body.nodeName != '#text') {
+        local_restriction(body);
+        body.querySelectorAll('p').forEach((text) => {
+            local_restriction(text);
+        });
+    }
+
     // add lazy-loading to images
     if (body.nodeName != '#text') {
         body.querySelectorAll('img').forEach((image) => {
@@ -349,8 +410,76 @@ export function markdown(
                 return;
             }
 
+            // for counter-like sites
+            const proxy_free = [
+                'count.getloli.com',
+                'i.imgur.com',
+                'media1.tenor.com',
+                'katelyynn.github.io',
+                'i.pinimg.com'
+            ];
+
+            try {
+                const url = new URL(image.src);
+
+                if (!proxy_free.includes(url.hostname)) {
+                    image.setAttribute('data-unsafe-href', encodeURI(image.src));
+                    image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
+                }
+            } catch(e) {
+                image.setAttribute('data-unsafe-href', encodeURI(image.src));
+                image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
+            }
+
             image.setAttribute('loading', 'lazy');
+
+            let func = () => expand_avatar(image.src, image.alt);
+            if (in_dialog) func = () => open(image.src);
+
+            const container = html.node`
+                <div class="markdown-image" onclick=${func} />
+            `;
+
+            image.after(container);
+            container.appendChild(image);
         });
+    }
+
+    if (allow_hue) {
+        console.info(hue, sat, lit);
+
+        if (hue !== undefined && sat !== undefined && lit !== undefined) {
+            if (take_effect) {
+                document.body.style.setProperty('--hue-album', hue);
+                document.body.style.setProperty('--sat-album', sat);
+                document.body.style.setProperty('--lit-album', lit);
+
+                load_chart_colours();
+            }
+
+            cache.hue = hue;
+            cache.sat = sat;
+            cache.lit = lit;
+
+            log('custom accent settings present', 'profile', 'info', {
+                hue,
+                sat,
+                lit
+            });
+        } else {
+            if (cache.hue) delete cache.hue;
+            if (cache.sat) delete cache.sat;
+            if (cache.lit) delete cache.lit;
+
+            log('cleared custom accent settings', 'profile', 'log');
+        }
+    }
+
+    if (cache && will_cache) {
+        log('finalised cache from markdown parsing', 'markdown', 'info', {
+            cache
+        });
+        save_profile_cache(cache, profile_cache, name);
     }
 
     return body;

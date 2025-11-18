@@ -44,6 +44,7 @@ import { redirect } from '../components/music.js';
 import tippy from 'tippy.js';
 import { expand_avatar } from '../avatar.js';
 import { hoshino } from '../components/hoshino.js';
+import { generic_subpage_header } from '../components/header.js';
 
 export async function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -88,9 +89,12 @@ export async function bleh_profiles() {
     // new account
     if (!avatar) {
         avatar = profile_header.querySelector('.header-avatar-add');
+        page.avatar = '';
         new_account = true;
     } else {
         avatar = avatar.querySelector('img');
+        page.avatar = avatar.src;
+        avatar.src = avatar.src.replace('/avatar170s/', '/arXL/');
     }
 
     profile_header.classList.add('legacy-header');
@@ -225,7 +229,12 @@ export async function bleh_profiles() {
         `;
         page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
 
+        const sponsor_profile = sponsor_list ? page.name == sponsor_list.sponsor_account : false;
+
         if (!is_own_profile) {
+            const follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]');
+            const message_button = profile_header.querySelector('.header-message-user');
+
             let taste = '';
             let taste_percentage = '';
             let taste_artists = [];
@@ -260,7 +269,9 @@ export async function bleh_profiles() {
             header.after(html.node`
                 <section class="profile-actions-section">
                     <div class="options">
-
+                        ${!sponsor_profile ? follow_button : ''}
+                        ${message_button ? html.node`<a class="has-icon send-a-msg" href="${root}inbox/compose?to=${page.name}">${tl(trans.send_a_message)}</a>` : ''}
+                        ${!sponsor_profile ? html.node`<a class="has-icon leave-a-shout" href="${root}user/${page.name}/shoutbox">${tl(trans.leave_a_shout)}</a>` : ''}
                     </div>
                     <div class="tasteometer tasteometer-compact-${taste}" data-taste=${taste}>
                         <p>${{ html: tl(trans.music_compat, { u: `<strong>${page.name}</strong>`, v: `<strong>${tl(trans.music_compat[taste]).toUpperCase()}</strong>` }) }}</p>
@@ -346,6 +357,8 @@ export async function bleh_profiles() {
         if (featured_track_panel)
             bleh_featured_profile_track(featured_track_panel);
     } else {
+        page.structure.row.insertBefore(generic_subpage_header(page.structure.content_top.querySelector('h1').textContent), page.structure.row.firstElementChild);
+
         let btn_add = page.structure.side.querySelector('.add-button');
         if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
 
@@ -736,7 +749,7 @@ function patch_profile_following() {
 
     // create nav
     let friends_nav = html.node`
-        <div class="toolbar">
+        <div class="friend-tabs">
             <nav class="navlist secondary-nav redesigned-navigation">
                 <ul class="navlist-items">
                     ${{ html: following_tab.outerHTML }}
@@ -751,10 +764,7 @@ function patch_profile_following() {
     link.href = `${root}user/${page.name}/friends`;
     link.textContent = tl(trans.friends);
 
-    page.structure.row.insertBefore(
-        friends_nav,
-        page.structure.row.firstElementChild
-    );
+    page.structure.main.insertBefore(friends_nav, page.structure.main.firstElementChild);
     page.structure.row.classList.add('col-main-is-primary');
 
     following_tab = friends_nav.querySelector(
@@ -790,23 +800,8 @@ function patch_profile_following() {
         `);
     }
 
-    // view-related buttons
-    let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons-wrapper');
-    view_buttons.innerHTML = `
-        <div class="view-buttons">
-            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${tl(trans.grid)}
-            </button>
-            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${tl(trans.list)}
-            </button>
-        </div>
-    `;
-
     const user_panel = html.node`
         <section class="users">
-            ${view_buttons}
             ${html.node([page.structure.main.innerHTML])}
         </section>
     `;
@@ -831,8 +826,6 @@ function bleh_featured_profile_track(object) {
     name_elem.classList = '';
     artist_elem.classList = 'source-album-artist';
 
-    let artist_elem_full = artist_elem;
-
     const img = art.querySelector('.cover-art');
     hoshino(
         img.querySelector(':scope > img'),
@@ -840,55 +833,7 @@ function bleh_featured_profile_track(object) {
         artist_elem.textContent.trim()
     );
 
-    if (settings.format_guest_features) {
-        let song_title = name_elem.textContent;
-
-        let formatted_title = name_includes(
-            song_title,
-            artist_elem.textContent
-        );
-        let song_tags = {};
-
-        if (formatted_title) {
-            song_title = formatted_title[0];
-            song_tags = formatted_title[1];
-        }
-
-        // combine
-        render(
-            name_elem,
-            html.node`
-            <div class="title">${romanise(song_title.trim())}</div>
-            ${song_tags.map(
-                (tag) => html.node`
-                <div class="feat" data-bwaa--tag-type="${tag.type}" data-bwaa--tag-group="${tag.group}">${romanise(tag.text)}</div>
-            `
-            )}
-        `
-        );
-
-        artist_elem_full = html.node`
-            <div class="source-album-artist">
-                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>
-            </div>
-        `;
-
-        // append guests
-        let song_guests = formatted_title[3];
-        for (let guest in song_guests) {
-            // &
-            artist_elem_full.innerHTML = `${artist_elem_full.innerHTML},`;
-
-            let guest_element = document.createElement('a');
-            guest_element.setAttribute(
-                'href',
-                `${root}music/${redirect()}${sanitise(song_guests[guest])}`
-            );
-            guest_element.textContent = romanise(song_guests[guest]);
-
-            artist_elem_full.appendChild(guest_element);
-        }
-    } else if (settings.corrections) {
+    if (settings.corrections) {
         name_elem.textContent = romanise(
             correct_item_by_artist(
                 name_elem.textContent.trim(),
@@ -908,42 +853,35 @@ function bleh_featured_profile_track(object) {
     }
 
     let panel = html.node`
-        <section class="featured-item-panel">
-            <div class="sub-text">
-                ${
-                    form ?
-                        html.node`
-                <a class="has-icon" data-type="obsession" href=${link}>
-                    <div class="bleh-icon" style="--icon: var(--mask)" />
+        <section class="featured-item-section">
+            <h2>
+                ${form ? html.node`
+                <a href=${link}>
                     ${tl(trans.obsession)}
                 </a>
                 ${form}
-                `
-                    :   html.node`
-                <div class="has-icon" data-type="track">
-                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl(trans.top_track)}
-                </div>
-                `
-                }
-            </div>
-            <div class="source-album js-link-block link-block">
-                <div class="source-album-art small">
-                    ${img}
-                </div>
-                <div class="source-album-details">
-                    <h4 class="source-album-name">${name_elem}</h4>
-                    ${artist_elem_full}
-                </div>
-                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute('href')} />
+                ` : html.node`
+                ${tl(trans.top_track)}
+                `}
+            </h2>
+            <div class="grid-items">
+                <li class="grid-items-item link-block">
+                    <div class="grid-items-cover-image">
+                        <div class="grid-items-cover-image-image">
+                            ${img}
+                        </div>
+                        <div class="grid-items-item-details">
+                            <p class="grid-items-item-main-text">${name_elem}</p>
+                            <p class="grid-items-item-aux-text">${artist_elem}</p>
+                        </div>
+                        <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute('href')} />
+                    </div>
+                </li>
             </div>
         </section>
     `;
 
-    page.structure.side.insertBefore(
-        panel,
-        page.structure.side.firstElementChild
-    );
+    page.structure.side.appendChild(panel);
 }
 
 function profile_recents() {

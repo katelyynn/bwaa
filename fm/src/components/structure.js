@@ -144,6 +144,8 @@ export function checkup_page_structure(is_subpage = false, header = null) {
             if (overview) overview.textContent = text;
         }
     }
+
+    page.structure.content_top = document.body.querySelector('.content-top');
 }
 
 export function checkup_nav() {
@@ -176,18 +178,14 @@ export function convert_to_toolbar() {
     const nav = page.structure.content_top.querySelector('.navlist');
     if (!nav) return;
 
-    nav.classList.add('redesigned-navigation');
-
     page.structure.toolbar = html.node`
-        <div class="toolbar">
+        <div class="friend-tabs">
             ${nav}
         </div>
     `;
 
-    page.structure.row.insertBefore(
-        page.structure.toolbar,
-        page.structure.row.firstChild
-    );
+    page.structure.main.insertBefore(page.structure.toolbar,page.structure.main.firstElementChild);
+
     page.structure.content_top.style.display = 'none';
 }
 

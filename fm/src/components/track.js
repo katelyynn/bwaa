@@ -175,24 +175,6 @@ export function patch_titles(search = page.structure.main) {
             );
             const has_bar = track.querySelector(':scope > .chartlist-bar');
 
-            // menu
-            let track_timestamp = track.querySelector(
-                '.chartlist-timestamp span'
-            );
-            let track_timestamp_contents;
-            if (track_timestamp && !is_active) {
-                track_timestamp_contents =
-                    track_timestamp.getAttribute('title');
-
-                if (track_timestamp_contents) {
-                    track_timestamp.setAttribute('title', '');
-
-                    tippy(track_timestamp, {
-                        content: track_timestamp_contents
-                    });
-                }
-            }
-
             let album = track.querySelector('.chartlist-album a');
             if (!is_album && album)
                 album.textContent = correct_item_by_artist(

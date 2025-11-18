@@ -1709,12 +1709,12 @@ export const trans = {
             en: '{v1}, {v2}, and {v3}'
         }
     },
-    message: {
+    send_a_message: {
         // as in a direct message
-        en: 'Message',
-        de: 'Nachricht schreiben',
-        pt: 'Mensagem',
-        sv: 'Meddela'
+        en: 'Send a message'
+    },
+    leave_a_shout: {
+        en: 'Leave a shout'
     },
     join_discord: {
         en: 'Join Discord',
