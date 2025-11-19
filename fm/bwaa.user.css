@@ -3406,6 +3406,11 @@
                 text-shadow: unset;
                 font-size: inherit;
                 line-height: inherit;
+                display: inline-block;
+
+                & > p {
+                    display: inline-flex;
+                }
 
                 .grid-items-item-main-text {
                     font-size: inherit;
