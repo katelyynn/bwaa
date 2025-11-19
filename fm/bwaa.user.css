@@ -5348,6 +5348,7 @@
                 display: none !important;
             }
 
+            &:focus,
             &:active,
             &:hover {
                 background: #750500 !important;
