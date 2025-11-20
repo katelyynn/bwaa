@@ -287,8 +287,8 @@ export async function bleh_profiles() {
         let is_following = page.structure.container.querySelector('.label.user-follow');
 
 
-        if (settings.bio_markdown) {
-            let about_me_text = about_me_sidebar.querySelector('p');
+        let about_me_text = about_me_sidebar?.querySelector('p');
+        if (settings.bio_markdown && about_me_text) {
             let result = bio_parse(about_me_text);
 
             about_me_text.after(result);
