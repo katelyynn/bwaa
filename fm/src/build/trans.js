@@ -2120,12 +2120,6 @@ export const trans = {
             }
         }
     },
-    what_are_activities: {
-        en: 'Keep track of your most recent activity locally on your profile',
-        de: 'Verfolge deine letzten Aktivitäten lokal auf deinem Profil',
-        pt: 'Acompanhe suas atividades mais recentes localmente em seu perfil',
-        sv: 'Håll koll på dina senaste aktiviteter lokalt på din profil'
-    },
     activity_tracking: {
         name: {
             en: 'Track my activities',
@@ -2163,6 +2157,27 @@ export const trans = {
         de: 'Installation',
         pt: 'Instalação',
         sv: 'Installation'
+    },
+    user_library: {
+        en: '{u}’s Library'
+    },
+    play_user_library_radio: {
+        en: 'Play {u}’s Library Radio'
+    },
+    artists_in_total: {
+        en: '{c} Artists in total'
+    },
+    showing: {
+        en: 'Showing'
+    },
+    last_3_months: {
+        en: 'Last 3 Months'
+    },
+    grid_plays: {
+        en: '{c} plays'
+    },
+    loved_tracks: {
+        en: 'Loved Tracks'
     },
     grid: {
         // as in the view mode

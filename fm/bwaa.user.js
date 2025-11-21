@@ -34993,6 +34993,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </section>
         `;
       page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+      page.state.header = header;
       const sponsor_profile = sponsor_list ? page.name == sponsor_list.sponsor_account : false;
       if (!is_own_profile) {
         const follow_button = profile_header.querySelector('.header-avatar [data-toggle-button=""]');
@@ -35047,6 +35048,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       profile_artists();
       profile_albums();
       profile_tracks();
+      profile_library();
       if (is_own_profile && settings.activities) {
         let recent_activity_section = html.node`
                 <section class="recent-activity-section">
@@ -35488,6 +35490,97 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const header = panel.querySelector("h2 > a");
     if (header) header.textContent = tl2(trans.recently_listened_tracks);
     page.state.active_now = panel.querySelector("tbody > .chartlist-row:first-child > .chartlist-timestamp > span:not(.chartlist-now-scrobbling)");
+  }
+  function profile_library() {
+    if (!ff("library_on_profile")) return;
+    const station = page.structure.side.querySelector('.stationlink[data-analytics-label="library"]');
+    station.classList = "stationbutton-radio";
+    render(station, html`
+        <span>${tl2(trans.play_user_library_radio, { u: page.name })}</span>
+    `);
+    const recents = page.structure.main.querySelector("#recent-tracks-section");
+    let items;
+    const panel = html.node`
+        <section class="profile-library">
+            <h2>
+                <a class="text-colour-link" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS">${tl2(trans.user_library, { u: page.name })}</a>
+            </h2>
+            <div class="module-body">
+                <div class="module-header">
+                    <div class="left">
+                        <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS">${tl2(trans.artists_in_total, { c: page.state.artists.toLocaleString(lang) })}</a>
+                        <span>${tl2(trans.showing)}: ${tl2(trans.last_3_months)}</span>
+                    </div>
+                    <div class="right">
+                        ${station}
+                    </div>
+                </div>
+                <ul class="grid-items grid-items--numbered" ref=${(el) => items = el} />
+                <div class="cocktail">
+                    <div class="two-col">
+                        <div class="wrapper loved">
+                            <h3>
+                                <a>
+                                    <span class="icon loved_indicator_icon" />
+                                    <span>${tl2(trans.loved_tracks)}</span>
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <h3>
+                            <a>
+                                <span class="icon tag_icon" />
+                                <span>${tl2(trans.tags)}</span>
+                            </a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="more-link">
+                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS" data-see-more="true">${tl2(trans.see_more)}</a>
+                </div>
+            </div>
+        </section>
+    `;
+    if (recents) {
+      recents.after(panel);
+    } else {
+      page.state.header.after(panel);
+    }
+    fetch(`${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1&ajax=1`).then((res) => {
+      return res.text();
+    }).then((dom) => {
+      const doc = new DOMParser().parseFromString(dom, "text/html");
+      const list = doc.querySelector(".chartlist");
+      if (list) {
+        const list_items = list.querySelectorAll(".chartlist-row");
+        list_items.forEach((item, index3) => {
+          if (index3 > 7) return;
+          const image = item.querySelector(".avatar > img").src;
+          const name = item.querySelector(".chartlist-name > a").textContent;
+          const plays = item.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value");
+          const plays_link = item.querySelector(".chartlist-count-bar-link").href;
+          items.appendChild(html.node`
+                        <li class="grid-items-item js-focus-controls-container" data-bwaa-music-grids="true">
+                            <div class="grid-items-cover-image js-link-block link-block">
+                                <div class="grid-items-cover-image-image">
+                                    <img src=${image.replace("/avatar70s/", "/avatar300s/")} loading="lazy">
+                                </div>
+                                <div class="grid-items-item-details">
+                                    <p class="grid-items-item-main-text">
+                                        <a class="link-block-target" href="${root}music/${sanitise(name)}">${correct_artist(name)}</a>
+                                    </p>
+                                    <p class="grid-items-item-aux-text">
+                                        <a href=${plays_link}>${tl2(trans.grid_plays, { c: plays })}</a>
+                                    </p>
+                                </div>
+                                <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(name)}" tabindex="-1" aria-hidden="true" />
+                            </div>
+                        </li>
+                    `);
+        });
+      }
+    });
   }
   function profile_artists() {
     let panel = page.structure.main.querySelector("#top-artists");
@@ -38894,12 +38987,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }
       }
     },
-    what_are_activities: {
-      en: "Keep track of your most recent activity locally on your profile",
-      de: "Verfolge deine letzten Aktivit\xE4ten lokal auf deinem Profil",
-      pt: "Acompanhe suas atividades mais recentes localmente em seu perfil",
-      sv: "H\xE5ll koll p\xE5 dina senaste aktiviteter lokalt p\xE5 din profil"
-    },
     activity_tracking: {
       name: {
         en: "Track my activities",
@@ -38937,6 +39024,27 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Installation",
       pt: "Instala\xE7\xE3o",
       sv: "Installation"
+    },
+    user_library: {
+      en: "{u}\u2019s Library"
+    },
+    play_user_library_radio: {
+      en: "Play {u}\u2019s Library Radio"
+    },
+    artists_in_total: {
+      en: "{c} Artists in total"
+    },
+    showing: {
+      en: "Showing"
+    },
+    last_3_months: {
+      en: "Last 3 Months"
+    },
+    grid_plays: {
+      en: "{c} plays"
+    },
+    loved_tracks: {
+      en: "Loved Tracks"
     },
     grid: {
       // as in the view mode
@@ -41588,8 +41696,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         date: "2025-11-21"
       },
       library_on_profile: {
-        default: false,
+        default: true,
         name: "Show last 3 months library on profiles",
+        date: "2025-11-21"
+      },
+      profile_grids_into_list: {
+        default: false,
+        name: "Remove grids on profiles",
         date: "2025-11-21"
       }
     }

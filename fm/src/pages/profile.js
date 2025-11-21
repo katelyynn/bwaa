@@ -229,6 +229,7 @@ export async function bleh_profiles() {
             </section>
         `;
         page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+        page.state.header = header;
 
         const sponsor_profile = sponsor_list ? page.name == sponsor_list.sponsor_account : false;
 
@@ -302,6 +303,8 @@ export async function bleh_profiles() {
         profile_artists();
         profile_albums();
         profile_tracks();
+
+        profile_library();
 
         if (is_own_profile && settings.activities) {
             let recent_activity_section = html.node`
@@ -915,6 +918,109 @@ function profile_recents() {
     if (header) header.textContent = tl(trans.recently_listened_tracks);
 
     page.state.active_now = panel.querySelector('tbody > .chartlist-row:first-child > .chartlist-timestamp > span:not(.chartlist-now-scrobbling)');
+}
+
+function profile_library() {
+    if (!ff('library_on_profile')) return;
+
+    const station = page.structure.side.querySelector('.stationlink[data-analytics-label="library"]');
+    station.classList = 'stationbutton-radio';
+    render(station, html`
+        <span>${tl(trans.play_user_library_radio, { u: page.name })}</span>
+    `);
+
+    const recents = page.structure.main.querySelector('#recent-tracks-section');
+
+    let items;
+
+    const panel = html.node`
+        <section class="profile-library">
+            <h2>
+                <a class="text-colour-link" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS">${tl(trans.user_library, { u: page.name })}</a>
+            </h2>
+            <div class="module-body">
+                <div class="module-header">
+                    <div class="left">
+                        <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS">${tl(trans.artists_in_total, { c: page.state.artists.toLocaleString(lang) })}</a>
+                        <span>${tl(trans.showing)}: ${tl(trans.last_3_months)}</span>
+                    </div>
+                    <div class="right">
+                        ${station}
+                    </div>
+                </div>
+                <ul class="grid-items grid-items--numbered" ref=${el => items = el} />
+                <div class="cocktail">
+                    <div class="two-col">
+                        <div class="wrapper loved">
+                            <h3>
+                                <a>
+                                    <span class="icon loved_indicator_icon" />
+                                    <span>${tl(trans.loved_tracks)}</span>
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <h3>
+                            <a>
+                                <span class="icon tag_icon" />
+                                <span>${tl(trans.tags)}</span>
+                            </a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="more-link">
+                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS" data-see-more="true">${tl(trans.see_more)}</a>
+                </div>
+            </div>
+        </section>
+    `;
+
+    if (recents) {
+        recents.after(panel);
+    } else {
+        page.state.header.after(panel);
+    }
+
+    fetch(`${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1&ajax=1`)
+        .then(res => {
+            return res.text();
+        })
+        .then(dom => {
+            const doc = new DOMParser().parseFromString(dom, 'text/html');
+
+            const list = doc.querySelector('.chartlist');
+            if (list) {
+                const list_items = list.querySelectorAll('.chartlist-row');
+                list_items.forEach((item, index) => {
+                    if (index > 7) return;
+
+                    const image = item.querySelector('.avatar > img').src;
+                    const name = item.querySelector('.chartlist-name > a').textContent;
+                    const plays = item.querySelector('.chartlist-count-bar-slug').getAttribute('data-stat-value');
+                    const plays_link = item.querySelector('.chartlist-count-bar-link').href;
+
+                    items.appendChild(html.node`
+                        <li class="grid-items-item js-focus-controls-container" data-bwaa-music-grids="true">
+                            <div class="grid-items-cover-image js-link-block link-block">
+                                <div class="grid-items-cover-image-image">
+                                    <img src=${image.replace('/avatar70s/', '/avatar300s/')} loading="lazy">
+                                </div>
+                                <div class="grid-items-item-details">
+                                    <p class="grid-items-item-main-text">
+                                        <a class="link-block-target" href="${root}music/${sanitise(name)}">${correct_artist(name)}</a>
+                                    </p>
+                                    <p class="grid-items-item-aux-text">
+                                        <a href=${plays_link}>${tl(trans.grid_plays, { c: plays })}</a>
+                                    </p>
+                                </div>
+                                <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(name)}" tabindex="-1" aria-hidden="true" />
+                            </div>
+                        </li>
+                    `);
+                });
+            }
+        });
 }
 
 function profile_artists() {

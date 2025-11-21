@@ -12,8 +12,13 @@
             "date": "2025-11-21"
         },
         "library_on_profile": {
-            "default": false,
+            "default": true,
             "name": "Show last 3 months library on profiles",
+            "date": "2025-11-21"
+        },
+        "profile_grids_into_list": {
+            "default": false,
+            "name": "Remove grids on profiles",
             "date": "2025-11-21"
         }
     }
