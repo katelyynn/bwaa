@@ -10,6 +10,11 @@
             "default": false,
             "name": "Show hidden radio options",
             "date": "2025-11-21"
+        },
+        "library_on_profile": {
+            "default": false,
+            "name": "Show last 3 months library on profiles",
+            "date": "2025-11-21"
         }
     }
 }

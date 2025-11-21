@@ -20643,6 +20643,7 @@
   }
   function compile_settings() {
     let clone5 = structuredClone(settings);
+    settings_store.feature_flags.default = {};
     for (let setting2 in clone5) {
       if (settings_store[setting2] && JSON.stringify(clone5[setting2]) == JSON.stringify(settings_store[setting2].default) && setting2 != "version") {
         log2(
@@ -22639,51 +22640,32 @@
         page.state.inject,
         html`
                 <div class="form-section settings-form">
-                    <div class="panel-intro">
-                        <div class="sub-text">
-                            ${version.build}.${version.sku}
-                        </div>
-                        <h1>☆⌒(>w<)</h1>
-                    </div>
-                    <div class="sep" />
-                    <h4>${tl2(trans.manage_feature_flags)}</h4>
                     <div class="alert alert-danger">
                         ${tl2(trans.beware_notice)}
                     </div>
-                    <div class="setting-group">
+                    <fieldset>
+                        <legend>${tl2(trans.manage_feature_flags)}</legend>
                         ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
           let value = ff(flag);
           let checkbox;
-          let state;
           return html.node`
-                            <div class="form-group" data-type="toggle" onclick=${() => {
-            let current = checkbox.checked;
-            checkbox.checked = !current;
-            state.setAttribute("aria-checked", !current);
+                                <div class="form-group" data-type="toggle">
+                                    <div class="checkbox">
+                                        <label for="flag_${flag}">
+                                            <input type="checkbox" ref=${(el) => checkbox = el} id="flag_${flag}" checked=${value} onchange=${() => {
+            let current = !checkbox.checked;
             settings.feature_flags[flag] = !current;
-            document.documentElement.setAttribute(
-              `data-ff--${flag}`,
-              (!current).toString()
-            );
+            document.documentElement.setAttribute(`data-ff--${flag}`, !current);
             compile_settings();
           }}>
-                                <div class="heading">
-                                    <h5>${details.name}</h5>
-                                    ${details.notice ? html.node`<p>${{ html: details.notice }}</p>` : ""}
-                                    <div class="info-row">
-                                        <div class="new-badge flag-${details.default}">${details.default}</div><p class="date">${details.date}</p><p>${flag}</p>
+                                            ${details.name} <i class="subtext">(${details.date})</i>
+                                        </label>
+                                        ${details.notice ? html.node`<div class="alert">${{ html: details.notice }}</div>` : ""}
                                     </div>
                                 </div>
-                                <div class="toggle-wrap">
-                                    <input type="checkbox" ref=${(el) => checkbox = el} value=${value} checked=${value} />
-                                    <button class="toggle" aria-checked=${value} ref=${(el) => state = el}>
-                                        <div class="dot" />
-                                    </button>
-                                </div>
-                            </div>
-                        `;
+                            `;
         })}
-                    </div>
+                    </fieldset>
                 </div>
             `
       );
@@ -41519,6 +41501,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       title: trans.branch.name,
       body: trans.branch.body,
       warn_if_empty: true
+    },
+    feature_flags: {
+      default: {},
+      type: "list"
     }
   };
 
@@ -41599,6 +41585,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       show_hidden_radio_options: {
         default: false,
         name: "Show hidden radio options",
+        date: "2025-11-21"
+      },
+      library_on_profile: {
+        default: false,
+        name: "Show last 3 months library on profiles",
         date: "2025-11-21"
       }
     }

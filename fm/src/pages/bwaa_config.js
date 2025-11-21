@@ -944,57 +944,35 @@ export async function render_setting_page(page_id) {
             page.state.inject,
             html`
                 <div class="form-section settings-form">
-                    <div class="panel-intro">
-                        <div class="sub-text">
-                            ${version.build}.${version.sku}
-                        </div>
-                        <h1>☆⌒(>w<)</h1>
-                    </div>
-                    <div class="sep" />
-                    <h4>${tl(trans.manage_feature_flags)}</h4>
                     <div class="alert alert-danger">
                         ${tl(trans.beware_notice)}
                     </div>
-                    <div class="setting-group">
-                        ${Object.entries(version.feature_flags)
-                    .reverse()
-                    .map(([flag, details]) => {
-                        let value = ff(flag);
+                    <fieldset>
+                        <legend>${tl(trans.manage_feature_flags)}</legend>
+                        ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
+                            let value = ff(flag);
 
-                        let checkbox;
-                        let state;
+                            let checkbox;
 
-                        return html.node`
-                            <div class="form-group" data-type="toggle" onclick=${() => {
-                                let current = checkbox.checked;
+                            return html.node`
+                                <div class="form-group" data-type="toggle">
+                                    <div class="checkbox">
+                                        <label for="flag_${flag}">
+                                            <input type="checkbox" ref=${el => checkbox = el} id="flag_${flag}" checked=${value} onchange=${() => {
+                                                let current = !checkbox.checked;
 
-                                checkbox.checked = !current;
-                                state.setAttribute('aria-checked', !current);
-
-                                settings.feature_flags[flag] = !current;
-                                document.documentElement.setAttribute(
-                                    `data-ff--${flag}`,
-                                    (!current).toString()
-                                );
-                                compile_settings();
-                            }}>
-                                <div class="heading">
-                                    <h5>${details.name}</h5>
-                                    ${details.notice ? html.node`<p>${{ html: details.notice }}</p>` : ''}
-                                    <div class="info-row">
-                                        <div class="new-badge flag-${details.default}">${details.default}</div><p class="date">${details.date}</p><p>${flag}</p>
+                                                settings.feature_flags[flag] = !current;
+                                                document.documentElement.setAttribute(`data-ff--${flag}`, !current);
+                                                compile_settings();
+                                            }}>
+                                            ${details.name} <i class="subtext">(${details.date})</i>
+                                        </label>
+                                        ${details.notice ? html.node`<div class="alert">${{ html: details.notice }}</div>` : ''}
                                     </div>
                                 </div>
-                                <div class="toggle-wrap">
-                                    <input type="checkbox" ref=${(el) => (checkbox = el)} value=${value} checked=${value} />
-                                    <button class="toggle" aria-checked=${value} ref=${(el) => (state = el)}>
-                                        <div class="dot" />
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    })}
-                    </div>
+                            `;
+                        })}
+                    </fieldset>
                 </div>
             `
         );

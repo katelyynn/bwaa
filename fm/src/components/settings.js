@@ -1039,6 +1039,8 @@ export function seasonal_colour_switch() {
 export function compile_settings() {
     let clone = structuredClone(settings);
 
+    settings_store.feature_flags.default = {};
+
     for (let setting in clone) {
         if (
             settings_store[setting] &&

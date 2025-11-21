@@ -281,5 +281,9 @@ export let settings_store = {
         title: trans.branch.name,
         body: trans.branch.body,
         warn_if_empty: true
+    },
+    feature_flags: {
+        default: {},
+        type: 'list'
     }
 };
