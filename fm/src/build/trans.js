@@ -2033,10 +2033,7 @@ export const trans = {
     activity: {
         listing: {
             shout: {
-                en: 'Shout',
-                de: 'Shout hinterlassen',
-                pt: 'Enviou mensagem',
-                sv: 'Hojt'
+                en: 'You left {v} a shout.'
             },
             image_upload: {
                 en: 'Uploaded image',

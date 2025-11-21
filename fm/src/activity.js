@@ -47,7 +47,7 @@ export function render_activity(activity) {
     // date: string
 
     const activity_item = html.node`
-        <a class="activity-item activity--${activity.type}" href=${activity.context} />
+        <li class="activity-item journal-like activity--${activity.type}" />
     `;
 
     let involved_text = '';
@@ -86,58 +86,39 @@ export function render_activity(activity) {
             tooltip_sister = sister;
         }
 
-        if (involved.type == 'track' && settings.format_guest_features) {
-            let formatted_title = name_includes(name, sister);
-
-            let song_title;
-            let song_tags;
-            if (formatted_title) {
-                song_title = formatted_title[0];
-                song_tags = formatted_title[1];
-                tooltip_name = song_title;
-                tooltip_sister = sister;
-            }
-
-            // combine
-            name = html.node`${smart_title(song_title, song_tags)}`;
-            sister = html.node`${smart_artists(formatted_title[2], formatted_title[3])}`;
-        } else if (
+        if (
             (involved.type == 'album' || involved.type == 'track') &&
             settings.corrections
         ) {
-            name = romanise(correct_item_by_artist(name, sister));
+            name = correct_item_by_artist(name, sister);
             tooltip_name = name;
-            sister = romanise(correct_artist(sister));
+            sister = correct_artist(sister);
             tooltip_sister = sister;
         } else if (involved.type == 'artist' && settings.corrections) {
-            name = romanise(correct_artist(name));
+            name = correct_artist(name);
         }
 
         if (involved_text != '')
-            involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+            involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href=${involved_link}>${name}</a>`;
         else
-            involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+            involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href=${involved_link}>${name}</a>`;
     });
 
-    render(
-        activity_item,
-        html`
-            <div class="type">
-                ${tl(trans.activity.listing[activity.type])}
-                <div class="date">
-                    ${DateTime.fromISO(activity.date).toRelative()}
-                </div>
-            </div>
-            <div class="name">${involved_text}</div>
-        `
-    );
+    render(activity_item, html`
+        <div class="title">
+            ${{html: tl(trans.activity.listing[activity.type], {
+                v: html.node`<span>${involved_text}</span>`.outerHTML
+            })}}
+        </div>
+        <div class="date">
+            ${DateTime.fromISO(activity.date).toRelative()}
+        </div>
+    `);
 
     if (tooltip_name)
-        tippy(activity_item.querySelector('.name a'), {
-            theme: 'name-sister-combo',
+        tippy(activity_item.querySelector('.title a'), {
             content: html.node`
-                <span class="name">${tooltip_name}</span>
-                <span class="sister">${tooltip_sister}</span>
+                ${tooltip_sister} - ${tooltip_name}
             `
         });
 
