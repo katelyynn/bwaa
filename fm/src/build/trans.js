@@ -2036,82 +2036,43 @@ export const trans = {
                 en: 'You left {v} a shout.'
             },
             image_upload: {
-                en: 'Uploaded image',
-                de: 'Bild hochgeladen',
-                pt: 'Enviou imagem',
-                sv: 'Laddat upp bild'
+                en: 'You uploaded a {v} image.'
             },
             image_star: {
-                en: 'Starred image',
-                de: 'Bild als Favorit markiert',
-                pt: 'Favoritou imagem',
-                sv: 'Valt favoritbild'
+                en: 'You starred a {v} image.'
             },
             obsess: {
-                en: 'Obsessed',
-                de: 'Obsession festgelegt',
-                pt: 'Obcecou',
-                sv: 'Besatthet'
+                en: 'You’re obsessed with {v}.'
             },
             unobsess: {
-                en: 'Removed obsession',
-                de: 'Obsession entfernt',
-                pt: 'Desobcecou',
-                sv: 'Tagit bort besatthet'
+                en: 'You stopped obsessing over {v}.'
             },
             love: {
-                en: 'Loved',
-                de: 'Zu Favoriten hinzugefügt',
-                pt: 'Favoritou',
-                sv: 'Älskade låt'
+                en: 'You loved {v}.'
             },
             unlove: {
-                en: 'Removed love',
-                de: 'Favorit entfernt',
-                pt: 'Desfavoritou',
-                sv: 'Tog bort som älskad'
+                en: 'You removed love for {v}.'
             },
             install_bwaa: {
-                en: 'Installed bwaa',
-                de: 'bwaa wurde installiert',
-                pt: 'Instalou o bwaa',
-                sv: 'Installerade bwaa'
+                en: 'You installed bwaa.'
             },
             update_bwaa: {
-                en: 'Updated bwaa',
-                de: 'bwaa wurde aktualisiert',
-                pt: 'Atualizou o bwaa',
-                sv: 'Uppdaterade bwaa'
+                en: 'You updated bwaa to {v}.'
             },
             install_bleh: {
-                en: 'Installed bleh',
-                de: 'bleh wurde installiert',
-                pt: 'Instalou o bleh',
-                sv: 'Installerade bleh'
+                en: 'You installed bleh.'
             },
             update_bleh: {
-                en: 'Updated bleh',
-                de: 'bleh wurde aktualisiert',
-                pt: 'Atualizou o bleh',
-                sv: 'Uppdaterade bleh'
+                en: 'You updated bleh to {v}.'
             },
             bookmark: {
-                en: 'Bookmarked',
-                de: 'Lesezeichen hinzugefügt',
-                pt: 'Adicionou marcação',
-                sv: 'Bokmärkte'
+                en: 'You added {v} to Your Library.'
             },
             unbookmark: {
-                en: 'Removed bookmark',
-                de: 'Lesezeichen entfernt',
-                pt: 'Removeu marcação',
-                sv: 'Tog bort bokmärke'
+                en: 'You removed {v} from Your Library.'
             },
             wiki: {
-                en: 'Edited',
-                de: 'Bearbeitet',
-                pt: 'Editou',
-                sv: 'Redigerade'
+                en: 'You edited on {v}.'
             }
         },
         types: {

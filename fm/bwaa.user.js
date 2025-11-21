@@ -29859,8 +29859,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         <li class="activity-item journal-like activity--${activity.type}" />
     `;
     let involved_text = "";
-    let tooltip_name;
-    let tooltip_sister;
     activity.involved.forEach((involved) => {
       let involved_link;
       if (involved.type == "user")
@@ -29877,22 +29875,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       else if (involved.type == "bleh") involved_link = `${root}bleh`;
       let name = involved.name;
       let sister = involved.sister;
-      if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
-        tooltip_name = name;
-        tooltip_sister = sister;
-      }
+      let text3;
       if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
         name = correct_item_by_artist(name, sister);
-        tooltip_name = name;
         sister = correct_artist(sister);
-        tooltip_sister = sister;
+        text3 = `${sister} - ${name}`;
       } else if (involved.type == "artist" && settings.corrections) {
         name = correct_artist(name);
       }
       if (involved_text != "")
-        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href=${involved_link}>${name}</a>`;
+        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href=${involved_link}>${text3 ? text3 : name}</a>`;
       else
-        involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href=${involved_link}>${name}</a>`;
+        involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href=${involved_link}>${text3 ? text3 : name}</a>`;
     });
     render(activity_item, html`
         <div class="title">
@@ -29904,12 +29898,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             ${DateTime.fromISO(activity.date).toRelative()}
         </div>
     `);
-    if (tooltip_name)
-      tippy_esm_default(activity_item.querySelector(".title a"), {
-        content: html.node`
-                ${tooltip_sister} - ${tooltip_name}
-            `
-      });
     return activity_item;
   }
   function subscribe_to_events() {
@@ -38840,82 +38828,43 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "You left {v} a shout."
         },
         image_upload: {
-          en: "Uploaded image",
-          de: "Bild hochgeladen",
-          pt: "Enviou imagem",
-          sv: "Laddat upp bild"
+          en: "You uploaded a {v} image."
         },
         image_star: {
-          en: "Starred image",
-          de: "Bild als Favorit markiert",
-          pt: "Favoritou imagem",
-          sv: "Valt favoritbild"
+          en: "You starred a {v} image."
         },
         obsess: {
-          en: "Obsessed",
-          de: "Obsession festgelegt",
-          pt: "Obcecou",
-          sv: "Besatthet"
+          en: "You\u2019re obsessed with {v}."
         },
         unobsess: {
-          en: "Removed obsession",
-          de: "Obsession entfernt",
-          pt: "Desobcecou",
-          sv: "Tagit bort besatthet"
+          en: "You stopped obsessing over {v}."
         },
         love: {
-          en: "Loved",
-          de: "Zu Favoriten hinzugef\xFCgt",
-          pt: "Favoritou",
-          sv: "\xC4lskade l\xE5t"
+          en: "You loved {v}."
         },
         unlove: {
-          en: "Removed love",
-          de: "Favorit entfernt",
-          pt: "Desfavoritou",
-          sv: "Tog bort som \xE4lskad"
+          en: "You removed love for {v}."
         },
         install_bwaa: {
-          en: "Installed bwaa",
-          de: "bwaa wurde installiert",
-          pt: "Instalou o bwaa",
-          sv: "Installerade bwaa"
+          en: "You installed bwaa."
         },
         update_bwaa: {
-          en: "Updated bwaa",
-          de: "bwaa wurde aktualisiert",
-          pt: "Atualizou o bwaa",
-          sv: "Uppdaterade bwaa"
+          en: "You updated bwaa to {v}."
         },
         install_bleh: {
-          en: "Installed bleh",
-          de: "bleh wurde installiert",
-          pt: "Instalou o bleh",
-          sv: "Installerade bleh"
+          en: "You installed bleh."
         },
         update_bleh: {
-          en: "Updated bleh",
-          de: "bleh wurde aktualisiert",
-          pt: "Atualizou o bleh",
-          sv: "Uppdaterade bleh"
+          en: "You updated bleh to {v}."
         },
         bookmark: {
-          en: "Bookmarked",
-          de: "Lesezeichen hinzugef\xFCgt",
-          pt: "Adicionou marca\xE7\xE3o",
-          sv: "Bokm\xE4rkte"
+          en: "You added {v} to Your Library."
         },
         unbookmark: {
-          en: "Removed bookmark",
-          de: "Lesezeichen entfernt",
-          pt: "Removeu marca\xE7\xE3o",
-          sv: "Tog bort bokm\xE4rke"
+          en: "You removed {v} from Your Library."
         },
         wiki: {
-          en: "Edited",
-          de: "Bearbeitet",
-          pt: "Editou",
-          sv: "Redigerade"
+          en: "You edited on {v}."
         }
       },
       types: {

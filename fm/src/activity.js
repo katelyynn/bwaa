@@ -52,9 +52,6 @@ export function render_activity(activity) {
 
     let involved_text = '';
 
-    let tooltip_name;
-    let tooltip_sister;
-
     activity.involved.forEach((involved) => {
         let involved_link;
 
@@ -74,34 +71,24 @@ export function render_activity(activity) {
         let name = involved.name;
         let sister = involved.sister;
 
-        // tooltip
-        if (
-            involved.type != 'artist' &&
-            involved.type != 'user' &&
-            involved.type != 'tag' &&
-            involved.type != 'bwaa' &&
-            involved.type != 'bleh'
-        ) {
-            tooltip_name = name;
-            tooltip_sister = sister;
-        }
+        let text;
 
         if (
             (involved.type == 'album' || involved.type == 'track') &&
             settings.corrections
         ) {
             name = correct_item_by_artist(name, sister);
-            tooltip_name = name;
             sister = correct_artist(sister);
-            tooltip_sister = sister;
+
+            text = `${sister} - ${name}`;
         } else if (involved.type == 'artist' && settings.corrections) {
             name = correct_artist(name);
         }
 
         if (involved_text != '')
-            involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href=${involved_link}>${name}</a>`;
+            involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href=${involved_link}>${text ? text : name}</a>`;
         else
-            involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href=${involved_link}>${name}</a>`;
+            involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href=${involved_link}>${text ? text : name}</a>`;
     });
 
     render(activity_item, html`
@@ -114,13 +101,6 @@ export function render_activity(activity) {
             ${DateTime.fromISO(activity.date).toRelative()}
         </div>
     `);
-
-    if (tooltip_name)
-        tippy(activity_item.querySelector('.title a'), {
-            content: html.node`
-                ${tooltip_sister} - ${tooltip_name}
-            `
-        });
 
     return activity_item;
 }

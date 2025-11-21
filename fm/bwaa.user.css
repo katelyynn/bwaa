@@ -5022,6 +5022,9 @@
             font-size: 11px;
             display: block;
 
+            padding: 3px 0 3px 26px;
+            min-height: 27px;
+
             & > div {
                 display: inline;
             }
@@ -5030,25 +5033,15 @@
                 font-weight: normal;
             }
 
+            &:before {
+                --top: 2px;
+                --left: 1px;
+            }
+
             /*.involved--user {
                 padding: 0 2px;
                 background: var(--chartlist-hover);
             }*/
-
-            .involved--album, .involved--track, .involved--artist {
-                position: relative;
-                padding-left: calc(12px + 2px);
-
-                &:before {
-                    background-image: var(--cdn-flatness-preview-1-sprite);
-                    width: 12px !important;
-                    height: 12px !important;
-                    background-size: 12px !important;
-                    background-repeat: no-repeat !important;
-
-                    --top: 2px;
-                }
-            }
 
             &.activity--shout:before {
                 /* technically it used background-position: 0 -1440px; */
