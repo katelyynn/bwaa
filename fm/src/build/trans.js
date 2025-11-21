@@ -4375,6 +4375,21 @@ export const trans = {
     },
     social: {
         en: 'Social'
+    },
+    accuracy: {
+        en: 'Accuracy'
+    },
+    hide_notifications: {
+        en: 'Hide notifications, only display inbox'
+    },
+    hide_shout_votes: {
+        en: 'Hide shout votes'
+    },
+    flatten_shout_replies: {
+        en: 'Flatten shout replies'
+    },
+    show_library: {
+        en: 'Show User’s Library highlight on profiles'
     }
 };
 

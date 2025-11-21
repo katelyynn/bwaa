@@ -223,56 +223,15 @@ export async function render_setting_page(page_id) {
                 <div class="more-link align-left">
                     <a onclick=${() => change_settings_page('interface')} data-see-more="true">Choose your page style</a>
                 </div>
-                <h2 class="tiny">Customise further</h2>
                 <fieldset>
-                    <legend>Fun</legend>
-                    ${setting({ id: 'seasonal' })}
-                    ${setting({ id: 'seasonal_accent' })}
-                    ${setting({ id: 'seasonal_particles' })}
-                    ${setting({ id: 'seasonal_particles_fps' })}
-                    ${setting({ id: 'seasonal_overlays' })}
-                </fieldset>
-                <div class="update-center-header">
-                    ${paused === 'true' ? html.node`
-                        <div class="update-center-icon">
-                            <div class="update-container">
-                                <div class="bleh-icon" data-type="update" />
-                            </div>
-                            <div class="check-circle paused colourful">
-                                <div class="bleh-icon" data-type="paused" />
-                            </div>
-                        </div>
-                        <div class="update-center-details">
-                            <h2>${tl(trans.updates_paused)}</h2>
-                            <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
-                        </div>
-                        <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} disabled>${tl(trans.check)}</button>
-                    ` : update_required === 'false' ? html.node`
-                        <div class="update-center-icon">
-                            <div class="update-container">
-                                <div class="bleh-icon" data-type="update" />
-                            </div>
-                            ${last_checked
-                                    ? html.node`
-                            <div class="check-circle colourful">
-                                <div class="bleh-icon" data-type="check-thick" />
-                            </div>
-                            `
-                                    : ''
-                                }
-                        </div>
-                        <div class="update-center-details">
-                            ${last_checked
-                                    ? html.node`
-                            <h2>${tl(trans.you_are_up_to_date)}</h2>
-                            <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
-                            `
-                                    : html.node`
-                            <h2>${tl(trans.missing_updates)}</h2>
-                            <p class="last-checked">${tl(trans.never_checked)}</p>
-                            `
-                                }
-                        </div>
+                    ${update_required === 'false' ? html.node`
+                        ${last_checked ? html.node`
+                        <legend>${tl(trans.you_are_up_to_date)}</legend>
+                        <span>${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</span>
+                        ` : html.node`
+                        <legend>${tl(trans.missing_updates)}</legend>
+                        <span>${tl(trans.never_checked)}</span>
+                        `}
                         <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => update_check(true, update_btn, () => {
                             notify({
                                 id: 'update',
@@ -283,19 +242,12 @@ export async function render_setting_page(page_id) {
                             render_setting_page('general');
                         })}>${tl(trans.check)}</button>
                     ` : html.node`
-                        <div class="update-center-icon">
-                            <div class="update-container">
-                                <div class="bleh-icon" data-type="update" />
-                            </div>
-                        </div>
-                        <div class="update-center-details">
-                            <h2>${tl(trans.update_available_to_install)}</h2>
-                            ${last_checked ? html.node`
-                                <p class="last-checked">${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
-                            ` : html.node`
-                                <p class="last-checked">${tl(trans.never_checked)}</p>
-                            `}
-                        </div>
+                        <legend>${tl(trans.update_available_to_install)}</legend>
+                        ${last_checked ? html.node`
+                            <span>${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</span>
+                        ` : html.node`
+                            <span>${tl(trans.never_checked)}</span>
+                        `}
                         <div class="button-group">
                             <button class="btn icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => update_check(true, update_btn, () => {
                                 notify({
@@ -309,7 +261,7 @@ export async function render_setting_page(page_id) {
                             <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
                         </div>
                     `}
-                </div>
+                </fieldset>
                 ${last_checked && paused === 'false' && update_required === 'true' ? html.node`
                     <div class="alert alert-info">${tl(trans.you_are_installing_version, { v: version_to_install })}</div>
                 ` : html.node`
@@ -454,8 +406,8 @@ export async function render_setting_page(page_id) {
                 </section>
             ` : ''}
             <section class="form-section settings-form">
-                <h4>${tl(trans.language)}</h4>
-                <div class="setting-group">
+                <fieldset>
+                    <legend>${tl(trans.language)}</legend>
                     <div class="languages">
                         ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
                             let date;
@@ -503,20 +455,13 @@ export async function render_setting_page(page_id) {
                             return row;
                         })}
                     </div>
-                </div>
-                <div class="setting-group">
-                    <div class="form-group" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.submit_language.name)}</h5>
-                            <p>${tl(trans.submit_language.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
-                                ${tl(trans.help_contribute)}
-                            </a>
-                        </div>
+                    <div class="sep" />
+                    <div class="more-link">
+                        <a href="https://github.com/katelyynn/bleh/wiki" target="_blank" data-see-more="true">
+                            ${tl(trans.help_contribute)}
+                        </a>
                     </div>
-                </div>
+                </fieldset>
             </section>
         `);
     } else if (page_id == 'interface') {
@@ -527,107 +472,38 @@ export async function render_setting_page(page_id) {
                     ${setting({id: 'page_style'})}
                 </fieldset>
                 <fieldset>
+                    <legend>${tl(trans.profile)}</legend>
+                    ${setting({id: 'show_library'})}
+                </fieldset>
+                <fieldset>
                     <legend>${tl(trans.social)}</legend>
                     ${setting({id: 'varied_avatar_shapes'})}
+                    <div class="sep" />
+                    ${setting({id: 'hide_notifications'})}
+                    ${setting({id: 'hide_shout_votes'})}
+                    ${setting({id: 'flatten_shout_replies'})}
                 </fieldset>
             </div>
         `);
     } else if (page_id == 'seasonal') {
         register_skip_to([]);
 
-        render(
-            page.state.inject,
-            html`
-                <div class="form-section settings-form">
-                    <div class="seasonal-inner">
-                        <div class="sub-text">
-                            ${tl(trans.seasonal_timeline)}
-                        </div>
-                        <h4>
-                            ${DateTime.fromJSDate(
-                new Date(stored_season.now)
-            ).toLocaleString(DateTime.DATE_FULL)}
-                        </h4>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'seasonal' })}
-                        <div class="form-group" data-type="info">
-                            <div class="heading">
-                                <h5>${tl(trans.current_season)}</h5>
-                            </div>
-                            <div class="info">
-                                <div
-                                    class="icon-combo"
-                                    data-season=${stored_season.id}
-                                >
-                                    <div
-                                        class="bleh-icon bleh-seasonal-icon"
-                                    ></div>
-                                    <p>
-                                        ${tl(
-                trans.seasonal.listing[
-                stored_season.id
-                ]
-            )}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        ${stored_season.id != 'none' &&
-                    stored_season.start &&
-                    stored_season.end
-                    ? html.node`
-                    <div class="form-group" data-type="info">
-                        <div class="heading">
-                            <h5>${tl(trans.started)}</h5>
-                        </div>
-                        <div class="info">
-                            <p id="current_season_start">${DateTime.fromISO(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
-                        </div>
-                    </div>
-                    <div class="form-group" data-type="info">
-                        <div class="heading">
-                            <h5>${tl(trans.ends_in)}</h5>
-                        </div>
-                        <div class="info">
-                            <p id="current_season">${DateTime.fromISO(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
-                        </div>
-                    </div>
-                    `
-                    : settings.seasonal
-                        ? html.node`
-                    <div class="form-group" data-type="info">
-                        <div class="heading">
-                            <h5>${tl(trans.next_in)}</h5>
-                        </div>
-                        <div class="info">
-                            <p id="next_season_start">${DateTime.fromISO(stored_season.next_start.replace('y0', stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
-                        </div>
-                    </div>
-                    `
-                        : ''}
-                        ${settings.seasonal
-                    ? html.node`
-                    <div class="form-group" data-type="info">
-                        <div class="heading">
-                            <h5>${tl(trans.calculated_offset)}</h5>
-                        </div>
-                        <div class="info">
-                            <p>${stored_season.offset}</p>
-                        </div>
-                    </div>
-                    `
-                    : ''}
-                    </div>
-                    <h4>${tl(trans.settings)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: 'seasonal_particles' })}
-                        ${setting({ id: 'seasonal_particles_fps' })}
-                        ${setting({ id: 'seasonal_overlays' })}
-                    </div>
-                </div>
-            `
-        );
+        render(page.state.inject, html`
+            <div class="form-section settings-form">
+                <fieldset>
+                    <legend>${DateTime.fromJSDate(new Date(stored_season.now)).toLocaleString(DateTime.DATE_FULL)}</legend>
+                    ${setting({ id: 'seasonal' })}
+                </fieldset>
+                <fieldset>
+                    <legend>${tl(trans.settings)}</legend>
+                    ${setting({ id: 'seasonal_accent' })}
+                    ${setting({ id: 'seasonal_overlays' })}
+                    <div class="sep" />
+                    ${setting({ id: 'seasonal_particles' })}
+                    ${setting({ id: 'seasonal_particles_fps' })}
+                </fieldset>
+            </div>
+        `);
     } else if (page_id == 'performance') {
         register_skip_to([]);
 

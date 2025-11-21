@@ -285,5 +285,22 @@ export let settings_store = {
     feature_flags: {
         default: {},
         type: 'list'
+    },
+    hide_notifications: {
+        default: false,
+        title: trans.hide_notifications
+    },
+    hide_shout_votes: {
+        default: false,
+        title: trans.hide_shout_votes
+    },
+    flatten_shout_replies: {
+        default: false,
+        title: trans.flatten_shout_replies
+    },
+    show_library: {
+        default: true,
+        title: trans.show_library,
+        new_release: true
     }
 };

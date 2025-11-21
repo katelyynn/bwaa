@@ -1011,7 +1011,7 @@ function profile_library() {
                                         <a class="link-block-target" href="${root}music/${sanitise(name)}">${correct_artist(name)}</a>
                                     </p>
                                     <p class="grid-items-item-aux-text">
-                                        <a href=${plays_link}>${tl(trans.grid_plays, { c: plays })}</a>
+                                        <a href=${plays_link}>${tl(trans.grid_plays, { c: parseInt(plays).toLocaleString(lang) })}</a>
                                     </p>
                                 </div>
                                 <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(name)}" tabindex="-1" aria-hidden="true" />
