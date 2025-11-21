@@ -9,7 +9,7 @@ import { patch_avatar, style_name_from_badge } from '../avatar';
 import { settings } from '../build/config';
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
-import { clean_number, romanise, sanitise } from '../build/tools';
+import { cap, clean_number, romanise, sanitise } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
 import { refresh_all } from '../config';
 import { create_divider } from '../pages/gallery';
@@ -689,8 +689,8 @@ function create_listen_item(
     return listen_item;
 }
 
-function show_numbers_on_side(header_type) {
-    let metadata = document.body.querySelectorAll('.header-metadata-tnew-item');
+export function get_listen_stats() {
+    const metadata = document.body.querySelectorAll('.header-metadata-tnew-item');
 
     let listeners = {};
     let scrobbles = {};
@@ -720,88 +720,71 @@ function show_numbers_on_side(header_type) {
         }
     });
 
+    return {
+        listeners,
+        scrobbles,
+        metascore
+    };
+}
+
+export function get_tags() {
+    const container = page.structure.container.querySelector('.buffer-3 .catalogue-tags');
+
+    const tags = Array.from(container.querySelectorAll('.tag a'));
+    const see_more = container.querySelector('.tags-view-all');
+
+    if (see_more) {
+        see_more.classList = 'see-more-tags';
+        see_more.textContent = tl(trans.see_more);
+    }
+
+    return {
+        tags,
+        see_more
+    };
+}
+
+function show_numbers_on_side() {
+    const { listeners, scrobbles, metascore } = get_listen_stats();
+
     page.structure.side.classList.remove('hidden-xs');
 
     // get panel
-    let panel = page.structure.side.querySelector(
-        'section.section-with-separator:has(.listener-trend)'
-    );
+    let panel = page.structure.side.querySelector('section.section-with-separator:has(.listener-trend)');
 
     if (!panel) {
         panel = document.createElement('section');
         panel.classList.add('section-with-separator');
 
-        if (!page.mobile)
-            page.structure.side.insertBefore(
-                panel,
-                page.structure.side.firstElementChild
-            );
-        else
-            page.structure.main.insertBefore(
-                panel,
-                page.structure.main.firstElementChild
-            );
+        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     }
 
     panel.classList.add('listen-panel');
     panel.setAttribute('data-auth-name', auth.name);
 
-    let row = html.node`
-        <div class="listener-row">
-            <div class="listener-side">
-                <h3>${listeners.text}</h3>
-                <p>${listeners.abbr}</p>
+    const trend = page.structure.container.querySelector('.listener-trend');
+
+    page.structure.side.insertBefore(html.node`
+        <section>
+            <h2>${tl(trans[`${page.type}_stats`])}</h2>
+            <div class="stats-container">
+                <div class="scrobbles-and-listeners">
+                    <div class="scrobbles">
+                        <h1>${cap(scrobbles)}</h1>
+                        <p>${tl(trans.scrobbles)}</p>
+                    </div>
+                    <div class="listeners">
+                        <h1>${cap(listeners)}</h1>
+                        <p>${tl(trans.listeners)}</p>
+                    </div>
+                </div>
+                <div class="recent-listening-trend">
+                    <p>${tl(trans.recent_listening_trend)}</p>
+                    ${trend}
+                </div>
             </div>
-            <div class="scrobble-side">
-                <h3>${scrobbles.text}</h3>
-                <p>${scrobbles.abbr}</p>
-            </div>
-            ${
-                metascore.text ?
-                    html.node`
-            <div class="metascore-side">
-                <h3>${metascore.text}</h3>
-                <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
-            </div>
-            `
-                :   ''
-            }
-        </div>
-    `;
-
-    panel.insertBefore(row, panel.firstElementChild);
-
-    if (page.mobile)
-        page.structure.main.insertBefore(
-            panel,
-            page.structure.main.firstElementChild
-        );
-
-    tippy(row.querySelector('.listener-side p'), {
-        content: tl(trans.count_listeners).replace(
-            '{c}',
-            listeners.value.toLocaleString(lang)
-        )
-    });
-    tippy(row.querySelector('.scrobble-side p'), {
-        content: tl(trans.count_scrobbles).replace(
-            '{c}',
-            scrobbles.value.toLocaleString(lang)
-        )
-    });
-
-    // is there album artwork?
-    if (page.type == 'album') {
-        let album_artwork = document.body.querySelector(
-            '.artwork-and-metadata-row'
-        );
-
-        if (album_artwork)
-            page.structure.side.insertBefore(
-                album_artwork,
-                page.structure.side.firstElementChild
-            );
-    }
+        </section>
+    `, page.structure.side.firstElementChild);
 
     let masonry = page.structure.row.querySelector(
         ':scope > .col-sidebar.masonry-right'

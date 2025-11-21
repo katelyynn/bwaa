@@ -86,7 +86,7 @@
         }
     }
 
-    .user-type a,
+    .user-type a, .avatar-status-dot,
     body {
         --background: #e3e3e3;
         --navlist-grad: #ededed;
@@ -1555,6 +1555,29 @@
             color: #fff;
             text-align: center;
             background: var(--cdn-flatness-scrobble-flip) no-repeat;
+        }
+    }
+
+    .avatar-status-dot {
+        &.user-type--queen,
+        &.user-type--staff, &.user-type--mod {
+            background: var(--user-type-red) !important;
+        }
+
+        &.user-type--cute {
+            background: var(--user-type-purple) !important;
+        }
+
+
+        /* simulates bleh system */
+        &.user-type--cat, &.user-type--mask, &.user-type--paw,
+        &.user-type--colon-three,
+        &.user-type-reason--sponsor {
+            background: var(--user-type-sponsor) !important;
+        }
+
+        &.user-type--sponsor {
+            background: var(--user-type-pink) !important;
         }
     }
 
@@ -5774,7 +5797,7 @@
         box-shadow: inset -1px -1px 0 0 var(--body) !important;
         border-right: 1px solid var(--border);
         border-bottom: 1px solid var(--border);
-        box-shadow: unset;
+        font-size: 0 !important;
 
         .shout-user-avatar & {
             --size: 8px;
@@ -5878,7 +5901,7 @@
         }
 
         &:not(:has(.btn-inner)) {
-            padding: 3px 5px 2px 5px !important;
+            padding: 5px !important;
         }
 
         &:not([disabled]):hover {
@@ -8884,24 +8907,6 @@
 
 
     .user-type {
-        a {
-            .user-type--loader & {
-                --hue-over: 90;
-                --sat-over: 1.15;
-                --lit-over: 0.8;
-            }
-            .user-type--cosmic & {
-                --hue-over: 46;
-                --sat-over: 1.2;
-                --lit-over: 0.98;
-            }
-            .user-type--shell & {
-                --hue-over: 232;
-                --sat-over: 0.7;
-                --lit-over: 0.8;
-            }
-        }
-
         &.user-type--cat {
             &.user-type-for--boba2814 a {
                 --hue-over: 206;

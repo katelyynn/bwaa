@@ -91,7 +91,11 @@ export function create_badge(
 
     let elem = html.node`
         <span class=${classlist}>
+        ${on_avatar ? html.node`
+            ${badge.name}
+        ` : html.node`
             <a>${badge.name}</a>
+        `}
         </span>
     `;
 

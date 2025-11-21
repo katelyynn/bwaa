@@ -5,5 +5,11 @@
     "bio": "bwaa!!! ^-^",
     "author": "katelyn",
     "url": "https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js",
-    "feature_flags": {}
+    "feature_flags": {
+        "show_hidden_radio_options": {
+            "default": false,
+            "name": "Show hidden radio options",
+            "date": "2025-11-21"
+        }
+    }
 }

@@ -6,7 +6,7 @@
 
 import { log } from './log.js';
 import { notify } from '../components/notify.js';
-import { tl, trans } from './trans.js';
+import { lang, tl, trans } from './trans.js';
 import { settings } from './config.js';
 import { html } from 'lighterhtml';
 import { root } from './page.js';
@@ -456,4 +456,11 @@ export function set_storage(key, val) {
             persist: true
         });
     }
+}
+
+export function cap(item) {
+    if (item.value >= 10_000_000)
+        return item.abbr;
+
+    return item.value.toLocaleString(lang);
 }

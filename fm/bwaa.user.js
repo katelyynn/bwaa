@@ -18250,6 +18250,11 @@
       });
     }
   }
+  function cap(item) {
+    if (item.value >= 1e7)
+      return item.abbr;
+    return item.value.toLocaleString(lang);
+  }
 
   // src/build/music.js
   var artist_corrections = {};
@@ -19563,7 +19568,11 @@
     const classlist = on_avatar ? "avatar-status-dot" : "user-type";
     let elem = html.node`
         <span class=${classlist}>
+        ${on_avatar ? html.node`
+            ${badge.name}
+        ` : html.node`
             <a>${badge.name}</a>
+        `}
         </span>
     `;
     if (badge.icon != "" && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
@@ -19886,9 +19895,10 @@
           message: "No settings store entry present"
         });
       const type = settings_store[id].type || "toggle";
-      const title = settings_store[id].title ? tl2(settings_store[id].title) : id;
+      const title = settings_store[id].title ? tl2(settings_store[id].title) : null;
       let body = settings_store[id].body ? tl2(settings_store[id].body) : null;
       const icon = settings_store[id].icon;
+      const sub = settings_store[id].sub ? html.node`(${tl2(settings_store[id].sub).toLowerCase()})` : "";
       if (![
         "toggle",
         "range",
@@ -20238,13 +20248,16 @@
         let buttons = [];
         const elem = html.node`
                 <div class="form-group" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
-                    <label>
-                        ${html_title}
-                    </label>
+                    ${title ? html.node`
+                        <label>
+                            ${html_title}
+                        </label>
+                    ` : ""}
                     ${body ? html.node`<div class="alert">${body}</div>` : ""}
                     <div class="primary-selections">
                         ${Object.entries(settings_store[id].values).map(
           ([key, val]) => {
+            if (!ff("show_hidden_radio_options") && val.visible == false) return html.node``;
             const button = html.node`
                                     <div class="form-group" data-type="radio" data-value=${key} onclick=${() => {
               update_radio(key);
@@ -20253,6 +20266,8 @@
                                             <label for="setting_${id}_${key}">
                                                 <input type="radio" id="setting_${id}_${key}" name=${id} value=${key} ref=${(el) => radio = el}>
                                                 ${typeof val.name == "object" ? tl2(val.name) : val.name}
+                                                ${val.sub ? html.node`<i class="subtext">(${tl2(val.sub).toLowerCase()})</i>` : ""}
+                                                ${val.body ? html.node`<div class="alert">${tl2(val.body)}</div>` : ""}
                                             </label>
                                         </div>
                                     </div>
@@ -29006,8 +29021,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     parent.appendChild(listen_item);
     return listen_item;
   }
-  function show_numbers_on_side(header_type) {
-    let metadata = document.body.querySelectorAll(".header-metadata-tnew-item");
+  function get_listen_stats() {
+    const metadata = document.body.querySelectorAll(".header-metadata-tnew-item");
     let listeners = {};
     let scrobbles = {};
     let metascore = {};
@@ -29030,72 +29045,58 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         metascore.link = link.getAttribute("href");
       }
     });
+    return {
+      listeners,
+      scrobbles,
+      metascore
+    };
+  }
+  function get_tags() {
+    const container = page.structure.container.querySelector(".buffer-3 .catalogue-tags");
+    const tags = Array.from(container.querySelectorAll(".tag a"));
+    const see_more = container.querySelector(".tags-view-all");
+    if (see_more) {
+      see_more.classList = "see-more-tags";
+      see_more.textContent = tl2(trans.see_more);
+    }
+    return {
+      tags,
+      see_more
+    };
+  }
+  function show_numbers_on_side() {
+    const { listeners, scrobbles, metascore } = get_listen_stats();
     page.structure.side.classList.remove("hidden-xs");
-    let panel = page.structure.side.querySelector(
-      "section.section-with-separator:has(.listener-trend)"
-    );
+    let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
     if (!panel) {
       panel = document.createElement("section");
       panel.classList.add("section-with-separator");
-      if (!page.mobile)
-        page.structure.side.insertBefore(
-          panel,
-          page.structure.side.firstElementChild
-        );
-      else
-        page.structure.main.insertBefore(
-          panel,
-          page.structure.main.firstElementChild
-        );
+      page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     }
     panel.classList.add("listen-panel");
     panel.setAttribute("data-auth-name", auth.name);
-    let row = html.node`
-        <div class="listener-row">
-            <div class="listener-side">
-                <h3>${listeners.text}</h3>
-                <p>${listeners.abbr}</p>
+    const trend = page.structure.container.querySelector(".listener-trend");
+    page.structure.side.insertBefore(html.node`
+        <section>
+            <h2>${tl2(trans[`${page.type}_stats`])}</h2>
+            <div class="stats-container">
+                <div class="scrobbles-and-listeners">
+                    <div class="scrobbles">
+                        <h1>${cap(scrobbles)}</h1>
+                        <p>${tl2(trans.scrobbles)}</p>
+                    </div>
+                    <div class="listeners">
+                        <h1>${cap(listeners)}</h1>
+                        <p>${tl2(trans.listeners)}</p>
+                    </div>
+                </div>
+                <div class="recent-listening-trend">
+                    <p>${tl2(trans.recent_listening_trend)}</p>
+                    ${trend}
+                </div>
             </div>
-            <div class="scrobble-side">
-                <h3>${scrobbles.text}</h3>
-                <p>${scrobbles.abbr}</p>
-            </div>
-            ${metascore.text ? html.node`
-            <div class="metascore-side">
-                <h3>${metascore.text}</h3>
-                <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
-            </div>
-            ` : ""}
-        </div>
-    `;
-    panel.insertBefore(row, panel.firstElementChild);
-    if (page.mobile)
-      page.structure.main.insertBefore(
-        panel,
-        page.structure.main.firstElementChild
-      );
-    tippy_esm_default(row.querySelector(".listener-side p"), {
-      content: tl2(trans.count_listeners).replace(
-        "{c}",
-        listeners.value.toLocaleString(lang)
-      )
-    });
-    tippy_esm_default(row.querySelector(".scrobble-side p"), {
-      content: tl2(trans.count_scrobbles).replace(
-        "{c}",
-        scrobbles.value.toLocaleString(lang)
-      )
-    });
-    if (page.type == "album") {
-      let album_artwork = document.body.querySelector(
-        ".artwork-and-metadata-row"
-      );
-      if (album_artwork)
-        page.structure.side.insertBefore(
-          album_artwork,
-          page.structure.side.firstElementChild
-        );
-    }
+        </section>
+    `, page.structure.side.firstElementChild);
     let masonry = page.structure.row.querySelector(
       ":scope > .col-sidebar.masonry-right"
     );
@@ -30779,13 +30780,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const avatar2 = album_header.querySelector(".header-new-background-image");
     const position = album_header.querySelector(".header-new-chart-position-number");
     const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
-    const listeners = document.body.querySelector(".header-new-info-desktop .header-metadata-tnew-display > p > abbr");
-    save_hoshino_artwork(
-      avatar_img,
-      page.name,
-      page.sister,
-      clean_number(listeners?.title)
-    );
+    const { listeners, scrobbles, metascore } = get_listen_stats();
+    const { tags, see_more } = get_tags();
     const header = html.node`
         <section class="profile-album-section">
             <div class="album-info">
@@ -30794,19 +30790,25 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       u: `<a href="${root}music/${page.sister}">${correct_artist(page.sister)}</a>`
     }) }}</h1>
                 <div class="stats">
-
+                    ${tl2(trans.plays_and_listeners, {
+      l: listeners.value.toLocaleString(lang),
+      p: scrobbles.value.toLocaleString(lang)
+    })}
                 </div>
                 <div class="actions">
 
                 </div>
                 <div class="tags">
-
+                    ${tl2(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
+                        ${tag}${i < list.length - 1 ? ", " : ""}
+                    `)} ${see_more}
                 </div>
                 <div class="shouts">
-
+                    ${tl2(trans.shouts)}: <a href="${root}music/${page.sister}/${page.name}/+shoutbox">${tl2(trans.leave_a_shout)}</a>
                 </div>
                 <div class="share-bar">
-
+                    <strong>${tl2(trans.share_this_album)}</strong>
+                    <a class="btn-primary" href=${window.location.href}>${tl2(trans.share_link)}</a>
                 </div>
             </div>
             <div class="album-image-side">
@@ -30839,7 +30841,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     if (!is_subpage) {
       show_your_scrobbles();
-      album_missing_a_tracklist();
       bleh_about_artist();
       bleh_tags_mini();
       let similar_albums = page.structure.main.querySelector(".similar-albums");
@@ -30859,142 +30860,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (ff("oracle") && settings.oracle_beta) oracle_process();
     log2("status is", "page", "info", page);
     update_page();
-  }
-  function album_missing_a_tracklist() {
-    let tracklist = page.structure.main.querySelector("#tracklist");
-    let settings_btn;
-    if (tracklist) {
-      let top2 = tracklist.querySelector(".section-controls");
-      top2.classList = "top-container";
-      let header = top2.querySelector("h3");
-      let select_btn = top2.querySelector(".dropdown-menu-clickable-button");
-      if (select_btn) {
-        select_btn.classList.add(
-          "select-button",
-          "link-select",
-          "blend-v2-btn"
-        );
-        select_btn.classList.remove("dropdown-menu-clickable-button");
-      }
-      header.after(html.node`
-            <div class="accompany view-buttons blend blend-v2">
-                ${select_btn}
-            </div>
-            <div class="view-buttons blend blend-v2">
-                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl2(trans.settings)}
-                </button>
-            </div>
-        `);
-    } else {
-      let top_overview = page.structure.main.querySelector(
-        ".top-overview-panel"
-      );
-      if (!top_overview) return;
-      let top2 = html.node`
-            <div class="top-container">
-                <h3 class="text-18">${tl2(trans.tracklist)}</h3>
-                <div class="view-buttons blend blend-v2">
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl2(trans.settings)}
-                    </button>
-                </div>
-            </div>
-        `;
-      tracklist = html.node`
-            <section>
-                ${top2}
-                <div class="loading-data-container">
-                    <p class="loading-data-text">${tl2(trans.gathering_your_plays)}</p>
-                </div>
-            </section>
-        `;
-      top_overview.after(tracklist);
-      let url = document.querySelector(".header-metadata-display a");
-      if (!url) {
-        let url_split = window.location.href.split("/");
-        let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
-        let album_as_track_url = window.location.href.replace(
-          album_url,
-          `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`
-        );
-        render(
-          tracklist,
-          html`
-                    ${top2}
-                    <div class="loading-data-container">
-                        <p class="loading-data-text failed">
-                            ${tl2(trans.failed_to_find_tracks)}
-                        </p>
-                        <a class="see-more" href="${album_as_track_url}"
-                            >${tl2(trans.open_album_as_track)}</a
-                        >
-                    </div>
-                `
-        );
-        return;
-      }
-      url = url.getAttribute("href");
-      fetch(url).then(function(response) {
-        console.error("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        let inner_tracklist = doc.querySelector(
-          '#top-tracks-section [v-else=""] .chartlist'
-        );
-        if (inner_tracklist == null) {
-          let url_split = window.location.href.split("/");
-          let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
-          let album_as_track_url = window.location.href.replace(
-            album_url,
-            `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`
-          );
-          render(
-            tracklist,
-            html`
-                            ${top2}
-                            <div class="loading-data-container">
-                                <p class="loading-data-text failed">
-                                    ${tl2(trans.failed_to_find_tracks)}
-                                </p>
-                                <a class="see-more" href=${album_as_track_url}
-                                    >${tl2(trans.open_album_as_track)}</a
-                                >
-                            </div>
-                        `
-          );
-          return;
-        }
-        inner_tracklist.classList.remove("chartlist--with-image");
-        render(
-          tracklist,
-          html`
-                        ${top2}
-                        <div class="alert alert-info">
-                            ${tl2(trans.sourced_from_own_plays)}
-                        </div>
-                        ${inner_tracklist}
-                    `
-        );
-      });
-    }
-    tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: html.node`
-            <div class="dialog-settings">
-                <div class="setting-group blend">
-                    ${setting({ id: "format_guest_features" })}
-                    ${setting({ id: "show_guest_features" })}
-                </div>
-            </div>
-        `,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click"
-    });
   }
 
   // src/pages/artist.js
@@ -36026,8 +35891,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             `,
           menu.firstElementChild
         );
-        let send_button = shout.querySelector(".form-group--submit");
-        shout_send(send_button);
       } catch (e) {
         notify({
           id: "shout",
@@ -36631,7 +36494,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       title: "An error has occurred",
       body: html.node`
             <div class="modal-vertical-inner error-inner">
-                <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
                 <p>An error prevented ${version.brand} from finishing loading, it's recommended to leave the page and refresh.</p>
                 <pre class="error-info">${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}${e.stack ? html.node`<br><span class="error-stack">${e.stack}</span>` : ""}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}<br>    ${version.build}</pre>
@@ -37728,6 +37590,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page_style: {
       en: "Page style"
     },
+    page_style_2008: {
+      en: "A major redesign that stayed similar at it\u2019s core from 2008 to 2012."
+    },
+    page_style_2012: {
+      en: "The final iteration of the design as it progressed before 2013."
+    },
+    page_style_2013: {
+      en: "A major redesign focused on being more responsive and modern. Profile pages are not affected. Tabs are placed in the upper right instead of the left."
+    },
+    page_style_2014: {
+      en: "A continuation from the year prior which redesigns the header, footer, and adds glare to buttons. One year before the site would redesign to current day."
+    },
     theme: {
       en: "Theme",
       de: "Farbschema",
@@ -38714,6 +38588,36 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     leave_a_shout: {
       en: "Leave a shout"
     },
+    share_this_artist: {
+      en: "Share this artist:"
+    },
+    share_this_album: {
+      en: "Share this album:"
+    },
+    share_this_track: {
+      en: "Share this track:"
+    },
+    share_link: {
+      en: "Share link"
+    },
+    popular_tags: {
+      en: "Popular tags"
+    },
+    see_more: {
+      en: "See more"
+    },
+    recent_listening_trend: {
+      en: "Recent Listening Trend"
+    },
+    artist_stats: {
+      en: "Artist Stats"
+    },
+    album_stats: {
+      en: "Album Stats"
+    },
+    track_stats: {
+      en: "Track Stats"
+    },
     join_discord: {
       en: "Join Discord",
       de: "Discord beitreten",
@@ -39412,6 +39316,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "{v} by {u}",
       de: "{v} von {u}",
       pt: "{v} por {u}"
+    },
+    plays_and_listeners: {
+      en: "{p} plays ({l} listeners)"
     },
     from_user: {
       en: "from {u}",
@@ -41550,28 +41457,40 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       type: "radio",
       values: {
         2007: {
-          name: "2007"
+          name: "2007",
+          visible: false
         },
         2008: {
-          name: "2008"
+          name: "2008",
+          body: trans.page_style_2008,
+          visible: false
         },
         2009: {
-          name: "2009"
+          name: "2009",
+          visible: false
         },
         2010: {
-          name: "2010"
+          name: "2010",
+          visible: false
         },
         2011: {
-          name: "2011"
+          name: "2011",
+          visible: false
         },
         2012: {
-          name: "2012"
+          name: "2012",
+          body: trans.page_style_2012,
+          sub: trans.default
         },
         2013: {
-          name: "2013"
+          name: "2013",
+          body: trans.page_style_2013,
+          visible: false
         },
         2014: {
-          name: "2014"
+          name: "2014",
+          body: trans.page_style_2014,
+          visible: false
         }
       }
     },
@@ -41815,7 +41734,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     bio: "bwaa!!! ^-^",
     author: "katelyn",
     url: "https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js",
-    feature_flags: {}
+    feature_flags: {
+      show_hidden_radio_options: {
+        default: false,
+        name: "Show hidden radio options",
+        date: "2025-11-21"
+      }
+    }
   };
 
   // node_modules/@kurkle/color/dist/color.esm.js

@@ -724,6 +724,18 @@ export const trans = {
     page_style: {
         en: 'Page style'
     },
+    page_style_2008: {
+        en: 'A major redesign that stayed similar at it’s core from 2008 to 2012.'
+    },
+    page_style_2012: {
+        en: 'The final iteration of the design as it progressed before 2013.'
+    },
+    page_style_2013: {
+        en: 'A major redesign focused on being more responsive and modern. Profile pages are not affected. Tabs are placed in the upper right instead of the left.'
+    },
+    page_style_2014: {
+        en: 'A continuation from the year prior which redesigns the header, footer, and adds glare to buttons. One year before the site would redesign to current day.'
+    },
     theme: {
         en: 'Theme',
         de: 'Farbschema',
@@ -1711,6 +1723,36 @@ export const trans = {
     leave_a_shout: {
         en: 'Leave a shout'
     },
+    share_this_artist: {
+        en: 'Share this artist:'
+    },
+    share_this_album: {
+        en: 'Share this album:'
+    },
+    share_this_track: {
+        en: 'Share this track:'
+    },
+    share_link: {
+        en: 'Share link'
+    },
+    popular_tags: {
+        en: 'Popular tags'
+    },
+    see_more: {
+        en: 'See more'
+    },
+    recent_listening_trend: {
+        en: 'Recent Listening Trend'
+    },
+    artist_stats: {
+        en: 'Artist Stats'
+    },
+    album_stats: {
+        en: 'Album Stats'
+    },
+    track_stats: {
+        en: 'Track Stats'
+    },
     join_discord: {
         en: 'Join Discord',
         de: 'Discord beitreten',
@@ -2409,6 +2451,9 @@ export const trans = {
         en: '{v} by {u}',
         de: '{v} von {u}',
         pt: '{v} por {u}'
+    },
+    plays_and_listeners: {
+        en: '{p} plays ({l} listeners)'
     },
     from_user: {
         en: 'from {u}',

@@ -80,28 +80,40 @@ export let settings_store = {
         type: 'radio',
         values: {
             2007: {
-                name: '2007'
+                name: '2007',
+                visible: false
             },
             2008: {
-                name: '2008'
+                name: '2008',
+                body: trans.page_style_2008,
+                visible: false
             },
             2009: {
-                name: '2009'
+                name: '2009',
+                visible: false
             },
             2010: {
-                name: '2010'
+                name: '2010',
+                visible: false
             },
             2011: {
-                name: '2011'
+                name: '2011',
+                visible: false
             },
             2012: {
-                name: '2012'
+                name: '2012',
+                body: trans.page_style_2012,
+                sub: trans.default
             },
             2013: {
-                name: '2013'
+                name: '2013',
+                body: trans.page_style_2013,
+                visible: false
             },
             2014: {
-                name: '2014'
+                name: '2014',
+                body: trans.page_style_2014,
+                visible: false
             }
         }
     },

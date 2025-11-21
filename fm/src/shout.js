@@ -137,9 +137,6 @@ export function patch_shouts() {
             `,
                 menu.firstElementChild
             );
-
-            let send_button = shout.querySelector('.form-group--submit');
-            shout_send(send_button);
         } catch (e) {
             notify({
                 id: 'shout',

@@ -19,6 +19,7 @@ import { select } from './select.js';
 import { input } from './input.js';
 import { status } from './status.js';
 import { set_storage } from '../build/tools.js';
+import { ff } from '../sku.js';
 
 export function setting({
     id = '',
@@ -41,10 +42,11 @@ export function setting({
             });
 
         const type = settings_store[id].type || 'toggle';
-        const title =
-            settings_store[id].title ? tl(settings_store[id].title) : id;
+        const title = settings_store[id].title ? tl(settings_store[id].title) : null;
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
         const icon = settings_store[id].icon;
+
+        const sub = settings_store[id].sub ? html.node`(${tl(settings_store[id].sub).toLowerCase()})` : '';
 
         if (
             ![
@@ -498,13 +500,17 @@ export function setting({
 
             const elem = html.node`
                 <div class="form-group" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
-                    <label>
-                        ${html_title}
-                    </label>
+                    ${title ? html.node`
+                        <label>
+                            ${html_title}
+                        </label>
+                    ` : ''}
                     ${body ? html.node`<div class="alert">${body}</div>` : ''}
                     <div class="primary-selections">
                         ${Object.entries(settings_store[id].values).map(
                             ([key, val]) => {
+                                if (!ff('show_hidden_radio_options') && val.visible == false) return html.node``;
+
                                 const button = html.node`
                                     <div class="form-group" data-type="radio" data-value=${key} onclick=${() => {
                                         update_radio(key);
@@ -513,6 +519,8 @@ export function setting({
                                             <label for="setting_${id}_${key}">
                                                 <input type="radio" id="setting_${id}_${key}" name=${id} value=${key} ref=${el => radio = el}>
                                                 ${typeof val.name == 'object' ? tl(val.name) : val.name}
+                                                ${val.sub ? html.node`<i class="subtext">(${tl(val.sub).toLowerCase()})</i>` : ''}
+                                                ${val.body ? html.node`<div class="alert">${tl(val.body)}</div>` : ''}
                                             </label>
                                         </div>
                                     </div>
