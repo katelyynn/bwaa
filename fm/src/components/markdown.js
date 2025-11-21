@@ -5,7 +5,7 @@
 //
 
 import { auth, page, root } from '../build/page';
-import { html } from 'lighterhtml';
+import { html, render } from 'lighterhtml';
 import { patch_wiki_contents } from '../pages/wiki.js';
 import { redirect } from './music.js';
 import showdown from 'showdown';
@@ -365,30 +365,13 @@ export function markdown(
         'tidal.com': 'Tidal'
     };
 
-    if (links.length > 0) {
-        body.appendChild(html.node`
-            <div class="social-links-container">
-                <div class="sub-text music-small-header">
-                    ${tl(trans.links)}
-                </div>
-                <div class="music-links social-links">
-                    ${links.map((link) => {
-                        let label = link.host;
+    if (links.length > 0 && page.state.profile_url) {
+        page.state.profile_url.setAttribute('data-hidden', false);
 
-                        if (link.name) {
-                            label = link.name;
-                        } else if (link_strings.hasOwnProperty(link.host)) {
-                            label = link_strings[link.host];
-                        }
-
-                        return html.node`
-                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-host-unknown=${!link_strings.hasOwnProperty(link.host)} data-path=${link.path} style="--favi: url(https://icons.duckduckgo.com/ip3/${link.host}.ico)">
-                                ${label}
-                            </a>
-                        `;
-                    })}
-                </div>
-            </div>
+        render(page.state.profile_url, html`
+            ${links.map((link, i, arr) => html.node`
+                <a href=${link.url} target="_blank">${link.host}${link.path != '/' ? '/' : ''}${link.path.slice(1)}</a>${i < arr.length - 1 ? ', ' : ''}
+            `)}
         `);
     }
 

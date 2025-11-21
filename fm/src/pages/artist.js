@@ -476,9 +476,6 @@ export function bleh_artists() {
             });
         }
     } else {
-        let btn_add = page.structure.side.querySelector('.add-button');
-        if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
-
         if (page.subpage.startsWith('listeners_')) {
             let toolbar = page.structure.row.querySelector(
                 ':scope > .toolbar > .navlist > .navlist-items'

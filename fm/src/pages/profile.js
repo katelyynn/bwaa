@@ -205,6 +205,7 @@ export async function bleh_profiles() {
                         <div class="top">
                             <strong>${display_name.textContent.trim()}</strong>
                         </div>
+                        <div class="url" ref=${el => page.state.profile_url = el} data-hidden="true" />
                         <div class="bottom user-last-seen">
                             ${tl(trans.last_seen, {v: (page.state.active_now) ? tl(trans.last_seen.now) : page.state.active_now})}
                         </div>
@@ -906,7 +907,7 @@ function profile_recents() {
     const header = panel.querySelector('h2 > a');
     if (header) header.textContent = tl(trans.recently_listened_tracks);
 
-    page.state.active_now = panel.querySelector('.chartlist-timestamp > span');
+    page.state.active_now = panel.querySelector('tbody > .chartlist-row:first-child > .chartlist-timestamp > span:not(.chartlist-now-scrobbling)');
 }
 
 function profile_artists() {

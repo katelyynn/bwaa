@@ -88,10 +88,6 @@ export function patch_avatar(
                                         trans.badges[pre_existing_badge_type]
                                             .name
                                     ),
-                                    reason: tl(
-                                        trans.badges[pre_existing_badge_type]
-                                            .reason
-                                    ),
                                     inbuilt: true
                                 })
                             :   ''
@@ -105,9 +101,6 @@ export function patch_avatar(
                             type: pre_existing_badge_type,
                             name: tl(
                                 trans.badges[pre_existing_badge_type].name
-                            ),
-                            reason: tl(
-                                trans.badges[pre_existing_badge_type].reason
                             ),
                             inbuilt: true
                         })}

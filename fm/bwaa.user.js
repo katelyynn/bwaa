@@ -19537,14 +19537,9 @@
           badge.name = tl2(trans.badges[badge.type].name);
         } else {
           badge.name = tl2(trans.unavailable);
-          badge.reason = tl2(trans.requires_higher_bleh_version);
+          badge.reason = tl2(trans.requires_higher_bwaa_version);
         }
       }
-      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
-        badge.reason = tl2(trans.badges[badge.type].reason);
-      else if (badge.reason && trans.badges[badge.reason] && trans.badges[badge.reason].reason)
-        badge.reason = tl2(trans.badges[badge.reason].reason);
-      if (badge.reason) return;
       if (badge.type == "sponsor" || badge.type == "contributor")
         badge.reason = badge.type;
       else if (badge.type == "cute" || badge.type == "queen")
@@ -19557,7 +19552,6 @@
   function create_badge(badge = {
     type: "",
     icon: "",
-    reason: "",
     hue: -1,
     sat: -1,
     lit: -1,
@@ -21966,7 +21960,7 @@
                 </div>
                 <h2 class="tiny">Quick controls</h2>
                 <div class="more-link align-left">
-                    <a onclick=${() => change_settings_page("interface")}>Choose your page style</a>
+                    <a onclick=${() => change_settings_page("interface")} data-see-more="true">Choose your page style</a>
                 </div>
                 <h2 class="tiny">Customise further</h2>
                 <fieldset>
@@ -23877,9 +23871,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         name: tl2(
           trans.badges[pre_existing_badge_type].name
         ),
-        reason: tl2(
-          trans.badges[pre_existing_badge_type].reason
-        ),
         inbuilt: true
       }) : ""}
                     </div>
@@ -23889,9 +23880,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         type: pre_existing_badge_type,
         name: tl2(
           trans.badges[pre_existing_badge_type].name
-        ),
-        reason: tl2(
-          trans.badges[pre_existing_badge_type].reason
         ),
         inbuilt: true
       })}
@@ -26186,28 +26174,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       "discogs.com": "Discogs",
       "tidal.com": "Tidal"
     };
-    if (links.length > 0) {
-      body.appendChild(html.node`
-            <div class="social-links-container">
-                <div class="sub-text music-small-header">
-                    ${tl2(trans.links)}
-                </div>
-                <div class="music-links social-links">
-                    ${links.map((link) => {
-        let label = link.host;
-        if (link.name) {
-          label = link.name;
-        } else if (link_strings.hasOwnProperty(link.host)) {
-          label = link_strings[link.host];
-        }
-        return html.node`
-                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-host-unknown=${!link_strings.hasOwnProperty(link.host)} data-path=${link.path} style="--favi: url(https://icons.duckduckgo.com/ip3/${link.host}.ico)">
-                                ${label}
-                            </a>
-                        `;
-      })}
-                </div>
-            </div>
+    if (links.length > 0 && page.state.profile_url) {
+      page.state.profile_url.setAttribute("data-hidden", false);
+      render(page.state.profile_url, html`
+            ${links.map((link, i, arr) => html.node`
+                <a href=${link.url} target="_blank">${link.host}${link.path != "/" ? "/" : ""}${link.path.slice(1)}</a>${i < arr.length - 1 ? ", " : ""}
+            `)}
         `);
     }
     if (body.nodeName != "#text") patch_wiki_contents(body);
@@ -29054,14 +29026,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function get_tags() {
     const container = page.structure.container.querySelector(".buffer-3 .catalogue-tags");
     const tags = Array.from(container.querySelectorAll(".tag a"));
-    const see_more = container.querySelector(".tags-view-all");
-    if (see_more) {
-      see_more.classList = "see-more-tags";
-      see_more.textContent = tl2(trans.see_more);
+    const see_more2 = container.querySelector(".tags-view-all");
+    if (see_more2) {
+      see_more2.classList = "see-more-tags";
+      see_more2.textContent = tl2(trans.see_more);
     }
     return {
       tags,
-      see_more
+      see_more: see_more2
     };
   }
   function show_numbers_on_side() {
@@ -30577,6 +30549,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             track_title.setAttribute("data-name", corrected_title);
           }
         }
+        const timestamp = track.querySelector(".chartlist-timestamp > span");
+        if (timestamp) {
+          if (is_active) timestamp.textContent = tl2(trans.listening_now);
+        }
       }
     });
   }
@@ -30781,7 +30757,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const position = album_header.querySelector(".header-new-chart-position-number");
     const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
     const { listeners, scrobbles, metascore } = get_listen_stats();
-    const { tags, see_more } = get_tags();
+    const { tags, see_more: see_more2 } = get_tags();
     const header = html.node`
         <section class="profile-album-section">
             <div class="album-info">
@@ -30801,7 +30777,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="tags">
                     ${tl2(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
                         ${tag}${i < list.length - 1 ? ", " : ""}
-                    `)} ${see_more}
+                    `)} ${see_more2}
                 </div>
                 <div class="shouts">
                     ${tl2(trans.shouts)}: <a href="${root}music/${page.sister}/${page.name}/+shoutbox">${tl2(trans.leave_a_shout)}</a>
@@ -31204,8 +31180,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         });
       }
     } else {
-      let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage.startsWith("listeners_")) {
         let toolbar = page.structure.row.querySelector(
           ":scope > .toolbar > .navlist > .navlist-items"
@@ -34886,12 +34860,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         obsession_author
       );
       related.appendChild(header);
-      let see_more = other_tracks.nextElementSibling;
+      let see_more2 = other_tracks.nextElementSibling;
       related.appendChild(other_tracks);
-      if (see_more) {
+      if (see_more2) {
         let more = document.createElement("div");
         more.classList.add("more-link-fullwidth-right");
-        more.appendChild(see_more.querySelector("a"));
+        more.appendChild(see_more2.querySelector("a"));
         related.appendChild(more);
       }
     }
@@ -35039,6 +35013,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         <div class="top">
                             <strong>${display_name.textContent.trim()}</strong>
                         </div>
+                        <div class="url" ref=${(el) => page.state.profile_url = el} data-hidden="true" />
                         <div class="bottom user-last-seen">
                             ${tl2(trans.last_seen, { v: page.state.active_now ? tl2(trans.last_seen.now) : page.state.active_now })}
                         </div>
@@ -35549,7 +35524,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (settings_btn) settings_btn.textContent = tl2(trans.settings);
     const header = panel.querySelector("h2 > a");
     if (header) header.textContent = tl2(trans.recently_listened_tracks);
-    page.state.active_now = panel.querySelector(".chartlist-timestamp > span");
+    page.state.active_now = panel.querySelector("tbody > .chartlist-row:first-child > .chartlist-timestamp > span:not(.chartlist-now-scrobbling)");
   }
   function profile_artists() {
     let panel = page.structure.main.querySelector("#top-artists");
@@ -36099,68 +36074,27 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
 
   // src/footer.js
   function bleh_footer() {
-    let footer = document.body.querySelector("footer.footer");
-    let extras = html.node`
-        <div class="footer-extras">
-            ${footer.querySelector(".footer-top")}
-            ${footer.querySelector(".footer-bottom")}
+    const footer = document.body.querySelector("footer.footer");
+    const container = footer.querySelector(".container");
+    const quote = "cute quote here";
+    const year = (/* @__PURE__ */ new Date()).getFullYear();
+    container.appendChild(html.node`
+        <div class="cute-quote-container">
+            <div class="quote">“${quote}”</div>
+            <div class="more">
+                <strong>${tl2(trans.more_lastfm_sites)}</strong>: <a href="https://blog.last.fm">${tl2(trans.blog)}</a> | <a href="https://musicmanager.last.fm">${tl2(trans.music_manager)}</a> | <a href="https://build.last.fm">${tl2(trans.build)}</a> | <a href="https://playground.last.fm">${tl2(trans.playground)}</a>
+            </div>
         </div>
-    `;
-    let kate = "katelyn";
-    if (sponsor_list && sponsor_list.special) kate = sponsor_list.special[0];
-    render(
-      footer,
-      html`
-            <div class="footer-credit">
-                <p>
-                    ${{
-        html: tl2(trans.made_with_love, {
-          u: `<a href="${root}user/${kate}">${kate}</a>`,
-          c: '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">',
-          "/c": "</a>",
-          h: `<span class="bleh-icon heart sponsor-related">${tl2(trans.love_lower)}</span>`
-        })
-      }}
-                </p>
-                ${lang != "en" && lang in lang_info ? html.node`
-                        <p>
-                            ${{
-        html: tl2(trans.translations, {
-          l: lang_info[lang].name,
-          u: lang_info[lang].by.map(
-            (user) => `<a href="${root}user/${user}">${user}</a>`
-          ).join(", ")
-        })
-      }}
-                        </p>
-                    ` : ""}
+        <div class="legal">
+            <div class="logos">
+                <div class="cbs-logo" />
+                <div class="audioscrobbler-logo" style="background-image: url(/static/images/footer_logo@2x.49ca51948b0a.png)" />
             </div>
-            <div class="footer-web music-links">
-                <a
-                    class="music-link"
-                    data-type="source"
-                    href="https://github.com/katelyynn/bleh"
-                    target="_blank"
-                    >${tl2(trans.view_source)}</a
-                >
-                <a
-                    class="music-link"
-                    data-type="issue"
-                    href="https://github.com/katelyynn/bleh/issues/new/choose"
-                    target="_blank"
-                    >${tl2(trans.report_issue)}</a
-                >
-                <a
-                    class="more"
-                    onclick=${() => extras.toggleAttribute("aria-expanded")}
-                    ><span class="bleh-icon"
-                /></a>
+            <div class="text">
+                ${tl2(trans.copyright, { y: year })} | <a href="${root}legal/terms">${tl2(trans.terms_of_use)}</a> ${tl2(trans.and)} <a href="${root}legal/privacy">${tl2(trans.privacy_policy)}</a> | <i class="update-date">${tl2(trans.updated_year, { y: year })}</i>
             </div>
-            ${extras}
-        `
-    );
-    let heart = footer.querySelector(".heart");
-    heart.addEventListener("click", () => sponsor());
+        </div>
+    `);
   }
 
   // src/components/dialog_extender.js
@@ -36408,6 +36342,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function load_dismissed() {
   }
 
+  // src/components/link.js
+  function see_more() {
+    if (!page.structure.container) return;
+    const links = page.structure.container.querySelectorAll(":is(.more-link, .more-link-fullwidth-right) > a:not([data-see-more])");
+    links.forEach((link) => {
+      link.setAttribute("data-see-more", true);
+      link.textContent = tl2(trans.see_more);
+    });
+  }
+
   // src/page.js
   function bleh() {
     florence({
@@ -36540,6 +36484,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "events" || page.type == "festival" || page.type == "tag" || page.type == "overview" || page.type == "bookmarks") {
       patch_titles();
     }
+    see_more();
     if (settings.corrections) {
       correct_generic_combo("resource-list--release-list-item");
       correct_generic_combo("similar-albums-item");
@@ -36941,26 +36886,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           de: "Keine Abzeichen",
           pt: "Sem emblemas",
           sv: "Inga emblem"
-        },
-        reason: {
-          en: "Become a sponsor to get a badge!",
-          de: "Werde Sponsor, um ein Abzeichen zu erhalten!",
-          pt: "Se torne um apoiador para ganhar um emblema!",
-          sv: "Bli en sponsor f\xF6r att f\xE5 ett emblem!"
         }
       },
       "user-status-subscriber": {
         name: {
-          en: "Last.fm Pro",
-          de: "Last.fm Pro",
-          pt: "Last.fm Pro",
-          sv: "Last.fm Pro"
-        },
-        reason: {
-          en: "Active Pro subscription",
-          de: "Aktives Pro-Abonnement",
-          pt: "Plano Pro ativo",
-          sv: "Aktiv Pro prenumeration"
+          en: "Subscriber"
         }
       },
       "user-status-staff": {
@@ -36969,12 +36899,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           de: "Mitarbeiter",
           pt: "Equipe",
           sv: "Personal"
-        },
-        reason: {
-          en: "Official member of Last.fm",
-          de: "Ofizielles Mitglied von Last.fm",
-          pt: "Membro oficial da Last.fm",
-          sv: "Officiell medlem p\xE5 Last.fm"
         }
       },
       "user-status-mod": {
@@ -36983,30 +36907,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           de: "Moderator",
           pt: "Moderador",
           sv: "Moderator"
-        },
-        reason: {
-          en: "Official member of Last.fm",
-          de: "Ofizielles Mitglied von Last.fm",
-          pt: "Membro oficial do Last.fm",
-          sv: "Officiell medlem p\xE5 Last.fm"
         }
       },
       "user-status-alum": {
         name: {
           en: "Alum"
-        },
-        reason: {
-          en: "Former member of Last.fm",
-          de: "Ehemaliger Mitarbeiter von Last.fm",
-          sv: "F\xF6re-detta medlem p\xE5 Last.fm"
-        }
-      },
-      "label--fade": {
-        reason: {
-          en: "They follow you!",
-          de: "Diese Person folgt dir!",
-          pt: "Ele(a) te segue!",
-          sv: "Denna medlem f\xF6ljer dig!"
         }
       },
       contributor: {
@@ -37015,12 +36920,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           de: "Mitwirkender",
           pt: "Contribuidor(a)",
           sv: "Bidragsgivare"
-        },
-        reason: {
-          en: "Has worked on bleh or bwaa",
-          de: "Hat an bleh oder bwaa gearbeitet",
-          pt: "Trabalhou no bleh ou bwaa",
-          sv: "Har arbetat p\xE5 bleh eller bwaa"
         }
       },
       translation: {
@@ -37045,12 +36944,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           de: "Sponsor",
           pt: "Apoiador",
           sv: "Sponsor"
-        },
-        reason: {
-          en: "thank you from kate <3",
-          de: "danke von kate <3",
-          pt: "obrigad\xE3o da kate <3",
-          sv: "tack ifr\xE5n kate <3"
         }
       },
       cute: {
@@ -37073,26 +36966,22 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         name: {
           en: "band-aid",
           de: "pflaster"
-        },
-        reason: {
-          en: "the sillyness caught up to me",
-          de: "der unfug hat mich eingeholt"
         }
       },
       "bubble-tea": {
         name: {
           en: "escoffier :3"
-        },
-        reason: {
-          en: "katelyn\u2019s wife ~"
         }
       }
     },
-    requires_higher_bleh_version: {
-      en: "Requires higher bleh version",
-      de: "Erfordert eine neuere bleh-Version",
-      pt: "Requer a vers\xE3o mais recente do bleh",
-      sv: "Beh\xF6ver en nyare version av bleh"
+    listening_now: {
+      en: "Listening now"
+    },
+    requires_higher_bwaa_version: {
+      en: "Requires higher bwaa version",
+      de: "Erfordert eine neuere bwaa-Version",
+      pt: "Requer a vers\xE3o mais recente do bwaa",
+      sv: "Beh\xF6ver en nyare version av bwaa"
     },
     home: {
       en: "Home",
@@ -37601,6 +37490,36 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     page_style_2014: {
       en: "A continuation from the year prior which redesigns the header, footer, and adds glare to buttons. One year before the site would redesign to current day."
+    },
+    more_lastfm_sites: {
+      en: "More Last.fm Sites"
+    },
+    blog: {
+      en: "Blog"
+    },
+    music_manager: {
+      en: "Music Manager"
+    },
+    build: {
+      en: "Build"
+    },
+    playground: {
+      en: "Playground (Subscriber VIP zone)"
+    },
+    copyright: {
+      en: "\xA9 {y} Last.fm Ltd. All rights reserved."
+    },
+    terms_of_use: {
+      en: "Terms Of Use"
+    },
+    and: {
+      en: "and"
+    },
+    privacy_policy: {
+      en: "Privacy Policy"
+    },
+    updated_year: {
+      en: "Updated {y}"
     },
     theme: {
       en: "Theme",

@@ -74,6 +74,7 @@ import { prepare_music } from './components/music.js';
 import { page_menu } from './components/menu.js';
 import { seasonal_colour_switch } from './components/settings.js';
 import florence from '@tealmiku/florence';
+import { see_more } from './components/link.js';
 
 export function bleh() {
     florence({
@@ -265,6 +266,8 @@ function main_flow() {
     ) {
         patch_titles();
     }
+
+    see_more();
 
     if (settings.corrections) {
         correct_generic_combo('resource-list--release-list-item');

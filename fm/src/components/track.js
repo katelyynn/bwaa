@@ -240,6 +240,11 @@ export function patch_titles(search = page.structure.main) {
                     track_title.setAttribute('data-name', corrected_title);
                 }
             }
+
+            const timestamp = track.querySelector('.chartlist-timestamp > span');
+            if (timestamp) {
+                if (is_active) timestamp.textContent = tl(trans.listening_now);
+            }
         }
     });
 }

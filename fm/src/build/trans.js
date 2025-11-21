@@ -75,26 +75,11 @@ export const trans = {
                 de: 'Keine Abzeichen',
                 pt: 'Sem emblemas',
                 sv: 'Inga emblem'
-            },
-            reason: {
-                en: 'Become a sponsor to get a badge!',
-                de: 'Werde Sponsor, um ein Abzeichen zu erhalten!',
-                pt: 'Se torne um apoiador para ganhar um emblema!',
-                sv: 'Bli en sponsor för att få ett emblem!'
             }
         },
         'user-status-subscriber': {
             name: {
-                en: 'Last.fm Pro',
-                de: 'Last.fm Pro',
-                pt: 'Last.fm Pro',
-                sv: 'Last.fm Pro'
-            },
-            reason: {
-                en: 'Active Pro subscription',
-                de: 'Aktives Pro-Abonnement',
-                pt: 'Plano Pro ativo',
-                sv: 'Aktiv Pro prenumeration'
+                en: 'Subscriber'
             }
         },
         'user-status-staff': {
@@ -103,12 +88,6 @@ export const trans = {
                 de: 'Mitarbeiter',
                 pt: 'Equipe',
                 sv: 'Personal'
-            },
-            reason: {
-                en: 'Official member of Last.fm',
-                de: 'Ofizielles Mitglied von Last.fm',
-                pt: 'Membro oficial da Last.fm',
-                sv: 'Officiell medlem på Last.fm'
             }
         },
         'user-status-mod': {
@@ -117,30 +96,11 @@ export const trans = {
                 de: 'Moderator',
                 pt: 'Moderador',
                 sv: 'Moderator'
-            },
-            reason: {
-                en: 'Official member of Last.fm',
-                de: 'Ofizielles Mitglied von Last.fm',
-                pt: 'Membro oficial do Last.fm',
-                sv: 'Officiell medlem på Last.fm'
             }
         },
         'user-status-alum': {
             name: {
                 en: 'Alum'
-            },
-            reason: {
-                en: 'Former member of Last.fm',
-                de: 'Ehemaliger Mitarbeiter von Last.fm',
-                sv: 'Före-detta medlem på Last.fm'
-            }
-        },
-        'label--fade': {
-            reason: {
-                en: 'They follow you!',
-                de: 'Diese Person folgt dir!',
-                pt: 'Ele(a) te segue!',
-                sv: 'Denna medlem följer dig!'
             }
         },
         contributor: {
@@ -149,12 +109,6 @@ export const trans = {
                 de: 'Mitwirkender',
                 pt: 'Contribuidor(a)',
                 sv: 'Bidragsgivare'
-            },
-            reason: {
-                en: 'Has worked on bleh or bwaa',
-                de: 'Hat an bleh oder bwaa gearbeitet',
-                pt: 'Trabalhou no bleh ou bwaa',
-                sv: 'Har arbetat på bleh eller bwaa'
             }
         },
         translation: {
@@ -179,12 +133,6 @@ export const trans = {
                 de: 'Sponsor',
                 pt: 'Apoiador',
                 sv: 'Sponsor'
-            },
-            reason: {
-                en: 'thank you from kate <3',
-                de: 'danke von kate <3',
-                pt: 'obrigadão da kate <3',
-                sv: 'tack ifrån kate <3'
             }
         },
         cute: {
@@ -207,26 +155,22 @@ export const trans = {
             name: {
                 en: 'band-aid',
                 de: 'pflaster'
-            },
-            reason: {
-                en: 'the sillyness caught up to me',
-                de: 'der unfug hat mich eingeholt'
             }
         },
         'bubble-tea': {
             name: {
                 en: 'escoffier :3'
-            },
-            reason: {
-                en: 'katelyn’s wife ~'
             }
         }
     },
-    requires_higher_bleh_version: {
-        en: 'Requires higher bleh version',
-        de: 'Erfordert eine neuere bleh-Version',
-        pt: 'Requer a versão mais recente do bleh',
-        sv: 'Behöver en nyare version av bleh'
+    listening_now: {
+        en: 'Listening now'
+    },
+    requires_higher_bwaa_version: {
+        en: 'Requires higher bwaa version',
+        de: 'Erfordert eine neuere bwaa-Version',
+        pt: 'Requer a versão mais recente do bwaa',
+        sv: 'Behöver en nyare version av bwaa'
     },
     home: {
         en: 'Home',
@@ -735,6 +679,36 @@ export const trans = {
     },
     page_style_2014: {
         en: 'A continuation from the year prior which redesigns the header, footer, and adds glare to buttons. One year before the site would redesign to current day.'
+    },
+    more_lastfm_sites: {
+        en: 'More Last.fm Sites'
+    },
+    blog: {
+        en: 'Blog'
+    },
+    music_manager: {
+        en: 'Music Manager'
+    },
+    build: {
+        en: 'Build'
+    },
+    playground: {
+        en: 'Playground (Subscriber VIP zone)'
+    },
+    copyright: {
+        en: '© {y} Last.fm Ltd. All rights reserved.'
+    },
+    terms_of_use: {
+        en: 'Terms Of Use'
+    },
+    and: {
+        en: 'and'
+    },
+    privacy_policy: {
+        en: 'Privacy Policy'
+    },
+    updated_year: {
+        en: 'Updated {y}'
     },
     theme: {
         en: 'Theme',

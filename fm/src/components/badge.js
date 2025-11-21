@@ -46,20 +46,9 @@ export function load_badges(user, solo = false) {
                 badge.name = tl(trans.badges[badge.type].name);
             } else {
                 badge.name = tl(trans.unavailable);
-                badge.reason = tl(trans.requires_higher_bleh_version);
+                badge.reason = tl(trans.requires_higher_bwaa_version);
             }
         }
-
-        if (trans.badges[badge.type] && trans.badges[badge.type].reason)
-            badge.reason = tl(trans.badges[badge.type].reason);
-        else if (
-            badge.reason &&
-            trans.badges[badge.reason] &&
-            trans.badges[badge.reason].reason
-        )
-            badge.reason = tl(trans.badges[badge.reason].reason);
-
-        if (badge.reason) return;
 
         if (badge.type == 'sponsor' || badge.type == 'contributor')
             badge.reason = badge.type;
@@ -76,7 +65,6 @@ export function create_badge(
     badge = {
         type: '',
         icon: '',
-        reason: '',
         hue: -1,
         sat: -1,
         lit: -1,

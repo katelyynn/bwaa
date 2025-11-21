@@ -221,7 +221,7 @@ export async function render_setting_page(page_id) {
                 </div>
                 <h2 class="tiny">Quick controls</h2>
                 <div class="more-link align-left">
-                    <a onclick=${() => change_settings_page('interface')}>Choose your page style</a>
+                    <a onclick=${() => change_settings_page('interface')} data-see-more="true">Choose your page style</a>
                 </div>
                 <h2 class="tiny">Customise further</h2>
                 <fieldset>

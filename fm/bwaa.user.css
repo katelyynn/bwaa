@@ -6375,6 +6375,7 @@
             background: unset !important;
             border: unset !important;
 
+            &:before,
             &:after {
                 display: none;
             }
