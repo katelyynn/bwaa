@@ -9035,4 +9035,17 @@
     .legacy-header {
         display: none;
     }
+
+    .stationlinks {
+        order: 2;
+    }
+
+    .your-progress-component {
+        order: 1;
+    }
+
+    .alert.small {
+        font-size: 11px;
+        margin: 8px 0 15px 0 !important;
+    }
 }

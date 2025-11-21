@@ -2024,11 +2024,13 @@ export const trans = {
         pt: 'Use ‘ ’ para citações do artista ou de outras fontes.',
         sv: 'Använd ‘ ’ för citat från artisten eller från annanstans'
     },
+    recent_activity: {
+        en: 'Recent Activity'
+    },
+    only_you_can_see_activity: {
+        en: 'Only you can see your recent activity.'
+    },
     activity: {
-        en: 'Activity',
-        de: 'Aktivität',
-        pt: 'Atividade',
-        sv: 'Aktivitet',
         listing: {
             shout: {
                 en: 'Shout',

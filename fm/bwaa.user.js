@@ -30648,13 +30648,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       return wrapper;
     }} |
              ${() => {
+      const to_display = settings.theme == "paint_it_black" ? "simply_red" : "paint_it_black";
       const elem = html.node`
                     <a onclick=${() => {
         const to_save = settings.theme == "simply_red" ? "paint_it_black" : "simply_red";
+        const to_display2 = settings.theme == "paint_it_black" ? "simply_red" : "paint_it_black";
         save_setting("theme", to_save);
-        elem.textContent = tl2(trans[to_save]);
+        elem.textContent = tl2(trans[to_display2]);
       }} title=${tl2(trans.switch_colour_style)}>
-                        ${tl2(trans[settings.theme])}
+                        ${tl2(trans[to_display])}
                     </a>
                 `;
       return elem;
@@ -35094,14 +35096,21 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (is_own_profile && settings.activities) {
         let recent_activity_section = html.node`
                 <section class="recent-activity-section">
-                    <h2>${tl2(trans.activity)}</h2>
+                    <h2>${tl2(trans.recent_activity)}</h2>
+                    <div class="alert small">
+                        ${tl2(trans.only_you_can_see_activity)}
+                    </div>
                     ${render_activity_list()}
                     <div class="more-link">
                         <a href="${root}bleh/profile">${tl2(trans.activity_settings)}</a>
                     </div>
                 </section>
             `;
-        page.structure.side.appendChild(recent_activity_section);
+        if (about_me_sidebar) {
+          about_me_sidebar.after(recent_activity_section);
+        } else {
+          page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
+        }
       }
       if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
         page.structure.container.removeChild(page.structure.nav);
@@ -35561,7 +35570,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         allow_icons: true,
         allow_hue: true,
         allow_socials: true,
-        allow_alignment: true
+        allow_alignment: true,
+        allow_fonts: true
       })
     );
     return temp;
@@ -38834,11 +38844,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Use \u2018 \u2019 para cita\xE7\xF5es do artista ou de outras fontes.",
       sv: "Anv\xE4nd \u2018 \u2019 f\xF6r citat fr\xE5n artisten eller fr\xE5n annanstans"
     },
+    recent_activity: {
+      en: "Recent Activity"
+    },
+    only_you_can_see_activity: {
+      en: "Only you can see your recent activity."
+    },
     activity: {
-      en: "Activity",
-      de: "Aktivit\xE4t",
-      pt: "Atividade",
-      sv: "Aktivitet",
       listing: {
         shout: {
           en: "Shout",

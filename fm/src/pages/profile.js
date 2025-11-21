@@ -306,7 +306,10 @@ export async function bleh_profiles() {
         if (is_own_profile && settings.activities) {
             let recent_activity_section = html.node`
                 <section class="recent-activity-section">
-                    <h2>${tl(trans.activity)}</h2>
+                    <h2>${tl(trans.recent_activity)}</h2>
+                    <div class="alert small">
+                        ${tl(trans.only_you_can_see_activity)}
+                    </div>
                     ${render_activity_list()}
                     <div class="more-link">
                         <a href="${root}bleh/profile">${tl(trans.activity_settings)}</a>
@@ -314,7 +317,11 @@ export async function bleh_profiles() {
                 </section>
             `;
 
-            page.structure.side.appendChild(recent_activity_section);
+            if (about_me_sidebar) {
+                about_me_sidebar.after(recent_activity_section);
+            } else {
+                page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
+            }
         }
 
         if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
@@ -955,7 +962,8 @@ function bio_parse(text) {
             allow_icons: true,
             allow_hue: true,
             allow_socials: true,
-            allow_alignment: true
+            allow_alignment: true,
+            allow_fonts: true
         })
     );
 
