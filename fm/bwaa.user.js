@@ -30652,7 +30652,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const elem = html.node`
                     <a onclick=${() => {
         const to_save = settings.theme == "simply_red" ? "paint_it_black" : "simply_red";
-        const to_display2 = settings.theme == "paint_it_black" ? "simply_red" : "paint_it_black";
+        const to_display2 = to_save == "paint_it_black" ? "simply_red" : "paint_it_black";
         save_setting("theme", to_save);
         elem.textContent = tl2(trans[to_display2]);
       }} title=${tl2(trans.switch_colour_style)}>

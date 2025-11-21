@@ -123,7 +123,7 @@ export function append_nav() {
                 const elem = html.node`
                     <a onclick=${() => {
                         const to_save = settings.theme == 'simply_red' ? 'paint_it_black' : 'simply_red';
-                        const to_display = settings.theme == 'paint_it_black' ? 'simply_red' : 'paint_it_black';
+                        const to_display = to_save == 'paint_it_black' ? 'simply_red' : 'paint_it_black';
 
                         save_setting('theme', to_save);
                         elem.textContent = tl(trans[to_display]);
