@@ -34708,7 +34708,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         </div>
                         <div class="url" ref=${(el) => page.state.profile_url = el} data-hidden="true" />
                         <div class="bottom user-last-seen">
-                            ${tl2(trans.last_seen, { v: page.state.active_now ? tl2(trans.last_seen.now) : page.state.active_now })}
+                            ${tl2(trans.last_seen, { v: page.state.active_now ? page.state.active_now.textContent.trim() : tl2(trans.last_seen.now) })}
                         </div>
                     </div>
                     <div class="user-data">

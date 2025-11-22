@@ -207,7 +207,7 @@ export async function bleh_profiles() {
                         </div>
                         <div class="url" ref=${el => page.state.profile_url = el} data-hidden="true" />
                         <div class="bottom user-last-seen">
-                            ${tl(trans.last_seen, {v: (page.state.active_now) ? tl(trans.last_seen.now) : page.state.active_now})}
+                            ${tl(trans.last_seen, {v: page.state.active_now ? page.state.active_now.textContent.trim() : tl(trans.last_seen.now)})}
                         </div>
                     </div>
                     <div class="user-data">
