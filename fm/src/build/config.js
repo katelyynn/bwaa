@@ -282,10 +282,6 @@ export let settings_store = {
         body: trans.branch.body,
         warn_if_empty: true
     },
-    feature_flags: {
-        default: {},
-        type: 'list'
-    },
     hide_notifications: {
         default: false,
         title: trans.hide_notifications

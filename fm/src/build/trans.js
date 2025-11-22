@@ -511,6 +511,9 @@ export const trans = {
         ja: 'よりscrobble',
         sv: 'skrobblar sedan '
     },
+    wiki_read_more: {
+        en: 'Read more…'
+    },
     edit: {
         en: 'Edit',
         de: 'Bearbeiten',

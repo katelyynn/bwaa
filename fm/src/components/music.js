@@ -734,6 +734,22 @@ export function get_tags() {
     };
 }
 
+export function get_wiki() {
+    if (!page.structure.container) return;
+
+    let wiki = page.structure.container.querySelector('.wiki-block.visible-lg');
+    if (wiki) return { wiki, wiki_state: true };
+
+    wiki = page.structure.container.querySelector('.wiki-block.visible-md');
+    if (wiki) return { wiki, wiki_state: true };
+
+    wiki = page.structure.container.querySelector('.wiki-block');
+    if (wiki) return { wiki, wiki_state: true };
+
+    wiki = page.structure.container.querySelector('.wiki-block-cta');
+    if (wiki) return { wiki, wiki_state: false };
+}
+
 function show_numbers_on_side() {
     const { listeners, scrobbles, metascore } = get_listen_stats();
 
@@ -789,16 +805,6 @@ function show_numbers_on_side() {
         upper.classList.add('upper-overview-to-hide');
         // make last-child
         page.structure.row.appendChild(upper);
-
-        let new_upper = document.createElement('section');
-        new_upper.classList.add('top-overview-panel');
-        new_upper.setAttribute('data-page-type', page.type);
-        new_upper.innerHTML = upper.innerHTML;
-
-        page.structure.main.insertBefore(
-            new_upper,
-            page.structure.main.firstElementChild
-        );
     }
 
     // is there a video?

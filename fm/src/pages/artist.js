@@ -23,6 +23,7 @@ import {
     convert_top_listener,
     get_listen_stats,
     get_tags,
+    get_wiki,
     redirect,
     show_your_scrobbles
 } from '../components/music';
@@ -106,6 +107,8 @@ export function bleh_artists() {
 
         const { listeners, scrobbles } = get_listen_stats();
         const { tags, see_more } = get_tags();
+        const { wiki, wiki_state } = get_wiki();
+        let wiki_options;
 
         const gallery_link = artist_header.querySelector('.header-new-gallery--link');
         const gallery_count = int_from_string(gallery_link.textContent.trim());
@@ -132,6 +135,24 @@ export function bleh_artists() {
             similar_items = similar.querySelectorAll('.catalogue-overview-similar-artists-full-width-item');
         }
 
+        if (wiki_state) {
+            wiki_options = html.node`
+                <div class="wiki-options" />
+            `;
+
+            const read_more = wiki.querySelector('a:last-child[href$="+wiki"]');
+            if (read_more) {
+                read_more.classList = 'read-more';
+                read_more.textContent = tl(trans.wiki_read_more);
+
+                wiki_options.appendChild(read_more);
+            }
+
+            wiki_options.appendChild(html.node`
+                <a class="edit-wiki" href="${root}music/${sanitise(page.name)}/+wiki/edit"><span class="icon edit_icon" />${tl(trans.edit)}</a>
+            `);
+        }
+
         const header = html.node`
             <section class="profile-artist-section">
                 <div class="artist-info">
@@ -147,6 +168,10 @@ export function bleh_artists() {
                     </div>
                     <div class="actions">
 
+                    </div>
+                    <div class="wiki">
+                        ${wiki}
+                        ${wiki_options}
                     </div>
                     <div class="tags">
                         ${tl(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
@@ -178,7 +203,7 @@ export function bleh_artists() {
                             </div>
                         </div>
                         <div class="option">
-                            <a>${tl(trans.see_all_pictures, { c: gallery_count.toLocaleString(lang) })}</a>
+                            <a href="${root}music/${sanitise(page.name)}/+images">${tl(trans.see_all_pictures, { c: gallery_count.toLocaleString(lang) })}</a>
                         </div>
                     </div>
                     ${radio ? html.node`
@@ -190,12 +215,16 @@ export function bleh_artists() {
                                 '/s': '</strong>',
                                 u: correct_artist(page.name),
                                 a: html.node`<span>${Array.from(similar_items).map((item, index, arr) => {
+                                    if (index > 3) return html.node``;
+
                                     const text = item.querySelector('.catalogue-overview-similar-artists-full-width-item-name').textContent.trim();
 
                                     return html.node`
-                                        <a href="${root}music/${sanitise(text)}">${correct_artist(text)}</a>${index < arr.length - 1 ? ', ' : ''}
+                                        <a href="${root}music/${sanitise(text)}">${correct_artist(text)}</a>${index < 3 ? ', ' : ''}
                                     `;
-                                })}</span>`.outerHTML
+                                })}</span>`.outerHTML,
+                                m: `<a href="${root}music/${sanitise(page.name)}/+similar">`,
+                                '/m': '</a>'
                             })}}
                         </div>
                     </div>

@@ -28933,6 +28933,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       see_more: see_more2
     };
   }
+  function get_wiki() {
+    if (!page.structure.container) return;
+    let wiki = page.structure.container.querySelector(".wiki-block.visible-lg");
+    if (wiki) return { wiki, wiki_state: true };
+    wiki = page.structure.container.querySelector(".wiki-block.visible-md");
+    if (wiki) return { wiki, wiki_state: true };
+    wiki = page.structure.container.querySelector(".wiki-block");
+    if (wiki) return { wiki, wiki_state: true };
+    wiki = page.structure.container.querySelector(".wiki-block-cta");
+    if (wiki) return { wiki, wiki_state: false };
+  }
   function show_numbers_on_side() {
     const { listeners, scrobbles, metascore } = get_listen_stats();
     page.structure.side.classList.remove("hidden-xs");
@@ -28976,14 +28987,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let upper = document.body.querySelector(".col-main");
       upper.classList.add("upper-overview-to-hide");
       page.structure.row.appendChild(upper);
-      let new_upper = document.createElement("section");
-      new_upper.classList.add("top-overview-panel");
-      new_upper.setAttribute("data-page-type", page.type);
-      new_upper.innerHTML = upper.innerHTML;
-      page.structure.main.insertBefore(
-        new_upper,
-        page.structure.main.firstElementChild
-      );
     }
     if (page.type == "track") {
       let video_col = document.body.querySelector(
@@ -30462,7 +30465,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         dialog_open = !dialog_open;
         wrapper.setAttribute("data-dialog-open", dialog_open);
       }} name=${lang}>
-                            ${selected_language.trim()}
+                            ${selected_language?.trim()}
                         </a>
                         <div class="language-menu">
                             ${language_options}
@@ -30720,6 +30723,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/arXL/");
       const { listeners, scrobbles } = get_listen_stats();
       const { tags, see_more: see_more2 } = get_tags();
+      const { wiki, wiki_state } = get_wiki();
+      let wiki_options;
       const gallery_link = artist_header.querySelector(".header-new-gallery--link");
       const gallery_count = int_from_string(gallery_link.textContent.trim());
       const image_list = page.structure.side.querySelector(".sidebar-image-list");
@@ -30740,6 +30745,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (similar) {
         similar_items = similar.querySelectorAll(".catalogue-overview-similar-artists-full-width-item");
       }
+      if (wiki_state) {
+        wiki_options = html.node`
+                <div class="wiki-options" />
+            `;
+        const read_more = wiki.querySelector('a:last-child[href$="+wiki"]');
+        if (read_more) {
+          read_more.classList = "read-more";
+          read_more.textContent = tl2(trans.wiki_read_more);
+          wiki_options.appendChild(read_more);
+        }
+        wiki_options.appendChild(html.node`
+                <a class="edit-wiki" href="${root}music/${sanitise(page.name)}/+wiki/edit"><span class="icon edit_icon" />${tl2(trans.edit)}</a>
+            `);
+      }
       const header = html.node`
             <section class="profile-artist-section">
                 <div class="artist-info">
@@ -30755,6 +30774,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </div>
                     <div class="actions">
 
+                    </div>
+                    <div class="wiki">
+                        ${wiki}
+                        ${wiki_options}
                     </div>
                     <div class="tags">
                         ${tl2(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
@@ -30785,7 +30808,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             </div>
                         </div>
                         <div class="option">
-                            <a>${tl2(trans.see_all_pictures, { c: gallery_count.toLocaleString(lang) })}</a>
+                            <a href="${root}music/${sanitise(page.name)}/+images">${tl2(trans.see_all_pictures, { c: gallery_count.toLocaleString(lang) })}</a>
                         </div>
                     </div>
                     ${radio3 ? html.node`
@@ -30797,11 +30820,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         "/s": "</strong>",
         u: correct_artist(page.name),
         a: html.node`<span>${Array.from(similar_items).map((item, index3, arr) => {
+          if (index3 > 3) return html.node``;
           const text3 = item.querySelector(".catalogue-overview-similar-artists-full-width-item-name").textContent.trim();
           return html.node`
-                                        <a href="${root}music/${sanitise(text3)}">${correct_artist(text3)}</a>${index3 < arr.length - 1 ? ", " : ""}
+                                        <a href="${root}music/${sanitise(text3)}">${correct_artist(text3)}</a>${index3 < 3 ? ", " : ""}
                                     `;
-        })}</span>`.outerHTML
+        })}</span>`.outerHTML,
+        m: `<a href="${root}music/${sanitise(page.name)}/+similar">`,
+        "/m": "</a>"
       }) }}
                         </div>
                     </div>
@@ -37136,6 +37162,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ja: "\u3088\u308Ascrobble",
       sv: "skrobblar sedan "
     },
+    wiki_read_more: {
+      en: "Read more\u2026"
+    },
     edit: {
       en: "Edit",
       de: "Bearbeiten",
@@ -41396,10 +41425,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       title: trans.branch.name,
       body: trans.branch.body,
       warn_if_empty: true
-    },
-    feature_flags: {
-      default: {},
-      type: "list"
     },
     hide_notifications: {
       default: false,

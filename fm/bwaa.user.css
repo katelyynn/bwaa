@@ -9212,6 +9212,13 @@
         &.tag_icon {
             background-position: 0 -740px;
         }
+
+        &.edit_icon {
+            width: 19px;
+            height: 19px;
+            background-position: 0 -720px;
+            margin: 0 0 -5px 0;
+        }
     }
 
     .new-badge {
@@ -9245,6 +9252,21 @@
             text-decoration: none;
             background: #999;
             border-color: #999;
+        }
+    }
+
+    .wiki-options {
+        margin-top: 5px;
+        font-size: 11px;
+        line-height: 1.25em;
+
+        & > .read-more {
+            padding: 0 5px 0 0;
+            border-right: 1px solid var(--border);
+        }
+
+        & > .edit-wiki {
+            margin-left: 3.4px;
         }
     }
 }

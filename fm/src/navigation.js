@@ -107,7 +107,7 @@ export function append_nav() {
                             dialog_open = !dialog_open;
                             wrapper.setAttribute('data-dialog-open', dialog_open);
                         }} name=${lang}>
-                            ${selected_language.trim()}
+                            ${selected_language?.trim()}
                         </a>
                         <div class="language-menu">
                             ${language_options}
