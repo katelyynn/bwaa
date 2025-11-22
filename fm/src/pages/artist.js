@@ -118,6 +118,20 @@ export function bleh_artists() {
             image_list.parentElement.remove();
         }
 
+        const radio = document.body.querySelector('.stationlink[data-analytics-label="artist"]');
+        if (radio) {
+            radio.classList = 'station-button-largest';
+            render(radio, html`
+                <strong>${tl(trans.play_radio)}</strong>
+            `);
+        }
+
+        const similar = document.body.querySelector('.catalogue-overview-similar-artists-full-width');
+        let similar_items;
+        if (similar) {
+            similar_items = similar.querySelectorAll('.catalogue-overview-similar-artists-full-width-item');
+        }
+
         const header = html.node`
             <section class="profile-artist-section">
                 <div class="artist-info">
@@ -148,23 +162,44 @@ export function bleh_artists() {
                     </div>
                 </div>
                 <div class="artist-image-side">
-                    <div class="images">
-                        <div class="top">
-                            <a href=${gallery_link?.href}>
-                                <img src=${avatar_img}>
-                            </a>
-                        </div>
-                        <div class="bottom">
-                            ${Array.from(items).map((item, index) => {
-                                if (index > 3) return html.node``;
+                    <div class="artist-image">
+                        <div class="images">
+                            <div class="top">
+                                <a href=${gallery_link?.href}>
+                                    <img src=${avatar_img}>
+                                </a>
+                            </div>
+                            <div class="bottom">
+                                ${Array.from(items).map((item, index) => {
+                                    if (index == 0 || index > 4) return html.node``;
 
-                                return item;
-                            })}
+                                    return item;
+                                })}
+                            </div>
+                        </div>
+                        <div class="option">
+                            <a>${tl(trans.see_all_pictures, { c: gallery_count.toLocaleString(lang) })}</a>
                         </div>
                     </div>
-                    <div class="option">
-                        <a>${tl(trans.see_all_pictures, { c: gallery_count.toLocaleString(lang) })}</a>
+                    ${radio ? html.node`
+                    <div class="station-col">
+                        ${radio}
+                        <div class="station-alert">
+                            ${{html: tl(trans.radio_cta, {
+                                s: '<strong>',
+                                '/s': '</strong>',
+                                u: correct_artist(page.name),
+                                a: html.node`<span>${Array.from(similar_items).map((item, index, arr) => {
+                                    const text = item.querySelector('.catalogue-overview-similar-artists-full-width-item-name').textContent.trim();
+
+                                    return html.node`
+                                        <a href="${root}music/${sanitise(text)}">${correct_artist(text)}</a>${index < arr.length - 1 ? ', ' : ''}
+                                    `;
+                                })}</span>`.outerHTML
+                            })}}
+                        </div>
                     </div>
+                    ` : ''}
                 </div>
         `;
         page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
@@ -225,23 +260,6 @@ export function bleh_artists() {
                                 .querySelector('.link-block-cover-link')
                                 ?.getAttribute('href');
                             let img = item.querySelector('img')?.src;
-
-                            if (type == 'track') {
-                                const top_track =
-                                    page.structure.main.querySelector(
-                                        '#top-tracks .cover-art img'
-                                    );
-                                if (
-                                    top_track &&
-                                    !top_track.src.endsWith(
-                                        '4128a6eb29f94943c9d206c08e625904.jpg'
-                                    )
-                                )
-                                    img = top_track.src.replace(
-                                        '/64s/',
-                                        '/avatar170s/'
-                                    );
-                            }
 
                             return html.node`
                                 <div class="featured-artist-item">

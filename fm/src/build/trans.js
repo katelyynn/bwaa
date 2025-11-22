@@ -2048,10 +2048,10 @@ export const trans = {
                 en: 'You stopped obsessing over {v}.'
             },
             love: {
-                en: 'You loved {v}.'
+                en: 'You added {v} to your Loved Tracks.'
             },
             unlove: {
-                en: 'You removed love for {v}.'
+                en: 'You removed {v} from your Loved Tracks.'
             },
             install_bwaa: {
                 en: 'You installed bwaa.'
@@ -4396,6 +4396,15 @@ export const trans = {
     },
     on_tour: {
         en: 'On Tour'
+    },
+    play_radio: {
+        en: 'Play Radio'
+    },
+    radio_cta: {
+        // u: artist name
+        // a: artist list
+        // m: wrapper for link
+        en: 'Listen to {s}{u} Radio{/s}, featuring artists like {a} and {m}more…{/m}'
     }
 };
 
