@@ -37,6 +37,7 @@ import { setting } from '../components/settings.js';
 import tippy from 'tippy.js';
 import { oracle_process } from '../components/oracle.js';
 import { save_hoshino_artwork } from '../components/hoshino.js';
+import { breadcrumb } from '../components/header.js';
 
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
@@ -89,52 +90,58 @@ export function bleh_albums() {
 
     checkup_page_structure(is_subpage, album_header);
 
-    const avatar = album_header.querySelector('.header-new-background-image');
-    const position = album_header.querySelector('.header-new-chart-position-number');
+    if (page.subpage == 'overview') {
+        const avatar = album_header.querySelector('.header-new-background-image');
+        const position = album_header.querySelector('.header-new-chart-position-number');
 
-    const avatar_img = avatar?.getAttribute('content').replace('/ar0/', '/avatar300s/');
+        const avatar_img = avatar?.getAttribute('content').replace('/ar0/', '/avatar300s/');
 
-    const { listeners, scrobbles, metascore } = get_listen_stats();
-    const { tags, see_more } = get_tags();
+        const { listeners, scrobbles, metascore } = get_listen_stats();
+        const { tags, see_more } = get_tags();
 
-    const header = html.node`
-        <section class="profile-album-section">
-            <div class="album-info">
-                <h1>${{html: tl(trans.value_by_user, {
-                    v: correct_item_by_artist(page.name, page.sister),
-                    u: `<a href="${root}music/${page.sister}">${correct_artist(page.sister)}</a>`
-                })}}</h1>
-                <div class="stats">
-                    ${tl(trans.plays_and_listeners, {
-                        l: listeners.value.toLocaleString(lang),
-                        p: scrobbles.value.toLocaleString(lang)
-                    })}
-                </div>
-                <div class="actions">
+        const header = html.node`
+            ${breadcrumb()}
+            <section class="profile-album-section">
+                <div class="album-info">
+                    <h1>${{html: tl(trans.value_by_user, {
+                        v: correct_item_by_artist(page.name, page.sister),
+                        u: `<a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>`
+                    })}}</h1>
+                    <div class="stats">
+                        ${tl(trans.plays_and_listeners, {
+                            l: listeners.value.toLocaleString(lang),
+                            p: scrobbles.value.toLocaleString(lang)
+                        })}
+                    </div>
+                    <div class="actions">
 
+                    </div>
+                    <div class="tags">
+                        ${tl(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
+                            ${tag}${i < list.length - 1 ? ', ' : ''}
+                        `)} ${see_more}
+                    </div>
+                    <div class="shouts">
+                        ${tl(trans.shouts)}: <a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+shoutbox">${tl(trans.leave_a_shout)}</a>
+                    </div>
+                    <div class="share-bar">
+                        <strong>${tl(trans.share_this_album)}</strong>
+                        <a class="btn-primary" href=${window.location.href}>${tl(trans.share_link)}</a>
+                    </div>
                 </div>
-                <div class="tags">
-                    ${tl(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
-                        ${tag}${i < list.length - 1 ? ', ' : ''}
-                    `)} ${see_more}
+                <div class="album-image-side">
+                    <a class="image">
+                        ${avatar ? html.node`
+                            <img src=${avatar_img}>
+                        ` : ''}
+                    </a>
                 </div>
-                <div class="shouts">
-                    ${tl(trans.shouts)}: <a href="${root}music/${page.sister}/${page.name}/+shoutbox">${tl(trans.leave_a_shout)}</a>
-                </div>
-                <div class="share-bar">
-                    <strong>${tl(trans.share_this_album)}</strong>
-                    <a class="btn-primary" href=${window.location.href}>${tl(trans.share_link)}</a>
-                </div>
-            </div>
-            <div class="album-image-side">
-                <a class="image">
-                    ${avatar ? html.node`
-                        <img src=${avatar_img}>
-                    ` : ''}
-                </a>
-            </div>
-    `;
-    page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+        `;
+        page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    } else {
+        page.structure.main.insertBefore(breadcrumb(), page.structure.main.firstElementChild);
+    }
+
     album_header.classList.add('legacy-header');
 
     // cover

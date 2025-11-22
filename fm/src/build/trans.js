@@ -4390,6 +4390,12 @@ export const trans = {
     },
     show_library: {
         en: 'Show User’s Library highlight on profiles'
+    },
+    see_all_pictures: {
+        en: 'See all {c} pictures'
+    },
+    on_tour: {
+        en: 'On Tour'
     }
 };
 

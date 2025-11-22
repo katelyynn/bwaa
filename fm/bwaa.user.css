@@ -9112,6 +9112,7 @@
 
         .grid-items {
             margin-top: 10px;
+            min-height: 310px;
         }
 
         .cocktail {
@@ -9166,5 +9167,9 @@
         padding: 1px 3px !important;
         font-size: 10px;
         margin: 0 3px;
+    }
+
+    .page-breadcrumb {
+        margin-bottom: 12px;
     }
 }

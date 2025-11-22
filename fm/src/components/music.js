@@ -266,10 +266,7 @@ export async function show_your_scrobbles() {
     // create child for u
     create_listen_item(listen_container, your_listens, page.type);
 
-    // profile shortcut :3
-
     // other user
-    if (page.type != 'artist') listen_container.appendChild(create_divider());
     create_listen_item(
         listen_container,
         {
@@ -283,14 +280,7 @@ export async function show_your_scrobbles() {
     );
 
     // append
-    col_main.insertBefore(listen_container, col_main.firstElementChild);
-
-    if (!katsune)
-        col_main.insertBefore(top_container, col_main.firstElementChild);
-    else
-        page.structure.container
-            .querySelector('.bleh-background')
-            .after(top_container);
+    page.structure.side.insertBefore(listen_container, page.structure.side.firstElementChild);
 
     // other listeners
     if (page.type == 'artist') {
@@ -728,7 +718,7 @@ export function get_listen_stats() {
 }
 
 export function get_tags() {
-    const container = page.structure.container.querySelector('.buffer-3 .catalogue-tags');
+    const container = page.structure.container.querySelector('.catalogue-tags');
 
     const tags = Array.from(container.querySelectorAll('.tag a'));
     const see_more = container.querySelector('.tags-view-all');

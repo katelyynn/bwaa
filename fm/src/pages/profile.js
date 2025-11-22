@@ -953,7 +953,7 @@ function profile_library() {
                     <div class="two-col">
                         <div class="wrapper loved">
                             <h3>
-                                <a>
+                                <a href="${root}user/${page.name}/library/loved">
                                     <span class="icon loved_indicator_icon" />
                                     <span>${tl(trans.loved_tracks)}</span>
                                 </a>
@@ -962,7 +962,7 @@ function profile_library() {
                     </div>
                     <div class="wrapper">
                         <h3>
-                            <a>
+                            <a href="${root}user/${page.name}/tags">
                                 <span class="icon tag_icon" />
                                 <span>${tl(trans.tags)}</span>
                             </a>

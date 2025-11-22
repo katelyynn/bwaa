@@ -8,6 +8,7 @@ import { html } from "lighterhtml";
 import { page, root } from "../build/page";
 import { sanitise } from "../build/tools";
 import { correct_artist, correct_item_by_artist } from "./lotus";
+import { tl, trans } from "../build/trans";
 
 export function generic_subpage_header(header_title, link_type = 'user', direct_link = '') {
     // determines top text link
@@ -45,5 +46,31 @@ export function generic_subpage_header(header_title, link_type = 'user', direct_
                 <h1 ref=${el => page.state.title = el}>${header_title}</h1>
             </div>
         </section>
+    `;
+}
+
+export function breadcrumb() {
+    let label = page.subpage;
+
+    if (page.subpage != 'overview') {
+        if (page.subpage.startsWith('shoutbox')) {
+            label = tl(trans.shoutbox);
+        } else if (page.subpage.startsWith('tags')) {
+            label = tl(trans.tags);
+        } else if (page.subpage.startsWith('wiki')) {
+            label = tl(trans.wiki);
+        } else if (trans.hasOwnProperty(page.subpage)) {
+            label = tl(trans[page.subpage]);
+        }
+    }
+
+    return html.node`
+        <div class="page-breadcrumb">
+            ${page.subpage != 'overview' ? html.node`
+                <a href="${root}music">${tl(trans.music)}</a> » <a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a> » <a href="${root}music/${sanitise(page.sister)}${page.type == 'album' ? '/' : '/_/'}${sanitise(page.name)}">${correct_item_by_artist(page.name, page.sister)}</a> » ${label}
+            ` : html.node`
+                <a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a> » <span>${correct_item_by_artist(page.name, page.sister)}</span>
+            `}
+        </div>
     `;
 }

@@ -18234,6 +18234,11 @@
     const date = DateTime.fromJSDate(new Date(string));
     return date.toFormat("HH:mm:ss Z");
   }
+  function int_from_string(string) {
+    const match3 = string.match(/[\d.,\s\u00A0\u202F]+/);
+    if (match3) return clean_number(match3[0]);
+    return string;
+  }
   function set_storage(key, val) {
     try {
       localStorage.setItem(key, val);
@@ -21810,6 +21815,29 @@
                 <h1 ref=${(el) => page.state.title = el}>${header_title}</h1>
             </div>
         </section>
+    `;
+  }
+  function breadcrumb() {
+    let label = page.subpage;
+    if (page.subpage != "overview") {
+      if (page.subpage.startsWith("shoutbox")) {
+        label = tl2(trans.shoutbox);
+      } else if (page.subpage.startsWith("tags")) {
+        label = tl2(trans.tags);
+      } else if (page.subpage.startsWith("wiki")) {
+        label = tl2(trans.wiki);
+      } else if (trans.hasOwnProperty(page.subpage)) {
+        label = tl2(trans[page.subpage]);
+      }
+    }
+    return html.node`
+        <div class="page-breadcrumb">
+            ${page.subpage != "overview" ? html.node`
+                <a href="${root}music">${tl2(trans.music)}</a> » <a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a> » <a href="${root}music/${sanitise(page.sister)}${page.type == "album" ? "/" : "/_/"}${sanitise(page.name)}">${correct_item_by_artist(page.name, page.sister)}</a> » ${label}
+            ` : html.node`
+                <a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a> » <span>${correct_item_by_artist(page.name, page.sister)}</span>
+            `}
+        </div>
     `;
   }
 
@@ -28536,7 +28564,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       your_listens.listens = clean_number(scrobble_button.textContent.trim());
     }
     create_listen_item(listen_container, your_listens, page.type);
-    if (page.type != "artist") listen_container.appendChild(create_divider());
     create_listen_item(
       listen_container,
       {
@@ -28548,11 +28575,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       },
       page.type
     );
-    col_main.insertBefore(listen_container, col_main.firstElementChild);
-    if (!katsune)
-      col_main.insertBefore(top_container, col_main.firstElementChild);
-    else
-      page.structure.container.querySelector(".bleh-background").after(top_container);
+    page.structure.side.insertBefore(listen_container, page.structure.side.firstElementChild);
     if (page.type == "artist") {
       let other_container = col_main.querySelector(
         ".personal-stats-item--listeners"
@@ -28898,7 +28921,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     };
   }
   function get_tags() {
-    const container = page.structure.container.querySelector(".buffer-3 .catalogue-tags");
+    const container = page.structure.container.querySelector(".catalogue-tags");
     const tags = Array.from(container.querySelectorAll(".tag a"));
     const see_more2 = container.querySelector(".tags-view-all");
     if (see_more2) {
@@ -29536,51 +29559,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             `
     )}
     `;
-  }
-  function artist_title() {
-    let title = document.body.querySelector(".header-new-title");
-    let title_text = title.textContent.trim();
-    let has_multi = false;
-    if (title_text.includes(", ") || title_text.includes("&")) has_multi = true;
-    page.multi = false;
-    if (!has_multi) {
-      if (!settings.corrections) {
-        title.textContent = romanise(title_text);
-        return;
-      }
-      title.textContent = romanise(correct_artist(title_text, true));
-    } else {
-      title_text = title_text.replaceAll("&", ";").replaceAll(", ", ";").replaceAll(";;", ";");
-      for (const [key, value] of Object.entries(combined_artists)) {
-        if (key == "version") continue;
-        const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const regex = new RegExp(escaped, "gi");
-        title_text = title_text.replace(regex, value);
-      }
-      page.multi = true;
-      title.innerHTML = "";
-      let split = title_text.split(";");
-      if (split.length < 2) {
-        page.multi = false;
-        if (!settings.corrections) return;
-        title.textContent = romanise(correct_artist(title_text, true));
-        return;
-      }
-      split.forEach((artist, index3) => {
-        if (index3 > 0) title.innerHTML += ",";
-        artist = artist.trim();
-        let part = document.createElement("a");
-        part.classList.add("multi-artist-part");
-        part.setAttribute(
-          "href",
-          `${root}music/${redirect()}${sanitise(artist)}`
-        );
-        if (settings.corrections)
-          part.textContent = romanise(correct_artist(artist));
-        else part.textContent = romanise(artist);
-        title.appendChild(part);
-      });
-    }
   }
   function patch_header_title() {
     page.suggest = null;
@@ -30601,49 +30579,54 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       log2("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, album_header);
-    const avatar2 = album_header.querySelector(".header-new-background-image");
-    const position = album_header.querySelector(".header-new-chart-position-number");
-    const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
-    const { listeners, scrobbles, metascore } = get_listen_stats();
-    const { tags, see_more: see_more2 } = get_tags();
-    const header = html.node`
-        <section class="profile-album-section">
-            <div class="album-info">
-                <h1>${{ html: tl2(trans.value_by_user, {
-      v: correct_item_by_artist(page.name, page.sister),
-      u: `<a href="${root}music/${page.sister}">${correct_artist(page.sister)}</a>`
-    }) }}</h1>
-                <div class="stats">
-                    ${tl2(trans.plays_and_listeners, {
-      l: listeners.value.toLocaleString(lang),
-      p: scrobbles.value.toLocaleString(lang)
-    })}
-                </div>
-                <div class="actions">
+    if (page.subpage == "overview") {
+      const avatar2 = album_header.querySelector(".header-new-background-image");
+      const position = album_header.querySelector(".header-new-chart-position-number");
+      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
+      const { listeners, scrobbles, metascore } = get_listen_stats();
+      const { tags, see_more: see_more2 } = get_tags();
+      const header = html.node`
+            ${breadcrumb()}
+            <section class="profile-album-section">
+                <div class="album-info">
+                    <h1>${{ html: tl2(trans.value_by_user, {
+        v: correct_item_by_artist(page.name, page.sister),
+        u: `<a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>`
+      }) }}</h1>
+                    <div class="stats">
+                        ${tl2(trans.plays_and_listeners, {
+        l: listeners.value.toLocaleString(lang),
+        p: scrobbles.value.toLocaleString(lang)
+      })}
+                    </div>
+                    <div class="actions">
 
+                    </div>
+                    <div class="tags">
+                        ${tl2(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
+                            ${tag}${i < list.length - 1 ? ", " : ""}
+                        `)} ${see_more2}
+                    </div>
+                    <div class="shouts">
+                        ${tl2(trans.shouts)}: <a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+shoutbox">${tl2(trans.leave_a_shout)}</a>
+                    </div>
+                    <div class="share-bar">
+                        <strong>${tl2(trans.share_this_album)}</strong>
+                        <a class="btn-primary" href=${window.location.href}>${tl2(trans.share_link)}</a>
+                    </div>
                 </div>
-                <div class="tags">
-                    ${tl2(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
-                        ${tag}${i < list.length - 1 ? ", " : ""}
-                    `)} ${see_more2}
+                <div class="album-image-side">
+                    <a class="image">
+                        ${avatar2 ? html.node`
+                            <img src=${avatar_img}>
+                        ` : ""}
+                    </a>
                 </div>
-                <div class="shouts">
-                    ${tl2(trans.shouts)}: <a href="${root}music/${page.sister}/${page.name}/+shoutbox">${tl2(trans.leave_a_shout)}</a>
-                </div>
-                <div class="share-bar">
-                    <strong>${tl2(trans.share_this_album)}</strong>
-                    <a class="btn-primary" href=${window.location.href}>${tl2(trans.share_link)}</a>
-                </div>
-            </div>
-            <div class="album-image-side">
-                <a class="image">
-                    ${avatar2 ? html.node`
-                        <img src=${avatar_img}>
-                    ` : ""}
-                </a>
-            </div>
-    `;
-    page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+        `;
+      page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    } else {
+      page.structure.main.insertBefore(breadcrumb(), page.structure.main.firstElementChild);
+    }
     album_header.classList.add("legacy-header");
     if (settings.hue_from_album) {
       let header_inner = album_header.querySelector(".header-new-inner");
@@ -30691,7 +30674,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let artist_header = document.body.querySelector(".header-new--artist");
     page.name = artist_header.querySelector(".header-new-title").textContent;
     page.sister = "";
-    artist_title();
     let is_subpage = artist_header.classList.contains("header-new--subpage");
     if (auth.pro) {
       page.structure.container = document.body.querySelector(
@@ -30731,214 +30713,77 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       log2("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, artist_header);
-    let katsune = ff("katsune");
+    if (page.subpage == "overview") {
+      const avatar2 = artist_header.querySelector(".header-new-background-image");
+      const position = artist_header.querySelector(".header-new-chart-position-number");
+      const on_tour = artist_header.querySelector(".header-new-on-tour");
+      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/arXL/");
+      const { listeners, scrobbles } = get_listen_stats();
+      const { tags, see_more: see_more2 } = get_tags();
+      const gallery_link = artist_header.querySelector(".header-new-gallery--link");
+      const gallery_count = int_from_string(gallery_link.textContent.trim());
+      const image_list = page.structure.side.querySelector(".sidebar-image-list");
+      let items;
+      if (image_list) {
+        items = image_list.querySelectorAll(".image-list-item");
+        image_list.parentElement.remove();
+      }
+      const header = html.node`
+            <section class="profile-artist-section">
+                <div class="artist-info">
+                    <h1>
+                        ${correct_artist(page.name)}
+                        ${on_tour ? html.node`<a class="ontour" href="${root}music/${sanitise(page.name)}/+events">${tl2(trans.on_tour)}</a>` : ""}
+                    </h1>
+                    <div class="stats">
+                        ${tl2(trans.plays_and_listeners, {
+        l: listeners.value.toLocaleString(lang),
+        p: scrobbles.value.toLocaleString(lang)
+      })}
+                    </div>
+                    <div class="actions">
+
+                    </div>
+                    <div class="tags">
+                        ${tl2(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
+                            ${tag}${i < list.length - 1 ? ", " : ""}
+                        `)} ${see_more2}
+                    </div>
+                    <div class="shouts">
+                        ${tl2(trans.shouts)}: <a href="${root}music/${page.name}/+shoutbox">${tl2(trans.leave_a_shout)}</a>
+                    </div>
+                    <div class="share-bar">
+                        <strong>${tl2(trans.share_this_artist)}</strong>
+                        <a class="btn-primary" href=${window.location.href}>${tl2(trans.share_link)}</a>
+                    </div>
+                </div>
+                <div class="artist-image-side">
+                    <div class="images">
+                        <div class="top">
+                            <a href=${gallery_link?.href}>
+                                <img src=${avatar_img}>
+                            </a>
+                        </div>
+                        <div class="bottom">
+                            ${Array.from(items).map((item, index3) => {
+        if (index3 > 3) return html.node``;
+        return item;
+      })}
+                        </div>
+                    </div>
+                    <div class="option">
+                        <a>${tl2(trans.see_all_pictures, { c: gallery_count.toLocaleString(lang) })}</a>
+                    </div>
+                </div>
+        `;
+      page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    }
     let featured_items = artist_header.querySelector(
       ".artist-header-featured-items"
     );
-    if (ff("refreshed_music_nav")) {
-      let avatar2 = artist_header.querySelector(
-        ".header-new-background-image"
-      );
-      let title = artist_header.querySelector(".header-new-title");
-      let on_tour = artist_header.querySelector(".header-new-on-tour");
-      let position = artist_header.querySelector(
-        ".header-new-chart-position-number"
-      );
-      if (on_tour) on_tour.classList.add("label", "no-hover");
-      let multi_info_box;
-      let redesigned_artist_header = html.node`
-            <section class="redesigned-header redesigned-artist-header no-background">
-                <div class="avatar-side">
-                    ${avatar2 ? html.node`
-                    <img src="${avatar2.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
-                    <a class="bleh--avatar-clickable-link"></a>
-                    ` : html.node`<img class="missing-artist">`}
-                </div>
-                <div class="info-side">
-                    ${page.multi ? html.node`
-                    <div class="sub-text">
-                        ${tl2(trans.artists)}
-                        <div class="info-tip" ref=${(el) => multi_info_box = el}>
-                            <div class="bleh-icon bleh-info-icon"></div>
-                        </div>
-                    </div>
-                    ` : html.node`
-                    <div class="sub-text">${tl2(trans.artist)}</div>
-                    `}
-                    <div class="title-container" data-multi=${page.multi}>
-                        ${title}
-                        ${position}
-                        ${on_tour ? html.node`
-                        <div class="badges">
-                            ${on_tour}
-                        </div>
-                        ` : ""}
-                    </div>
-                </div>
-            </section>
-        `;
-      if (multi_info_box) {
-        tippy_esm_default(multi_info_box, {
-          content: tl2(trans.artists_tooltip)
-        });
-      }
-      if (position) {
-        tippy_esm_default(position, {
-          content: tl2(trans.view_the_charts)
-        });
-      }
-      let bg;
-      if (avatar2) bg = register_background(avatar2.getAttribute("content"));
-      else bg = register_background(null);
-      page.structure.container.insertBefore(
-        redesigned_artist_header,
-        page.structure.container.firstElementChild
-      );
-      artist_header.classList.add("legacy-header");
-      let avatar_side = redesigned_artist_header.querySelector(".avatar-side");
-      let avatar_link = avatar_side.querySelector("a");
-      if (avatar2 != null && avatar_link != null) {
-        if (settings.default_avatar_action == "expand" && avatar2 != null)
-          avatar_link.setAttribute(
-            "onclick",
-            `_expand_avatar('${avatar2.getAttribute("content")}')`
-          );
-        else if (settings.default_avatar_action == "gallery")
-          avatar_link.href = `${root}music/${redirect()}${sanitise(page.name)}/+images`;
-        let menu = tippy_esm_default(avatar_side, {
-          theme: "context-menu",
-          content: html.node`
-                    ${avatar2 != null ? html.node`
-                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar2.getAttribute("content"))} data-menu-item="expand">
-                        ${tl2(trans.expand)}
-                    </button>
-                    ` : ""}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${tl2(trans.photos)}
-                    </a>
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                        ${tl2(trans.settings)}
-                    </a>
-                `,
-          placement: "right-start",
-          trigger: "manual",
-          interactive: true,
-          interactiveBorder: 10,
-          offset: [0, 0],
-          onShow(instance) {
-            instance.popper.addEventListener("click", (event3) => {
-              instance.hide();
-            });
-          }
-        });
-        register_menu(avatar_side, menu);
-      }
-      if (!is_subpage) {
-        let view_button = redesigned_artist_header.querySelector(".view-all-button");
-        if (view_button) {
-          let view_menu = tippy_esm_default(view_button, {
-            theme: "context-menu",
-            content: html.node`
-                        <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                            ${tl2(trans.settings)}
-                        </a>
-                    `,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(view_button, view_menu);
-        }
-      }
-    }
     if (!is_subpage) {
       show_your_scrobbles();
-      bleh_tags_mini();
-      let top_tracks = page.structure.main.querySelector("#top-tracks");
-      if (top_tracks) {
-        let settings_btn;
-        let top2 = top_tracks.querySelector(".section-controls");
-        top2.classList = "top-container";
-        let header = top2.querySelector("h3");
-        let select_btn = top2.querySelector(
-          ".dropdown-menu-clickable-button"
-        );
-        if (select_btn) {
-          select_btn.classList.add(
-            "select-button",
-            "link-select",
-            "blend-v2-btn"
-          );
-          select_btn.classList.remove("dropdown-menu-clickable-button");
-        }
-        let play = top2.querySelector(".section-playlink");
-        if (play) {
-          play.classList.add("blend-v2-btn", "radio");
-          play.classList.remove(
-            "section-playlink",
-            "hover-section-control"
-          );
-          play.setAttribute("data-type", "play");
-        }
-        header.after(html.node`
-                <div class="accompany view-buttons blend blend-v2">
-                    ${select_btn}
-                </div>
-                <div class="view-buttons blend blend-v2">
-                    ${play}
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl2(trans.settings)}
-                    </button>
-                </div>
-            `);
-        tippy_esm_default(settings_btn, {
-          theme: "window",
-          content: html.node`
-                    <div class="dialog-settings">
-                        <div class="setting-group blend">
-                            ${setting({ id: "format_guest_features" })}
-                            ${setting({ id: "show_guest_features" })}
-                        </div>
-                    </div>
-                `,
-          placement: "bottom",
-          interactive: true,
-          interactiveBorder: 10,
-          trigger: "click",
-          appendTo: document.body
-        });
-      }
-      let top_albums = page.structure.main.querySelector("#top-albums");
-      if (top_albums) {
-        let top2 = top_albums.querySelector(".section-controls");
-        top2.classList = "top-container";
-        let header = top2.querySelector("h3");
-        let select_btn = top2.querySelector(
-          ".dropdown-menu-clickable-button"
-        );
-        if (select_btn) {
-          select_btn.classList.add(
-            "select-button",
-            "link-select",
-            "blend-v2-btn"
-          );
-          select_btn.classList.remove("dropdown-menu-clickable-button");
-          header.after(html.node`
-                    <div class="accompany view-buttons blend blend-v2">
-                        ${select_btn}
-                    </div>
-                `);
-        }
-      }
-      if (katsune && featured_items) {
+      if (featured_items) {
         let featured_panel = html.node`
                 <section class="featured-items-panel">
                     ${Array.from(featured_items.querySelectorAll("li")).map(
@@ -31012,7 +30857,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         )}
                 </section>
             `;
-        page.structure.main.querySelector(".top-overview-panel").after(featured_panel);
+        page.structure.side.appendChild(featured_panel);
       }
       const listeners_section = page.structure.main.querySelector(".listeners-section");
       if (listeners_section) {
@@ -35412,7 +35257,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <div class="two-col">
                         <div class="wrapper loved">
                             <h3>
-                                <a>
+                                <a href="${root}user/${page.name}/library/loved">
                                     <span class="icon loved_indicator_icon" />
                                     <span>${tl2(trans.loved_tracks)}</span>
                                 </a>
@@ -35421,7 +35266,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </div>
                     <div class="wrapper">
                         <h3>
-                            <a>
+                            <a href="${root}user/${page.name}/tags">
                                 <span class="icon tag_icon" />
                                 <span>${tl2(trans.tags)}</span>
                             </a>
@@ -41149,6 +40994,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     show_library: {
       en: "Show User\u2019s Library highlight on profiles"
+    },
+    see_all_pictures: {
+      en: "See all {c} pictures"
+    },
+    on_tour: {
+      en: "On Tour"
     }
   };
   function tl2(key, replacements = {}) {
