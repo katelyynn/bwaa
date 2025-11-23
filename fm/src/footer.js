@@ -8,13 +8,14 @@ import { html } from 'lighterhtml';
 import { tl, trans } from './build/trans';
 import { root } from './build/page';
 import { settings } from './build/config';
+import { version } from './main';
 
 export function bleh_footer() {
     const footer = document.body.querySelector('footer.footer');
 
     const container = footer.querySelector('.container');
 
-    const quote = 'cute quote here';
+    const quote = version.quote || 'cute quote here';
     const year = settings.page_style || new Date().getFullYear();
 
     container.appendChild(html.node`

@@ -35958,7 +35958,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function bleh_footer() {
     const footer = document.body.querySelector("footer.footer");
     const container = footer.querySelector(".container");
-    const quote = "cute quote here";
+    const quote = version.quote || "cute quote here";
     const year = settings.page_style || (/* @__PURE__ */ new Date()).getFullYear();
     container.appendChild(html.node`
         <div class="cute-quote-container">
@@ -41399,6 +41399,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     bio: "bwaa!!! ^-^",
     author: "katelyn",
     url: "https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js",
+    quote: "pretty girls love bwaa",
     feature_flags: {
       show_hidden_radio_options: {
         default: false,
