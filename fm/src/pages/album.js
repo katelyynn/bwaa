@@ -127,7 +127,9 @@ export function bleh_albums() {
                     <a class="image">
                         ${avatar ? html.node`
                             <img src=${avatar_img}>
-                        ` : ''}
+                        ` : html.node`
+                            <img class="missing-album mega">
+                        `}
                     </a>
                 </div>
         `;

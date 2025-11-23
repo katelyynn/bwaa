@@ -30625,7 +30625,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <a class="image">
                         ${avatar2 ? html.node`
                             <img src=${avatar_img}>
-                        ` : ""}
+                        ` : html.node`
+                            <img class="missing-album mega">
+                        `}
                     </a>
                 </div>
         `;
