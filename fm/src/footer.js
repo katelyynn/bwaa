@@ -7,6 +7,7 @@
 import { html } from 'lighterhtml';
 import { tl, trans } from './build/trans';
 import { root } from './build/page';
+import { settings } from './build/config';
 
 export function bleh_footer() {
     const footer = document.body.querySelector('footer.footer');
@@ -14,7 +15,7 @@ export function bleh_footer() {
     const container = footer.querySelector('.container');
 
     const quote = 'cute quote here';
-    const year = new Date().getFullYear();
+    const year = settings.page_style || new Date().getFullYear();
 
     container.appendChild(html.node`
         <div class="cute-quote-container">

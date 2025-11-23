@@ -204,23 +204,4 @@ export function append_nav() {
         // only allow clicking link if new tab action
         if (!new_tab) e.preventDefault();
     });
-
-    const alert = {
-        headline: 'BETA',
-        text: html.node`
-            You are testing beta software, please <a href="https://github.com/katelyynn/bwaa/issues">leave feedback</a> if you encounter issues or have suggestions.
-        `
-    }
-
-    if (alert.headline && alert.text) {
-        document.body.appendChild(html.node`
-            <div class="page-alert">
-                <div class="headline">
-                    <strong><p>${alert.headline}</p></strong>
-                </div>
-                <p>${alert.text}</p>
-            </div>
-        `);
-        document.body.setAttribute('data-has-alert', true);
-    }
 }
