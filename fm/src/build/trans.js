@@ -4432,6 +4432,9 @@ export const trans = {
     },
     plays_in_library: {
         en: '{c} plays in your library'
+    },
+    you_scrobbled_this_track: {
+        en: 'You’ve scrobbled this track {a}{c} times{/a}.'
     }
 };
 

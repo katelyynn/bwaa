@@ -4632,6 +4632,10 @@
             background: var(--listening-trend-head);
         }
 
+        & > div:last-child {
+            border-radius: 5px;
+        }
+
         .scrobbles-and-listeners {
             display: flex;
             margin: 10px 0;
@@ -4667,7 +4671,6 @@
             padding: 10px;
             background: var(--listening-trend);
             border-top: 1px solid var(--border-4);
-            border-radius: 5px;
 
             p {
                 font-size: 11px;
@@ -4701,6 +4704,28 @@
             }
             .highcharts-alternate-grid {
                 fill: var(--navlist-grad) !important;
+            }
+        }
+
+        .your-plays {
+            padding: 10px;
+            border-top: 1px solid var(--border-2);
+            background: #faf9f9;
+            color: #555;
+
+            display: flex;
+            gap: 8px;
+
+            & > .avatar {
+                width: 38px;
+                height: 38px;
+
+                & > img {
+                    width: 34px;
+                    height: 34px;
+                    padding: 1px;
+                    border: 1px solid var(--border);
+                }
             }
         }
     }

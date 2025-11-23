@@ -28378,7 +28378,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   };
   async function show_your_scrobbles() {
     let katsune = ff("katsune");
-    show_numbers_on_side(page.type);
     const page_is_blocked = !page.structure.main.querySelector("#shoutbox");
     log2(
       `${page_is_blocked ? "page is blocked" : "page is not blocked"}`,
@@ -28554,11 +28553,59 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let scrobble_button = document.body.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
     if (scrobble_button)
       your_listens = clean_number(scrobble_button.textContent.trim());
-    if (your_listens > 0) {
+    if (page.type == "track") {
+      const { listeners, scrobbles, metascore } = get_listen_stats();
+      page.structure.side.classList.remove("hidden-xs");
+      let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
+      if (!panel) {
+        panel = document.createElement("section");
+        panel.classList.add("section-with-separator");
+        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
+      }
+      panel.classList.add("listen-panel");
+      panel.setAttribute("data-auth-name", auth.name);
+      const trend = page.structure.container.querySelector(".listener-trend");
+      page.structure.side.insertBefore(html.node`
+            <section>
+                <h2>${tl2(trans[`${page.type}_stats`])}</h2>
+                <div class="stats-container">
+                    <div class="scrobbles-and-listeners">
+                        <div class="scrobbles">
+                            <h1>${cap(scrobbles)}</h1>
+                            <p>${tl2(trans.scrobbles)}</p>
+                        </div>
+                        <div class="listeners">
+                            <h1>${cap(listeners)}</h1>
+                            <p>${tl2(trans.listeners)}</p>
+                        </div>
+                    </div>
+                    <div class="recent-listening-trend">
+                        <p>${tl2(trans.recent_listening_trend)}</p>
+                        ${trend}
+                    </div>
+                    ${your_listens > 0 ? html.node`
+                    <div class="your-plays">
+                        <div class="avatar">
+                            <img src=${auth.avatar} alt=${auth.name}>
+                        </div>
+                        <div class="info">
+                            <p>${{ html: tl2(trans.you_scrobbled_this_track, {
+        c: your_listens.toLocaleString(lang),
+        a: `<a href="${scrobble_button.getAttribute("href")}">`,
+        "/a": "</a>"
+      }) }}</p>
+                        </div>
+                    </div>
+                    ` : ""}
+                </div>
+            </section>
+        `, page.structure.side.firstElementChild);
+    } else if (your_listens > 0) {
       page.state.stats.appendChild(html.node`
             <a class="plays" href=${scrobble_button.getAttribute("href")}>${your_listens == 1 ? tl2(trans.one_play_in_library) : tl2(trans.plays_in_library, { c: your_listens.toLocaleString(lang) })}</a>
         `);
     }
+    show_numbers_on_side();
     create_listen_item(
       listen_container,
       {
@@ -28937,40 +28984,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
   }
   function show_numbers_on_side() {
-    if (page.type == "track") {
-      const { listeners, scrobbles, metascore } = get_listen_stats();
-      page.structure.side.classList.remove("hidden-xs");
-      let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
-      if (!panel) {
-        panel = document.createElement("section");
-        panel.classList.add("section-with-separator");
-        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
-      }
-      panel.classList.add("listen-panel");
-      panel.setAttribute("data-auth-name", auth.name);
-      const trend = page.structure.container.querySelector(".listener-trend");
-      page.structure.side.insertBefore(html.node`
-            <section>
-                <h2>${tl2(trans[`${page.type}_stats`])}</h2>
-                <div class="stats-container">
-                    <div class="scrobbles-and-listeners">
-                        <div class="scrobbles">
-                            <h1>${cap(scrobbles)}</h1>
-                            <p>${tl2(trans.scrobbles)}</p>
-                        </div>
-                        <div class="listeners">
-                            <h1>${cap(listeners)}</h1>
-                            <p>${tl2(trans.listeners)}</p>
-                        </div>
-                    </div>
-                    <div class="recent-listening-trend">
-                        <p>${tl2(trans.recent_listening_trend)}</p>
-                        ${trend}
-                    </div>
-                </div>
-            </section>
-        `, page.structure.side.firstElementChild);
-    }
     let masonry = page.structure.row.querySelector(
       ":scope > .col-sidebar.masonry-right"
     );
@@ -40947,6 +40960,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     plays_in_library: {
       en: "{c} plays in your library"
+    },
+    you_scrobbled_this_track: {
+      en: "You\u2019ve scrobbled this track {a}{c} times{/a}."
     }
   };
   function tl2(key, replacements = {}) {
