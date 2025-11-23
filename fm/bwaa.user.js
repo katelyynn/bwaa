@@ -30532,6 +30532,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const new_tab = e.button == 1 || cmd;
       if (!new_tab) e.preventDefault();
     });
+    const alert2 = {
+      headline: "BETA",
+      text: html.node`
+            You are testing beta software, please <a href="https://github.com/katelyynn/bwaa/issues">leave feedback</a> if you encounter issues or have suggestions.
+        `
+    };
+    if (alert2.headline && alert2.text) {
+      document.body.appendChild(html.node`
+            <div class="page-alert">
+                <div class="headline">
+                    <strong><p>${alert2.headline}</p></strong>
+                </div>
+                <p>${alert2.text}</p>
+            </div>
+        `);
+      document.body.setAttribute("data-has-alert", true);
+    }
   }
 
   // src/pages/album.js
