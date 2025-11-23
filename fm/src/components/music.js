@@ -743,46 +743,48 @@ export function get_similar_artists() {
 }
 
 function show_numbers_on_side() {
-    const { listeners, scrobbles, metascore } = get_listen_stats();
+    if (page.type == 'track') {
+        const { listeners, scrobbles, metascore } = get_listen_stats();
 
-    page.structure.side.classList.remove('hidden-xs');
+        page.structure.side.classList.remove('hidden-xs');
 
-    // get panel
-    let panel = page.structure.side.querySelector('section.section-with-separator:has(.listener-trend)');
+        // get panel
+        let panel = page.structure.side.querySelector('section.section-with-separator:has(.listener-trend)');
 
-    if (!panel) {
-        panel = document.createElement('section');
-        panel.classList.add('section-with-separator');
+        if (!panel) {
+            panel = document.createElement('section');
+            panel.classList.add('section-with-separator');
 
-        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
+            page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
+        }
+
+        panel.classList.add('listen-panel');
+        panel.setAttribute('data-auth-name', auth.name);
+
+        const trend = page.structure.container.querySelector('.listener-trend');
+
+        page.structure.side.insertBefore(html.node`
+            <section>
+                <h2>${tl(trans[`${page.type}_stats`])}</h2>
+                <div class="stats-container">
+                    <div class="scrobbles-and-listeners">
+                        <div class="scrobbles">
+                            <h1>${cap(scrobbles)}</h1>
+                            <p>${tl(trans.scrobbles)}</p>
+                        </div>
+                        <div class="listeners">
+                            <h1>${cap(listeners)}</h1>
+                            <p>${tl(trans.listeners)}</p>
+                        </div>
+                    </div>
+                    <div class="recent-listening-trend">
+                        <p>${tl(trans.recent_listening_trend)}</p>
+                        ${trend}
+                    </div>
+                </div>
+            </section>
+        `, page.structure.side.firstElementChild);
     }
-
-    panel.classList.add('listen-panel');
-    panel.setAttribute('data-auth-name', auth.name);
-
-    const trend = page.structure.container.querySelector('.listener-trend');
-
-    page.structure.side.insertBefore(html.node`
-        <section>
-            <h2>${tl(trans[`${page.type}_stats`])}</h2>
-            <div class="stats-container">
-                <div class="scrobbles-and-listeners">
-                    <div class="scrobbles">
-                        <h1>${cap(scrobbles)}</h1>
-                        <p>${tl(trans.scrobbles)}</p>
-                    </div>
-                    <div class="listeners">
-                        <h1>${cap(listeners)}</h1>
-                        <p>${tl(trans.listeners)}</p>
-                    </div>
-                </div>
-                <div class="recent-listening-trend">
-                    <p>${tl(trans.recent_listening_trend)}</p>
-                    ${trend}
-                </div>
-            </div>
-        </section>
-    `, page.structure.side.firstElementChild);
 
     let masonry = page.structure.row.querySelector(
         ':scope > .col-sidebar.masonry-right'
