@@ -2304,12 +2304,6 @@
 
             position: relative;
 
-            [data-bwaa--seasonal_accent="true"][data-bwaa--season="fall"] &,
-            [data-bwaa--seasonal_accent="true"][data-bwaa--season="christmas"] &,
-            [data-bwaa--seasonal_accent="true"][data-bwaa--season="new_years"] & {
-                text-shadow: #3F6B8F 0 1px 0;
-            }
-
             [data-bwaa--theme="paint_it_black"] & {
                 background-position: left -390px;
                 text-shadow: #000 0 1px 1px;
