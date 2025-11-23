@@ -22,6 +22,7 @@ import {
     bleh_top_listeners,
     convert_top_listener,
     get_listen_stats,
+    get_similar_artists,
     get_tags,
     get_wiki,
     redirect,
@@ -111,7 +112,7 @@ export function bleh_artists() {
         let wiki_options;
 
         const gallery_link = artist_header.querySelector('.header-new-gallery--link');
-        const gallery_count = int_from_string(gallery_link.textContent.trim());
+        const gallery_count = int_from_string(gallery_link?.textContent.trim());
 
         const image_list = page.structure.side.querySelector('.sidebar-image-list');
         let items;
@@ -129,11 +130,7 @@ export function bleh_artists() {
             `);
         }
 
-        const similar = document.body.querySelector('.catalogue-overview-similar-artists-full-width');
-        let similar_items;
-        if (similar) {
-            similar_items = similar.querySelectorAll('.catalogue-overview-similar-artists-full-width-item');
-        }
+        const similar_items = get_similar_artists();
 
         if (wiki_state) {
             wiki_options = html.node`
@@ -190,9 +187,11 @@ export function bleh_artists() {
                     <div class="artist-image">
                         <div class="images">
                             <div class="top">
-                                <a href=${gallery_link?.href}>
-                                    <img src=${avatar_img}>
-                                </a>
+                                ${gallery_link ? html.node`
+                                    <a href=${gallery_link?.href}>
+                                        <img src=${avatar_img}>
+                                    </a>
+                                ` : ''}
                             </div>
                             <div class="bottom">
                                 ${Array.from(items).map((item, index) => {
@@ -335,6 +334,22 @@ export function bleh_artists() {
                     convert_top_listener(listener, index, 'listeners-section')
                 );
             });
+        }
+
+        const events = page.structure.side.querySelector('.events-list-sidebar');
+        if (events) {
+            const events_sidebar = events.parentElement.parentElement;
+
+            const events_header = events_sidebar.querySelector('h2');
+            render(events_header, html`
+                <a href="${root}music/${sanitise(page.name)}/+events">${tl(trans.events)}</a>
+            `);
+
+            const actions = events_sidebar.querySelector('.more-link-with-action');
+            if (actions) {
+                const see_more = actions.lastElementChild;
+                see_more.textContent = tl(trans.see_more);
+            }
         }
     } else {
         if (page.subpage.startsWith('listeners_')) {

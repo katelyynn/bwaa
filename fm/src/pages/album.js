@@ -10,17 +10,15 @@ import { auth, page, root } from '../build/page';
 import {
     clamp_lit,
     clamp_sat,
-    clean_number,
-    desanitise,
     hex_to_hsl,
     sanitise
 } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
 import { bleh_about_artist } from '../components/about_artist';
-import { correct_artist, correct_item_by_artist, patch_header_title } from '../components/lotus';
-import { register_menu } from '../components/menu';
+import { correct_artist, correct_item_by_artist } from '../components/lotus';
 import {
     get_listen_stats,
+    get_similar_artists,
     get_tags,
     redirect,
     show_your_scrobbles
@@ -32,11 +30,7 @@ import { bleh_gallery_list, bleh_gallery_upload } from './gallery';
 import { bleh_tags_mini } from './tag';
 import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from './wiki';
 import { html, render } from 'lighterhtml';
-import { expand_avatar } from '../avatar.js';
-import { setting } from '../components/settings.js';
-import tippy from 'tippy.js';
 import { oracle_process } from '../components/oracle.js';
-import { save_hoshino_artwork } from '../components/hoshino.js';
 import { breadcrumb } from '../components/header.js';
 
 export function bleh_albums() {
@@ -176,6 +170,8 @@ export function bleh_albums() {
 
         bleh_tags_mini();
 
+        album_tracklist();
+
         let similar_albums =
             page.structure.main.querySelector('.similar-albums');
         if (similar_albums) {
@@ -197,4 +193,33 @@ export function bleh_albums() {
 
     log('status is', 'page', 'info', page);
     update_page();
+}
+
+function album_tracklist() {
+    const tracklist_panel = page.structure.main.querySelector('#tracklist');
+    if (!tracklist_panel) return;
+
+    const similar_items = get_similar_artists();
+    const radio = document.body.querySelector('.stationlink[data-analytics-label="artist"]');
+
+    if (!radio) return;
+
+    radio.classList = 'station-button-large';
+    render(radio, html`
+        <strong>${tl(trans.play_user_radio, { u: correct_artist(page.sister) })}</strong>
+        <p>${{html: tl(trans.radio_with, {
+            u: html.node`<span>${Array.from(similar_items).map((item, index, arr) => {
+                if (index > 3) return html.node``;
+
+                const text = item.querySelector('.catalogue-overview-similar-artists-item-name').textContent.trim();
+
+                return html.node`
+                ${correct_artist(text)}${index < 3 ? ', ' : ''}
+            `;
+            })}</span>`.outerHTML
+        })}}</p>
+    `);
+
+    const tracklist = tracklist_panel.querySelector(':scope > .buffer-standard');
+    tracklist.after(radio);
 }

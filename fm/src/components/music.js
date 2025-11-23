@@ -750,6 +750,15 @@ export function get_wiki() {
     if (wiki) return { wiki, wiki_state: false };
 }
 
+export function get_similar_artists() {
+    const full_width = page.type == 'artist' ? '-full-width' : '';
+
+    const similar = document.body.querySelector(`.catalogue-overview-similar-artists${full_width}`);
+    if (similar) {
+        return similar.querySelectorAll(`.catalogue-overview-similar-artists${full_width}-item`);
+    }
+}
+
 function show_numbers_on_side() {
     const { listeners, scrobbles, metascore } = get_listen_stats();
 

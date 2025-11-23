@@ -28944,6 +28944,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     wiki = page.structure.container.querySelector(".wiki-block-cta");
     if (wiki) return { wiki, wiki_state: false };
   }
+  function get_similar_artists() {
+    const full_width = page.type == "artist" ? "-full-width" : "";
+    const similar = document.body.querySelector(`.catalogue-overview-similar-artists${full_width}`);
+    if (similar) {
+      return similar.querySelectorAll(`.catalogue-overview-similar-artists${full_width}-item`);
+    }
+  }
   function show_numbers_on_side() {
     const { listeners, scrobbles, metascore } = get_listen_stats();
     page.structure.side.classList.remove("hidden-xs");
@@ -30316,7 +30323,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           `returned ${track_artist} from url ${track_title.getAttribute("href")}`,
           "track"
         );
-        if (!wide) track.classList.add("chartlist-row--with-artist");
         const is_active = track.classList.contains(
           "chartlist-row--now-scrobbling"
         );
@@ -30346,9 +30352,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           }
         }
         let song_artist_element = track.querySelector(".chartlist-artist");
-        if (song_artist_element) {
-          track.appendChild(song_artist_element);
-        }
         if (settings.corrections) {
           let song_artist_element2 = track.querySelector(
             ".chartlist-artist a"
@@ -30653,6 +30656,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       show_your_scrobbles();
       bleh_about_artist();
       bleh_tags_mini();
+      album_tracklist();
       let similar_albums = page.structure.main.querySelector(".similar-albums");
       if (similar_albums) {
         let similar_panel = similar_albums.parentElement;
@@ -30670,6 +30674,28 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (ff("oracle") && settings.oracle_beta) oracle_process();
     log2("status is", "page", "info", page);
     update_page();
+  }
+  function album_tracklist() {
+    const tracklist_panel = page.structure.main.querySelector("#tracklist");
+    if (!tracklist_panel) return;
+    const similar_items = get_similar_artists();
+    const radio3 = document.body.querySelector('.stationlink[data-analytics-label="artist"]');
+    if (!radio3) return;
+    radio3.classList = "station-button-large";
+    render(radio3, html`
+        <strong>${tl2(trans.play_user_radio, { u: correct_artist(page.sister) })}</strong>
+        <p>${{ html: tl2(trans.radio_with, {
+      u: html.node`<span>${Array.from(similar_items).map((item, index3, arr) => {
+        if (index3 > 3) return html.node``;
+        const text3 = item.querySelector(".catalogue-overview-similar-artists-item-name").textContent.trim();
+        return html.node`
+                ${correct_artist(text3)}${index3 < 3 ? ", " : ""}
+            `;
+      })}</span>`.outerHTML
+    }) }}</p>
+    `);
+    const tracklist = tracklist_panel.querySelector(":scope > .buffer-standard");
+    tracklist.after(radio3);
   }
 
   // src/pages/artist.js
@@ -30726,7 +30752,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const { wiki, wiki_state } = get_wiki();
       let wiki_options;
       const gallery_link = artist_header.querySelector(".header-new-gallery--link");
-      const gallery_count = int_from_string(gallery_link.textContent.trim());
+      const gallery_count = int_from_string(gallery_link?.textContent.trim());
       const image_list = page.structure.side.querySelector(".sidebar-image-list");
       let items;
       if (image_list) {
@@ -30740,11 +30766,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <strong>${tl2(trans.play_radio)}</strong>
             `);
       }
-      const similar = document.body.querySelector(".catalogue-overview-similar-artists-full-width");
-      let similar_items;
-      if (similar) {
-        similar_items = similar.querySelectorAll(".catalogue-overview-similar-artists-full-width-item");
-      }
+      const similar_items = get_similar_artists();
       if (wiki_state) {
         wiki_options = html.node`
                 <div class="wiki-options" />
@@ -30796,9 +30818,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <div class="artist-image">
                         <div class="images">
                             <div class="top">
-                                <a href=${gallery_link?.href}>
-                                    <img src=${avatar_img}>
-                                </a>
+                                ${gallery_link ? html.node`
+                                    <a href=${gallery_link?.href}>
+                                        <img src=${avatar_img}>
+                                    </a>
+                                ` : ""}
                             </div>
                             <div class="bottom">
                                 ${Array.from(items).map((item, index3) => {
@@ -30917,6 +30941,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             convert_top_listener(listener, index3, "listeners-section")
           );
         });
+      }
+      const events = page.structure.side.querySelector(".events-list-sidebar");
+      if (events) {
+        const events_sidebar = events.parentElement.parentElement;
+        const events_header = events_sidebar.querySelector("h2");
+        render(events_header, html`
+                <a href="${root}music/${sanitise(page.name)}/+events">${tl2(trans.events)}</a>
+            `);
+        const actions = events_sidebar.querySelector(".more-link-with-action");
+        if (actions) {
+          const see_more2 = actions.lastElementChild;
+          see_more2.textContent = tl2(trans.see_more);
+        }
       }
     } else {
       if (page.subpage.startsWith("listeners_")) {
@@ -36654,8 +36691,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function update_page() {
     page.structure.container.setAttribute("data-page-type", page.type);
     page.structure.container.setAttribute("data-page-subpage", page.subpage);
-    page.structure.container.setAttribute("data-beret", ff("beret"));
-    page.structure.container.setAttribute("data-short", ff("short"));
   }
   function favi() {
     let favicon = document.querySelector('link[rel="icon"]');
@@ -41058,6 +41093,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       // a: artist list
       // m: wrapper for link
       en: "Listen to {s}{u} Radio{/s}, featuring artists like {a} and {m}more\u2026{/m}"
+    },
+    play_user_radio: {
+      en: "Play {u} Radio"
+    },
+    radio_with: {
+      en: "With: {u} and more\u2026"
     }
   };
   function tl2(key, replacements = {}) {

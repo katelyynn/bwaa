@@ -707,8 +707,6 @@ function page_indicator() {
 export function update_page() {
     page.structure.container.setAttribute('data-page-type', page.type);
     page.structure.container.setAttribute('data-page-subpage', page.subpage);
-    page.structure.container.setAttribute('data-beret', ff('beret'));
-    page.structure.container.setAttribute('data-short', ff('short'));
 }
 
 function favi() {

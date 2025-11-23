@@ -4408,6 +4408,12 @@ export const trans = {
         // a: artist list
         // m: wrapper for link
         en: 'Listen to {s}{u} Radio{/s}, featuring artists like {a} and {m}more…{/m}'
+    },
+    play_user_radio: {
+        en: 'Play {u} Radio'
+    },
+    radio_with: {
+        en: 'With: {u} and more…'
     }
 };
 

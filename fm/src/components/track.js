@@ -167,8 +167,6 @@ export function patch_titles(search = page.structure.main) {
                 `returned ${track_artist} from url ${track_title.getAttribute('href')}`,
                 'track'
             );
-            // when focused on a track in a library, an artist field is redundant
-            if (!wide) track.classList.add('chartlist-row--with-artist');
 
             const is_active = track.classList.contains(
                 'chartlist-row--now-scrobbling'
@@ -208,9 +206,6 @@ export function patch_titles(search = page.structure.main) {
             }
 
             let song_artist_element = track.querySelector('.chartlist-artist');
-            if (song_artist_element) {
-                track.appendChild(song_artist_element);
-            }
 
             if (settings.corrections) {
                 let song_artist_element = track.querySelector(
