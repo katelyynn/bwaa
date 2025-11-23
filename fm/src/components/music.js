@@ -257,7 +257,7 @@ export async function show_your_scrobbles() {
 
     if (your_listens > 0) {
         page.state.stats.appendChild(html.node`
-            <a class="plays" href=${scrobble_button.getAttribute('href')}>${your_listens == 1 ? tl(trans.one_play_in_library) : tl(trans.plays_in_library, { c: your_listens })}</a>
+            <a class="plays" href=${scrobble_button.getAttribute('href')}>${your_listens == 1 ? tl(trans.one_play_in_library) : tl(trans.plays_in_library, { c: your_listens.toLocaleString(lang) })}</a>
         `);
     }
 

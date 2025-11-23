@@ -28556,7 +28556,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       your_listens = clean_number(scrobble_button.textContent.trim());
     if (your_listens > 0) {
       page.state.stats.appendChild(html.node`
-            <a class="plays" href=${scrobble_button.getAttribute("href")}>${your_listens == 1 ? tl2(trans.one_play_in_library) : tl2(trans.plays_in_library, { c: your_listens })}</a>
+            <a class="plays" href=${scrobble_button.getAttribute("href")}>${your_listens == 1 ? tl2(trans.one_play_in_library) : tl2(trans.plays_in_library, { c: your_listens.toLocaleString(lang) })}</a>
         `);
     }
     create_listen_item(
