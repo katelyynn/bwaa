@@ -6605,6 +6605,8 @@
             --dropdown-border-override: none !important;
             margin: unset !important;
 
+            z-index: unset !important;
+
 
             .navlist-items {
                 overflow: visible;
