@@ -3424,17 +3424,16 @@
                 text-shadow: unset;
                 font-size: inherit;
                 line-height: inherit;
-                display: inline-block;
-
-                & > p {
-                    display: inline-flex;
-                }
+                display: block;
+                overflow: hidden;
 
                 .grid-items-item-main-text {
                     font-size: inherit;
                     line-height: inherit;
                     font-weight: bold;
                     color: var(--header-text-black);
+
+                    display: inline;
 
                     a {
                         color: inherit;
@@ -3445,17 +3444,20 @@
                         color: var(--text-link);
                     }
                 }
-                .grid-items-item-aux-text a {
-                    color: var(--text-link);
-                    font-size: 10px;
-                    white-space: nowrap;
-                    display: flex;
+                .grid-items-item-aux-text {
+                    display: inline;
 
-                    &:before {
-                        content: '(';
-                    }
-                    &:after {
-                        content: ')';
+                    & > a {
+                        color: var(--text-link);
+                        font-size: 10px;
+                        white-space: nowrap;
+
+                        &:before {
+                            content: '(';
+                        }
+                        &:after {
+                            content: ')';
+                        }
                     }
                 }
             }
