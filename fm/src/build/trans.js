@@ -4414,6 +4414,12 @@ export const trans = {
     },
     radio_with: {
         en: 'With: {u} and more…'
+    },
+    add_to_your_library: {
+        en: 'Add to Your Library'
+    },
+    added_to_your_library: {
+        en: 'Added to Your Library'
     }
 };
 

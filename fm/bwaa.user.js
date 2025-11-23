@@ -41105,6 +41105,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     radio_with: {
       en: "With: {u} and more\u2026"
+    },
+    add_to_your_library: {
+      en: "Add to Your Library"
+    },
+    added_to_your_library: {
+      en: "Added to Your Library"
     }
   };
   function tl2(key, replacements = {}) {
