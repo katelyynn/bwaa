@@ -128,6 +128,7 @@
 
         --chartlist-odd: #ebebeb;
         --chartlist-hover: #bfdff4;
+        --chartlist-hover-less: #d0e4f0;
         --chartlist-highlight: #fffcca;
 
         --alert: #e4f1ff;
@@ -2760,6 +2761,10 @@
             #top-tracks & {
                 .chartlist-image {
                     display: none;
+                }
+
+                &:hover, &:focus-within {
+                    background: var(--chartlist-hover-less) !important;
                 }
 
                 &:not(.chartlist-row--with-artist) {
@@ -9264,6 +9269,10 @@
         & > .section-controls > .dropdown-menu-clickable {
             display: none !important;
         }
+    }
+
+    .sidebar-date-heading {
+        display: none;
     }
 
 

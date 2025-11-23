@@ -164,7 +164,9 @@ export function bleh_artists() {
                         })}
                     </div>
                     <div class="actions">
+                        <div class="actions-inner" ref=${el => page.state.actions = el}>
 
+                        </div>
                     </div>
                     <div class="wiki">
                         ${wiki}
@@ -338,6 +340,7 @@ export function bleh_artists() {
 
         const events = page.structure.side.querySelector('.events-list-sidebar');
         if (events) {
+            const body = events.querySelector('tbody');
             const events_sidebar = events.parentElement.parentElement;
 
             const events_header = events_sidebar.querySelector('h2');
@@ -350,6 +353,18 @@ export function bleh_artists() {
                 const see_more = actions.lastElementChild;
                 see_more.textContent = tl(trans.see_more);
             }
+
+            const lists = events_sidebar.querySelectorAll('.events-list-sidebar');
+            lists.forEach((list, index) => {
+                if (index == 0) return;
+
+                const items = list.querySelectorAll('tbody > tr');
+                items.forEach(item => {
+                    body.appendChild(item);
+                });
+
+                list.remove();
+            });
         }
     } else {
         if (page.subpage.startsWith('listeners_')) {

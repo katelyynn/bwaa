@@ -28601,21 +28601,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         create_listen_item(listen_container, other_listeners, page.type);
       }
     }
-    let interact_container = document.createElement("section");
-    interact_container.classList.add("side-actions");
     let text3 = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
     let artist = document.body.querySelector(".header-new-crumb");
     if (artist != void 0)
       text3 = `${text3}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
     let header_actions = document.body.querySelector(".header-new-actions");
-    interact_container.innerHTML = header_actions.innerHTML;
-    let buttons = interact_container.querySelectorAll("button");
+    if (!page.state.actions) return;
+    const children = header_actions.children;
+    Array.from(children).forEach((child) => {
+      page.state.actions.appendChild(child);
+    });
+    let buttons = page.state.actions.querySelectorAll("button");
     buttons.forEach((button) => {
       if (button.classList[0] != "header-new-playlink")
         button.classList.add("btn", "side-action");
       else button.classList.add("dropdown-menu-clickable-item");
       if (button.classList[0] == "header-new-more-button")
-        interact_container.removeChild(button.parentElement);
+        page.state.actions.removeChild(button.parentElement);
       if (button.classList[1] == "header-new-love-button") {
         button.setAttribute("data-type", "love");
         let new_text = document.createElement("span");
@@ -28623,7 +28625,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         button.appendChild(new_text);
       }
     });
-    let links = interact_container.querySelectorAll("a");
+    let links = page.state.actions.querySelectorAll("a");
     links.forEach((button) => {
       if (button.classList[0] != "header-new-playlink")
         button.classList.add("btn", "side-action");
@@ -28637,22 +28639,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       obsession_btn.classList = "btn side-action";
       obsession_btn.setAttribute("data-type", "obsession");
       obsession_btn.textContent = tl2(trans.obsession);
-      interact_container.appendChild(obsession_form);
+      page.state.actions.appendChild(obsession_form);
     }
-    const play_btn = interact_container.querySelector(".header-new-playlink");
-    if (play_btn) interact_container.removeChild(play_btn);
-    if (auth.name) {
-      if (!page.mobile)
-        page.structure.side.insertBefore(
-          interact_container,
-          page.structure.side.firstElementChild
-        );
-      else
-        page.structure.main.insertBefore(
-          interact_container,
-          page.structure.main.firstElementChild
-        );
-    }
+    const play_btn = page.state.actions.querySelector(".header-new-playlink");
+    if (play_btn) page.state.actions.removeChild(play_btn);
     const new_playlist = page.structure.side.querySelector(":scope > form");
     if (new_playlist) {
       let header = new_playlist.querySelector("h3");
@@ -28661,7 +28651,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       playlist_button.classList = "btn side-action";
       playlist_button.setAttribute("data-type", "playlist");
       playlist_button.textContent = tl2(trans.create_playlist);
-      interact_container.appendChild(new_playlist);
+      page.state.actions.appendChild(new_playlist);
     }
     const metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
@@ -30606,7 +30596,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       })}
                     </div>
                     <div class="actions">
+                        <div class="actions-inner" ref=${(el) => page.state.actions = el}>
 
+                        </div>
                     </div>
                     <div class="tags">
                         ${tl2(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
@@ -30797,7 +30789,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       })}
                     </div>
                     <div class="actions">
+                        <div class="actions-inner" ref=${(el) => page.state.actions = el}>
 
+                        </div>
                     </div>
                     <div class="wiki">
                         ${wiki}
@@ -30946,6 +30940,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       const events = page.structure.side.querySelector(".events-list-sidebar");
       if (events) {
+        const body = events.querySelector("tbody");
         const events_sidebar = events.parentElement.parentElement;
         const events_header = events_sidebar.querySelector("h2");
         render(events_header, html`
@@ -30956,6 +30951,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           const see_more2 = actions.lastElementChild;
           see_more2.textContent = tl2(trans.see_more);
         }
+        const lists = events_sidebar.querySelectorAll(".events-list-sidebar");
+        lists.forEach((list, index3) => {
+          if (index3 == 0) return;
+          const items = list.querySelectorAll("tbody > tr");
+          items.forEach((item) => {
+            body.appendChild(item);
+          });
+          list.remove();
+        });
       }
     } else {
       if (page.subpage.startsWith("listeners_")) {

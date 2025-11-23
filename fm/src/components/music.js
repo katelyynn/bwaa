@@ -316,9 +316,6 @@ export async function show_your_scrobbles() {
     }
 
     // interactables on the right
-    let interact_container = document.createElement('section');
-    interact_container.classList.add('side-actions');
-
     let text = document.body
         .querySelector('.header-new-title')
         .textContent.replaceAll(' ', '+')
@@ -330,17 +327,21 @@ export async function show_your_scrobbles() {
 
     // temp probably
     let header_actions = document.body.querySelector('.header-new-actions');
+    if (!page.state.actions) return;
 
-    interact_container.innerHTML = header_actions.innerHTML;
+    const children = header_actions.children;
+    Array.from(children).forEach(child => {
+        page.state.actions.appendChild(child);
+    });
 
-    let buttons = interact_container.querySelectorAll('button');
+    let buttons = page.state.actions.querySelectorAll('button');
     buttons.forEach((button) => {
         if (button.classList[0] != 'header-new-playlink')
             button.classList.add('btn', 'side-action');
         else button.classList.add('dropdown-menu-clickable-item');
 
         if (button.classList[0] == 'header-new-more-button')
-            interact_container.removeChild(button.parentElement);
+            page.state.actions.removeChild(button.parentElement);
 
         if (button.classList[1] == 'header-new-love-button') {
             button.setAttribute('data-type', 'love');
@@ -349,7 +350,7 @@ export async function show_your_scrobbles() {
             button.appendChild(new_text);
         }
     });
-    let links = interact_container.querySelectorAll('a');
+    let links = page.state.actions.querySelectorAll('a');
     links.forEach((button) => {
         if (button.classList[0] != 'header-new-playlink')
             button.classList.add('btn', 'side-action');
@@ -366,24 +367,11 @@ export async function show_your_scrobbles() {
         obsession_btn.setAttribute('data-type', 'obsession');
         obsession_btn.textContent = tl(trans.obsession);
 
-        interact_container.appendChild(obsession_form);
+        page.state.actions.appendChild(obsession_form);
     }
 
-    const play_btn = interact_container.querySelector('.header-new-playlink');
-    if (play_btn) interact_container.removeChild(play_btn);
-
-    if (auth.name) {
-        if (!page.mobile)
-            page.structure.side.insertBefore(
-                interact_container,
-                page.structure.side.firstElementChild
-            );
-        else
-            page.structure.main.insertBefore(
-                interact_container,
-                page.structure.main.firstElementChild
-            );
-    }
+    const play_btn = page.state.actions.querySelector('.header-new-playlink');
+    if (play_btn) page.state.actions.removeChild(play_btn);
 
     // new playlist
     const new_playlist = page.structure.side.querySelector(':scope > form');
@@ -396,7 +384,7 @@ export async function show_your_scrobbles() {
         playlist_button.setAttribute('data-type', 'playlist');
         playlist_button.textContent = tl(trans.create_playlist);
 
-        interact_container.appendChild(new_playlist);
+        page.state.actions.appendChild(new_playlist);
     }
 
     const metadata = col_main.querySelector('.metadata-column');

@@ -108,7 +108,9 @@ export function bleh_albums() {
                         })}
                     </div>
                     <div class="actions">
+                        <div class="actions-inner" ref=${el => page.state.actions = el}>
 
+                        </div>
                     </div>
                     <div class="tags">
                         ${tl(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
