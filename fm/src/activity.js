@@ -46,6 +46,10 @@ export function render_activity(activity) {
     // context: string,
     // date: string
 
+    if (activity.type == 'shout' && activity.involved[0].name == page.name) {
+        activity.type = 'shout_own';
+    }
+
     const activity_item = html.node`
         <li class="activity-item journal-like activity--${activity.type}" />
     `;

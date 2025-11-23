@@ -5044,9 +5044,10 @@
                 background: var(--chartlist-hover);
             }*/
 
+            &.activity--shout_own:before,
             &.activity--shout:before {
                 /* technically it used background-position: 0 -1440px; */
-                background-position: -16px -1220px;
+                background-position: -16px -1219px;
             }
             &.activity--obsess:before {
                 background-position: 0 -1662px;

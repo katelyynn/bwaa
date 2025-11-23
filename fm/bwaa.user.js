@@ -29702,6 +29702,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     return activity_list;
   }
   function render_activity(activity) {
+    if (activity.type == "shout" && activity.involved[0].name == page.name) {
+      activity.type = "shout_own";
+    }
     const activity_item = html.node`
         <li class="activity-item journal-like activity--${activity.type}" />
     `;
@@ -38551,6 +38554,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         shout: {
           en: "You left {v} a shout."
         },
+        shout_own: {
+          en: "You left yourself a shout."
+        },
         image_upload: {
           en: "You uploaded an image to {v}."
         },
@@ -38564,7 +38570,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "You stopped obsessing over {v}."
         },
         love: {
-          en: "You added {v} to your Loved Tracks."
+          en: "You loved {v}."
         },
         unlove: {
           en: "You removed {v} from your Loved Tracks."

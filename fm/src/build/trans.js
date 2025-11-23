@@ -2041,6 +2041,9 @@ export const trans = {
             shout: {
                 en: 'You left {v} a shout.'
             },
+            shout_own: {
+                en: 'You left yourself a shout.'
+            },
             image_upload: {
                 en: 'You uploaded an image to {v}.'
             },
@@ -2054,7 +2057,7 @@ export const trans = {
                 en: 'You stopped obsessing over {v}.'
             },
             love: {
-                en: 'You added {v} to your Loved Tracks.'
+                en: 'You loved {v}.'
             },
             unlove: {
                 en: 'You removed {v} from your Loved Tracks.'
