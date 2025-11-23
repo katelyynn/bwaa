@@ -24482,7 +24482,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <img>
                 </div>
             </div>
-            <div class="input-container content-form">
+            <div class="input-container">
                 <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl2(trans.enter_username)}">
                 <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
         let name = input2.value;
@@ -28550,20 +28550,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     } else if (page.type == "track") {
       scrobble_page = page_url_split[page_url_length - 2] + "/_/" + page_url_split[page_url_length];
     }
-    let your_listens = {
-      name: auth.name,
-      listens: 0,
-      link: scrobble_page,
-      avi: auth.avatar,
-      katsune
-    };
-    let scrobble_button = col_main.querySelector(
-      ".personal-stats-item--scrobbles .hidden-xs a"
-    );
-    if (scrobble_button) {
-      your_listens.listens = clean_number(scrobble_button.textContent.trim());
+    let your_listens = 0;
+    let scrobble_button = document.body.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
+    if (scrobble_button)
+      your_listens = clean_number(scrobble_button.textContent.trim());
+    if (your_listens > 0) {
+      page.state.stats.appendChild(html.node`
+            <a class="plays" href=${scrobble_button.getAttribute("href")}>${your_listens == 1 ? tl2(trans.one_play_in_library) : tl2(trans.plays_in_library, { c: your_listens })}</a>
+        `);
     }
-    create_listen_item(listen_container, your_listens, page.type);
     create_listen_item(
       listen_container,
       {
@@ -30502,8 +30497,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     else inbox_count = parseInt(inbox_count.textContent);
     site_auth.appendChild(html.node`
         <div class="user-companion-nav">
-            <a href="${root}inbox/notifications">${tl2(trans.notifications)}${notif_count > 0 ? ` (${notif_count})` : ""}</a> |
-             <a href="${root}inbox">${tl2(trans.inbox)}${inbox_count > 0 ? ` (${inbox_count})` : ""}</a> |
+             <a href="${root}inbox/notifications">${tl2(trans.notifications)}${notif_count > 0 ? ` (${notif_count})` : ""}</a>
+             <div class="user-companion-sep" />
+             <a href="${root}inbox">${tl2(trans.inbox)}${inbox_count > 0 ? ` (${inbox_count})` : ""}</a>
+             <div class="user-companion-sep" />
              <a href="${root}logout">${tl2(trans.logout)}</a>
         </div>
     `);
@@ -30589,11 +30586,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         v: correct_item_by_artist(page.name, page.sister),
         u: `<a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>`
       }) }}</h1>
-                    <div class="stats">
-                        ${tl2(trans.plays_and_listeners, {
+                    <div class="stats" ref=${(el) => page.state.stats = el}>
+                        <p>${tl2(trans.plays_and_listeners, {
         l: listeners.value.toLocaleString(lang),
         p: scrobbles.value.toLocaleString(lang)
-      })}
+      })}</p>
                     </div>
                     <div class="actions">
                         <div class="actions-inner" ref=${(el) => page.state.actions = el}>
@@ -30782,11 +30779,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         ${correct_artist(page.name)}
                         ${on_tour ? html.node`<a class="ontour" href="${root}music/${sanitise(page.name)}/+events">${tl2(trans.on_tour)}</a>` : ""}
                     </h1>
-                    <div class="stats">
-                        ${tl2(trans.plays_and_listeners, {
+                    <div class="stats" ref=${(el) => page.state.stats = el}>
+                        <p>${tl2(trans.plays_and_listeners, {
         l: listeners.value.toLocaleString(lang),
         p: scrobbles.value.toLocaleString(lang)
-      })}
+      })}</p>
                     </div>
                     <div class="actions">
                         <div class="actions-inner" ref=${(el) => page.state.actions = el}>
@@ -31259,7 +31256,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   };
 
   // src/pages/bleh_setup.js
-  function bleh_setup() {
+  function bwaa_setup() {
     page.structure.container = document.body.querySelector(".page-content");
     try {
       page.structure.row = page.structure.container.querySelector(".row");
@@ -31270,7 +31267,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     let content_top = document.body.querySelector(".content-top");
     checkup_page_structure(false, content_top);
-    page.type = "bleh_setup";
+    page.type = "bwaa_setup";
     page.subpage = "";
     log2("status is", "page", "info", page);
     update_page();
@@ -31279,9 +31276,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.row.removeChild(page.structure.row.firstElementChild);
     page.structure.container.removeAttribute("data-beret");
     page.structure.container.removeAttribute("data-short");
-    page.structure.content.classList.add("cards-view");
-    let masthead = document.body.querySelector(".masthead");
-    masthead.classList.add("in-setup");
     render(
       page.structure.main,
       html`
@@ -31291,7 +31285,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <img src=${auth.avatar.replace("/avatar42s/", "/avatar170s/")} alt=${tl2(trans.your_avatar)}>
             </div>
             <div class="info">
-                <h1>${tl2(trans.bleh_setup)}</h1>
+                <h1>${tl2(trans.bwaa_setup)}</h1>
                 <div class="subtle">
                     ${{ html: tl2(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}
                 </div>
@@ -31301,7 +31295,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <img class="missing-avatar" alt=${tl2(trans.your_avatar)}>
             </div>
             <div class="info">
-                <h1>${tl2(trans.bleh_setup)}</h1>
+                <h1>${tl2(trans.bwaa_setup)}</h1>
                 <div class="subtle">
                     ${tl2(trans.not_logged_in)}
                 </div>
@@ -31319,19 +31313,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </section>
         `
     );
-    bleh_setup_start();
+    bwaa_setup_start();
   }
   unsafeWindow._setup = function() {
-    bleh_setup_start();
+    bwaa_setup_start();
   };
-  function bleh_setup_start() {
+  function bwaa_setup_start() {
     page.structure.setup.setAttribute("data-page", "start");
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
       render(
         page.structure.setup_content,
-        html` <p>${{ html: tl2(trans.welcome_to_bleh) }}</p> `
+        html` <p>${{ html: tl2(trans.welcome_to_bwaa) }}</p> `
       );
       page.structure.setup_footer.innerHTML = `
             <a class="see-more cancel" href="${root}user/${auth.name}">
@@ -31545,7 +31539,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             <div class="info-side">
                                 <div class="sub-text">${tl2(trans.track)}</div>
                                 <div class="title-container">
-                                    <h1 class="bleh--name-with-features">
+                                    <h1 class="bwaa--name-with-features">
                                         <div class="title">California Love</div>
                                         <div
                                             class="feat"
@@ -31562,24 +31556,24 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                             Remix
                                         </div>
                                     </h1>
-                                    <h1 class="bleh--name-without-features">
+                                    <h1 class="bwaa--name-without-features">
                                         California Love (ft. Dr. Dre, Roger
                                         Troutman) - Remix
                                     </h1>
                                 </div>
                                 <h2>
                                     <a class="header-new-crumb">2Pac</a
-                                    ><span class="bleh--name-with-features"
+                                    ><span class="bwaa--name-with-features"
                                         >,
                                     </span>
                                     <a
-                                        class="header-new-crumb bleh--name-with-features"
+                                        class="header-new-crumb bwaa--name-with-features"
                                         >Dr. Dre</a
-                                    ><span class="bleh--name-with-features"
+                                    ><span class="bwaa--name-with-features"
                                         >,
                                     </span>
                                     <a
-                                        class="header-new-crumb bleh--name-with-features"
+                                        class="header-new-crumb bwaa--name-with-features"
                                         >Roger Troutman</a
                                     >
                                 </h2>
@@ -31617,7 +31611,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         html`
                 <p>
                     ${{
-          html: tl2(trans.setup_end).replace("{a}", `<a href="${root}bleh">`).replace("{/a}", "</a>")
+          html: tl2(trans.setup_end).replace("{a}", `<a href="${root}bwaa">`).replace("{/a}", "</a>")
         }}
                 </p>
                 <div class="mini-list">
@@ -31627,26 +31621,26 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         target="_blank"
                     >
                         <div class="mini-icon colourful" data-type="discord">
-                            <div class="bleh-icon" />
+                            <div class="bwaa-icon" />
                         </div>
                         <div class="mini-info">
                             <h5>${tl2(trans.join_discord)}</h5>
                         </div>
                         <div
-                            class="bleh-icon mini-arrow"
+                            class="bwaa-icon mini-arrow"
                             style="--icon: var(--mask)"
                             data-type="arrow-right"
                         ></div>
                     </a>
                     <button class="btn mini" onclick=${() => sponsor()}>
                         <div class="mini-icon colourful" data-type="sponsor">
-                            <div class="bleh-icon" />
+                            <div class="bwaa-icon" />
                         </div>
                         <div class="mini-info">
                             <h5>${tl2(trans.sponsor)}</h5>
                         </div>
                         <div
-                            class="bleh-icon mini-arrow"
+                            class="bwaa-icon mini-arrow"
                             style="--icon: var(--mask)"
                             data-type="arrow-right"
                         ></div>
@@ -31678,11 +31672,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }, page.state.trans);
   };
   function notify_if_new_update() {
-    let last_version_used = localStorage.getItem("bleh_last_version_used") || "";
+    let last_version_used = localStorage.getItem("bwaa_last_version_used") || "";
     if (last_version_used == "") {
-      window.location.href = `${root}bleh/setup`;
-      set_storage("bleh_last_version_used", version.build);
-      register_activity("install_bleh", [], `${root}bleh`);
+      window.location.href = `${root}bwaa/setup`;
+      set_storage("bwaa_last_version_used", version.build);
+      register_activity("install_bwaa", [], `${root}bwaa`);
       return;
     }
     if (last_version_used != version.build) {
@@ -31695,11 +31689,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         icon: "icon-16-update"
       });
       register_activity(
-        "update_bleh",
-        [{ name: version.build, type: "bleh" }],
-        `${root}bleh`
+        "update_bwaa",
+        [{ name: version.build, type: "bwaa" }],
+        `${root}bwaa`
       );
-      set_storage("bleh_last_version_used", version.build);
+      set_storage("bwaa_last_version_used", version.build);
       request_changelog();
     }
   }
@@ -35308,6 +35302,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let panel = page.structure.main.querySelector("#recent-tracks-section");
     if (!panel) return;
     let more_link = panel.nextElementSibling;
+    if (page.name == auth.name) {
+      const link = more_link.querySelector(":scope > a");
+      link.textContent = tl2(trans.see_more_edit);
+      link.setAttribute("data-see-more", true);
+    }
     panel.appendChild(more_link);
     panel.classList.remove("content-form");
     panel.classList.add("settings-form");
@@ -36000,209 +35999,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let dismiss = modal_dialog.querySelector(".modal-dismiss");
       let token = form.querySelector('[name="csrfmiddlewaretoken"]');
       if (token) page.token = token.getAttribute("value");
-      if (form.action && form.action.endsWith("+bookmarks/modal/added")) {
-        title.textContent = tl2(trans.saved_to_bookmarks);
-        let new_form;
-        render(
-          contents,
-          html`
-                    <div class="big-modal-alert">
-                        ${{
-            html: tl2(trans.bookmark_save_msg).replace(
-              "{link}",
-              `<a class="see-more" href="${root}music/+bookmarks">${tl2(trans.go_there_now_lower)}</a>`
-            )
-          }}
-                    </div>
-                    <form
-                        method="post"
-                        ref=${(el) => new_form = el}
-                        onsubmit=${async (e) => {
-            e.preventDefault();
-            let url = `${root}music/+bookmarks/modal/added`;
-            let form_data = new FormData(new_form);
-            console.info(form_data);
-            try {
-              await fetch(url, {
-                method: "POST",
-                body: form_data
-              }).then((res) => {
-                let data2 = res.json();
-                log2("received response", "form", "info", {
-                  data: data2
-                });
-                dismiss.click();
-              });
-            } catch (e2) {
-              console.error(e2);
-            }
-          }}
-                    >
-                        <input
-                            type="hidden"
-                            name="csrfmiddlewaretoken"
-                            value="${page.token}"
-                        />
-                        <div class="modal-footer">
-                            ${toggle({
-            value: true,
-            type: "checkbox",
-            name: "always_show",
-            title: tl2(trans.always_remind_me)
-          })}
-                            <button class="btn primary done" type="submit">
-                                ${tl2(trans.done)}
-                            </button>
-                        </div>
-                    </form>
-                `
-        );
-      } else if (body.classList.contains("automatic-edit-modal-body-v2")) {
-        let bulk_edit_active = false;
-        let edit_all = body.querySelector('[name="edit_all"]');
-        if (edit_all && edit_all.disabled) bulk_edit_active = true;
-        if (!bulk_edit_active) title.textContent = tl2(trans.edit_scrobble);
-        else title.textContent = tl2(trans.edit_scrobbles_in_bulk);
-        modal_dialog.classList.add("automatic-edit-modal");
-        let checkboxes = body.querySelectorAll(".checkbox");
-        checkboxes.forEach((checkbox) => {
-          let input_el = checkbox.querySelector("input");
-          let value = input_el.checked;
-          let name = input_el.getAttribute("name");
-          let text3 = checkbox.textContent.trim();
-          let disabled = input_el.disabled;
-          render(
-            checkbox.parentElement,
-            html`
-                        ${toggle({
-              value,
-              type: "checkbox",
-              name,
-              title: text3,
-              disabled,
-              data: input_el.value
-            })}
-                    `
-          );
-        });
-        let original_fields = body.querySelectorAll(
-          ".edit-scrobble-label--originally"
-        );
-        original_fields.forEach((field) => {
-          field.textContent = field.textContent.trim().replace(/"([^"]*)"/g, "\u2018$1\u2019");
-        });
-        let submit = body.querySelector(".form-group--submit");
-        submit.classList = "modal-footer";
-        let delete_form = body.querySelector(".edit-scrobble-form-delete");
-        let delete_btn;
-        if (delete_form)
-          delete_btn = delete_form.querySelector(".btn-delete");
-        render(
-          submit,
-          html`
-                    <button
-                        class="see-more cancel"
-                        type="button"
-                        onclick=${() => dismiss.click()}
-                    >
-                        ${tl2(trans.cancel)}
-                    </button>
-                    <div class="fill" />
-                    <div class="button-group">
-                        ${delete_form ? html.node`
-                    <button class="btn icon danger-subtle" data-type="delete" type="button" onclick=${() => {
-            delete_btn.click();
-          }}>
-                        ${tl2(trans.delete)}
-                    </button>
-                    ` : ""}
-                        ${submit.querySelector("input")}
-                        <button
-                            class="btn primary icon"
-                            data-type="item-edit"
-                            type="submit"
-                        >
-                            ${tl2(trans.edit)}
-                        </button>
-                    </div>
-                `
-        );
-      } else if (body.querySelector(".lastfm-bulk-edit-list")) {
-        let checks;
-        let controls = body.querySelector(
-          ".lastfm-bulk-edit-form-group-controls"
-        );
-        if (controls) {
-          let parent = controls.parentElement;
-          parent.parentElement.removeChild(parent);
-          let disclaimer = body.querySelector(".form-disclaimer");
-          disclaimer.after(html.node`
-                    <div class="button-group">
-                        <button class="flex-button" onclick=${() => {
-            checks.forEach((check) => {
-              check.check();
-            });
-          }} type="button">
-                            <div class="bleh-icon" data-type="select-all" style="--icon: var(--mask)" />
-                            ${tl2(trans.select_all)}
-                        </button>
-                        <button class="flex-button" onclick=${() => {
-            checks.forEach((check) => {
-              check.uncheck();
-            });
-          }} type="button">
-                            <div class="bleh-icon" data-type="deselect-all" style="--icon: var(--mask)" />
-                            ${tl2(trans.deselect_all)}
-                        </button>
-                    </div>
-                `);
-        }
-        let list = body.querySelector(".lastfm-bulk-edit-list");
-        let checkboxes = list.querySelectorAll(".checkbox");
-        checkboxes.forEach((checkbox) => {
-          let input_el = checkbox.querySelector("input");
-          let value = input_el.checked;
-          let name = input_el.getAttribute("name");
-          let disabled = input_el.disabled;
-          let data2 = input_el.getAttribute("value");
-          let item_artist = correct_artist(
-            checkbox.querySelector("div").title
-          );
-          let item_name = correct_item_by_artist(
-            checkbox.querySelector("strong").title,
-            item_artist
-          );
-          let item_scrobbles = checkbox.querySelector("small").textContent.trim();
-          render(
-            checkbox.parentElement,
-            html`
-                        ${toggle({
-              value,
-              type: "checkbox",
-              name,
-              title: item_name + tl2(trans.by_artist).replace("{a}", item_artist),
-              body: item_scrobbles,
-              disabled,
-              data: data2
-            })}
-                    `
-          );
-        });
-        checks = list.querySelectorAll(".setting");
-        let footer = body.querySelector(".form-group--submit");
-        footer.classList = "modal-footer";
-        render(
-          footer,
-          html`
-                    <button class="see-more cancel" type="reset">
-                        ${tl2(trans.cancel)}
-                    </button>
-                    <div class="fill" />
-                    <button class="btn primary continue" type="submit">
-                        ${tl2(trans.continue)}
-                    </button>
-                `
-        );
+      const content_form = body.querySelector(".content-form");
+      if (content_form) {
+        content_form.classList.remove("content-form");
+        content_form.classList.add("settings-form");
+      }
+      if (body.classList.contains("automatic-edit-modal-body-v2")) {
       }
     });
   }
@@ -36424,7 +36226,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     detect_mobile();
     page.platform = detect_platform();
     if (window.location.pathname.startsWith(setup_url.replace("{root}", root))) {
-      bleh_setup();
+      bwaa_setup();
     } else if (window.location.pathname.startsWith(sponsor_url.replace("{root}", root))) {
       bleh_sponsor_page();
     } else if (window.location.pathname.startsWith(bwaa_url.replace("{root}", root))) {
@@ -38409,6 +38211,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     see_more: {
       en: "See more"
     },
+    see_more_edit: {
+      en: "See more/edit"
+    },
     recent_listening_trend: {
       en: "Recent Listening Trend"
     },
@@ -38730,7 +38535,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "You left {v} a shout."
         },
         image_upload: {
-          en: "You uploaded a {v} image."
+          en: "You uploaded an image to {v}."
         },
         image_star: {
           en: "You starred a {v} image."
@@ -41111,6 +40916,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     added_to_your_library: {
       en: "Added to Your Library"
+    },
+    one_play_in_library: {
+      en: "1 play in your library"
+    },
+    plays_in_library: {
+      en: "{c} plays in your library"
     }
   };
   function tl2(key, replacements = {}) {

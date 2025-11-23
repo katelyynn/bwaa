@@ -38,7 +38,7 @@ import { append_nav } from './navigation';
 import { bleh_albums } from './pages/album';
 import { bleh_artists } from './pages/artist';
 import { bwaa_settings } from './pages/bwaa_config';
-import { bleh_setup, notify_if_new_update } from './pages/bleh_setup';
+import { bwaa_setup, notify_if_new_update } from './pages/bleh_setup';
 import { bleh_error } from './pages/error';
 import { bleh_events } from './pages/event';
 import { bleh_gallery, bleh_gallery_upload_check } from './pages/gallery';
@@ -347,7 +347,7 @@ function load_page(main_content = null) {
     page.platform = detect_platform();
 
     if (window.location.pathname.startsWith(setup_url.replace('{root}', root))) {
-        bleh_setup();
+        bwaa_setup();
     } else if (window.location.pathname.startsWith(sponsor_url.replace('{root}', root))) {
         bleh_sponsor_page();
     } else if (window.location.pathname.startsWith(bwaa_url.replace('{root}', root))) {

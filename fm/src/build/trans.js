@@ -1718,6 +1718,9 @@ export const trans = {
     see_more: {
         en: 'See more'
     },
+    see_more_edit: {
+        en: 'See more/edit'
+    },
     recent_listening_trend: {
         en: 'Recent Listening Trend'
     },
@@ -2039,7 +2042,7 @@ export const trans = {
                 en: 'You left {v} a shout.'
             },
             image_upload: {
-                en: 'You uploaded a {v} image.'
+                en: 'You uploaded an image to {v}.'
             },
             image_star: {
                 en: 'You starred a {v} image.'
@@ -4420,6 +4423,12 @@ export const trans = {
     },
     added_to_your_library: {
         en: 'Added to Your Library'
+    },
+    one_play_in_library: {
+        en: '1 play in your library'
+    },
+    plays_in_library: {
+        en: '{c} plays in your library'
     }
 };
 

@@ -24,7 +24,7 @@ import { dialog } from '../components/dialog.js';
 import { match } from '../components/dynamic_theming.js';
 import { set_storage } from '../build/tools.js';
 
-export function bleh_setup() {
+export function bwaa_setup() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -39,7 +39,7 @@ export function bleh_setup() {
     checkup_page_structure(false, content_top);
 
 
-    page.type = 'bleh_setup';
+    page.type = 'bwaa_setup';
     page.subpage = '';
 
     log('status is', 'page', 'info', page);
@@ -54,10 +54,6 @@ export function bleh_setup() {
 
     page.structure.container.removeAttribute('data-beret');
     page.structure.container.removeAttribute('data-short');
-    page.structure.content.classList.add('cards-view');
-
-    let masthead = document.body.querySelector('.masthead');
-    masthead.classList.add('in-setup');
 
     render(
         page.structure.main,
@@ -69,7 +65,7 @@ export function bleh_setup() {
                 <img src=${auth.avatar.replace('/avatar42s/', '/avatar170s/')} alt=${tl(trans.your_avatar)}>
             </div>
             <div class="info">
-                <h1>${tl(trans.bleh_setup)}</h1>
+                <h1>${tl(trans.bwaa_setup)}</h1>
                 <div class="subtle">
                     ${{ html: tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}
                 </div>
@@ -80,7 +76,7 @@ export function bleh_setup() {
                 <img class="missing-avatar" alt=${tl(trans.your_avatar)}>
             </div>
             <div class="info">
-                <h1>${tl(trans.bleh_setup)}</h1>
+                <h1>${tl(trans.bwaa_setup)}</h1>
                 <div class="subtle">
                     ${tl(trans.not_logged_in)}
                 </div>
@@ -99,20 +95,20 @@ export function bleh_setup() {
         `
     );
 
-    bleh_setup_start();
+    bwaa_setup_start();
 }
 
 unsafeWindow._setup = function () {
-    bleh_setup_start();
+    bwaa_setup_start();
 };
-function bleh_setup_start() {
+function bwaa_setup_start() {
     page.structure.setup.setAttribute('data-page', 'start');
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function () {
         page.structure.setup.setAttribute('data-animating', 'false');
         render(
             page.structure.setup_content,
-            html` <p>${{ html: tl(trans.welcome_to_bleh) }}</p> `
+            html` <p>${{ html: tl(trans.welcome_to_bwaa) }}</p> `
         );
         page.structure.setup_footer.innerHTML = `
             <a class="see-more cancel" href="${root}user/${auth.name}">
@@ -340,7 +336,7 @@ unsafeWindow._setup_music = function () {
                             <div class="info-side">
                                 <div class="sub-text">${tl(trans.track)}</div>
                                 <div class="title-container">
-                                    <h1 class="bleh--name-with-features">
+                                    <h1 class="bwaa--name-with-features">
                                         <div class="title">California Love</div>
                                         <div
                                             class="feat"
@@ -357,24 +353,24 @@ unsafeWindow._setup_music = function () {
                                             Remix
                                         </div>
                                     </h1>
-                                    <h1 class="bleh--name-without-features">
+                                    <h1 class="bwaa--name-without-features">
                                         California Love (ft. Dr. Dre, Roger
                                         Troutman) - Remix
                                     </h1>
                                 </div>
                                 <h2>
                                     <a class="header-new-crumb">2Pac</a
-                                    ><span class="bleh--name-with-features"
+                                    ><span class="bwaa--name-with-features"
                                         >,
                                     </span>
                                     <a
-                                        class="header-new-crumb bleh--name-with-features"
+                                        class="header-new-crumb bwaa--name-with-features"
                                         >Dr. Dre</a
-                                    ><span class="bleh--name-with-features"
+                                    ><span class="bwaa--name-with-features"
                                         >,
                                     </span>
                                     <a
-                                        class="header-new-crumb bleh--name-with-features"
+                                        class="header-new-crumb bwaa--name-with-features"
                                         >Roger Troutman</a
                                     >
                                 </h2>
@@ -415,7 +411,7 @@ unsafeWindow._setup_end = function () {
                 <p>
                     ${{
                         html: tl(trans.setup_end)
-                            .replace('{a}', `<a href="${root}bleh">`)
+                            .replace('{a}', `<a href="${root}bwaa">`)
                             .replace('{/a}', '</a>')
                     }}
                 </p>
@@ -426,26 +422,26 @@ unsafeWindow._setup_end = function () {
                         target="_blank"
                     >
                         <div class="mini-icon colourful" data-type="discord">
-                            <div class="bleh-icon" />
+                            <div class="bwaa-icon" />
                         </div>
                         <div class="mini-info">
                             <h5>${tl(trans.join_discord)}</h5>
                         </div>
                         <div
-                            class="bleh-icon mini-arrow"
+                            class="bwaa-icon mini-arrow"
                             style="--icon: var(--mask)"
                             data-type="arrow-right"
                         ></div>
                     </a>
                     <button class="btn mini" onclick=${() => sponsor()}>
                         <div class="mini-icon colourful" data-type="sponsor">
-                            <div class="bleh-icon" />
+                            <div class="bwaa-icon" />
                         </div>
                         <div class="mini-info">
                             <h5>${tl(trans.sponsor)}</h5>
                         </div>
                         <div
-                            class="bleh-icon mini-arrow"
+                            class="bwaa-icon mini-arrow"
                             style="--icon: var(--mask)"
                             data-type="arrow-right"
                         ></div>
@@ -484,13 +480,13 @@ unsafeWindow._setup_end = function () {
  */
 export function notify_if_new_update() {
     let last_version_used =
-        localStorage.getItem('bleh_last_version_used') || '';
+        localStorage.getItem('bwaa_last_version_used') || '';
 
     // enter first-time setup
     if (last_version_used == '') {
-        window.location.href = `${root}bleh/setup`;
-        set_storage('bleh_last_version_used', version.build);
-        register_activity('install_bleh', [], `${root}bleh`);
+        window.location.href = `${root}bwaa/setup`;
+        set_storage('bwaa_last_version_used', version.build);
+        register_activity('install_bwaa', [], `${root}bwaa`);
         return;
     }
 
@@ -505,11 +501,11 @@ export function notify_if_new_update() {
             icon: 'icon-16-update'
         });
         register_activity(
-            'update_bleh',
-            [{ name: version.build, type: 'bleh' }],
-            `${root}bleh`
+            'update_bwaa',
+            [{ name: version.build, type: 'bwaa' }],
+            `${root}bwaa`
         );
-        set_storage('bleh_last_version_used', version.build);
+        set_storage('bwaa_last_version_used', version.build);
 
         request_changelog();
     }

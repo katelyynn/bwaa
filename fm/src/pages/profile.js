@@ -906,6 +906,13 @@ function profile_recents() {
     if (!panel) return;
 
     let more_link = panel.nextElementSibling;
+
+    if (page.name == auth.name) {
+        const link = more_link.querySelector(':scope > a');
+        link.textContent = tl(trans.see_more_edit);
+        link.setAttribute('data-see-more', true);
+    }
+
     panel.appendChild(more_link);
 
     panel.classList.remove('content-form');

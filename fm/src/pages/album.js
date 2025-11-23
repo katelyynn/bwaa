@@ -101,11 +101,11 @@ export function bleh_albums() {
                         v: correct_item_by_artist(page.name, page.sister),
                         u: `<a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>`
                     })}}</h1>
-                    <div class="stats">
-                        ${tl(trans.plays_and_listeners, {
+                    <div class="stats" ref=${el => page.state.stats = el}>
+                        <p>${tl(trans.plays_and_listeners, {
                             l: listeners.value.toLocaleString(lang),
                             p: scrobbles.value.toLocaleString(lang)
-                        })}
+                        })}</p>
                     </div>
                     <div class="actions">
                         <div class="actions-inner" ref=${el => page.state.actions = el}>

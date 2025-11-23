@@ -46,7 +46,7 @@ export function other_listener(id) {
                     <img>
                 </div>
             </div>
-            <div class="input-container content-form">
+            <div class="input-container">
                 <input type="text" maxlength="40" id="text-profile" ref=${(el) => (input = el)} placeholder="${tl(trans.enter_username)}">
                 <button class="btn chibi icon primary submit" ref=${(el) => (submit = el)} onclick=${() => {
                     let name = input.value;

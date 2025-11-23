@@ -2228,6 +2228,21 @@
                 form {
                     display: inline;
                 }
+
+                display: flex;
+                gap: 5px;
+
+                & > .user-companion-sep {
+                    display: flex;
+                    width: 2px;
+                    height: 15px;
+                    background-image: var(--cdn-flatness-header-headersprite);
+                    background-position: right -510px;
+
+                    [data-bwaa--theme="paint_it_black"] & {
+                        background-position: right -540px;
+                    }
+                }
             }
         }
         .masthead-pro-wrap {
@@ -2287,7 +2302,7 @@
         .auth-link {
             background-image: var(--cdn-flatness-header-headersprite);
             height: 23px;
-            padding: 0 calc(21px + 8px) 1px 3px;
+            padding: 0 calc(21px + 7px) 1px 3px;
             background-position: left -360px;
             background-repeat: no-repeat;
             color: #eee !important;
@@ -2982,6 +2997,11 @@
                         background-position: -2px -1700px;
                         filter: none;
                         opacity: unset;
+                    }
+
+                    /* from some screenshots it seems theres no loved button, you do it on the track page itself? */
+                    [data-toggle-button-current-state="unloved"] & {
+                        display: none;
                     }
                 }
             }
@@ -5266,29 +5286,33 @@
         margin: unset !important;
     }
 
-    .dropdown-menu-clickable {
-        background: var(--body) !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 3px !important;
-        box-shadow: var(--dropdown-border-override, 3px 3px 5px var(--border)) !important; /* technically only in buy dropdowns */
+    .dropdown-menu-clickable.disclose-hide {
+        &:before {
+            display: none;
+        }
+    }
+
+    .dropdown-menu-clickable:not(.disclose-hide) {
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+        border-radius: unset !important;
+        box-shadow: none !important;
         font-size: 10px;
         padding: unset !important;
-        margin: -10px 0 0 0 !important;
         overflow: hidden;
-
-        [data-bwaa--theme="paint_it_black"] & {
-            box-shadow: var(--dropdown-border-override, 3px 3px 5px 2px var(--background)) !important;
-        }
 
         &:before {
             display: none;
         }
 
         .dropdown-menu-clickable-item {
-            background: var(--body);
-            color: var(--header-text-black);
-            padding: 0 8px;
-            padding-right: 60px;
+            background: #f2f2f2;
+            color: #6f6f6f;
+            padding: 0 8px !important;
+
+            &:not(:last-child) {
+                border-bottom: 1px solid #ccc;
+            }
 
             text-decoration: none !important;
 
@@ -5298,8 +5322,8 @@
 
             /* technically only blue in buy dropdowns but eh */
             &:hover {
-                background: var(--menu-hover) !important;
-                color: #fff;
+                background: #6f6f6f !important;
+                color: #f2f2f2;
             }
         }
     }
@@ -5892,6 +5916,7 @@
         color: var(--header-text-black) !important;
         border: 1px solid var(--border-3) !important;
         padding: 3px !important;
+        border-radius: unset !important;
     }
 
     .content-form textarea[style*="height: "]:not(#id_body) {
@@ -7387,6 +7412,7 @@
             color: inherit;
             letter-spacing: unset;
             margin: -15px -15px 15px -15px;
+            font-weight: bold;
 
             & + div {
                 margin-top: unset;
@@ -7425,7 +7451,9 @@
 
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: start;
+
+        padding: 100px 0;
 
         transition-property: background;
         transition-duration: var(--trans-short);
@@ -9304,5 +9332,9 @@
     [src$="4128a6eb29f94943c9d206c08e625904.jpg"] {
         content: url('data:image/png;base64,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') !important;
         font-size: 0;
+    }
+
+    .edit-scrobble-top-box {
+        display: none;
     }
 }

@@ -249,22 +249,17 @@ export async function show_your_scrobbles() {
     }
 
     // you
-    let your_listens = {
-        name: auth.name,
-        listens: 0,
-        link: scrobble_page,
-        avi: auth.avatar,
-        katsune: katsune
-    };
+    let your_listens = 0;
     // check to see if you have scrobbles
-    let scrobble_button = col_main.querySelector(
-        '.personal-stats-item--scrobbles .hidden-xs a'
-    );
-    if (scrobble_button) {
-        your_listens.listens = clean_number(scrobble_button.textContent.trim());
+    let scrobble_button = document.body.querySelector('.personal-stats-item--scrobbles .hidden-xs a');
+    if (scrobble_button)
+        your_listens = clean_number(scrobble_button.textContent.trim());
+
+    if (your_listens > 0) {
+        page.state.stats.appendChild(html.node`
+            <a class="plays" href=${scrobble_button.getAttribute('href')}>${your_listens == 1 ? tl(trans.one_play_in_library) : tl(trans.plays_in_library, { c: your_listens })}</a>
+        `);
     }
-    // create child for u
-    create_listen_item(listen_container, your_listens, page.type);
 
     // other user
     create_listen_item(

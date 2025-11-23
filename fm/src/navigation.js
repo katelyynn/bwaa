@@ -160,8 +160,10 @@ export function append_nav() {
 
     site_auth.appendChild(html.node`
         <div class="user-companion-nav">
-            <a href="${root}inbox/notifications">${tl(trans.notifications)}${notif_count > 0 ? ` (${notif_count})` : ''}</a> |
-             <a href="${root}inbox">${tl(trans.inbox)}${inbox_count > 0 ? ` (${inbox_count})` : ''}</a> |
+             <a href="${root}inbox/notifications">${tl(trans.notifications)}${notif_count > 0 ? ` (${notif_count})` : ''}</a>
+             <div class="user-companion-sep" />
+             <a href="${root}inbox">${tl(trans.inbox)}${inbox_count > 0 ? ` (${inbox_count})` : ''}</a>
+             <div class="user-companion-sep" />
              <a href="${root}logout">${tl(trans.logout)}</a>
         </div>
     `);

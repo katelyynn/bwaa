@@ -157,11 +157,11 @@ export function bleh_artists() {
                         ${correct_artist(page.name)}
                         ${on_tour ? html.node`<a class="ontour" href="${root}music/${sanitise(page.name)}/+events">${tl(trans.on_tour)}</a>` : ''}
                     </h1>
-                    <div class="stats">
-                        ${tl(trans.plays_and_listeners, {
+                    <div class="stats" ref=${el => page.state.stats = el}>
+                        <p>${tl(trans.plays_and_listeners, {
                             l: listeners.value.toLocaleString(lang),
                             p: scrobbles.value.toLocaleString(lang)
-                        })}
+                        })}</p>
                     </div>
                     <div class="actions">
                         <div class="actions-inner" ref=${el => page.state.actions = el}>
