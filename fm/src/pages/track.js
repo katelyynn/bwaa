@@ -9,9 +9,10 @@ import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
 import { tl, trans } from '../build/trans';
 import { bleh_about_artist } from '../components/about_artist';
-import { patch_header_title } from '../components/lotus';
+import { correct_artist, correct_item_by_artist, patch_header_title } from '../components/lotus';
 import { register_menu } from '../components/menu';
 import {
+    get_tags,
     show_your_scrobbles
 } from '../components/music';
 import { checkup_page_structure } from '../components/structure';
@@ -24,6 +25,8 @@ import { expand_avatar } from '../avatar.js';
 import tippy from 'tippy.js';
 import { oracle_process } from '../components/oracle.js';
 import { hoshino_return } from '../components/hoshino.js';
+import { breadcrumb } from '../components/header.js';
+import { sanitise } from '../build/tools.js';
 
 export function bleh_tracks() {
     let track_header = document.body.querySelector('.header-new--track');
@@ -34,8 +37,6 @@ export function bleh_tracks() {
     page.name = document.body
         .querySelector('[data-page-resource-name]')
         .getAttribute('data-page-resource-name');
-
-    patch_header_title();
 
     let is_subpage = track_header.classList.contains('header-new--subpage');
 
@@ -84,6 +85,60 @@ export function bleh_tracks() {
     }
 
     checkup_page_structure(is_subpage, track_header);
+
+    if (page.subpage == 'overview') {
+        const avatar = track_header.querySelector('.header-new-background-image');
+        const position = track_header.querySelector('.header-new-chart-position-number');
+
+        const avatar_img = avatar?.getAttribute('content').replace('/ar0/', '/avatar300s/');
+
+        const { tags, see_more } = get_tags();
+
+        const header = html.node`
+            ${breadcrumb()}
+            <section class="profile-track-section">
+                <div class="header">
+                    <div class="track-image-side">
+                        <a class="image">
+                            ${avatar ? html.node`
+                                <img src=${avatar_img}>
+                            ` : html.node`
+                                <img class="missing-track mega">
+                            `}
+                        </a>
+                    </div>
+                    <div class="track-info">
+                        <h1>${{html: tl(trans.value_by_user, {
+                            v: correct_item_by_artist(page.name, page.sister),
+                            u: `<a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>`
+                        })}}</h1>
+                        <p class="small></p>
+                        <div class="actions">
+                            <div class="actions-inner" ref=${el => page.state.actions = el}>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tags">
+                    ${tl(trans.popular_tags)}: ${tags.map((tag, i, list) => html.node`
+                        ${tag}${i < list.length - 1 ? ', ' : ''}
+                    `)} ${see_more}
+                </div>
+                <div class="shouts">
+                    ${tl(trans.shouts)}: <a href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+shoutbox">${tl(trans.leave_a_shout)}</a>
+                </div>
+                <div class="share-bar">
+                    <strong>${tl(trans.share_this_track)}</strong>
+                    <a class="btn-primary" href=${window.location.href}>${tl(trans.share_link)}</a>
+                </div>
+        `;
+        page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    } else {
+        page.structure.main.insertBefore(breadcrumb(), page.structure.main.firstElementChild);
+    }
+
+    track_header.classList.add('legacy-header');
 
     if (ff('refreshed_music_nav')) {
         let artist_avatar = track_header.querySelector(

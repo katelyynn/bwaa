@@ -3455,6 +3455,7 @@
                         color: var(--text-link);
                         font-size: 10px;
                         white-space: nowrap;
+                        display: inline-flex;
 
                         &:before {
                             content: '(';
@@ -3931,6 +3932,13 @@
                     display: block;
                 }
             }
+
+            .actions-inner {
+                display: flex;
+                align-items: end;
+                gap: 12px;
+                flex: 1;
+            }
         }
         .artist-image-side {
             width: 255px;
@@ -4078,6 +4086,12 @@
             .actions {
                 margin-bottom: 12px;
             }
+            .actions-inner {
+                display: flex;
+                align-items: end;
+                gap: 12px;
+                flex: 1;
+            }
 
             .tags {
                 font-size: 11px;
@@ -4193,10 +4207,10 @@
                 }
             }
 
-            .actions {
+            .actions-inner {
                 display: flex;
                 align-items: end;
-                gap: 4px;
+                gap: 12px;
                 flex: 1;
             }
 

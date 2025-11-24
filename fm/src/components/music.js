@@ -393,13 +393,6 @@ export async function show_your_scrobbles() {
 
         if (button.classList[0] == 'header-new-more-button')
             page.state.actions.removeChild(button.parentElement);
-
-        if (button.classList[1] == 'header-new-love-button') {
-            button.setAttribute('data-type', 'love');
-            let new_text = document.createElement('span');
-            new_text.textContent = tl(trans.love);
-            button.appendChild(new_text);
-        }
     });
     let links = page.state.actions.querySelectorAll('a');
     links.forEach((button) => {

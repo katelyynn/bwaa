@@ -142,31 +142,6 @@ export function bleh_albums() {
 
     album_header.classList.add('legacy-header');
 
-    // cover
-    if (settings.hue_from_album) {
-        let header_inner = album_header.querySelector('.header-new-inner');
-        try {
-            let bg = header_inner
-                .getAttribute('style')
-                .replace('background: #', '');
-            let hsl = hex_to_hsl(bg);
-
-            let sat = clamp_sat((hsl.s / 100) * 3);
-            let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
-
-            document.body.style.setProperty('--hue-album', hsl.h);
-            document.body.style.setProperty('--sat-album', sat);
-            document.body.style.setProperty('--lit-album', lit);
-
-            log(
-                `sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${sat}, ${lit})`,
-                'hue from album'
-            );
-        } catch (e) {
-            log('no cover present', 'hue from album');
-        }
-    }
-
     if (!is_subpage) {
         show_your_scrobbles();
 
