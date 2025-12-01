@@ -34720,7 +34720,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <div class="user-data">
                         <div class="user-plays">
                             <div class="count">
-                                ${{ html: tl2(trans.count_plays, { c: scrobble_flip(scrobbles, average) }) }}
+                                ${{ html: scrobbles > 0 ? tl2(trans.count_plays, { c: scrobble_flip(scrobbles, average) }) : tl2(trans.no_plays) }}
                             </div>
                             <div class="since">
                                 ${tl2(trans.since, { v: scrobble_since.textContent })}
@@ -36987,6 +36987,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "{c} Scrobbles",
       pt: "{c} scrobbles",
       sv: "{c} skrobblingar"
+    },
+    no_plays: {
+      en: "No plays"
     },
     count_scrobbles: {
       en: "{c} scrobbles",
@@ -41323,8 +41326,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/build/build.json
   var build_default = {
     brand: "bwaa",
-    build: "2025.1020",
-    sku: "parfait",
+    build: "2025.1220",
+    sku: "kitagawa",
     bio: "bwaa!!! ^-^",
     author: "katelyn",
     url: "https://github.com/katelyynn/bwaa/raw/uwu/fm/bwaa.user.js",

@@ -213,7 +213,7 @@ export async function bleh_profiles() {
                     <div class="user-data">
                         <div class="user-plays">
                             <div class="count">
-                                ${{ html: tl(trans.count_plays, {c: scrobble_flip(scrobbles, average)}) }}
+                                ${{ html: scrobbles > 0 ? tl(trans.count_plays, {c: scrobble_flip(scrobbles, average)}) : tl(trans.no_plays) }}
                             </div>
                             <div class="since">
                                 ${tl(trans.since, {v: scrobble_since.textContent})}

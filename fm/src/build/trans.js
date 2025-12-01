@@ -554,6 +554,9 @@ export const trans = {
         pt: '{c} scrobbles',
         sv: '{c} skrobblingar'
     },
+    no_plays: {
+        en: 'No plays'
+    },
     count_scrobbles: {
         en: '{c} scrobbles',
         de: '{c} Scrobbles',
