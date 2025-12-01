@@ -14,6 +14,7 @@ import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
 import {ff} from "../sku.js";
+import { generic_subpage_header } from "../components/header.js";
 
 export async function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -28,6 +29,7 @@ export async function bleh_home() {
     let content_top = document.body.querySelector('.content-top');
 
     page.name = auth.name;
+    page.avatar = auth.avatar;
 
     checkup_page_structure(false, content_top);
     log('status is', 'page', 'info', page);
@@ -48,17 +50,7 @@ export async function bleh_home() {
 
     let welcome;
     if (auth.name) {
-        welcome = html.node`
-            <div class="top-banner home-banner">
-                <div class="avatar">
-                    <img src=${auth.avatar.replace('/avatar42s/', '/avatar170s/')} alt=${tl(trans.your_avatar)}>
-                    ${(auth.sponsor) ? html.node`
-                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    ` : ''}
-                </div>
-                <h1>${{html: tl(trans[`good_${time}_user`]).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}}</h1>
-            </div>
-        `;
+        welcome = generic_subpage_header('something');
     } else {
         welcome = html.node`
             <div class="top-banner home-banner">

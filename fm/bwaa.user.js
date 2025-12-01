@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bwaa
 // @namespace    https://last.fm/
-// @version      2025.1020
+// @version      2025.1220
 // @description  bwaa!!! ^-^
 // @author       katelyn
 // @match        https://www.last.fm/*
@@ -4809,22 +4809,22 @@
             }
           },
           initContainer: function initContainer() {
-            var element = this.element, options = this.options, container = this.container, cropper2 = this.cropper;
+            var element = this.element, options = this.options, container = this.container, cropper = this.cropper;
             var minWidth = Number(options.minContainerWidth);
             var minHeight = Number(options.minContainerHeight);
-            addClass(cropper2, CLASS_HIDDEN);
+            addClass(cropper, CLASS_HIDDEN);
             removeClass(element, CLASS_HIDDEN);
             var containerData = {
               width: Math.max(container.offsetWidth, minWidth >= 0 ? minWidth : MIN_CONTAINER_WIDTH),
               height: Math.max(container.offsetHeight, minHeight >= 0 ? minHeight : MIN_CONTAINER_HEIGHT)
             };
             this.containerData = containerData;
-            setStyle2(cropper2, {
+            setStyle2(cropper, {
               width: containerData.width,
               height: containerData.height
             });
             addClass(element, CLASS_HIDDEN);
-            removeClass(cropper2, CLASS_HIDDEN);
+            removeClass(cropper, CLASS_HIDDEN);
           },
           // Canvas (image wrapper)
           initCanvas: function initCanvas2() {
@@ -5218,7 +5218,7 @@
         };
         var events = {
           bind: function bind() {
-            var element = this.element, options = this.options, cropper2 = this.cropper;
+            var element = this.element, options = this.options, cropper = this.cropper;
             if (isFunction2(options.cropstart)) {
               addListener2(element, EVENT_CROP_START, options.cropstart);
             }
@@ -5234,15 +5234,15 @@
             if (isFunction2(options.zoom)) {
               addListener2(element, EVENT_ZOOM, options.zoom);
             }
-            addListener2(cropper2, EVENT_POINTER_DOWN, this.onCropStart = this.cropStart.bind(this));
+            addListener2(cropper, EVENT_POINTER_DOWN, this.onCropStart = this.cropStart.bind(this));
             if (options.zoomable && options.zoomOnWheel) {
-              addListener2(cropper2, EVENT_WHEEL, this.onWheel = this.wheel.bind(this), {
+              addListener2(cropper, EVENT_WHEEL, this.onWheel = this.wheel.bind(this), {
                 passive: false,
                 capture: true
               });
             }
             if (options.toggleDragModeOnDblclick) {
-              addListener2(cropper2, EVENT_DBLCLICK, this.onDblclick = this.dblclick.bind(this));
+              addListener2(cropper, EVENT_DBLCLICK, this.onDblclick = this.dblclick.bind(this));
             }
             addListener2(element.ownerDocument, EVENT_POINTER_MOVE, this.onCropMove = this.cropMove.bind(this));
             addListener2(element.ownerDocument, EVENT_POINTER_UP, this.onCropEnd = this.cropEnd.bind(this));
@@ -5251,7 +5251,7 @@
             }
           },
           unbind: function unbind() {
-            var element = this.element, options = this.options, cropper2 = this.cropper;
+            var element = this.element, options = this.options, cropper = this.cropper;
             if (isFunction2(options.cropstart)) {
               removeListener2(element, EVENT_CROP_START, options.cropstart);
             }
@@ -5267,15 +5267,15 @@
             if (isFunction2(options.zoom)) {
               removeListener2(element, EVENT_ZOOM, options.zoom);
             }
-            removeListener2(cropper2, EVENT_POINTER_DOWN, this.onCropStart);
+            removeListener2(cropper, EVENT_POINTER_DOWN, this.onCropStart);
             if (options.zoomable && options.zoomOnWheel) {
-              removeListener2(cropper2, EVENT_WHEEL, this.onWheel, {
+              removeListener2(cropper, EVENT_WHEEL, this.onWheel, {
                 passive: false,
                 capture: true
               });
             }
             if (options.toggleDragModeOnDblclick) {
-              removeListener2(cropper2, EVENT_DBLCLICK, this.onDblclick);
+              removeListener2(cropper, EVENT_DBLCLICK, this.onDblclick);
             }
             removeListener2(element.ownerDocument, EVENT_POINTER_MOVE, this.onCropMove);
             removeListener2(element.ownerDocument, EVENT_POINTER_UP, this.onCropEnd);
@@ -6620,21 +6620,21 @@
               var container = element.parentNode;
               var template = document.createElement("div");
               template.innerHTML = TEMPLATE;
-              var cropper2 = template.querySelector(".".concat(NAMESPACE, "-container"));
-              var canvas = cropper2.querySelector(".".concat(NAMESPACE, "-canvas"));
-              var dragBox = cropper2.querySelector(".".concat(NAMESPACE, "-drag-box"));
-              var cropBox = cropper2.querySelector(".".concat(NAMESPACE, "-crop-box"));
+              var cropper = template.querySelector(".".concat(NAMESPACE, "-container"));
+              var canvas = cropper.querySelector(".".concat(NAMESPACE, "-canvas"));
+              var dragBox = cropper.querySelector(".".concat(NAMESPACE, "-drag-box"));
+              var cropBox = cropper.querySelector(".".concat(NAMESPACE, "-crop-box"));
               var face = cropBox.querySelector(".".concat(NAMESPACE, "-face"));
               this.container = container;
-              this.cropper = cropper2;
+              this.cropper = cropper;
               this.canvas = canvas;
               this.dragBox = dragBox;
               this.cropBox = cropBox;
-              this.viewBox = cropper2.querySelector(".".concat(NAMESPACE, "-view-box"));
+              this.viewBox = cropper.querySelector(".".concat(NAMESPACE, "-view-box"));
               this.face = face;
               canvas.appendChild(image);
               addClass(element, CLASS_HIDDEN);
-              container.insertBefore(cropper2, element.nextSibling);
+              container.insertBefore(cropper, element.nextSibling);
               removeClass(image, CLASS_HIDE);
               this.initPreview();
               this.bind();
@@ -6649,7 +6649,7 @@
                 addClass(cropBox.getElementsByClassName("".concat(NAMESPACE, "-center")), CLASS_HIDDEN);
               }
               if (options.background) {
-                addClass(cropper2, "".concat(NAMESPACE, "-bg"));
+                addClass(cropper, "".concat(NAMESPACE, "-bg"));
               }
               if (!options.highlight) {
                 addClass(face, CLASS_INVISIBLE);
@@ -19680,60 +19680,6 @@
     `);
     }
   }
-  function select_prepare(element) {
-    let values = [];
-    element.querySelectorAll("option").forEach((option2) => {
-      values.push({
-        value: option2.value,
-        text: option2.textContent
-      });
-    });
-    return values;
-  }
-  function custom_select(select2, element_to_append) {
-    console.info(select2);
-    let id = select2.getAttribute("id");
-    let value = select2.value;
-    let value_objects = select2.querySelectorAll("option");
-    let menu_list = document.createElement("div");
-    value_objects.forEach((object) => {
-      let object_value = object.getAttribute("value");
-      let object_text = object.textContent;
-      let item = document.createElement("button");
-      item.classList.add(
-        "btn",
-        "dropdown-menu-clickable-item",
-        "select-item"
-      );
-      item.setAttribute(
-        "onclick",
-        `_set_custom_select_value('${id}', '${object_value}')`
-      );
-      item.setAttribute("data-value", object_value);
-      item.setAttribute("type", "button");
-      item.textContent = object_text;
-      menu_list.appendChild(item);
-    });
-    let button = document.createElement("button");
-    button.classList.add("select-button");
-    button.setAttribute("id", `select-${id}`);
-    button.setAttribute("type", "button");
-    button.textContent = menu_list.querySelector(
-      `[data-value="${value}"]`
-    ).textContent;
-    let theme_menu_item = tippy_esm_default(button, {
-      theme: "select-menu",
-      content: html.node([menu_list.innerHTML]),
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        update_custom_select(instance.popper, select2.value);
-      }
-    });
-    element_to_append.appendChild(button);
-  }
   unsafeWindow._set_custom_select_value = function(select_id, value) {
     let select2 = document.getElementById(select_id);
     select2.value = value;
@@ -20046,7 +19992,7 @@
             message: "A text type requires a max defined in the settings store"
           });
         let reset_btn;
-        let avatar2;
+        let avatar;
         let input2;
         let submit;
         let input_container;
@@ -20063,7 +20009,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option2, reset_btn, avatar2)}>${tl2(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option2, reset_btn, avatar)}>${tl2(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -20089,14 +20035,14 @@
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     ${settings_store[id].avatar ? html.node`
                     <div class="avatar-container">
-                        <div class="avatar-inner" ref=${(el) => avatar2 = el}>
+                        <div class="avatar-inner" ref=${(el) => avatar = el}>
                             <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
                         </div>
                     </div>
                     ` : ""}
                     <div class="input-container in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
                         <input type="text" maxlength=${max2} value=${value} style="--max: ${max2}px" ref=${(el) => input2 = el} placeholder=${placeholder} />
-                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option2, input2.value, reset_btn, avatar2)}>${tl2(trans.save)}</button>
+                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option2, input2.value, reset_btn, avatar)}>${tl2(trans.save)}</button>
                     </div>
                 </div>
             `;
@@ -20568,7 +20514,7 @@
         </div>
     `;
   }
-  function update_text(id, input2, submit, option2, value, reset_btn, avatar2, silent = false) {
+  function update_text(id, input2, submit, option2, value, reset_btn, avatar, silent = false) {
     if (settings_store[id].wait) {
       reset_btn.disabled = true;
       input2.disabled = true;
@@ -20590,7 +20536,7 @@
     }
     save_setting(id, value);
   }
-  function reset_text(id, input2, submit, option2, reset_btn, avatar2) {
+  function reset_text(id, input2, submit, option2, reset_btn, avatar) {
     update_text(
       id,
       input2,
@@ -20598,7 +20544,7 @@
       option2,
       settings_store[id].default,
       reset_btn,
-      avatar2,
+      avatar,
       true
     );
     notify({
@@ -23726,20 +23672,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
 
   // src/avatar.js
-  function patch_avatar(avatar2, name, type = "", parent = null, side = "right") {
-    if (avatar2.hasAttribute("data-bwaa-avatar")) return {};
-    avatar2.setAttribute("data-bwaa-avatar", "true");
-    const avatar_img = avatar2.querySelector("img");
+  function patch_avatar(avatar, name, type = "", parent = null, side = "right") {
+    if (avatar.hasAttribute("data-bwaa-avatar")) return {};
+    avatar.setAttribute("data-bwaa-avatar", "true");
+    const avatar_img = avatar.querySelector("img");
     if (!avatar_img) return {};
     avatar_img.src = avatar_img.src.replace("/64s/", "/avatar70s/");
     if (settings.varied_avatar_shapes) {
       avatar_img.src = avatar_img.src.replace("/avatar70s/", "/arXL/").replace("/avatar170s/", "/arXL/").replace("/avatar300s/", "/arXL");
     }
-    avatar2.setAttribute("title", "");
+    avatar.setAttribute("title", "");
     let badges = load_badges(name);
-    let pre_existing_badge = avatar2.querySelector(".avatar-status-dot");
-    if (badges && pre_existing_badge) avatar2.removeChild(pre_existing_badge);
-    if (!parent) avatar2.classList.add("avatar-can-hoverbox");
+    let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
+    if (badges && pre_existing_badge) avatar.removeChild(pre_existing_badge);
+    if (!parent) avatar.classList.add("avatar-can-hoverbox");
     else parent.classList.add("parent-can-hoverbox");
     let pre_existing_badge_type;
     if (pre_existing_badge)
@@ -23752,9 +23698,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pre_existing_badge_type = null;
     }
     if (badges)
-      avatar2.appendChild(create_badge(badges[badges.length - 1], true));
+      avatar.appendChild(create_badge(badges[badges.length - 1], true));
     let image_header;
-    const popup = tippy_esm_default(parent ? parent : avatar2, {
+    const popup = tippy_esm_default(parent ? parent : avatar, {
       theme: "context-menu",
       content: html.node`
             <div class="track-preview user-preview">
@@ -23807,17 +23753,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       trigger: "click",
       appendTo: document.body
     });
-    register_menu(parent ? parent : avatar2, popup);
+    register_menu(parent ? parent : avatar, popup);
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge)
       return { type: pre_existing_badge.classList[1] };
     else return { type: "none" };
   }
-  function return_name_from_avatar(avatar2) {
-    if (!avatar2) return;
-    if (!avatar2.hasAttribute("alt")) return;
-    if (avatar2.getAttribute("alt") == tl2(trans.your_avatar)) return auth;
-    return avatar2.getAttribute("alt").replace(tl2(trans.avatar_for_user), "");
+  function return_name_from_avatar(avatar) {
+    if (!avatar) return;
+    if (!avatar.hasAttribute("alt")) return;
+    if (avatar.getAttribute("alt") == tl2(trans.your_avatar)) return auth;
+    return avatar.getAttribute("alt").replace(tl2(trans.avatar_for_user), "");
   }
   unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
@@ -24658,7 +24604,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector(".about-artist");
     if (!legacy_container) return;
-    let avatar2 = legacy_container.querySelector(
+    let avatar = legacy_container.querySelector(
       ".gallery-preview-image--0 img"
     );
     let listeners = legacy_container.querySelector(".about-artist-listeners");
@@ -24672,9 +24618,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       html`
             <div class="about-artist-panel">
                 <div class="avatar-side">
-                    ${avatar2 ? html.node`
-                    <img src=${avatar2.getAttribute("src")}>
-                    <a onclick=${() => expand_avatar(avatar2.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
+                    ${avatar ? html.node`
+                    <img src=${avatar.getAttribute("src")}>
+                    <a onclick=${() => expand_avatar(avatar.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
                 ` : html.node`
                     <img class="missing-artist">
                 `}
@@ -26156,130 +26102,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     return body;
   }
-  function markdown_prompt({
-    allow_headers = false,
-    starting_header = 3,
-    allow_links = true,
-    line_breaks = true,
-    allow_banners = false,
-    allow_icons = false,
-    allow_hue = false,
-    allow_socials = false,
-    allow_lists = true,
-    allow_alignment = false
-  } = {}) {
-    if (!line_breaks) allow_alignment = false;
-    const examples = [
-      {
-        name: tl2(trans.supports_markdown.header.name),
-        string: tl2(trans.supports_markdown.header.string),
-        hide_if: !allow_headers
-      },
-      {
-        name: tl2(trans.supports_markdown.bold.name),
-        string: tl2(trans.supports_markdown.bold.string)
-      },
-      {
-        name: tl2(trans.supports_markdown.italics.name),
-        string: tl2(trans.supports_markdown.italics.string)
-      },
-      {
-        name: tl2(trans.supports_markdown.bold_italics.name),
-        string: tl2(trans.supports_markdown.bold_italics.string)
-      },
-      {
-        name: tl2(trans.supports_markdown.underlined.name),
-        string: tl2(trans.supports_markdown.underlined.string)
-      },
-      {
-        name: "Fancy link",
-        string: "[example >~<](https://katelyn.moe)",
-        hide_if: !allow_links
-      },
-      {
-        name: "Simple link",
-        string: `https://last.fm${root}user/${auth.name}`,
-        hide_if: !allow_links
-      },
-      {
-        name: "Mentioned user",
-        string: `@${auth.name}`
-      },
-      {
-        name: "Image",
-        string: `![alt text](${auth.avatar})`,
-        string_display: "![alt text](image url here)",
-        hide_if: !line_breaks
-      },
-      {
-        name: "Left-alignment",
-        string: "[left]text[/left]",
-        hide_if: !allow_alignment
-      },
-      {
-        name: "Center-alignment",
-        string: "[center]text[/center]",
-        hide_if: !allow_alignment
-      },
-      {
-        name: "Right-alignment",
-        string: "[right]text[/right]",
-        hide_if: !allow_alignment
-      }
-    ];
-    dialog({
-      id: "markdown",
-      title: tl2(trans.supports_markdown),
-      body: html.node`
-            <p>You can write fancy text here using Markdown, which lets you make your words pretty with simple shortcuts.</p>
-            <table class="fancy-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>How</th>
-                        <th>Result</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${examples.map((example) => {
-        if (example.hide_if) return html.node``;
-        return html.node`
-                            <tr>
-                                <td>${example.name}</td>
-                                <td class="subtle">${example.string_display ? example.string_display : example.string}</td>
-                                ${example.explain ? html.node`
-                                    <td>
-                                        <div class="icon-combo">
-                                            <div class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
-                                            ${example.explain}
-                                        </div>
-                                    </td>
-                                ` : html.node`
-                                    <td class="markdown-body">${markdown(
-          example.string,
-          {
-            allow_headers,
-            starting_header,
-            allow_links,
-            line_breaks,
-            allow_banners,
-            allow_icons,
-            allow_hue,
-            allow_socials,
-            allow_lists,
-            allow_alignment,
-            in_dialog: true
-          }
-        )}</td>
-                                `}
-                            </tr>
-                        `;
-      })}
-                </tbody>
-            </table>
-        `
-    });
-  }
   function local_restriction(text3) {
     if (text3.textContent.trim().startsWith("Due to local laws, we are temporarily"))
       text3.classList.add("local-restriction");
@@ -26466,10 +26288,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let entries2 = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries2.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
-      let avatar2 = author.querySelector(".wiki-history-author-avatar");
+      let avatar = author.querySelector(".wiki-history-author-avatar");
       let name = author.querySelector(".link-block-target");
-      if (name && avatar2) {
-        let badge = patch_avatar(avatar2, name.textContent, "wiki");
+      if (name && avatar) {
+        let badge = patch_avatar(avatar, name.textContent, "wiki");
         if (badge && badge.type) {
           if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
             name.style.setProperty("--hue-over", badge.hue);
@@ -26852,9 +26674,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     checkup_page_structure(is_subpage, track_header);
     if (page.subpage == "overview") {
-      const avatar2 = track_header.querySelector(".header-new-background-image");
+      const avatar = track_header.querySelector(".header-new-background-image");
       const position = track_header.querySelector(".header-new-chart-position-number");
-      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
+      const avatar_img = avatar?.getAttribute("content").replace("/ar0/", "/avatar300s/");
       const { tags, see_more: see_more2 } = get_tags();
       const header = html.node`
             ${breadcrumb()}
@@ -26862,7 +26684,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="header">
                     <div class="track-image-side">
                         <a class="image">
-                            ${avatar2 ? html.node`
+                            ${avatar ? html.node`
                                 <img src=${avatar_img}>
                             ` : html.node`
                                 <img class="missing-track mega">
@@ -29128,7 +28950,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let position = index3 + 1;
     if (page.requested.page != null && page.requested.page != "1" && key == "top-listeners")
       position += (parseInt(page.requested.page) - 1) * 30;
-    let avatar2 = listener.querySelector(`.${key}-item-image`);
+    let avatar = listener.querySelector(`.${key}-item-image`);
     let name_wrap = listener.querySelector(`.${key}-item-name a`);
     let name = name_wrap.textContent;
     let track_wrap = listener.querySelector(`.${key}-track`);
@@ -29148,7 +28970,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar" ref=${(el) => user_list_avatar = el}>
-                    ${{ html: avatar2.innerHTML }}
+                    ${{ html: avatar.innerHTML }}
                 </span>
                 ${follow}
                 ${track_wrap ? html.node`
@@ -30514,9 +30336,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     checkup_page_structure(is_subpage, album_header);
     if (page.subpage == "overview") {
-      const avatar2 = album_header.querySelector(".header-new-background-image");
+      const avatar = album_header.querySelector(".header-new-background-image");
       const position = album_header.querySelector(".header-new-chart-position-number");
-      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
+      const avatar_img = avatar?.getAttribute("content").replace("/ar0/", "/avatar300s/");
       const { listeners, scrobbles, metascore } = get_listen_stats();
       const { tags, see_more: see_more2 } = get_tags();
       const header = html.node`
@@ -30553,7 +30375,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
                 <div class="album-image-side">
                     <a class="image">
-                        ${avatar2 ? html.node`
+                        ${avatar ? html.node`
                             <img src=${avatar_img}>
                         ` : html.node`
                             <img class="missing-album mega">
@@ -30657,10 +30479,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     checkup_page_structure(is_subpage, artist_header);
     if (page.subpage == "overview") {
-      const avatar2 = artist_header.querySelector(".header-new-background-image");
+      const avatar = artist_header.querySelector(".header-new-background-image");
       const position = artist_header.querySelector(".header-new-chart-position-number");
       const on_tour = artist_header.querySelector(".header-new-on-tour");
-      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/arXL/");
+      const avatar_img = avatar?.getAttribute("content").replace("/ar0/", "/arXL/");
       const { listeners, scrobbles } = get_listen_stats();
       const { tags, see_more: see_more2 } = get_tags();
       const { wiki, wiki_state } = get_wiki();
@@ -31810,945 +31632,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     );
   }
 
-  // src/components/auto_edit.js
-  function bleh_auto_edits() {
-    let corrections_panel = document.body.querySelector("#subscription-corrections");
-    page.structure.main.appendChild(corrections_panel);
-    let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
-    nav.insertBefore(html.node`
-        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
-            <a class="secondary-nav-item-link" href="${root}settings/subscription">
-                ${tl2(trans.back)}
-            </a>
-        </li>
-    `, nav.firstElementChild);
-  }
-
   // src/pages/lastfm_settings.js
   var import_cropperjs = __toESM(require_cropper(), 1);
-
-  // src/components/radio_toggle.js
-  function radio2({ name, value, values = {} }) {
-    let buttons = [];
-    let elem = html.node`
-        <div class="primary-selections">
-        ${Object.entries(values).map(([key, val]) => {
-      const icon = val.icon;
-      let input2;
-      const button = html.node`
-                <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
-        update_radio(key);
-      }}>
-                    <div class="radio-cont">
-                        <input type="radio" name=${name} value=${key} required ref=${(el) => input2 = el}>
-                        <div class="radio" aria-checked=${value == key} />
-                    </div>
-                    ${icon ? html.node`
-                                <div class="icon">
-                                    <div class="bleh-icon" style="--icon: var(--${icon})" />
-                                </div>
-                            ` : ""}
-                    <div class="heading">
-                        <h5>${typeof val.name == "object" ? tl(val.name) : val.name}</h5>
-                    </div>
-                </div>
-            `;
-      input2.checked = value == key;
-      buttons.push(button);
-      return button;
-    })}
-        </div>
-    `;
-    function update_radio(val) {
-      buttons.forEach((btn) => {
-        btn.querySelector("input").checked = btn.getAttribute("data-value") == val;
-        btn.querySelector(".radio").setAttribute(
-          "aria-checked",
-          btn.getAttribute("data-value") == val
-        );
-      });
-    }
-    return elem;
-  }
-  function radio_convert(existing) {
-    if (!existing) return {};
-    let values = {};
-    existing.forEach((item) => {
-      const input2 = item.querySelector("input");
-      const label = item.querySelector("label");
-      values[input2.value] = {
-        name: label.textContent.trim()
-      };
-    });
-    return values;
-  }
-
-  // src/pages/lastfm_settings.js
-  var cropper;
   function bleh_native_settings() {
-    let no_data = page.structure.container.querySelector(
-      ":scope > .no-data-message"
-    );
-    if (no_data) {
-      page.structure.main.appendChild(no_data);
-    }
-    if (page.subpage == "overview") {
-      patch_settings_profile_tab();
-    } else if (page.subpage == "privacy") {
-      patch_settings_privacy_tab();
-    } else if (page.subpage == "subscription_overview") {
-      let panel = page.structure.container.querySelector(".row + div");
-      let subscription = panel.querySelector("#current-subscription");
-      let edits = panel.querySelector("#automatic-edits");
-      let merch_h = panel.querySelector(":scope > h2");
-      let merch = panel.querySelector("#mechandise-discount");
-      let history = panel.querySelector("#pro-history");
-      merch.insertBefore(merch_h, merch.firstElementChild);
-      page.structure.main.appendChild(subscription);
-      page.structure.main.appendChild(edits);
-      page.structure.main.appendChild(merch);
-      page.structure.main.appendChild(history);
-      let button = subscription.querySelector(".btn-primary");
-      if (button)
-        button.classList.add("subscription-button", "icon", "primary");
-      let more_link_wrap = edits.querySelector(".more-link");
-      if (more_link_wrap) {
-        more_link_wrap.classList = "";
-        let edit_buttons = more_link_wrap.querySelectorAll("a");
-        edit_buttons.forEach((edit_button, index3) => {
-          edit_button.classList.add(
-            "btn",
-            "edit-lead-button",
-            "icon",
-            "primary"
-          );
-          if (index3 == 0) edit_button.classList.add("edit-album");
-          else edit_button.classList.add("edit-track");
-        });
-      }
-    } else if (page.subpage.startsWith("subscription_automatic-edits")) {
-      bleh_auto_edits();
-    } else if (page.subpage == "account_overview") {
-      bleh_accounts();
-    } else if (page.subpage == "website") {
-      bleh_website();
-    } else if (page.subpage == "change-username_overview") {
-      bleh_name_change();
-    } else if (page.subpage == "applications_overview") {
-      bleh_applications();
-    }
-    if (ff("katsune")) return;
-    let edit_header = document.createElement("section");
-    edit_header.classList.add(
-      "redesigned-header",
-      "edit-header",
-      "no-background"
-    );
-    edit_header.innerHTML = `
-        <div class="tag-side">
-            <div class="tag-icon cog-icon"></div>
-        </div>
-        <div class="info-side">
-            <div class="sub-text">${tl2(trans.settings)}</div>
-            <h1>${header_text}</h1>
-        </div>
-    `;
-    page.structure.container.insertBefore(
-      edit_header,
-      page.structure.container.firstElementChild
-    );
-  }
-  function patch_settings_profile_tab() {
-    let update_picture = page.structure.main.querySelector("#update-picture");
-    if (!update_picture) return;
-    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    patch_settings_profile_panel(token, update_picture);
-    patch_settings_charts_panel(token);
-  }
-  function patch_settings_charts_panel(token) {
-    let charts_panel = document.getElementById("update-chart");
-    if (charts_panel.hasAttribute("data-kate-processed")) return;
-    charts_panel.setAttribute("data-kate-processed", "true");
-    charts_panel.classList.add("bleh--panel");
-    let original_chart_settings = {
-      recent: {
-        recent_artwork: document.getElementById(
-          "id_show_recent_tracks_artwork"
-        ).checked,
-        count: document.getElementById("id_chart_length_recent_tracks").outerHTML,
-        recent_realtime: document.getElementById(
-          "id_auto_refresh_recent_tracks"
-        ).checked
-      },
-      artists: {
-        timeframe: document.getElementById("id_chart_range_top_artists").outerHTML,
-        style: document.getElementById(
-          "id_chart_style_and_length_top_artists"
-        ).outerHTML
-      },
-      albums: {
-        timeframe: document.getElementById("id_chart_range_top_albums").outerHTML,
-        style: document.getElementById(
-          "id_chart_style_and_length_top_albums"
-        ).outerHTML
-      },
-      tracks: {
-        count: document.getElementById("id_chart_length_top_tracks").outerHTML,
-        timeframe: document.getElementById("id_chart_range_top_tracks").outerHTML
-      }
-    };
-    charts_panel.innerHTML = `
-        <h4>${tl2(trans.recent_tracks)}</h4>
-        <form action="${root}settings#update-chart" name="chart-form" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="inner-preview pad">
-                <div class="tracks recent">
-                    <div class="track realtime">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                        ${original_chart_settings.recent.count}
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl2(trans.recent_artwork)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                        <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl2(trans.recent_realtime.name)}</h5>
-                        <p>${tl2(trans.recent_realtime.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                        <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <h4>${tl2(trans.top_artists)}</h4>
-            <div class="inner-preview pad">
-                <div class="item-grid artist">
-                    <div class="grid-primary artist">
-                        <div class="grid-item"></div>
-                    </div>
-                    <div class="grid-mains">
-                        <div class="grid-main artist">
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                        </div>
-                        <div class="grid-main artist">
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tracks artist">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                        ${original_chart_settings.artists.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_style)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
-                        ${original_chart_settings.artists.style}
-                    </div>
-                </div>
-            </div>
-            <h4>${tl2(trans.top_albums)}</h4>
-            <div class="inner-preview pad">
-                <div class="item-grid album">
-                    <div class="grid-primary album">
-                        <div class="grid-item"></div>
-                    </div>
-                    <div class="grid-mains">
-                        <div class="grid-main album">
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                        </div>
-                        <div class="grid-main album">
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tracks album">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                        ${original_chart_settings.albums.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.chart_style)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
-                        ${original_chart_settings.albums.style}
-                    </div>
-                </div>
-            </div>
-            <h4>${tl2(trans.top_tracks)}</h4>
-            <div class="inner-preview pad">
-                <div class="tracks">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                        ${original_chart_settings.tracks.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl2(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                        ${original_chart_settings.tracks.count}
-                    </div>
-                </div>
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl2(trans.save)}
-                </button>
-                <input type="hidden" value="chart" name="submit">
-            </div>
-        </form>
-    `;
-    custom_select(
-      charts_panel.querySelector("#id_chart_length_recent_tracks"),
-      charts_panel.querySelector("#id_chart_length_recent_tracks_select")
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_range_top_artists"),
-      charts_panel.querySelector("#id_chart_range_top_artists_select")
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_style_and_length_top_artists"),
-      charts_panel.querySelector(
-        "#id_chart_style_and_length_top_artists_select"
-      )
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_range_top_albums"),
-      charts_panel.querySelector("#id_chart_range_top_albums_select")
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_style_and_length_top_albums"),
-      charts_panel.querySelector(
-        "#id_chart_style_and_length_top_albums_select"
-      )
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_range_top_tracks"),
-      charts_panel.querySelector("#id_chart_range_top_tracks_select")
-    );
-    custom_select(
-      charts_panel.querySelector("#id_chart_length_top_tracks"),
-      charts_panel.querySelector("#id_chart_length_top_tracks_select")
-    );
-    for (let category in original_chart_settings) {
-      for (let setting2 in original_chart_settings[category]) {
-        update_inbuilt_item(
-          setting2,
-          original_chart_settings[category][setting2],
-          false
-        );
-      }
-    }
-    let selects = document.body.querySelectorAll("select");
-    selects.forEach((select2) => {
-      select2.setAttribute(
-        "onchange",
-        `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`
-      );
-      update_inbuilt_select(select2.getAttribute("id"), select2.value);
-    });
-  }
-  function patch_settings_profile_panel(token, update_picture) {
-    update_picture.classList.add("bleh--panel");
-    const upload_form = update_picture.querySelector(".avatar-upload-form");
-    const avatar_url = update_picture.querySelector(".image-upload-preview img").getAttribute("src");
-    const upload_finished = update_picture.querySelector(".alert-success");
-    if (page.state.avatar_changer && upload_finished) {
-      const id = page.state.avatar_changer.getAttribute("data-modal-id");
-      dialog_rm({ id });
-    }
-    let form_display_name = document.getElementById("id_full_name").value;
-    let form_website = document.getElementById("id_homepage").value;
-    let form_country = document.getElementById("id_country");
-    let form_about_me = document.getElementById("id_about_me").textContent;
-    let chars;
-    let about;
-    let preview;
-    const markdown_settings = {
-      allow_headers: true,
-      allow_banners: true,
-      allow_icons: true,
-      allow_hue: true,
-      cache: true,
-      take_effect: false,
-      allow_socials: true,
-      allow_alignment: true
-    };
-    let banner_setting;
-    let accent_setting;
-    render(
-      update_picture,
-      html`
-            <h4>${tl2(trans.profile)}</h4>
-            <div class="banner-preview"></div>
-            <div class="profile-container">
-                <div class="avatar-side">
-                    <div
-                        class="avatar image-upload-preview"
-                        onclick=${() => avatar(token)}
-                    >
-                        <img
-                            src=${avatar_url}
-                            alt=${tl2(trans.your_avatar)}
-                            loading="lazy"
-                        />
-                        <div class="avatar-overlay"></div>
-                    </div>
-                </div>
-                <div class="info-side">
-                    <div class="header-info">
-                        <div class="header">
-                            <h1>${auth.name}</h1>
-                        </div>
-                        <div class="header-title-secondary">
-                            <span
-                                class="header-title-secondary--pre"
-                                id="header-title-display-name--pre"
-                            ></span>
-                            <span
-                                class="header-title-display-name"
-                                id="header-title-display-name"
-                            ></span>
-                            <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
-                        <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
-                        </div>
-                    </div>
-                    <div class="sub-info">
-                        <form
-                            action="${root}settings#update-profile"
-                            name="profile-form"
-                            data-form-type="identity"
-                            method="post"
-                        >
-                            <input
-                                type="hidden"
-                                name="csrfmiddlewaretoken"
-                                value="${token}"
-                            />
-                            <div class="info-grid">
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.subtitle)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="text"
-                                            name="full_name"
-                                            value=${form_display_name}
-                                            maxlength="36"
-                                            id="id_full_name"
-                                            oninput="_update_display_name(this.value)"
-                                            data-form-type="other"
-                                        />
-                                        <div class="tip">
-                                            ${tl2(trans.pronoun_tip)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.country)}
-                                    </div>
-                                    ${select(
-        select_prepare(form_country),
-        form_country.value,
-        "country"
-      )}
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">${tl2(trans.about)}</div>
-                                    <div class="input about-me" id="about_me">
-                                        <textarea
-                                            name="about_me"
-                                            placeholder=${tl2(
-        trans.anything_you_can_imagine
-      )}
-                                            cols="40"
-                                            rows="10"
-                                            class="textarea--s"
-                                            maxlength="500"
-                                            id="id_about_me"
-                                            oninput=${() => update_about()}
-                                            ref=${(el) => about = el}
-                                            data-form-type="other"
-                                        >
-                                            ${form_about_me}
-                                        </textarea
-                                        >
-                                        <div class="dual-tip">
-                                            <div
-                                                class="tip markdown-enabled"
-                                                onclick=${() => markdown_prompt(
-        markdown_settings
-      )}
-                                            >
-                                                ${tl2(trans.supports_markdown)}
-                                            </div>
-                                            <div
-                                                class="tip characters"
-                                                ref=${(el) => chars = el}
-                                            >
-                                                ${tl2(
-        trans.value_characters_max,
-        { v: "500" }
-      )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.about_me_preview)}
-                                    </div>
-                                    <span
-                                        class="bleh--about-me-preview markdown-body"
-                                        ref=${(el) => preview = el}
-                                    ></span>
-                                </div>
-                                <div class="info-row" style="display: none">
-                                    <div class="title">
-                                        ${tl2(trans.website)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="url"
-                                            name="homepage"
-                                            value="${form_website}"
-                                            id="id_homepage"
-                                            data-form-type="website"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="save-row">
-                                <div class="form-submit">
-                                    <button
-                                        type="submit"
-                                        class="btn-primary save"
-                                        data-form-type="action"
-                                    >
-                                        ${tl2(trans.save)}
-                                    </button>
-                                    <input
-                                        type="hidden"
-                                        value="profile"
-                                        name="submit"
-                                    />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div
-                    class="setting"
-                    data-type="info"
-                    ref=${(el) => banner_setting = el}
-                />
-                <div
-                    class="setting"
-                    data-type="info"
-                    disabled=${!auth.sponsor}
-                    ref=${(el) => accent_setting = el}
-                />
-                ${setting({ id: "avatar_radius" })}
-            </div>
-        `
-    );
-    page.structure.main.removeChild(
-      page.structure.main.querySelector("#update-profile")
-    );
-    update_about();
-    function update_about() {
-      log2("re-rendering", "about", "log");
-      const value = about.value;
-      chars.textContent = tl2(trans.value_characters_max, {
-        v: `${value.length}/500`
-      });
-      chars.setAttribute("data-exceeded", value.length >= 500);
-      render(preview, markdown(value, markdown_settings));
-      let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      let cache3 = profile_cache[auth.name];
-      console.info("cache", cache3);
-      render(
-        banner_setting,
-        html`
-                <div class="heading">
-                    <h5>${tl2(trans.profile_banner.name)}</h5>
-                    <p>${tl2(trans.profile_banner.body)}</p>
-                    ${cache3.banner ? html.node`
-                <p>${tl2(trans.current_banner_value).replace("{v}", cache3.banner)}</p>
-                ` : ""}
-                </div>
-                ${() => {
-          if (!cache3.banner)
-            return html.node`
-                        <div class="info">
-                            <p>${tl2(trans.none)}</p>
-                        </div>
-                    `;
-          let banner_image = html.node`
-                    <div class="banner-image" style="background-image: url(${cache3.banner})" />
-                `;
-          tippy_esm_default(banner_image, {
-            content: cache3.banner
-          });
-          return banner_image;
-        }}
-            `
-      );
-      const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
-      console.info(
-        "cache update",
-        about.value,
-        cache3.hue,
-        cache3.sat,
-        cache3.lit
-      );
-      let edit;
-      render(
-        accent_setting,
-        html`
-                <div class="heading">
-                    <h5>
-                        ${tl2(trans.profile_accent.name)}<span
-                            class="new-badge sponsor-related"
-                            >${tl2(trans.sponsors_only)}</span
-                        ><span class="new-badge beta">${tl2(trans.new)}</span>
-                    </h5>
-                    <p>${tl2(trans.profile_accent.body)}</p>
-                </div>
-                <div class="info">
-                    <div
-                        class="colour-tile colourful"
-                        style="--hue-over: ${cache3.hue}; --sat-over: ${cache3.sat}; --lit-over: ${cache3.lit}"
-                    />
-                    <div class="swatch-group palette">
-                        <button
-                            class="swatch-container"
-                            ref=${(el) => edit = el}
-                            onclick=${() => {
-          let hue_range;
-          let sat_range;
-          let lit_range;
-          const match3 = about.value.match(accent_regex);
-          console.info(match3);
-          if (match3) {
-            save_setting(
-              "profile_hue",
-              parseInt(match3[1], 10)
-            );
-            save_setting(
-              "profile_sat",
-              parseFloat(match3[2])
-            );
-            save_setting(
-              "profile_lit",
-              parseFloat(match3[3])
-            );
-            settings_store.profile_hue.default = settings.hue;
-            settings_store.profile_sat.default = settings.sat;
-            settings_store.profile_lit.default = settings.lit;
-          }
-          let accent_preview;
-          dialog({
-            id: "profile_accent",
-            title: tl2(trans.profile_accent.name),
-            body: html.node`
-                                <div class="setting-group">
-                                    <div class="setting" data-type="info">
-                                        <div class="heading">
-                                            <h5>${tl2(trans.preview)}</h5>
-                                        </div>
-                                        <div class="info">
-                                            <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
-                                        </div>
-                                    </div>
-                                    ${ff("colour_based_on_hex") ? html.node`
-                                    <div class="setting" data-type="text">
-                                        <div class="heading">
-                                            <h5>${tl2(trans.convert_from_hex)}</h5>
-                                        </div>
-                                        <div class="input-container content-form">
-                                            ${colour = input({
-              type: "colour",
-              value: "#999999",
-              maxlength: 7,
-              warn_if_empty: true
-            })}
-                                            <button class="btn primary icon convert" onclick=${() => {
-              const value2 = colour.value();
-              const hsl = hex_to_hsl(value2);
-              hue_range.set(hsl.h);
-              sat_range.set(
-                clamp_sat(hsl.s / 100 * 3)
-              );
-              lit_range.set(
-                hsl.l / 100 + 0.35
-              );
-            }}>${tl2(trans.convert)}</button>
-                                        </div>
-                                    </div>
-                                    ` : ""}
-                                    ${hue_range = setting({ id: "profile_hue", func: update_colour_preview })}
-                                    ${sat_range = setting({ id: "profile_sat", func: update_colour_preview })}
-                                    ${lit_range = setting({ id: "profile_lit", func: update_colour_preview })}
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
-                                        ${tl2(trans.back)}
-                                    </button>
-                                    <div class="fill"></div>
-                                    <button class="btn primary continue" onclick=${() => {
-              const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
-              if (match3) {
-                about.value = about.value.replace(
-                  accent_regex,
-                  new_accent
-                );
-              } else {
-                const trimmed = about.value.trimEnd();
-                if (trimmed.length == 0) {
-                  about.value = new_accent;
-                } else {
-                  about.value = trimmed + "\n\n" + new_accent;
-                }
-              }
-              about.dispatchEvent(
-                new InputEvent("input", {
-                  bubbles: true,
-                  cancelable: true
-                })
-              );
-              dialog_rm({ id: "profile_accent" });
-              status({
-                title: tl2(
-                  trans.profile_accent.reminder
-                )
-              });
-            }}>
-                                        ${tl2(trans.change)}
-                                    </button>
-                                </div>
-                            `
-          });
-          function update_colour_preview() {
-            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
-          }
-        }}
-                        >
-                            <div
-                                class="swatch colourful"
-                                data-swatch-type="customise"
-                            />
-                        </button>
-                    </div>
-                </div>
-            `
-      );
-      tippy_esm_default(edit, {
-        content: tl2(trans.edit)
-      });
-    }
-    update_display_name(form_display_name);
+    page.structure.main.classList.remove("content-form");
+    page.structure.main.classList.add("settings-form");
   }
   unsafeWindow._update_display_name = function(value) {
     update_display_name(value);
@@ -32764,905 +31652,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       return true;
     return false;
   }
-  function avatar(token = "") {
-    if (!token) token = page.token;
-    else page.token = token;
-    page.state.avatar_changer = dialog({
-      id: "edit_avatar",
-      title: tl2(trans.change_avatar),
-      body: html.node`
-            <div class="forms">
-                <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                    <div class="form-group form-group--avatar js-form-group upload-avatar">
-                        <div class="js-form-group-controls form-group-controls">
-                            <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
-                                ${tl2(trans.upload)}
-                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl2(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
-                            </span>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-primary save" id="avatar_saver">
-                        ${tl2(trans.save)}
-                    </button>
-                    <input type="hidden" value="avatar" name="submit">
-                </form>
-                <form action="${root}settings/avatar/delete" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                    <div class="form-group delete-avatar">
-                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl2(trans.delete)}</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl2(trans.cancel)}</button>
-                <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl2(trans.save)}</button>
-            </div>
-        `
-    });
-    page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
-    const file_button = page.state.avatar_changer.querySelector(".btn-file");
-    const save_button = page.state.avatar_changer.querySelector(
-      ".modal-footer .primary"
-    );
-    let form;
-    function update_avatar(e) {
-      console.info(e);
-      if (!e.target.files || !e.target.files[0]) return;
-      form = page.state.avatar_changer.querySelector(".bleh-modal-body");
-      if (e.target.files[0].type == "image/gif") {
-        save_avatar();
-        finish_saving_avatar();
-        return;
-      }
-      let reader = new FileReader();
-      reader.onload = function() {
-        crop(reader.result);
-        save_button.removeAttribute("disabled");
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    function save_avatar() {
-      page.state.avatar_changer.querySelector("#avatar_saver").click();
-    }
-    function finish_saving_avatar() {
-      page.state.avatar_changer.setAttribute("data-loading", "true");
-      page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
-        button.setAttribute("disabled", "true");
-        button.removeAttribute("onclick");
-      });
-    }
-    function crop(file) {
-      let crop_image;
-      let save;
-      const crop_dialog = dialog({
-        id: "crop",
-        title: tl2(trans.crop_avatar),
-        body: html.node`
-                <div class="crop">
-                    <img src=${file} ref=${(el) => crop_image = el}>
-                </div>
-                <div class="alert alert-info">
-                    ${tl2(trans.crop_notice)}
-                </div>
-                <div class="modal-footer">
-                    <button class="see-more cancel" onclick=${() => {
-          if (cropper && cropper.destroy) cropper.destroy();
-          cropper = null;
-          avatar();
-        }}>${tl2(trans.cancel)}</button>
-                    <div class="fill"></div>
-                    <button class="btn primary save" onclick=${() => {
-          if (!cropper) return;
-          crop_dialog.querySelectorAll(".bleh-modal-body button").forEach((button) => {
-            button.setAttribute("disabled", "true");
-            button.removeAttribute("onclick");
-          });
-          const canvas = cropper.getCroppedCanvas();
-          canvas.toBlob((blob) => {
-            const cropped_file = new File(
-              [blob],
-              "avatar.png",
-              { type: "image/png" }
-            );
-            const inner_form = form.querySelector("form");
-            inner_form.style.display = "none";
-            crop_dialog.querySelector(".bleh-modal-body").appendChild(inner_form);
-            const file_input = inner_form.querySelector('input[type="file"]');
-            const data_transfer = new DataTransfer();
-            data_transfer.items.add(cropped_file);
-            file_input.files = data_transfer.files;
-            inner_form.querySelector("#avatar_saver").click();
-          }, "image/png");
-        }} ref=${(el) => save = el} disabled>${tl2(trans.save)}</button>
-                </div>
-            `
-      });
-      page.state.avatar_changer = crop_dialog;
-      crop_image.onload = () => {
-        if (cropper && cropper.destroy) cropper.destroy();
-        crop_image.style.maxWidth = "none";
-        crop_image.style.width = crop_image.naturalWidth + "px";
-        crop_image.style.height = crop_image.naturalHeight + "px";
-        cropper = new import_cropperjs.default(crop_image, {
-          viewMode: 3,
-          dragMode: "crop",
-          movable: true,
-          zoomable: true,
-          scalable: false,
-          cropBoxMovable: true,
-          cropBoxResizable: true,
-          background: false,
-          guides: true,
-          autoCropArea: 1
-        });
-        save.removeAttribute("disabled");
-      };
-    }
-  }
-  function patch_settings_privacy_tab() {
-    let privacy_panel = document.getElementById("privacy");
-    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    bleh_communication_panel(token);
-    patch_settings_privacy_panel(token, privacy_panel);
-  }
-  function bleh_communication_panel(token) {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    let panel = page.structure.main.querySelector("#ignorelist");
-    panel.classList.add("bleh--panel");
-    let list = panel.querySelectorAll(".ignore-list tr");
-    let new_list = document.createElement("div");
-    new_list.classList.add(
-      "generic-table-list",
-      "user-vertical-list",
-      "take-space"
-    );
-    let exceeded = false;
-    let exceed_amount = 10;
-    let amount = 0;
-    list.forEach((item, index3) => {
-      let name = item.querySelector("td").textContent.trim();
-      let form2 = item.querySelector("form");
-      let button = form2.querySelector("button");
-      button.classList.add("icon", "chibi", "danger-subtle");
-      button.setAttribute("data-type", "trash");
-      let entry = html.node`
-            <div class="generic-table-list-entry user-vertical-list-item">
-                <div class="name">
-                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
-                </div>
-                <div class="text preview">
-                    ${profile_notes.hasOwnProperty(name) ? html.node`
-                        <p id="profile-note-row-preview--${name}">${{ html: profile_notes[name] }}</p>
-                    ` : ""}
-                </div>
-                <div class="actions">
-                    ${form2}
-                </div>
-            </div>
-        `;
-      if (index3 > exceed_amount && !exceeded) exceeded = true;
-      if (exceeded) entry.classList.add("entry-is-exceeded");
-      new_list.appendChild(entry);
-      amount += 1;
-    });
-    if (exceeded) {
-      let remainder = amount - exceed_amount;
-      new_list.classList.add("list-is-exceeded");
-      new_list.setAttribute("data-expanded", "false");
-      let expand = html.node`
-            <button class="see-more expand-down" onclick=${() => {
-        expand.style.display = "none";
-        new_list.setAttribute("data-expanded", "true");
-      }}>
-                ${tl2(trans.view_count_more).replace("{c}", remainder.toString())}
-            </button>
-        `;
-      new_list.appendChild(expand);
-    }
-    let form = page.structure.main.querySelector('[name="ignorelist"]');
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    render(
-      panel,
-      html`
-            <h4>${tl2(trans.block_list)}</h4>
-            <div class="user-top-panel">
-                <div class="user-top-avatar user-top-avatar-side-left">
-                    <div class="bleh-icon"></div>
-                </div>
-                <img
-                    class="user-top-avatar user-top-avatar-main"
-                    src=${auth.avatar.replace("avatar42s", "avatar300s")}
-                    alt=${auth.name}
-                />
-                <div class="user-top-avatar user-top-avatar-side-right">
-                    <div class="bleh-icon"></div>
-                </div>
-            </div>
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl2(trans.profile)}</h5>
-                    <form
-                        action="${root}settings/privacy#ignorelist"
-                        name="ignorelist"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="csrfmiddlewaretoken"
-                            value=${page.token}
-                        />
-                        <div class="input-container">
-                            <input
-                                type="text"
-                                maxlength="80"
-                                id="id_user"
-                                name="user"
-                                placeholder=${tl2(trans.enter_username)}
-                            />
-                            <input
-                                type="hidden"
-                                name="listaction"
-                                value="add"
-                            />
-                            <input
-                                type="hidden"
-                                name="submit"
-                                value="ignorelist"
-                            />
-                            <button
-                                class="bleh--btn primary icon block"
-                                type="submit"
-                            >
-                                ${tl2(trans.block)}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="alert alert-info">
-                ${tl2(trans.blocked_count).replace("{c}", amount)}
-            </div>
-            ${new_list}
-            <div class="sep" />
-            <h5>${tl2(trans.when_blocked)}</h5>
-            <div class="to-consider">
-                <ul class="to-consider-good">
-                    <li>${tl2(trans.blocked_user_public)}</li>
-                    <li>${tl2(trans.blocked_user_message)}</li>
-                    <li>${tl2(trans.blocked_user_new_shouts)}</li>
-                </ul>
-                <ul class="to-consider-bad">
-                    <li>${tl2(trans.blocked_user_old_shouts)}</li>
-                    <li>${tl2(trans.blocked_user_view_profile)}</li>
-                </ul>
-            </div>
-        `
-    );
-  }
-  function patch_settings_privacy_panel(token, privacy_panel) {
-    privacy_panel.classList.add("bleh--panel");
-    let original_privacy_settings = {
-      recent_listening: document.getElementById("id_hide_realtime").checked,
-      receiving_msgs: document.getElementById("id_message_privacy").outerHTML,
-      disable_shoutbox: document.getElementById("id_shoutbox_disabled").checked
-    };
-    privacy_panel.innerHTML = `
-        <h4>${tl2(trans.privacy)}</h4>
-        <form action="${root}settings/privacy" name="privacy" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="inner-preview pad">
-                <div class="tracks recent_listening">
-                    <div class="track realtime">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl2(trans.recent_listening.name)}</h5>
-                        <p>${tl2(trans.recent_listening.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                        <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="setting" data-type="options">
-                    <div class="heading">
-                        <h5>${tl2(trans.allow_messages_from)}</h5>
-                    </div>
-                    <div class="primary-selections">
-                        ${original_privacy_settings.receiving_msgs}
-                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                            <h5>${tl2(trans.everyone)}</h5>
-                        </div>
-                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                            <h5>${tl2(trans.following_and_neighbours)}</h5>
-                        </div>
-                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                            <h5>${tl2(trans.following)}</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="inner-preview pad">
-                <div class="shouts">
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-group">
-                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl2(trans.close_shouts.name)}</h5>
-                        <p>${tl2(trans.close_shouts.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                        <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl2(trans.save)}
-                </button>
-                <input type="hidden" value="privacy" name="submit">
-            </div>
-        </form>
-    `;
-    for (let setting2 in original_privacy_settings) {
-      update_inbuilt_item(setting2, original_privacy_settings[setting2], false);
-    }
-    let selects = document.body.querySelectorAll("select");
-    selects.forEach((select2) => {
-      select2.setAttribute(
-        "onchange",
-        `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`
-      );
-      update_inbuilt_select(select2.getAttribute("id"), select2.value);
-    });
-  }
-  function bleh_accounts() {
-    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let original_settings = {
-      email_language: page.structure.main.querySelector('[name="language"]'),
-      marketing_emails: page.structure.main.querySelector(
-        '[name="opt_in_marketing"]'
-      ),
-      email: page.structure.main.querySelector('[name="email"]').value,
-      captcha: page.structure.main.querySelector(".lfm-recaptcha")
-    };
-    render(
-      page.structure.main,
-      html`
-            <section class="bleh--panel">
-                <h4>${tl2(trans.information)}</h4>
-                <div class="setting-group">
-                    <form
-                        action="${root}settings/change-username/send-email"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="csrfmiddlewaretoken"
-                            value="${token}"
-                        />
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.username.name)}</h5>
-                                <p>
-                                    ${{
-        html: tl2(trans.username.body).replace(
-          "{a}",
-          `<a href="https://support.last.fm/" target="_blank">`
-        ).replace("{/a}", "</a>")
-      }}
-                                </p>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_current_username"
-                                    type="text"
-                                    name="current_username"
-                                    value="${auth.name}"
-                                    disabled
-                                    required
-                                />
-                                <button class="btn chibi icon primary submit">
-                                    ${tl2(trans.send)}
-                                </button>
-                                <input
-                                    type="hidden"
-                                    value="change_username"
-                                    name="submit"
-                                />
-                            </div>
-                        </div>
-                    </form>
-                    <form
-                        action="${root}settings/account"
-                        name="change-email"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="csrfmiddlewaretoken"
-                            value="${token}"
-                        />
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.email)}</h5>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_email"
-                                    type="text"
-                                    name="email"
-                                    value="${original_settings.email}"
-                                    required
-                                />
-                                <button class="btn chibi icon primary submit">
-                                    ${tl2(trans.save)}
-                                </button>
-                                <input
-                                    type="hidden"
-                                    value="email_update"
-                                    name="submit"
-                                />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <form
-                    class="password-container"
-                    action="${root}settings/account/password#change-password"
-                    name="change-password"
-                    method="post"
-                >
-                    <input
-                        type="hidden"
-                        name="csrfmiddlewaretoken"
-                        value="${token}"
-                    />
-                    <div class="setting-group">
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.password)}</h5>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_password"
-                                    type="password"
-                                    name="password"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.new_password)}</h5>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_new_password"
-                                    type="password"
-                                    name="new_password"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div class="setting" data-type="text">
-                            <div class="heading">
-                                <h5>${tl2(trans.confirm_password)}</h5>
-                            </div>
-                            <div class="input-container content-form">
-                                <input
-                                    id="id_new_password_confirmation"
-                                    type="password"
-                                    name="new_password_confirmation"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        ${original_settings.captcha}
-                    </div>
-                    <div class="settings-footer end">
-                        <button class="btn-primary save" type="submit">
-                            ${tl2(trans.change)}
-                        </button>
-                    </div>
-                </form>
-            </section>
-            <section class="bleh--panel">
-                <h4>${tl2(trans.communication)}</h4>
-                <form
-                    action="${root}settings/account"
-                    name="email-settings"
-                    method="post"
-                >
-                    <input
-                        type="hidden"
-                        name="csrfmiddlewaretoken"
-                        value="${token}"
-                    />
-                    <div class="setting-group">
-                        <div class="setting" data-type="select">
-                            <div class="heading">
-                                <h5>${tl2(trans.email_language)}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector">
-                                ${select(
-        select_prepare(
-          original_settings.email_language
-        ),
-        original_settings.email_language.value,
-        original_settings.email_language.name
-      )}
-                            </div>
-                        </div>
-                        ${toggle({
-        value: original_settings.marketing_emails.checked,
-        name: original_settings.marketing_emails.name,
-        title: tl2(trans.marketing_emails.name),
-        body: tl2(trans.marketing_emails.body),
-        standalone: false
-      })}
-                    </div>
-                    <div class="settings-footer end">
-                        <button class="btn-primary save" type="submit">
-                            ${tl2(trans.save)}
-                        </button>
-                        <input
-                            type="hidden"
-                            value="email_settings"
-                            name="submit"
-                        />
-                    </div>
-                </form>
-            </section>
-            <section class="bleh--panel">
-                <h4>${tl2(trans.security)}</h4>
-                <form
-                    action="${root}settings/account"
-                    name="email-settings"
-                    method="post"
-                >
-                    <input
-                        type="hidden"
-                        name="csrfmiddlewaretoken"
-                        value="${token}"
-                    />
-                    <div class="setting-group">
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.logout_everywhere)}</h5>
-                            </div>
-                            <div class="toggle-wrap">
-                                <a
-                                    class="see-more danger logout"
-                                    href="${root}settings/account/logout-everywhere"
-                                >
-                                    ${tl2(trans.logout)}
-                                </a>
-                            </div>
-                        </div>
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.delete_account.name)}</h5>
-                                <p>${tl2(trans.delete_account.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <a
-                                    class="see-more danger delete-account"
-                                    href="${root}settings/account/delete"
-                                >
-                                    ${tl2(
-        trans.delete_account_permanently
-      ).replace("{u}", auth.name)}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </section>
-        `
-    );
-    for (let setting2 in original_settings) {
-      update_inbuilt_item(setting2, original_settings[setting2], false);
-    }
-  }
-  function bleh_name_change() {
-    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    return;
-  }
-  function bleh_website() {
-    const token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    const auto_correct = page.structure.main.querySelector(
-      '[name="corrections_enabled"]:checked'
-    );
-    const preferred_affiliate = page.structure.main.querySelector(
-      '[name="preferred_affiliate"]:checked'
-    );
-    const timezone = page.structure.main.querySelector('[name="timezone"]');
-    const help_text = page.structure.main.querySelector(".js-field-help-text");
-    const location = page.structure.main.querySelector(
-      '[data-require="components/location-form-field-v2"]'
-    );
-    const radius = page.structure.main.querySelector('[name="event_radius"]');
-    let timezone_text;
-    page.structure.main.insertBefore(
-      html.node`
-            <form class="dont-move" action="${root}settings/website" method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.website)}</h4>
-                    <div class="setting-group">
-                        <div class="setting v2" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans.auto_correct_scrobbles.name)}</h5>
-                                <p>${tl2(trans.auto_correct_scrobbles.body)}</p>
-                            </div>
-                            ${radio2({
-        name: auto_correct.name,
-        value: auto_correct.value,
-        values: {
-          False: {
-            name: tl2(
-              trans.auto_correct_scrobbles.false
-            )
-          },
-          True: {
-            name: tl2(
-              trans.auto_correct_scrobbles.true
-            )
-          }
-        }
-      })}
-                        </div>
-                    </div>
-                    <div class="alert alert-danger">
-                        ${tl2(trans.auto_correct_scrobbles.warning)}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.events)}</h4>
-                    <div class="setting-group">
-                        <div class="setting v2" data-type="select">
-                            <div class="heading">
-                                <h5>${tl2(trans.timezone)}</h5>
-                                <p ref=${(el) => timezone_text = el}>${help_text.textContent.trim()}</p>
-                            </div>
-                            ${select(
-        select_prepare(timezone),
-        timezone.value,
-        timezone.name,
-        (val) => {
-          fetch(
-            `${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`
-          ).then((res) => res.text()).then((dom) => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(
-              dom,
-              "text/html"
-            );
-            const text3 = doc.querySelector("p");
-            if (!text3) return;
-            timezone_text.textContent = text3.textContent;
-          }).catch(
-            (e) => log2(
-              "unable to get text",
-              "timezone",
-              "error",
-              { e }
-            )
-          );
-        }
-      )}
-                        </div>
-                        <div class="setting v2" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.location.name)}</h5>
-                                <p>${tl2(trans.location.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                ${location}
-                            </div>
-                        </div>
-                        <div class="setting v2" data-type="select">
-                            <div class="heading">
-                                <h5>${tl2(trans.event_radius)}</h5>
-                            </div>
-                            ${select(select_prepare(radius), radius.value, radius.name)}
-                        </div>
-                    </div>
-                    <div class="settings-footer end">
-                        <button type="submit" class="btn-primary save">
-                            ${tl2(trans.save)}
-                        </button>
-                        <input type="hidden" value="website" name="submit">
-                    </div>
-                </section>
-            </form>
-            <section class="bleh--panel">
-                <h4>${tl2(trans.playback)}</h4>
-                <form action="${root}settings/website" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${token}>
-                    <div class="setting-group">
-                        <div class="setting v2" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans.preferred_affiliate.name)}</h5>
-                                <p>${tl2(trans.preferred_affiliate.body)}</p>
-                            </div>
-                            ${radio2({
-        name: preferred_affiliate.name,
-        value: preferred_affiliate.value,
-        values: radio_convert(
-          page.structure.main.querySelectorAll(
-            "#id_preferred_affiliate > .lfm-form-radio"
-          )
-        )
-      })}
-                        </div>
-                    </div>
-                    <div class="settings-footer end">
-                        <button type="submit" class="btn-primary save">
-                            ${tl2(trans.save)}
-                        </button>
-                        <input type="hidden" value="playback" name="submit">
-                    </div>
-                </form>
-            </section>
-        `,
-      page.structure.main.firstElementChild
-    );
-    const website = page.structure.main.querySelector("#website");
-    website.remove();
-    const playback = page.structure.main.querySelector("#playback");
-    playback.remove();
-  }
-  function bleh_applications() {
-    let session_types = page.structure.main.querySelectorAll(".api-sessions");
-    let suggested;
-    let connected;
-    if (session_types.length > 1) {
-      suggested = session_types[0];
-      connected = session_types[1];
-    } else {
-      connected = session_types[0];
-    }
-    render(
-      page.structure.main,
-      html`
-            <section class="applications">
-                <div class="section-intro">
-                    <h3>${tl2(trans.applications)}</h3>
-                    <p>${tl2(trans.applications_intro)}</p>
-                </div>
-                ${suggested ? html`
-                        <h2>${tl2(trans.suggested)}</h2>
-                        ${suggested}
-                    ` : ""}
-                <h2>${tl2(trans.connected)}</h2>
-                ${connected}
-            </section>
-        `
-    );
-    session_types.forEach((session_type) => {
-      let sessions = session_type.querySelectorAll(".api-session");
-      sessions.forEach((session) => {
-        const details = session.querySelector(".api-session-details");
-        const form = session.querySelector("form");
-        const button = form.querySelector("button");
-        button.classList.add("chibi");
-        tippy_esm_default(button, {
-          content: button.textContent
-        });
-        const name = details.querySelector(".api-session-app-name");
-        const desc = details.querySelector(".api-session-app-description");
-        const status2 = details.querySelector(".api-session-status");
-        const image = details.querySelector(".api-session-app-image");
-        image.classList = "";
-        const default_image = image.src.endsWith(
-          "14d19fbdca555c1782176cd789e81af7.png"
-        );
-        render(
-          session,
-          html`
-                    <div class="session-header">
-                        <div
-                            class="session-image"
-                            data-default-image=${default_image}
-                        >
-                            ${image}
-                        </div>
-                        <div class="session-details">${name} ${desc}</div>
-                        ${form}
-                    </div>
-                    ${status2 ? html.node`
-                <div class="session-footer">
-                    ${status2}
-                </div>
-                ` : ""}
-                `
-        );
-      });
-    });
-  }
 
   // src/pages/home.js
   async function bleh_home() {
@@ -33676,6 +31665,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     let content_top = document.body.querySelector(".content-top");
     page.name = auth.name;
+    page.avatar = auth.avatar;
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page);
     update_page();
@@ -33692,17 +31682,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     log2(`hour ${hour} time ${time2}`, "time");
     let welcome;
     if (auth.name) {
-      welcome = html.node`
-            <div class="top-banner home-banner">
-                <div class="avatar">
-                    <img src=${auth.avatar.replace("/avatar42s/", "/avatar170s/")} alt=${tl2(trans.your_avatar)}>
-                    ${auth.sponsor ? html.node`
-                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    ` : ""}
-                </div>
-                <h1>${{ html: tl2(trans[`good_${time2}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}</h1>
-            </div>
-        `;
+      welcome = generic_subpage_header("something");
     } else {
       welcome = html.node`
             <div class="top-banner home-banner">
@@ -33992,9 +31972,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       let users = page.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
       users.forEach((user) => {
-        let avatar2 = user.querySelector(".attendee-summary-user-avatar");
+        let avatar = user.querySelector(".attendee-summary-user-avatar");
         let name = user.querySelector(".attendee-summary-user-link").textContent;
-        patch_avatar(avatar2, name, "event");
+        patch_avatar(avatar, name, "event");
       });
       let cancelled = page.structure.main.querySelector(".event-status--cancelled");
       if (cancelled) {
@@ -34030,9 +32010,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         refresh_all();
         let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
-          let avatar2 = user.querySelector(".user-list-avatar");
+          let avatar = user.querySelector(".user-list-avatar");
           let name = user.querySelector(".user-list-link").textContent;
-          let badge = patch_avatar(avatar2, name, "follow");
+          let badge = patch_avatar(avatar, name, "follow");
           if (badge.type == "avatar-status-dot--staff")
             user.classList.add("staff-user");
         });
@@ -34051,7 +32031,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       log2("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
-    let header_text2 = content_top.querySelector(".content-top-header").textContent;
+    let header_text = content_top.querySelector(".content-top-header").textContent;
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page);
     update_page();
@@ -34064,7 +32044,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         </div>
         <div class="info-side">
             <div class="sub-text">${tl2(trans.event)}</div>
-            <h1>${header_text2}</h1>
+            <h1>${header_text}</h1>
         </div>
     `;
     page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
@@ -34133,8 +32113,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let involved = [];
       const strongs = link.querySelectorAll("strong");
       let split = href.replace(root, "").split("/");
-      const avatar2 = notification.querySelector(".avatar");
-      avatar2.classList = "avatar";
+      const avatar = notification.querySelector(".avatar");
+      avatar.classList = "avatar";
       const time2 = notification.querySelector("time");
       let is_reply = false;
       let others_included = 0;
@@ -34152,10 +32132,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       } else if (href.endsWith("/listening-report/month")) {
         type = "listening-report";
         involved.push(strongs[0].textContent);
-        let img = avatar2.querySelector("img");
+        let img = avatar.querySelector("img");
         img.src = auth.avatar;
         img.alt = auth.name;
-        let label = avatar2.querySelector(".avatar-status-dot");
+        let label = avatar.querySelector(".avatar-status-dot");
         if (auth.pro) {
           label.classList = "avatar-status-dot avatar-status-dot--subscriber";
         } else {
@@ -34222,11 +32202,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         });
       }
       console.info(split, context, type, involved);
-      patch_avatar(avatar2, involved[0]);
+      patch_avatar(avatar, involved[0]);
       render(
         notification,
         html`
-                <div class="notification-avatar">${avatar2}</div>
+                <div class="notification-avatar">${avatar}</div>
                 <div
                     class="bleh-icon"
                     data-type=${type}
@@ -34316,11 +32296,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       notif_links.forEach((notification) => {
         let link = notification.getAttribute("href");
         if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
-        let avatar2 = notification.querySelector(".avatar");
+        let avatar = notification.querySelector(".avatar");
         let name = notification.querySelector(".inbox-notifications__item-description strong");
         if (!name) return;
-        let name_text = sanitise(return_name_from_avatar(avatar2.querySelector("img")));
-        let badge = patch_avatar(avatar2, name_text);
+        let name_text = sanitise(return_name_from_avatar(avatar.querySelector("img")));
+        let badge = patch_avatar(avatar, name_text);
         name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
         if (notification.classList.contains("inbox-notifications__item--highlight"))
           notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
@@ -34333,9 +32313,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let sender_time = inbox.querySelector(".inbox-message-timestamp");
       sender_panel.appendChild(sender_name);
       sender_panel.appendChild(sender_time);
-      let avatar2 = sender_panel.querySelector(".avatar");
+      let avatar = sender_panel.querySelector(".avatar");
       let name_text = sanitise(sender_name.textContent.trim());
-      let badge = patch_avatar(avatar2, name_text);
+      let badge = patch_avatar(avatar, name_text);
       sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
     } else if (page.subpage == "compose") {
       let inbox = page.structure.container.querySelector(".inbox-compose-view");
@@ -34616,17 +32596,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     );
     let new_account = false;
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    let avatar2 = profile_header.querySelector(".avatar");
+    let avatar = profile_header.querySelector(".avatar");
     const profile_name_obj = profile_header.querySelector(".header-title-label-wrap");
     const profile_sub_text = profile_header.querySelector(".header-title-secondary");
-    if (!avatar2) {
-      avatar2 = profile_header.querySelector(".header-avatar-add");
+    if (!avatar) {
+      avatar = profile_header.querySelector(".header-avatar-add");
       page.avatar = "";
       new_account = true;
     } else {
-      avatar2 = avatar2.querySelector("img");
-      page.avatar = avatar2.src;
-      avatar2.src = avatar2.src.replace("/avatar170s/", "/arXL/");
+      avatar = avatar.querySelector("img");
+      page.avatar = avatar.src;
+      avatar.src = avatar.src.replace("/avatar170s/", "/arXL/");
     }
     profile_header.classList.add("legacy-header");
     tab_replace("listening-report", tl2(trans.charts));
@@ -34703,7 +32683,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const header = html.node`
             <section class="profile-header-section" data-page-style=${settings.page_style}>
                 <div class="badge-avatar">
-                    ${avatar2}
+                    ${avatar}
                     ${types}
                 </div>
                 <div class="badge-info">
@@ -35854,9 +33834,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ".user-list-item:not(.user-list-item-mobile-ad)"
     );
     users.forEach((user) => {
-      let avatar2 = user.querySelector(".user-list-avatar");
+      let avatar = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link");
-      const badge = patch_avatar(avatar2, name.textContent, "follow");
+      const badge = patch_avatar(avatar, name.textContent, "follow");
       style_name_from_badge(name, badge);
       let artists = user.querySelectorAll(".user-list-shared-artists a");
       artists.forEach((artist) => {
@@ -40941,12 +38921,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (auth_link.state) {
       auth.avatar = auth_link.state.querySelector("img").getAttribute("src");
       if (auth.avatar != previous_avi) {
-        let avatar2 = auth_link.state.querySelector("img");
-        avatar2.setAttribute("crossorigin", "anonymous");
+        let avatar = auth_link.state.querySelector("img");
+        avatar.setAttribute("crossorigin", "anonymous");
         try {
-          avatar2.addEventListener("load", () => {
+          avatar.addEventListener("load", () => {
             let thief = new import_color_thief_browser2.default();
-            let colour2 = thief.getColor(avatar2);
+            let colour2 = thief.getColor(avatar);
             let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat2(hsl.s / 100 * 3);
