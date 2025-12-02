@@ -661,22 +661,7 @@ export async function bleh_profiles() {
                 new_panel.appendChild(no_data);
             }
         } else if (page.subpage == 'loved') {
-            let count_text = page.structure.content_top
-                .querySelector('h1')
-                .textContent.trim();
-            let chr = count_text.indexOf('(');
 
-            let count = 0;
-            if (chr != -1)
-                count = count_text
-                    .substring(chr)
-                    .replace('(', '')
-                    .replace(')', '');
-
-            page.structure.nav.querySelector('.secondary-nav-item--loved a')
-                .appendChild(html.node`
-                <div class="new-badge count-badge">${count}</div>
-            `);
         } else if (page.subpage.startsWith('library')) {
             const date_range = page.structure.side.querySelector('.date-range-picker-form');
 
