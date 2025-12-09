@@ -29618,11 +29618,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href=${involved_link}>${text3 ? text3 : name}</a>`;
     });
     render(activity_item, html`
-        <div class="title">
-            ${{ html: tl2(trans.activity.listing[activity.type], {
+        <div class="title">${{ html: tl2(trans.activity.listing[activity.type], {
       v: html.node`<span>${involved_text}</span>`.outerHTML
-    }) }}
-        </div>
+    }) }}</div>
         <div class="date">
             ${DateTime.fromISO(activity.date).toRelative()}
         </div>

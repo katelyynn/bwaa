@@ -96,11 +96,9 @@ export function render_activity(activity) {
     });
 
     render(activity_item, html`
-        <div class="title">
-            ${{html: tl(trans.activity.listing[activity.type], {
-                v: html.node`<span>${involved_text}</span>`.outerHTML
-            })}}
-        </div>
+        <div class="title">${{html: tl(trans.activity.listing[activity.type], {
+            v: html.node`<span>${involved_text}</span>`.outerHTML
+        })}}</div>
         <div class="date">
             ${DateTime.fromISO(activity.date).toRelative()}
         </div>

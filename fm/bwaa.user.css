@@ -8703,13 +8703,14 @@
         .text-left,
         .text-right {
             & + p {
-                margin-top: 24px;
+                margin-top: 15px;
             }
         }
 
+        h1, h2, h3, h4, h5,
         blockquote,
         p {
-            margin: 24px 0;
+            margin: 15px 0;
         }
 
         .text-center {
