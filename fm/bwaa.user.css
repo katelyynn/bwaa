@@ -3224,7 +3224,7 @@
                 padding: unset;
             }
 
-            &:not(.profile-header-subpage-section + &, .async-content-error-message) {
+            &:not(.profile-header-subpage-section + &, .async-content-error-message, .no-data-message) {
                 border-top: 1px dotted var(--border);
                 margin: 30px -15px 0 -15px;
 
